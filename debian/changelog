@@ -1,3 +1,10 @@
+nagios-plugins (1.4.2-6) unreleased; urgency=low
+
+  * NOT YET RELEASED
+  * migrate package from CVS to svn
+
+ -- Marc Haber <mh+debian-packages@zugschlus.de>  Fri, 20 Jan 2006 18:59:42 +0000
+
 nagios-plugins (1.4.2-5) unstable; urgency=low
 
   * Sean Finney
