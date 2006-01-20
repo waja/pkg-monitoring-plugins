@@ -1,0 +1,5 @@
+06_checkircd
+10_config.h_debiandefaults.dpatch
+11_check_ups.c_perfdata_fix.dpatch
+12_check_mysql.c_mysql_options.dpatch
+13_subst.in_again.dpatch
