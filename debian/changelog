@@ -1,0 +1,265 @@
+nagios-plugins (1.4.2-1) unstable; urgency=low
+
+  * New upstream release.
+  * Sean Finney:
+    - now managing nagios-plugins as part of the pkg-nagios alioth project.
+    - updated Maintainer field
+    - updated build-dependencies to build against libsnmp9-dev
+    - removed build-dependencies on exim4 | mail-transport-agent, ssh, fping,
+      qstat, smbclient, and ntp stuff.  instead they are all have their
+      paths hardcoded into the build-process via dpatch file
+      10_config.h_debiandefaults.dpatch (closes: #312333, #297708).
+    - added config option for ssmtp
+    - upstream is now accidentally deleting the check_ldaps plugin
+      during the build-process.  whoops.
+    - removed unneccesary dpatch 09_pssyntax, massaged 08_subst.dpatch
+      into shape with new upstream version.
+    - added check_mysql_cmdlinecred to allow parsing of credentials on
+      the cmdline (closes: #314913).
+    - looks like the issue with check_load was previously resolved by
+      guido (closes: #305351).
+    - nagios and nagios-plugins no longer need to use update-nagios, as nagios
+      can natively scan /etc/nagios-plugins/config now:
+      (closes: #325893, #321939).
+    - i believe check_ldap's config is now correct (closes: #305720).
+    - removed references to check_nmap, which is generally superceded
+      by check_tcp.  it still exists in the contrib directory of the
+      source, which may at some point be put in /usr/share/doc for those
+      who really want it (closes: #319997).
+    - include de.po patch from jens seidel (closes: #313960).
+    - upstream fix: all of the plugins should now be properly setting
+      locales, so problems like commas for decimal seperators should no
+      longer break plugins for people in certain locales:
+      (closes #312228, #306244, #308458, #327212, #316882).
+    - upstream fix: check_ntp now supports zero offset (closes: #276794).
+    - upstream fix: divide by zero check for check_swap (closes: #328603).
+
+ -- sean finney <seanius@debian.org>  Thu, 06 Oct 2005 05:02:36 -0400
+
+nagios-plugins (1.4-6) unstable; urgency=low
+
+  * Build-Depend on the *correct* libmysqlclient-dev
+
+ -- Guido Trotter <ultrotter@debian.org>  Sun,  8 May 2005 08:12:20 -0700
+
+nagios-plugins (1.4-5) unstable; urgency=low
+
+  * Fix Build-Dependencies for sarge as per
+    http://lists.debian.org/debian-release/2005/05/msg00442.html and following
+
+ -- Guido Trotter <ultrotter@debian.org>  Sat,  7 May 2005 18:19:32 -0700
+
+nagios-plugins (1.4-4) unstable; urgency=medium
+
+  * The "Upload after it's too late" release
+  * Make nagios-plugins depend on iputils-ping only (closes: #296295)
+  * Urgency medium because it fixes an important bug reported by lots
+    of people, and it doesn't change anything else
+  * This version should be the one sarge ships with, hopefully!
+
+ -- Guido Trotter <ultrotter@debian.org>  Tue,  3 May 2005 17:04:39 -0700
+
+nagios-plugins (1.4-3) unstable; urgency=medium
+
+  * Add back empty imap.cfg (closes: #296249)
+  * Remove --with-ping-command from configure (closes: #296295)
+  * Fix load.cfg (closes: #296254)
+  * Urgency medium because it fixes a segfault in check_ping
+  * Build depend on mail-transport-agent (mailq path) (closes: #297708)
+
+ -- Guido Trotter <ultrotter@debian.org>  Mon,  7 Mar 2005 04:31:49 +0000
+
+nagios-plugins (1.4-2) unstable; urgency=low
+
+  * Add information about update-nagios needed after re-configuration
+    (Shouldn't nagios document this? anyway...) (closes: #291224)
+  * Use --ssl in check_https (closes: #295917)
+  * Fix ps syntax (closes: #296003)
+
+ -- Guido Trotter <ultrotter@debian.org>  Sat, 19 Feb 2005 20:22:16 +0000
+
+nagios-plugins (1.4-1) unstable; urgency=low
+
+  * The "I'm still around" release
+  * New upstream version (closes: #294224)
+  * Remove useless patches:
+    01_ldap21bind
+    04_checkswap
+    03_hostwithnumbers
+    05_checkbreeze
+    07_checkbyssh (apparently it wasn't considered a bug upstream)
+  * Fix argument number in check_ldap (closes: #281700) (Thanks Joerg)
+  * Fix hostname placeholder in mysql.cfg (closes: #281701)
+  * Don't list check_imap twice (closes: #280702)
+  * Add check_https command (closes: #292124)
+  * Add check_dig command (closes: #281020)
+  * Add check_breeze command (closes: #281019)
+  * Add dummy commands (closes: #281018)
+  * Add check_mailq_<MTA> commands for all supported mtas (closes: #281016, #282015)
+  * Add check_spop and check_simap commands (closes: #280700)
+  * Add check_nt command (closes: #294299)
+  * Fix check_load command (closes: #294298)
+  * Fix a reference to @libexec@ in snmp.cfg (closes: #276520)
+
+ -- Guido Trotter <ultrotter@debian.org>  Fri, 18 Feb 2005 07:50:28 +0000
+
+nagios-plugins (1.3.1.0-12) unstable; urgency=low
+
+  * Sorry for the multiple uploads trying to fix the problem... 
+    Unfortunately I don't have any !i386 handy. :(
+  * This time #275803 should really be dealt with!
+
+ -- Guido Trotter <ultrotter@debian.org>  Wed, 13 Oct 2004 13:59:58 -0700
+
+nagios-plugins (1.3.1.0-11) unstable; urgency=high
+
+  * Hack subst.in to really solve the incorrect "use lib" on arches !i386
+    forcing the correct (debian) path in (closes: #275803)
+  * urgency set to high because it solves an RC bug in sarge
+
+ -- Guido Trotter <ultrotter@debian.org>  Wed, 13 Oct 2004 08:23:53 -0700
+
+nagios-plugins (1.3.1.0-10) unstable; urgency=low
+
+  * The "Better late than never" release
+  * Include Tom Laermans mysql.cfg in pluginsconfig (closes: #267747)
+  * Include Tom Laermans imap.cfg in pluginsconfig (closes: #267953)
+  * Fix snmp_load typo (thanks to Raoul Borenius) (closes: #270276)
+  * Fix snmp_load typo (thanks to Raoul Borenius) (closes: #270276)
+  * Build-depend on mawk to try fixing #275803 (was that the culprit?)
+
+ -- Guido Trotter <ultrotter@debian.org>  Tue, 12 Oct 2004 20:44:51 -0700
+
+nagios-plugins (1.3.1.0-9) unstable; urgency=high
+
+  * Update debian/watch file
+  * Fix check_breeze (thanks to Peter Palfrader for noticing it was broken)
+    (closes: #265207)
+  * Add to 04_checkswap two patches from Sean Finney plus one from me
+    (to avoid it returning STATE_CRITICAL when no swap is configured) 
+    (closes: #265152, #265154)
+  * Also import:
+    - Sven Velt patch for check_ircd (closes: #259720)
+    - Cyril Bouthors patch for check_by_ssh (closes: #257793)
+  * Urgency high so nagios and nagios-plugins stop running one after
+    the other to enter testing
+  * Sorry, the package splitting is still delayed for after sarge
+
+ -- Guido Trotter <ultrotter@debian.org>  Thu, 12 Aug 2004 16:13:35 +0200
+
+nagios-plugins (1.3.1.0-8) unstable; urgency=low
+
+  * Import a backport of check_swap from upstream CVS done by 
+    "The Fungi" <fungi@yuggoth.org> to make swap checking 2.6 
+    compatible (closes: #261151)
+  * Postpone package splitting, so this version can go in sarge
+    with nagios before we have to wait a bit in the NEW queue
+
+ -- Guido Trotter <ultrotter@debian.org>  Sun, 25 Jul 2004 11:34:01 +0200
+
+nagios-plugins (1.3.1.0-7) unstable; urgency=low
+
+  * Add 03_hostwithnumbers.dpatch written by me to correct the behaviour
+    of is_hostname() in utils.c  about host components beginning with a 
+    number (closes: #253620). Thanks to Andreas Edler who spotted
+    the problem.
+
+ -- Guido Trotter <ultrotter@debian.org>  Tue, 15 Jun 2004 15:37:48 +0200
+
+nagios-plugins (1.3.1.0-6) unstable; urgency=low
+
+  * Conflict with the current version of nagios (closes: #245607)
+
+ -- Guido Trotter <ultrotter@debian.org>  Sat, 24 Apr 2004 12:01:59 +0200
+
+nagios-plugins (1.3.1.0-5) unstable; urgency=low
+
+  * Move plugin configuration to /etc/nagios-plugins/config
+  * For the time beeing symlink from the original directory
+
+  This should help nagios closing #241807
+
+ -- Guido Trotter <ultrotter@debian.org>  Fri, 23 Apr 2004 09:06:51 +0200
+
+nagios-plugins (1.3.1.0-4) unstable; urgency=low
+
+  * Fix not considered args and broken example in check_disk (closes: #241833)
+
+ -- Guido Trotter <ultrotter@debian.org>  Mon,  5 Apr 2004 10:34:37 +0200
+
+nagios-plugins (1.3.1.0-3) unstable; urgency=low
+
+  * Take parameters for basic check_ping (closes: #238670)
+  * Add ssh.cfg and ldap.cfg (closes: #236781)
+
+ -- Guido Trotter <ultrotter@debian.org>  Sat,  3 Apr 2004 18:03:38 +0200
+
+nagios-plugins (1.3.1.0-2) unstable; urgency=low
+
+  * Recommend nagios-text | nagios
+  * Remove notify.cfg from distributed config files (closes: #234951)
+
+ -- Guido Trotter <ultrotter@debian.org>  Thu, 26 Feb 2004 22:41:56 +0100
+
+nagios-plugins (1.3.1.0-1) unstable; urgency=low
+
+  * The "lintian clean it" release
+  * Upstream version is 1.3.1, i've incremented the version number a bit in
+    order to upload a new source without the CVS directories, and so let
+    lintian not complain...
+
+ -- Guido Trotter <ultrotter@debian.org>  Tue, 24 Feb 2004 19:37:09 +0100
+
+nagios-plugins (1.3.1-6) unstable; urgency=low
+
+  * Depend only on ntp-simple instead of ntp (closes: #233267)
+  * Also in build-dependency use ntp-simple rather than ntp
+
+ -- Guido Trotter <ultrotter@debian.org>  Tue, 17 Feb 2004 21:03:58 +0100
+
+nagios-plugins (1.3.1-5) unstable; urgency=low
+
+  * Adapt the choosen ping command to the fact that configure 
+    doesn't set PING_PACKETS_FIRST when PING_COMMAND is passed 
+    from the command line (closes: #233010)
+
+ -- Guido Trotter <ultrotter@debian.org>  Mon, 16 Feb 2004 13:19:20 +0100
+
+nagios-plugins (1.3.1-4) unstable; urgency=low
+
+  * Pass --with-ping-command to configure, and relax the dependency on ping.
+  * Export a sane $PATH and pass it to configure (closes: #232498)
+  * Give full path of libexec dir to configure (closes: #232436)
+  * Remove empty dirs from debian/dirs
+  * Ship command configuration in /usr/share/nagios/pluginconfig
+    These files are generated passing the upstream command.cfg to 
+    nagios' convertcfg, and then splitted up manually removing 
+    definitions already shipped with nagios. Thanks to Nate Allen 
+    who found out the solution. (closes: #232300)
+
+ -- Guido Trotter <ultrotter@debian.org>  Sat, 14 Feb 2004 13:20:55 +0100
+
+nagios-plugins (1.3.1-3) unstable; urgency=low
+
+  * Remove dependency on non-existent package "dqs"
+  * Pass --with-df-command="/bin/df -Pk" to configure, since compiling
+    on the autobuilders doesn't detect that (why?)
+  * Build-depend also on libkrb5-dev
+
+ -- Guido Trotter <ultrotter@debian.org>  Wed, 11 Feb 2004 17:03:23 +0100
+
+nagios-plugins (1.3.1-2) unstable; urgency=low
+
+  * Add some missing build dependencies that prevented nagios-plugins
+    from compiling
+
+ -- Guido Trotter <ultrotter@debian.org>  Wed, 11 Feb 2004 12:41:13 +0100
+
+nagios-plugins (1.3.1-1) unstable; urgency=low
+
+  * Initial Release (closes: #208218)
+  * I prefer having all the plugins in a single package: the installation size
+    is not so terrible
+
+ -- Guido Trotter <ultrotter@debian.org>  Sun,  1 Feb 2004 10:32:04 +0100
+
