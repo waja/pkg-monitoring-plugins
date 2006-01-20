@@ -1,0 +1,12 @@
+PKG="NAGplugin"
+NAME="nagios-plugins"
+DESC="Nagios network monitoring plugins"
+ARCH="powerpc"
+VERSION="1.4.2,REV=2005.09.19.15.00"
+CATEGORY="application"
+VENDOR="Nagios Plugin Development Team"
+EMAIL="nagiosplug-devel@lists.sourceforge.net"
+PSTAMP="nag20050919150045"
+BASEDIR="/"
+CLASSES="none"
+
