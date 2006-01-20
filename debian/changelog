@@ -2,8 +2,11 @@ nagios-plugins (1.4.2-6) unreleased; urgency=low
 
   * NOT YET RELEASED
   * migrate package from CVS to svn
+  * add 23_check_axis.dpatch, making the package suiteable to
+    debian/-only layout
+  * convert to debian/-only layout
 
- -- Marc Haber <mh+debian-packages@zugschlus.de>  Fri, 20 Jan 2006 18:59:42 +0000
+ -- Marc Haber <mh+debian-packages@zugschlus.de>  Fri, 20 Jan 2006 19:01:25 +0000
 
 nagios-plugins (1.4.2-5) unstable; urgency=low
 
