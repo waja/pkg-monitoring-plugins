@@ -44,6 +44,10 @@ endif
 config.status: configure
 	export PATH=$(PATH)
 	dh_testdir
+	ln -sf /usr/share/misc/config.sub .
+	ln -sf /usr/share/misc/config.guess .
+	rm -f config.cache
+	
 	# Add here commands to configure the package.
 	EXTRAS="check_game check_fping check_by_ssh" CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --libexecdir=${NP_LIBEXEC} --with-nagios-user=nagios --with-nagios-group=nagios --with-trusted-path=/bin:/sbin:/usr/bin:/usr/sbin --with-df-command="/bin/df -Pk"
 
@@ -67,6 +71,10 @@ really-clean:
 
 	# Add here commands to clean up after the build process.
 	-$(MAKE) distclean
+	find -type d -name autom4te.cache -print0 | xargs -0 -r rm -rf \;
+	-rm -f platform.h auto-include.h
+	find -type d -name build -print0 | xargs -0 -r rm -rf \;
+	find \( -name config.sub -o -name config.guess \) -print0 | xargs -0 -r rm -f \;
 	dh_clean 
 
 install: build

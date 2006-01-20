@@ -3,7 +3,7 @@ Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: sean finney <seanius@debian.org>, Guido Trotter <ultrotter@debian.org>
-Build-Depends: debhelper (>= 4.0.0), dpatch (>= 2.0.9), libldap2-dev, postgresql-dev, libmysqlclient14-dev | libmysqlclient-dev, libsnmp9-dev | libsnmp-dev, libradius1-dev, libkrb5-dev, libnet-snmp-perl, procps, coreutils | fileutils, iputils-ping, dnsutils, bind9-host | host, snmp, mawk | awk
+Build-Depends: debhelper (>= 4.0.0), dpatch (>= 2.0.9), autotools-dev, libldap2-dev, postgresql-dev, libmysqlclient14-dev | libmysqlclient-dev, libsnmp9-dev | libsnmp-dev, libradius1-dev, libkrb5-dev, libnet-snmp-perl, procps, coreutils | fileutils, iputils-ping, dnsutils, bind9-host | host, snmp, mawk | awk
 Standards-Version: 3.6.2
 
 Package: nagios-plugins
