@@ -1,0 +1,82 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_config.h_debiandefaults.dpatch by  <seanius@localhost.localdomain>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad sid~/configure sid/configure
+--- sid~/configure	2005-09-30 15:56:02.000000000 +0200
++++ sid/configure	2005-10-31 21:15:42.000000000 +0100
+@@ -7760,7 +7760,7 @@
+ fi;
+ 
+ 
+-EXTRAS=
++#EXTRAS=
+ 
+ LDFLAGS="$LDFLAGS -L."
+ 
+diff -urNad sid~/np-debian.h sid/np-debian.h
+--- sid~/np-debian.h	1970-01-01 01:00:00.000000000 +0100
++++ sid/np-debian.h	2005-10-31 21:15:42.000000000 +0100
+@@ -0,0 +1,25 @@
++#ifndef _NP_DEBIAN_H_
++#define _NP_DEBIAN_H_
++
++#undef PATH_TO_MAILQ
++#define PATH_TO_MAILQ "/usr/bin/mailq"
++
++#undef SSH_COMMAND
++#define SSH_COMMAND "/usr/bin/ssh"
++
++#undef PATH_TO_FPING
++#define PATH_TO_FPING "/usr/bin/fping"
++
++#undef PATH_TO_QSTAT
++#define PATH_TO_QSTAT "/usr/bin/quakestat"
++
++#undef PATH_TO_SMBCLIENT
++#define PATH_TO_SMBCLIENT "/usr/bin/smbclient"
++
++#undef PATH_TO_NTPDATE
++#define PATH_TO_NTPDATE "/usr/sbin/ntpdate"
++
++#undef PATH_TO_NTPQ
++#define PATH_TO_NTPQ "/usr/bin/ntpq"
++
++#endif /* _NP_DEBIAN_H_ */
+diff -urNad sid~/plugins/common.h sid/plugins/common.h
+--- sid~/plugins/common.h	2004-12-10 01:13:43.000000000 +0100
++++ sid/plugins/common.h	2005-10-31 21:16:22.000000000 +0100
+@@ -33,6 +33,7 @@
+  *****************************************************************************/
+ 
+ #include "config.h"
++#include "np-debian.h"
+ 
+ #ifdef HAVE_FEATURES_H
+ #include <features.h>
+diff -urNad sid~/plugins-scripts/utils.pm.in sid/plugins-scripts/utils.pm.in
+--- sid~/plugins-scripts/utils.pm.in	2003-04-13 06:25:36.000000000 +0200
++++ sid/plugins-scripts/utils.pm.in	2005-10-31 21:15:42.000000000 +0100
+@@ -35,13 +35,13 @@
+ sub is_hostname;
+ 
+ ## updated by autoconf
+-$PATH_TO_RPCINFO = "@PATH_TO_RPCINFO@" ;
+-$PATH_TO_NTPDATE = "@PATH_TO_NTPDATE@" ;
+-$PATH_TO_NTPDC   = "@PATH_TO_NTPDC@" ;
+-$PATH_TO_NTPQ    = "@PATH_TO_NTPQ@" ;
++$PATH_TO_RPCINFO = "/usr/bin/rpcinfo";
++$PATH_TO_NTPDATE = "/usr/sbin/ntpdate";
++$PATH_TO_NTPDC   = "/usr/bin/ntpdc";
++$PATH_TO_NTPQ    = "/usr/bin/ntpq";
+ $PATH_TO_LMSTAT  = "@PATH_TO_LMSTAT@" ;
+-$PATH_TO_SMBCLIENT = "@PATH_TO_SMBCLIENT@" ;
+-$PATH_TO_MAILQ   = "@PATH_TO_MAILQ@";
++$PATH_TO_SMBCLIENT = "/usr/bin/smbclient";
++$PATH_TO_MAILQ   = "/usr/bin/mailq";
+ $PATH_TO_QMAIL_QSTAT = "@PATH_TO_QMAIL_QSTAT@";
+ 
+ ## common variables
