@@ -1,0 +1,95 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 08_subst.dpatch by Guido Trotter <ultrotter@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad nagios-plugins-1.3.1.0/plugins-scripts/subst.in /tmp/dpep.bslXbi/nagios-plugins-1.3.1.0/plugins-scripts/subst.in
+--- nagios-plugins-1.3.1.0/plugins-scripts/subst.in	2004-10-13 13:58:07.000000000 -0700
++++ /tmp/dpep.bslXbi/nagios-plugins-1.3.1.0/plugins-scripts/subst.in	2004-10-13 13:59:26.000000000 -0700
+@@ -1,35 +1,37 @@
+ #!/usr/bin/awk
+ 
+-function which(c,path) {
+-	cmd = "test -x " c;
+-
+-	if (system(cmd)==0) {
+-		return c;
+-	} 
+-
+-	sub(/\/.*\//,"",c);
+-  for (dir in path) {
+-			cmd = "test -x " path[dir] "/" c;
+-			if (system(cmd)==0) {
+-					return path[dir] "/" c;
+-			} 
+-	}
+-
+-
+-	return c;
+-}
++# Useless
++#function which(c,path) {
++#	cmd = "test -x " c;
++#
++#	if (system(cmd)==0) {
++#		return c;
++#	} 
++#
++#	sub(/\/.*\//,"",c);
++#  for (dir in path) {
++#			cmd = "test -x " path[dir] "/" c;
++#			if (system(cmd)==0) {
++#					return path[dir] "/" c;
++#			} 
++#	}
++#
++#
++#	return c;
++#}
+ 
+ # used to replace "use lib utils.pm" with "use lib @libexecdir"
+ #
+ function led() {
+-	led1 = "@libexecdir@";
+-	led2 = "@exec_prefix@";
+-	led3 = "@prefix@";
+-	if ( match(led1, /^\$\{exec_prefix\}/ ) != 0 ) {
+-		return "\"" led3 "/libexec\" " ;
+-	
+-	}
+-	return "\"" led1 "\"" ;
++#	led1 = "@libexecdir@";
++#	led2 = "@exec_prefix@";
++#	led3 = "@prefix@";
++#	if ( match(led1, /^\$\{exec_prefix\}/ ) != 0 ) {
++#		return "\"" led3 "/libexec\" " ;
++#	
++#	}
++#	Hack to force debian package to have the correct dir on all arches
++	return "\"/usr/lib/nagios/plugins\"" ;
+ }
+ 
+ BEGIN {
+@@ -60,13 +62,14 @@
+ 
+ # Specific programs
+ 
++# They are already correct, it seems... don't bother with this!
+ #
+-/^[^#]/ && /(\/.*)?\/(bin|sbin|lib|libexec)\// {
+-	match($0,/(\/.*)?\/(bin|sbin|lib|libexec)\/[-_a-zA-Z0-9]+/);
+-	start=RSTART+RLENGTH;
+-	c=substr($0,RSTART,RLENGTH);
+-	sub(c,which(c,path));
+-}
++#/^[^#]/ && /(\/.*)?\/(bin|sbin|lib|libexec)\// {
++#	match($0,/(\/.*)?\/(bin|sbin|lib|libexec)\/[-_a-zA-Z0-9]+/);
++#	start=RSTART+RLENGTH;
++#	c=substr($0,RSTART,RLENGTH);
++#	sub(c,which(c,path));
++#}
+ 
+ {
+ 	print;

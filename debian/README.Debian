@@ -1,0 +1,11 @@
+nagios-plugins for Debian
+-------------------------
+
+If you customize the plugin configuration, please remember to run "update-nagios".
+
+At the time of this writing MRTGEXT NLM for Novell Servers is not packaged for 
+debian, so check_nwstat is removed for the time beeing, till me or someone else 
+packages it.
+
+ -- Guido Trotter <ultrotter@debian.org>, Sun,  1 Feb 2004 10:05:51 +0100
+

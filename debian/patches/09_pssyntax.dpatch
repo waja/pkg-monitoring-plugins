@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 09_pssyntax.dpatch by Guido Trotter <ultrotter@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad nagios-plugins-1.4/configure /tmp/dpep.mMn24q/nagios-plugins-1.4/configure
+--- nagios-plugins-1.4/configure	2005-02-04 00:48:39.000000000 +0000
++++ /tmp/dpep.mMn24q/nagios-plugins-1.4/configure	2005-02-19 19:37:02.416691816 +0000
+@@ -14012,7 +14012,7 @@
+ 	egrep -i "^ *STAT +[UCOMAND]+ +VSZ +RSS +USER +UID +PPID +COMMAND" > /dev/null
+ then
+ 	ac_cv_ps_varlist="procstat,&procuid,&procppid,&procvsz,&procrss,&procpcpu,procprog,&pos"
+-	ac_cv_ps_command="$PATH_TO_PS -axwo 'stat uid ppid vsz rss pcpu comm args'"
++	ac_cv_ps_command="$PATH_TO_PS axwo 'stat uid ppid vsz rss pcpu comm args'"
+ 	ac_cv_ps_format="%s %d %d %d %d %f %s %n"
+ 	ac_cv_ps_cols=8
+ 	echo "$as_me:$LINENO: result: $ac_cv_ps_command" >&5

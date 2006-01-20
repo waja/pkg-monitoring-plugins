@@ -1,0 +1,28 @@
+Source: nagios-plugins
+Section: net
+Priority: extra
+Maintainer: Guido Trotter <ultrotter@debian.org>
+Build-Depends: debhelper (>= 4.0.0), dpatch (>= 2.0.9), libldap2-dev, postgresql-dev, libmysqlclient12-dev | libmysqlclient-dev, libsnmp5-dev, libradius1-dev, libkrb5-dev, qstat, fping, libnet-snmp-perl, procps, coreutils | fileutils, iputils-ping, dnsutils, bind9-host | host, ntpdate, ntp-simple, smbclient, snmp, ssh, mawk | awk, exim4 | mail-transport-agent
+Standards-Version: 3.6.1.0
+
+Package: nagios-plugins
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, fping, qstat, snmp, radiusclient1, libnet-snmp-perl, procps, iputils-ping, dnsutils, bind9-host | host, ntpdate, ntp-simple | ntp, smbclient
+Conflicts: netsaint, netsaint-plugins, netsaint-plugins-extra, netsaint-plugins-fping, netsaint-plugins-game, netsaint-plugins-ldap, netsaint-plugins-mysql, netsaint-plugins-pgsql, netsaint-plugins-radius, netsaint-plugins-samba, netsaint-plugins-snmp, nagios-text (<= 2:1.2-3.1), nagios-mysql (<= 2:1.2-3.1), nagios-pgsql (<= 2:1.2-3.1)
+Suggests: ntp
+Recommends: nagios-text | nagios
+Description: Plugins for the nagios network monitoring and management system
+ Nagios is a host/service/network monitoring and management system. It has
+ the following features:
+ .
+  o  Monitoring of network services (via TCP port, SMTP, POP3, HTTP, NNTP,
+     PING, etc.)
+  o  Plugin interface to allow for user-developed service checks
+  o  Contact notifications when problems occur and get resolved (via email,
+     pager, or user-defined method)
+  o  Ability to define event handlers to be run during service or host events
+     (for proactive problem resolution)
+  o  Web output (current status, notifications, history, log file, etc.)
+ .
+ These plugins are used by nagios to perform the various service checks.
+
