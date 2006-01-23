@@ -1,6 +1,5 @@
-nagios-plugins (1.4.2-6) unreleased; urgency=low
+nagios-plugins (1.4.2-6) unstable; urgency=low
 
-  * NOT YET RELEASED
   [sean finney]
   * 10_config.h_debiandefaults.dpatch now also hardcodes nslookup,
     removing the need for a couple more build-dependencies (dnsutils,
@@ -21,7 +20,7 @@ nagios-plugins (1.4.2-6) unreleased; urgency=low
   * add build-dependency on autotools-dev, add code to automatically
     link in current config.guess, config.sub
 
- -- Marc Haber <mh+debian-packages@zugschlus.de>  Fri, 20 Jan 2006 19:05:15 +0000
+ -- sean finney <seanius@debian.org>  Mon, 23 Jan 2006 23:24:21 +0100
 
 nagios-plugins (1.4.2-5) unstable; urgency=low
 
