@@ -32,7 +32,7 @@ Package: nagios-plugins-basic
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, procps, iputils-ping
 Conflicts: nagios-plugins (<= 1.4.2-3)
-Replaces: nagios-plugins
+Replaces: nagios-plugins, nagios-plugins-standard
 Suggests: nagios-text | nagios
 Description: Plugins for the nagios network monitoring and management system
  Nagios is a host/service/network monitoring and management system. It has
