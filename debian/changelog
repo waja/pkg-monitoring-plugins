@@ -1,6 +1,18 @@
-nagios-plugins (1.4.2-6) unreleased; urgency=low
+nagios-plugins (1.4.2-6) unstable; urgency=low
 
-  * NOT YET RELEASED
+  [sean finney]
+  * 10_config.h_debiandefaults.dpatch now also hardcodes nslookup,
+    removing the need for a couple more build-dependencies (dnsutils,
+    bind9-host | host).  this also has the added benefit that the
+    build process doesn't require a working dns setup :)
+  * moved check_dig to -standard, as that's where check_dns (and
+    more importantly its configs and dependencies) are.
+  * moved check_ping to -basic.  even though it means another
+    dependency in -basic, maintainer consensus is that it's
+    critical enough of a plugin that it should go in.
+  * split config for check_fping into fping.cfg.
+
+  [marc haber]
   * migrate package from CVS to svn
   * add 23_check_axis.dpatch, making the package suiteable to
     debian/-only layout
@@ -8,7 +20,7 @@ nagios-plugins (1.4.2-6) unreleased; urgency=low
   * add build-dependency on autotools-dev, add code to automatically
     link in current config.guess, config.sub
 
- -- Marc Haber <mh+debian-packages@zugschlus.de>  Fri, 20 Jan 2006 19:05:15 +0000
+ -- sean finney <seanius@debian.org>  Mon, 23 Jan 2006 23:24:21 +0100
 
 nagios-plugins (1.4.2-5) unstable; urgency=low
 
