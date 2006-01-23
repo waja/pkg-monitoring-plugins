@@ -1,6 +1,19 @@
 nagios-plugins (1.4.2-6) unreleased; urgency=low
 
   * NOT YET RELEASED
+  [sean finney]
+  * 10_config.h_debiandefaults.dpatch now also hardcodes nslookup,
+    removing the need for a couple more build-dependencies (dnsutils,
+    bind9-host | host).  this also has the added benefit that the
+    build process doesn't require a working dns setup :)
+  * moved check_dig to -standard, as that's where check_dns (and
+    more importantly its configs and dependencies) are.
+  * moved check_ping to -basic.  even though it means another
+    dependency in -basic, maintainer consensus is that it's
+    critical enough of a plugin that it should go in.
+  * split config for check_fping into fping.cfg.
+
+  [marc haber]
   * migrate package from CVS to svn
   * add 23_check_axis.dpatch, making the package suiteable to
     debian/-only layout
