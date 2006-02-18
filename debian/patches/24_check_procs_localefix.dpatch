@@ -1,0 +1,17 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 24_check_procs_localefix.dpatch by  <seanius@debian.org>
+##
+## DP: make sure LC_NUMERIC is properly set because the plugin parses output
+
+@DPATCH@
+diff -urNad nagios-plugins-1.4.2~/plugins/check_procs.c nagios-plugins-1.4.2/plugins/check_procs.c
+--- nagios-plugins-1.4.2~/plugins/check_procs.c	2005-09-15 10:27:58.000000000 +0200
++++ nagios-plugins-1.4.2/plugins/check_procs.c	2006-02-18 13:52:13.000000000 +0100
+@@ -116,6 +116,7 @@
+ 	setlocale (LC_ALL, "");
+ 	bindtextdomain (PACKAGE, LOCALEDIR);
+ 	textdomain (PACKAGE);
++	setlocale (LC_NUMERIC, "POSIX");
+ 
+ 	input_buffer = malloc (MAX_INPUT_BUFFER);
+ 	procprog = malloc (MAX_INPUT_BUFFER);
