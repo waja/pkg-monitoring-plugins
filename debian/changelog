@@ -1,3 +1,11 @@
+nagios-plugins (1.4.2-7) unstable; urgency=high
+
+  [sean finney]
+  * update build dependencies to build against libmysqlclient15-dev.
+    fixes (now) rc bug, urgency thus set to high.
+
+ -- sean finney <seanius@debian.org>  Sat, 18 Feb 2006 13:47:54 +0100
+
 nagios-plugins (1.4.2-6) unstable; urgency=low
 
   [sean finney]
