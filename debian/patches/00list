@@ -1,16 +1,7 @@
 06_checkircd
 10_config.h_debiandefaults.dpatch
-11_check_ups.c_perfdata_fix.dpatch
-12_check_mysql.c_mysql_options.dpatch
 13_subst.in_again.dpatch
 14_check_log_paths.dpatch
-15_check_mrtg_wtf_conditionals.dpatch
-16_check_smtp_protocolfix.dpatch
-17_check_smb_freespace.dpatch
 18_check_game_cmdline.dpatch
-19_check_disk_subdirs.dpatch
-20_check_ntp_lessbeastlyregex.dpatch
-21_de.po_fixes.dpatch
 22_check_smb_hostaddress.dpatch
 23_check_axis.dpatch
-24_check_procs_localefix.dpatch
