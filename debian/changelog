@@ -1,8 +1,10 @@
 nagios-plugins (1.4.3-1.0) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * make package build fail if /proc is not mounted, before I end up
+    filing that bug a fourth time. Closes: #344389, #354215
 
- -- sean finney <sean@localhost.localdomain>  Sun, 28 May 2006 21:40:55 +0200
+ -- Marc Haber <mh+debian-packages@zugschlus.de>  Fri,  9 Jun 2006 13:18:50 +0000
 
 nagios-plugins (1.4.3-1) unstable; urgency=low
 

@@ -44,6 +44,14 @@ endif
 config.status: configure
 	export PATH=$(PATH)
 	dh_testdir
+	
+	# if /proc is not mounted, check_nagios and check_procs are
+	# silently omitted from build.
+	@if ! [ -d /proc/1 ]; then \
+	  echo "nagios-plugins needs a mounted /proc to correctly build"; \
+	  exit 1; \
+	fi
+	
 	ln -sf /usr/share/misc/config.sub .
 	ln -sf /usr/share/misc/config.guess .
 	rm -f config.cache
