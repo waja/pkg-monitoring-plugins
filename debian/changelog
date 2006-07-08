@@ -1,10 +1,33 @@
-nagios-plugins (1.4.3-1.0) UNRELEASED; urgency=low
+nagios-plugins (1.4.3.0cvs.20060707-1) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  [sean finney]
+  * new release based on latest upstream CVS HEAD, as backporting some
+    of the changes would involve either massive patches to the autofoo
+    generated files (Makefile/Configure etc) or by changing the packages
+    to autogenerate the autofoo stuff as part of the build process,
+    neither of which i like.
+  * anyway, the goodies:
+    - upstream incorporated fix for F'ing TBFS due to the broken .la files
+      installed in the libradius-dev package
+    - new check_apt plugin to check that a host is up to date wrt the debian
+      package management system (run with --help for more information)
+      Closes: #317763.
+    - new check_ntp plugin written in C, which performs much faster and more
+      reliably than the perl plugin, and does everything natively
+      (sending/recieving the packets itself instead of parsing the output
+      of ntpdate/ntpq). Closes: #351257, #360549, #360774.
+    - as a result, we no longer need to depend on any of the NTP stuff.
+  * modified debian/control to reflect new lack of dependency on ntp
+  * modified debian/rules to keep check_ntp in the -basic package, as
+    there's no reason to keep it in standard now.
+  * finally incorporate martin pitt's request about transitioning to
+    the new postgres build system.  Closes: #377201.
+
+  [marc haber]
   * make package build fail if /proc is not mounted, before I end up
     filing that bug a fourth time. Closes: #344389, #354215
 
- -- Marc Haber <mh+debian-packages@zugschlus.de>  Fri,  9 Jun 2006 13:18:50 +0000
+ -- sean finney <seanius@debian.org>  Sun, 04 Jun 2006 00:57:17 +0200
 
 nagios-plugins (1.4.3-1) unstable; urgency=low
 

@@ -3,7 +3,7 @@ Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: sean finney <seanius@debian.org>, Guido Trotter <ultrotter@debian.org>
-Build-Depends: debhelper (>= 4.0.0), dpatch (>= 2.0.9), autotools-dev, libldap2-dev, postgresql-dev, libmysqlclient15-dev | libmysqlclient12-dev | libmysqlclient-dev, libsnmp9-dev | libsnmp5-dev | libsnmp-dev, libradius1-dev, libkrb5-dev, libnet-snmp-perl, procps, coreutils, iputils-ping, snmp, mawk | awk
+Build-Depends: debhelper (>= 4.0.0), dpatch (>= 2.0.9), autotools-dev, libldap2-dev, libpq-dev, libmysqlclient15-dev | libmysqlclient12-dev | libmysqlclient-dev, libsnmp9-dev | libsnmp5-dev | libsnmp-dev, libradius1-dev, libkrb5-dev, libnet-snmp-perl, procps, coreutils, iputils-ping, snmp, mawk | awk
 Standards-Version: 3.6.2
 
 Package: nagios-plugins
@@ -56,7 +56,7 @@ Package: nagios-plugins-standard
 Architecture: any
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins
-Depends: ${shlibs:Depends}, ${misc:Depends}, fping, qstat, snmp, radiusclient1, libnet-snmp-perl, dnsutils, bind9-host | host, ntpdate, ntp, smbclient
+Depends: ${shlibs:Depends}, ${misc:Depends}, fping, qstat, snmp, radiusclient1, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient
 Suggests: nagios-text | nagios
 Description: Plugins for the nagios network monitoring and management system
  Nagios is a host/service/network monitoring and management system. It has
