@@ -1,3 +1,9 @@
+nagios-plugins (1.4.3.0cvs.20060707-2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- sean finney <sean@localhost>  Sun,  9 Jul 2006 17:40:38 +0200
+
 nagios-plugins (1.4.3.0cvs.20060707-1) unstable; urgency=low
 
   [sean finney]
