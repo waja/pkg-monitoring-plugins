@@ -1,4 +1,4 @@
-nagios-plugins (1.4.3.0cvs.20060707-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.3.0cvs.20060707-1) unstable; urgency=low
 
   [sean finney]
   * new release based on latest upstream CVS HEAD, as backporting some
