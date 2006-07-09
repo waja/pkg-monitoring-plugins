@@ -23,7 +23,8 @@ NP_BASIC_DIR:=$(CURDIR)/debian/nagios-plugins-basic
 NP_STD_DIR:=$(CURDIR)/debian/nagios-plugins-standard
 std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
 	check_rpc check_snmp check_wave check_fping check_game \
-	check_radius check_mysql check_pgsql check_disk_smb check_ldap \
+	check_radius check_mysql check_mysql_query check_pgsql \
+	check_disk_smb check_ldap \
 	check_dns check_dig check_flexlm check_oracle
 std_plugin_cfgs:=breeze dns flexlm games hppjd ifstatus ldap mrtg mysql \
 	netware nt pgsql radius snmp
