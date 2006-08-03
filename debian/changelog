@@ -1,3 +1,14 @@
+nagios-plugins (1.4.3.0cvs.20060707-3) UNRELEASED; urgency=low
+
+  NOT RELEASED YET 
+
+  [sean finney]
+  * to make backporting easier, change the build dep on libpq-dev
+    to libpq-dev | postgresql-dev.  thanks to Jan Wagner for the
+    suggestion.
+
+ -- sean finney <seanius@debian.org>  Thu, 03 Aug 2006 12:16:54 -0700
+
 nagios-plugins (1.4.3.0cvs.20060707-2) unstable; urgency=low
 
   [sean finney]
