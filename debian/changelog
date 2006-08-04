@@ -1,6 +1,4 @@
-nagios-plugins (1.4.3.0cvs.20060707-3) UNRELEASED; urgency=low
-
-  NOT RELEASED YET 
+nagios-plugins (1.4.3.0cvs.20060707-3) unstable; urgency=high
 
   [sean finney]
   * to make backporting easier, change the build dep on libpq-dev
@@ -8,8 +6,9 @@ nagios-plugins (1.4.3.0cvs.20060707-3) UNRELEASED; urgency=low
     suggestion.
   * fix for check_ldaps showing up in two packages (closes: #373926).
     thanks to Jan for being persistant in pointing this out.
+  * that last one is rc, hence high urgency.
 
- -- sean finney <seanius@debian.org>  Fri, 04 Aug 2006 00:54:10 -0700
+ -- sean finney <seanius@debian.org>  Fri, 04 Aug 2006 08:57:33 -0700
 
 nagios-plugins (1.4.3.0cvs.20060707-2) unstable; urgency=low
 
