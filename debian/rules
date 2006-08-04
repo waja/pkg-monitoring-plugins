@@ -24,7 +24,7 @@ NP_STD_DIR:=$(CURDIR)/debian/nagios-plugins-standard
 std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
 	check_rpc check_snmp check_wave check_fping check_game \
 	check_radius check_mysql check_mysql_query check_pgsql \
-	check_disk_smb check_ldap \
+	check_disk_smb check_ldap check_ldaps \
 	check_dns check_dig check_flexlm check_oracle
 std_plugin_cfgs:=breeze dns flexlm games hppjd ifstatus ldap mrtg mysql \
 	netware nt pgsql radius snmp
@@ -105,8 +105,6 @@ install: build
 	for c in ${std_plugin_cfgs}; do \
 		mv ${NP_BASIC_DIR}/${NP_ETC}/$${c}.cfg ${NP_STD_DIR}/${NP_ETC}; \
 	done
-	# XXX upstream breakage
-	ln -s check_ldap ${NP_STD_DIR}/${NP_LIBEXEC}/check_ldaps
 
 
 # Build architecture-independent files here.
