@@ -1,8 +1,10 @@
 nagios-plugins (1.4.3.0cvs.20060707-4) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
+  * include fix for braindead behaviour in check_tcp based plugins
+    such as check_simap (closes: #351847).
 
- -- sean finney <sean@localhost>  Fri,  4 Aug 2006 09:01:30 -0700
+ -- sean finney <seanius@debian.org>  Sat, 02 Sep 2006 23:03:45 +0200
 
 nagios-plugins (1.4.3.0cvs.20060707-3) unstable; urgency=high
 
