@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+if [ "$1" = "configure" ]; then
+	( 
+		cd /usr/share/nagios-plugins/templates-standard
+		for f in *cfg; do
+			ucf $f /etc/nagios-plugins/config/$f 
+		done 
+	);
+fi
+
+#DEBHELPER#

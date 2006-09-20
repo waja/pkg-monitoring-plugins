@@ -18,17 +18,21 @@ DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 CFLAGS = -Wall -g
 
 NP_LIBEXEC:=/usr/lib/nagios/plugins
-NP_ETC:=/etc/nagios-plugins/config
 NP_BASIC_DIR:=$(CURDIR)/debian/nagios-plugins-basic
+NP_BASIC_TEMPLATES:=$(NP_BASIC_DIR)/usr/share/nagios-plugins/templates-basic
 NP_STD_DIR:=$(CURDIR)/debian/nagios-plugins-standard
+NP_STD_TEMPLATES:=$(NP_STD_DIR)/usr/share/nagios-plugins/templates-standard
+
 std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
 	check_rpc check_snmp check_wave check_fping check_game \
 	check_radius check_mysql check_mysql_query check_pgsql \
 	check_disk_smb check_ldap check_ldaps \
 	check_dns check_dig check_flexlm check_oracle
-std_plugin_cfgs:=breeze dns flexlm games hppjd ifstatus ldap mrtg mysql \
-	netware nt pgsql radius snmp
 
+basic_plugin_cfgs:=apt dhcp disk dummy ftp http load mail ntp ping procs real \
+	ssh tcp_udp telnet users
+std_plugin_cfgs:=breeze disk-smb dns flexlm fping games hppjd ifstatus ldap \
+	mrtg mysql netware nt pgsql radius rpc-nfs snmp
 
 PATH = /bin:/sbin:/usr/bin:/usr/sbin
 
@@ -65,11 +69,7 @@ build: patch-stamp build-stamp
 
 build-stamp:  config.status
 	dh_testdir
-
-	# Add here commands to compile the package.
 	$(MAKE)
-	#/usr/bin/docbook-to-man debian/nagios-plugins.sgml > nagios-plugins.1
-
 	touch build-stamp
 
 clean: really-clean unpatch
@@ -85,6 +85,7 @@ really-clean:
 	-rm -f platform.h auto-include.h
 	find -type d -name build -print0 | xargs -0 -r rm -rf \;
 	find \( -name config.sub -o -name config.guess \) -print0 | xargs -0 -r rm -f \;
+	-rm -f debian/nagios-plugins-basic.postrm debian/nagios-plugins-standard.postrm
 	dh_clean 
 
 install: build
@@ -96,15 +97,26 @@ install: build
 	# Add here commands to install the package into debian/nagios-plugins.
 	$(MAKE) install DESTDIR=${NP_BASIC_DIR}
 	chmod 644 ${NP_BASIC_DIR}/usr/lib/nagios/plugins/utils.pm
-	cp $(CURDIR)/debian/pluginconfig/*.cfg ${NP_BASIC_DIR}/${NP_ETC}
 	# split up basic vs. standard plugins
 	for p in ${std_plugins}; do \
 		mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/$$p ${NP_STD_DIR}/${NP_LIBEXEC}; \
 	done
-	# now do the same for their configs
-	for c in ${std_plugin_cfgs}; do \
-		mv ${NP_BASIC_DIR}/${NP_ETC}/$${c}.cfg ${NP_STD_DIR}/${NP_ETC}; \
+	# now do the same for their configs, copying them into seperate
+	# "template" directories outside of /usr/share/doc for ucf to use.
+	for c in ${basic_plugin_cfgs}; do \
+		cp $(CURDIR)/debian/pluginconfig/$${c}.cfg ${NP_BASIC_TEMPLATES}; \
 	done
+	for c in ${std_plugin_cfgs}; do \
+		cp $(CURDIR)/debian/pluginconfig/$${c}.cfg ${NP_STD_TEMPLATES}; \
+	done
+	# dynamically create the postrm scripts using a template, so that we
+	# don't have to define the same list of plugin configs over and over.
+	sed -e 's/@BASIC_PLUGINS@/${basic_plugin_cfgs}/' \
+		< debian/nagios-plugins-basic.postrm.in \
+		> debian/nagios-plugins-basic.postrm
+	sed -e 's/@STD_PLUGINS@/${std_plugin_cfgs}/' \
+		< debian/nagios-plugins-basic.postrm.in \
+		> debian/nagios-plugins-basic.postrm
 
 
 # Build architecture-independent files here.

@@ -3,6 +3,9 @@ nagios-plugins (1.4.3.0cvs.20060707-4) UNRELEASED; urgency=low
   * NOT RELEASED YET
   * include fix for braindead behaviour in check_tcp based plugins
     such as check_simap (closes: #351847).
+  * dpkg's conffile handling can't deal with migrating config files
+    from nagios-plugins to nagios-plugins-foo, so we're now managing
+    all the config files via ucf (closes: #339971).
 
  -- sean finney <seanius@debian.org>  Sat, 02 Sep 2006 23:03:45 +0200
 
