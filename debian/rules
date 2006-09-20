@@ -115,8 +115,8 @@ install: build
 		< debian/nagios-plugins-basic.postrm.in \
 		> debian/nagios-plugins-basic.postrm
 	sed -e 's/@STD_PLUGINS@/${std_plugin_cfgs}/' \
-		< debian/nagios-plugins-basic.postrm.in \
-		> debian/nagios-plugins-basic.postrm
+		< debian/nagios-plugins-standard.postrm.in \
+		> debian/nagios-plugins-standard.postrm
 
 
 # Build architecture-independent files here.
