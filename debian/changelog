@@ -8,6 +8,7 @@ nagios-plugins (1.4.4-1) UNRELEASED; urgency=low
   * dpkg's conffile handling can't deal with migrating config files
     from nagios-plugins to nagios-plugins-foo, so we're now managing
     all the config files via ucf (closes: #339971).
+  * remove some unneeded build-deps, and bump Standards-Version
 
  -- sean finney <seanius@debian.org>  Sat, 02 Sep 2006 23:03:45 +0200
 
