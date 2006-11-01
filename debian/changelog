@@ -1,7 +1,9 @@
-nagios-plugins (1.4.3.0cvs.20060707-4) UNRELEASED; urgency=low
+nagios-plugins (1.4.4-1) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
-  * include fix for braindead behaviour in check_tcp based plugins
+  * new upstream release.  actually, we've been basing previous versions
+    on cvs snapshots so the changes aren't that big.
+  * upstream includes fix for warn/crit handling in check_tcp based plugins
     such as check_simap (closes: #351847).
   * dpkg's conffile handling can't deal with migrating config files
     from nagios-plugins to nagios-plugins-foo, so we're now managing
