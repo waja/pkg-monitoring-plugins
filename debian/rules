@@ -62,7 +62,40 @@ config.status: configure
 	rm -f config.cache
 	
 	# Add here commands to configure the package.
-	EXTRAS="check_game check_fping check_by_ssh check_dig check_dns" PATH_TO_DIG="/usr/bin/dig" PATH_TO_NSLOOKUP="/usr/bin/nslookup" NSLOOKUP_COMMAND="/usr/bin/nslookup -sil" PATH_TO_HOST="/usr/bin/host" CFLAGS="$(CFLAGS)" ./configure --host=$(DEB_HOST_GNU_TYPE) --build=$(DEB_BUILD_GNU_TYPE) --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --libexecdir=${NP_LIBEXEC} --with-nagios-user=nagios --with-nagios-group=nagios --with-trusted-path=/bin:/sbin:/usr/bin:/usr/sbin --with-mysql=/usr --disable-rpath PGINCLUDE="-I`pg_config --includedir`" PGLIBS="-lpq -lcrypt"
+	PGINCLUDE="-I`pg_config --includedir`" PGLIBS="-lpq -lcrypt" \
+	CFLAGS="$(CFLAGS)" \
+	./configure \
+		--host=$(DEB_HOST_GNU_TYPE) \
+		--build=$(DEB_BUILD_GNU_TYPE) \
+		--prefix=/usr \
+		--mandir=/usr/share/man \
+		--infodir=/usr/share/info \
+		--libexecdir=${NP_LIBEXEC} \
+		--with-perl=/usr/bin/perl \
+		--with-openssl=/usr \
+		--with-pgsql=/usr \
+		--with-mysql=/usr \
+		--with-proc-loadavg=/proc/loadavg \
+		--with-ps-command=/bin/ps \
+		--with-ps-format="%s %d %d %d %d %d %f %s %n" \
+		--with-ps-cols=9 \
+		--with-ps-varlist="procstat,&procuid,&procpid,&procppid,&procvsz,&procrss,&procpcpu,procprog,&pos" \
+		--with-ping-command="/bin/ping -n -U -w %d -c %d %s" \
+		--with-ping6-command="/bin/ping6 -n -U -w %d -c %d %s" \
+		--with-nslookup-command="/usr/bin/nslookup -sil" \
+		--with-uptime-command="/usr/bin/uptime" \
+		--with-rpcinfo-command="/usr/bin/rpcinfo" \
+		--with-smbclient-command="/usr/bin/smbclient" \
+		--with-snmpget-command="/usr/bin/snmpget" \
+		--with-snmpgetnext-command="/usr/bin/snmpgetnext" \
+		--with-qstat-command="/usr/bin/quakestat" \
+		--with-fping-command="/usr/bin/fping" \
+		--with-ssh-command="/usr/bin/ssh" \
+		--with-mailq-command="/usr/bin/mailq" \
+		--with-proc-meminfo="/proc/meminfo" \
+		--with-dig-command="/usr/bin/dig" \
+		--with-apt-get-command="/usr/bin/apt-get" \
+		--disable-rpath
 
 
 build: patch-stamp build-stamp
