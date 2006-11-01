@@ -1,0 +1,18 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 25_check_tcp-expect.dpatch by  <seanius@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad nagios-plugins-1.4.4~/plugins/check_tcp.c nagios-plugins-1.4.4/plugins/check_tcp.c
+--- nagios-plugins-1.4.4~/plugins/check_tcp.c	2006-09-02 22:32:27.000000000 +0200
++++ nagios-plugins-1.4.4/plugins/check_tcp.c	2006-11-01 22:20:43.000000000 +0100
+@@ -494,7 +494,6 @@
+ 				asprintf(&server_send, "%s", optarg);
+ 			break;
+ 		case 'e': /* expect string (may be repeated) */
+-			EXPECT = NULL;
+ 			flags &= ~FLAG_EXACT_MATCH;
+ 			if (server_expect_count == 0)
+ 				server_expect = malloc (sizeof (char *) * (++server_expect_count));

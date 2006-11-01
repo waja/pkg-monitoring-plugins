@@ -5,3 +5,4 @@
 22_check_smb_hostaddress.dpatch
 23_check_axis.dpatch
 24_check_ups.dpatch
+25_check_tcp-expect.dpatch
