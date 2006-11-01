@@ -1,5 +1,4 @@
 06_checkircd
-10_config.h_debiandefaults.dpatch
 13_subst.in_again.dpatch
 14_check_log_paths.dpatch
 18_check_game_cmdline.dpatch
