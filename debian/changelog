@@ -1,6 +1,6 @@
 nagios-plugins (1.4.4-1) unstable; urgency=low
 
-  * NOT RELEASED YET
+  [sean finney]
   * new upstream release.  actually, we've been basing previous versions
     on cvs snapshots so the changes aren't that big.
   * upstream includes fix for warn/crit handling in check_tcp based plugins
@@ -12,7 +12,7 @@ nagios-plugins (1.4.4-1) unstable; urgency=low
   * fix for multiple expect strings in check_tcp.c.  thanks to Ralph Rößner
     for finding this (closes: #395176).
 
- -- sean finney <seanius@debian.org>  Wed, 01 Nov 2006 22:28:14 +0100
+ -- sean finney <seanius@debian.org>  Wed, 01 Nov 2006 22:57:16 +0100
 
 nagios-plugins (1.4.3.0cvs.20060707-3) unstable; urgency=high
 
