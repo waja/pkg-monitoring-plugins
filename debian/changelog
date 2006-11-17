@@ -1,8 +1,16 @@
-nagios-plugins (1.4.4-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.4-2) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * fix for implicit definition of basename function, thanks to
+    dann frazier for finding it (closes: #396814). 
+    patch: 26_implicit-basename.dpatch
+  * aparently the check_ups fix caused problems as well as solved them.
+    until we ge a real fix for the problem i'm reverting the patch.
+    thanks to Michael Bussmann (closes: #398767).
+  * add '-' to allowable characters in is_hostname.  thanks again to
+    Michael Bussmann (closes: #398767).
+    patch: 27_is_hostname.dpatch
 
- -- sean finney <seanius@debian.org>  Wed,  1 Nov 2006 23:00:13 +0100
+ -- sean finney <seanius@debian.org>  Fri, 17 Nov 2006 09:37:17 +0100
 
 nagios-plugins (1.4.4-1) unstable; urgency=low
 

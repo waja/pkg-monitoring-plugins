@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 27_is_hostname.dpatch by  <seanius@localhost.localdomain>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+diff -urNad nagios-plugins-1.4.4~/plugins-scripts/utils.pm.in nagios-plugins-1.4.4/plugins-scripts/utils.pm.in
+--- nagios-plugins-1.4.4~/plugins-scripts/utils.pm.in	2006-10-19 20:44:53.000000000 +0200
++++ nagios-plugins-1.4.4/plugins-scripts/utils.pm.in	2006-11-17 09:36:05.000000000 +0100
+@@ -76,7 +76,7 @@
+ 
+ sub is_hostname {
+ 	my $host1 = shift;
+-	if ($host1 && $host1 =~ m/^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*)$/) {
++	if ($host1 && $host1 =~ m/^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*)$/) {
+ 		return 1;
+ 	}else{
+ 		return 0;
