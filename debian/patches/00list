@@ -6,4 +6,4 @@
 23_check_axis.dpatch
 25_check_tcp-expect.dpatch
 26_implicit-basename.dpatch
-27_is_hostname.dpatch
+27_check_radius_segfault.dpatch

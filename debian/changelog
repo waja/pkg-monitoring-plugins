@@ -1,8 +1,16 @@
-nagios-plugins (1.4.4-3) UNRELEASED; urgency=low
+nagios-plugins (1.4.5-1) unstable; urgency=low
 
-  * NOT RELEASED YET
+  * new upstream (bugfix only) release.  the following patches
+    have been obsoleted:
+    - 27_is_hostname.dpatch
+  * fix for segfaulting check_radius plugin, thanks to Yasper
+    Casper for finding it (closes: #399532, #379788).
+    patch: 27_check_radius_segfault.dpatch
+  * regarding the fix for check_ups in the previous patch: both
+    the bug number and the attribution were incorrect.  thanks are
+    due to Robbert Kouprie (closes: #398780).
 
- -- sean finney <seanius@copelandia.seanius.net>  Fri, 17 Nov 2006 09:42:43 +0100
+ -- sean finney <seanius@debian.org>  Mon, 20 Nov 2006 20:31:23 +0100
 
 nagios-plugins (1.4.4-2) unstable; urgency=low
 
