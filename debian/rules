@@ -150,6 +150,9 @@ install: build
 	sed -e 's/@STD_PLUGINS@/${std_plugin_cfgs}/' \
 		< debian/nagios-plugins-standard.postrm.in \
 		> debian/nagios-plugins-standard.postrm
+	# copy our dpkg-sourced functions into place
+	install -D $(CURDIR)/debian/functions \
+		${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg/functions
 
 
 # Build architecture-independent files here.

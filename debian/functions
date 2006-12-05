@@ -1,0 +1,26 @@
+# functions for use by nagios plugins maintainer scripts
+
+# called as "register_cfgs $2" from postinst
+register_cfgs(){
+	local newinst
+	if [ -z "$1" ]; then
+		newinst="yes"
+		tmpfile=`mktemp -t nagios-plugins.XXXXXX`
+		if [ ! -f "$tmpfile" ]; then 
+			echo "error creating tempfile >&2"
+			exit 1
+		fi
+	fi
+	( 
+		cd $templdir
+		for f in *cfg; do
+			dest=/etc/nagios-plugins/config/$f
+			if [ "$newinst" = "yes" ] && [ -f $dest ]; then
+				cat $dest > $tmpfile
+				ucf $tmpfile $dest
+			fi
+			ucf $f /etc/nagios-plugins/config/$f 
+		done 
+	);
+	if [ "$newinst" = "yes" ]; then rm -f $tmpfile; fi
+}

@@ -1,12 +1,10 @@
 #!/bin/sh -e
 
+templdir=/usr/share/nagios-plugins/templates-basic
+. /usr/share/nagios-plugins/dpkg/functions
+
 if [ "$1" = "configure" ]; then
-	( 
-		cd /usr/share/nagios-plugins/templates-basic
-		for f in *cfg; do
-			ucf $f /etc/nagios-plugins/config/$f 
-		done 
-	);
+	register_cfgs $2
 fi
 
 #DEBHELPER#
