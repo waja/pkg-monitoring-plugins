@@ -151,7 +151,7 @@ install: build
 		< debian/nagios-plugins-standard.postrm.in \
 		> debian/nagios-plugins-standard.postrm
 	# copy our dpkg-sourced functions into place
-	install -D $(CURDIR)/debian/functions \
+	install -m 644 -D $(CURDIR)/debian/functions \
 		${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg/functions
 
 
