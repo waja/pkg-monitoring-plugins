@@ -1,26 +1,31 @@
 # functions for use by nagios plugins maintainer scripts
 
-# called as "register_cfgs $2" from postinst
+npconfdir=/etc/nagios-plugins/config
+npdpkgdir=/usr/share/nagios-plugins/dpkg
+
+# determine whether the file is the default file shipped in sarge
+# (called as is_pristine_sarge_file foo.cfg)
+is_pristine_sarge_file(){
+	sargemd5=`grep "${npconfdir}/$1" ${npdpkgdir}/sarge.md5sums | cut -d' ' -f1`
+	curmd5=`md5sum "${npconfdir}/$1" | cut -d' ' -f1`
+	if [ "$curmd5" = "$sargemd5" ]; then return 0; else return 1; fi
+}
+
+# we now register all n-p config files via ucf.  this means
+# we have to do a little bit of hand-holding for sarge migrations...
+# (called as "register_cfgs $2" from postinst)
 register_cfgs(){
 	local newinst
 	if [ -z "$1" ]; then
-		newinst="yes"
-		tmpfile=`mktemp -t nagios-plugins.XXXXXX`
-		if [ ! -f "$tmpfile" ]; then 
-			echo "error creating tempfile >&2"
-			exit 1
-		fi
+		( 
+			cd $templdir
+			for f in *cfg; do
+				dest=${npconfdir}/$f
+				if is_pristine_sarge_file $f; then
+					cp $f $dest
+				fi
+				ucf $f $dest
+			done 
+		);
 	fi
-	( 
-		cd $templdir
-		for f in *cfg; do
-			dest=/etc/nagios-plugins/config/$f
-			if [ "$newinst" = "yes" ] && [ -f $dest ]; then
-				cat $dest > $tmpfile
-				ucf $tmpfile $dest
-			fi
-			ucf $f /etc/nagios-plugins/config/$f 
-		done 
-	);
-	if [ "$newinst" = "yes" ]; then rm -f $tmpfile; fi
 }

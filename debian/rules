@@ -17,10 +17,11 @@ DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
 CFLAGS = -Wall -g
 
+DEBIANDIR=$(CURDIR)/debian
 NP_LIBEXEC:=/usr/lib/nagios/plugins
-NP_BASIC_DIR:=$(CURDIR)/debian/nagios-plugins-basic
+NP_BASIC_DIR:=$(DEBIANDIR)/nagios-plugins-basic
 NP_BASIC_TEMPLATES:=$(NP_BASIC_DIR)/usr/share/nagios-plugins/templates-basic
-NP_STD_DIR:=$(CURDIR)/debian/nagios-plugins-standard
+NP_STD_DIR:=$(DEBIANDIR)/nagios-plugins-standard
 NP_STD_TEMPLATES:=$(NP_STD_DIR)/usr/share/nagios-plugins/templates-standard
 
 std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
@@ -118,7 +119,7 @@ really-clean:
 	-rm -f platform.h auto-include.h
 	find -type d -name build -print0 | xargs -0 -r rm -rf \;
 	find \( -name config.sub -o -name config.guess \) -print0 | xargs -0 -r rm -f \;
-	-rm -f debian/nagios-plugins-basic.postrm debian/nagios-plugins-standard.postrm
+	-rm -f $(DEBIANDIR)/nagios-plugins-basic.postrm $(DEBIANDIR)/nagios-plugins-standard.postrm
 	dh_clean 
 
 install: build
@@ -137,21 +138,21 @@ install: build
 	# now do the same for their configs, copying them into seperate
 	# "template" directories outside of /usr/share/doc for ucf to use.
 	for c in ${basic_plugin_cfgs}; do \
-		cp $(CURDIR)/debian/pluginconfig/$${c}.cfg ${NP_BASIC_TEMPLATES}; \
+		cp $(DEBIANDIR)/pluginconfig/$${c}.cfg ${NP_BASIC_TEMPLATES}; \
 	done
 	for c in ${std_plugin_cfgs}; do \
-		cp $(CURDIR)/debian/pluginconfig/$${c}.cfg ${NP_STD_TEMPLATES}; \
+		cp $(DEBIANDIR)/pluginconfig/$${c}.cfg ${NP_STD_TEMPLATES}; \
 	done
 	# dynamically create the postrm scripts using a template, so that we
 	# don't have to define the same list of plugin configs over and over.
 	sed -e 's/@BASIC_PLUGINS@/${basic_plugin_cfgs}/' \
-		< debian/nagios-plugins-basic.postrm.in \
-		> debian/nagios-plugins-basic.postrm
+		< $(DEBIANDIR)/nagios-plugins-basic.postrm.in \
+		> $(DEBIANDIR)/nagios-plugins-basic.postrm
 	sed -e 's/@STD_PLUGINS@/${std_plugin_cfgs}/' \
-		< debian/nagios-plugins-standard.postrm.in \
-		> debian/nagios-plugins-standard.postrm
+		< $(DEBIANDIR)/nagios-plugins-standard.postrm.in \
+		> $(DEBIANDIR)/nagios-plugins-standard.postrm
 	# copy our dpkg-sourced functions into place
-	install -m 644 -D $(CURDIR)/debian/functions \
+	install -m 644 -D $(DEBIANDIR)/functions $(DEBIANDIR)/sarge.md5sums \
 		${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg/functions
 
 
