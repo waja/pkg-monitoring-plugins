@@ -6,9 +6,13 @@ npdpkgdir=/usr/share/nagios-plugins/dpkg
 # determine whether the file is the default file shipped in sarge
 # (called as is_pristine_sarge_file foo.cfg)
 is_pristine_sarge_file(){
-	sargemd5=`grep "${npconfdir}/$1" ${npdpkgdir}/sarge.md5sums | cut -d' ' -f1`
-	curmd5=`md5sum "${npconfdir}/$1" | cut -d' ' -f1`
-	if [ "$curmd5" = "$sargemd5" ]; then return 0; else return 1; fi
+	cfg="${npconfdir}/$1"
+	if [ -f "$cfg" ]; then
+		sargemd5=`grep "$cfg" ${npdpkgdir}/sarge.md5sums | cut -d' ' -f1`
+		curmd5=`md5sum "$cfg" | cut -d' ' -f1`
+		if [ "$curmd5" = "$sargemd5" ]; then return 0; fi
+	fi
+	return 1
 }
 
 # we now register all n-p config files via ucf.  this means
