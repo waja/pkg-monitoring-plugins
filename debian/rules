@@ -151,10 +151,10 @@ install: build
 	sed -e 's/@STD_PLUGINS@/${std_plugin_cfgs}/' \
 		< $(DEBIANDIR)/nagios-plugins-standard.postrm.in \
 		> $(DEBIANDIR)/nagios-plugins-standard.postrm
-	# copy our dpkg-sourced functions into place
-	install -m 644 -D $(DEBIANDIR)/functions $(DEBIANDIR)/sarge.md5sums \
-		${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg/functions
-
+	# copy our dpkg-sourced functions etc into place
+	mkdir -p ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg
+	install -t ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg \
+		$(DEBIANDIR)/functions $(DEBIANDIR)/sarge.md5sums
 
 # Build architecture-independent files here.
 binary-indep: build install
