@@ -1,7 +1,5 @@
 # functions for use by nagios plugins maintainer scripts
 
-set -x
-
 npconfdir=/etc/nagios-plugins/config
 npdpkgdir=/usr/share/nagios-plugins/dpkg
 
