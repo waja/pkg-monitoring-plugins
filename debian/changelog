@@ -1,9 +1,9 @@
-nagios-plugins (1.4.5-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.5-2) unstable; urgency=medium
 
   * fix for spurious conffile-type prompts from ucf, thanks to
     Stephen Gran for catching this (closes: #400595).
 
- -- sean finney <seanius@debian.org>  Tue, 05 Dec 2006 19:29:45 +0100
+ -- sean finney <seanius@debian.org>  Wed, 06 Dec 2006 22:38:38 +0100
 
 nagios-plugins (1.4.5-1) unstable; urgency=low
 
