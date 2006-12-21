@@ -2,6 +2,9 @@ nagios-plugins (1.4.5-3) UNRELEASED; urgency=low
 
   * NOT RELEASED YET
 
+  [jan wagner]
+  * add explicit IPv4 checks to ping.cfg
+
  -- sean finney <seanius@copelandia.seanius.net>  Wed,  6 Dec 2006 23:47:12 +0100
 
 nagios-plugins (1.4.5-2) unstable; urgency=medium
