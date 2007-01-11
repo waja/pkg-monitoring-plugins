@@ -8,7 +8,7 @@ nagios-plugins (1.4.5-3) UNRELEASED; urgency=low
     tcp_udp.cfg and telnet.cfg
   * add check_bgpstate script from contrib to nagios-plugins-standard
   * add whois to Suggests of nagios-plugins-standard
-  * fixed static community string for check_snmp_bgpstate in ping.cfg
+  * fixed static community string for check_snmp_bgpstate in snmp.cfg
     (closes: #403892).
   * remove static community string in ifstatus.cfg
 
