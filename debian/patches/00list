@@ -7,3 +7,4 @@
 25_check_tcp-expect.dpatch
 26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
+28_check_tcp.expect_reporting.dpatch
