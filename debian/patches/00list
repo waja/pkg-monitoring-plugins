@@ -8,3 +8,4 @@
 26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
 28_check_tcp.expect_reporting.dpatch
+29_check_tcp.check_jabber-returns-warning.dpatch

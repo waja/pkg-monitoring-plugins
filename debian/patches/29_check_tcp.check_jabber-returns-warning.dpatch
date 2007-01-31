@@ -1,0 +1,27 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 29_check_tcp.check_jabber-returns-warning.dpatch
+## Thomas Guyot-Sionnest <dermoth@aei.ca>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: No description.
+
+@DPATCH@
+Index: nagios-plugins-1.4.5/plugins/check_tcp.c
+===================================================================
+RCS file: /cvsroot/nagiosplug/nagiosplug/plugins/check_tcp.c,v
+retrieving revision 1.84
+diff -u -r1.84 check_tcp.c
+--- nagios-plugins-1.4.5/plugins/check_tcp.c	30 Jan 2007 14:24:10 -0000	1.84
++++ nagios-plugins-1.4.5/plugins/check_tcp.c	31 Jan 2007 04:45:13 -0000
+@@ -166,9 +166,9 @@
+ 	}
+ 	else if (!strncmp(SERVICE, "JABBER", 6)) {
+ 		SEND = "<stream:stream to=\'host\' xmlns=\'jabber:client\' xmlns:stream=\'http://etherx.jabber.org/streams\'>\n";
+-		EXPECT = "<?xml version=\'1.0\'?><stream:stream xmlns:stream=\'http://etherx.jabber.org/streams\'";
++		EXPECT = "<?xml version=\'1.0\'?><stream:stream xmlns=\'jabber:client\' xmlns:stream=\'http://etherx.jabber.org/streams\'";
+ 		QUIT = "</stream:stream>\n";
+-		flags |= FLAG_SSL | FLAG_HIDE_OUTPUT;
++		flags |= FLAG_HIDE_OUTPUT;
+ 		PORT = 5222;
+ 	}
+ 	else if (!strncmp (SERVICE, "NNTPS", 5)) {

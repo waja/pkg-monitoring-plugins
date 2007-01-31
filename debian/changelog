@@ -13,6 +13,8 @@ nagios-plugins (1.4.5-3) UNRELEASED; urgency=low
   * remove static community string in ifstatus.cfg
   * add 28_check_tcp.expect_reporting.dpatch to fix broken response for
     check_jabber
+  * add 29_check_tcp.check_jabber-returns-warning.dpatch to fix return of
+    check_jabber (closes: #392610).
 
  -- sean finney <seanius@copelandia.seanius.net>  Wed,  6 Dec 2006 23:47:12 +0100
 
