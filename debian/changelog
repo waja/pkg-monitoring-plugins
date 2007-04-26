@@ -16,6 +16,7 @@ nagios-plugins (1.4.5-3) UNRELEASED; urgency=low
   * add 29_check_tcp.check_jabber-returns-warning.dpatch to fix return of
     check_jabber (closes: #392610).
   * add check_mysql_database to mysql.cfg
+  * add check_cups to http.cfg
 
  -- sean finney <seanius@copelandia.seanius.net>  Wed,  6 Dec 2006 23:47:12 +0100
 
