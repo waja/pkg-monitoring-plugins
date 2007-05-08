@@ -18,7 +18,11 @@ nagios-plugins (1.4.5-3) UNRELEASED; urgency=low
   * add check_mysql_database to mysql.cfg
   * add check_cups to http.cfg
 
- -- sean finney <seanius@copelandia.seanius.net>  Wed,  6 Dec 2006 23:47:12 +0100
+  [sean finney]
+  * the Architecture should be "all" for the empty nagios-plugins 
+    metapackage (closes: #422083).
+
+ -- sean finney <seanius@debian.org>  Tue, 08 May 2007 21:14:37 +0200
 
 nagios-plugins (1.4.5-2) unstable; urgency=medium
 

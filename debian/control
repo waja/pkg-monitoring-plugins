@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 4.0.0), dpatch (>= 2.0.9), autotools-dev, libldap2-
 Standards-Version: 3.7.2
 
 Package: nagios-plugins
-Architecture: any
+Architecture: all
 Depends: nagios-plugins-basic, nagios-plugins-standard
 Suggests: nagios-text | nagios
 Description: Plugins for the nagios network monitoring and management system
