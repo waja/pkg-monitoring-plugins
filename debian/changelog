@@ -1,6 +1,6 @@
-nagios-plugins (1.4.5-3) UNRELEASED; urgency=low
+nagios-plugins (1.4.8-1) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  New upstream release.
 
   [jan wagner]
   * add explicit IPv4 checks to disk.cfg, ftp.cfg, http.cfg, ldap.cfg,
@@ -21,8 +21,19 @@ nagios-plugins (1.4.5-3) UNRELEASED; urgency=low
   [sean finney]
   * the Architecture should be "all" for the empty nagios-plugins 
     metapackage (closes: #422083).
+  * Merge changes from and ack NMU. Thanks to Michael Tautschnig 
+    (closes: #420954).
+  * Modify the Suggests to prefer nagios2 to nagios-text.
 
- -- sean finney <seanius@debian.org>  Tue, 08 May 2007 21:14:37 +0200
+ -- sean finney <seanius@debian.org>  Sun, 20 May 2007 20:12:32 +0200
+
+nagios-plugins (1.4.5-2.1) unstable; urgency=low
+
+  * Non-maintainer upload
+  * nagios-plugins-standard must have a versioned depends on
+    nagios-plugins-basic (Closes: #420954)
+
+ -- Michael Tautschnig <tautschn@model.in.tum.de>  Fri, 18 May 2007 22:44:59 +0200
 
 nagios-plugins (1.4.5-2) unstable; urgency=medium
 

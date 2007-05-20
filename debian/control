@@ -9,7 +9,7 @@ Standards-Version: 3.7.2
 Package: nagios-plugins
 Architecture: all
 Depends: nagios-plugins-basic, nagios-plugins-standard
-Suggests: nagios-text | nagios
+Suggests: nagios2 | nagios-text | nagios
 Description: Plugins for the nagios network monitoring and management system
  Nagios is a host/service/network monitoring and management system. It has
  the following features:
@@ -33,7 +33,7 @@ Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, procps, iputils-ping, ucf
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins, nagios-plugins-standard
-Suggests: nagios-text | nagios
+Suggests: nagios2 | nagios-text | nagios
 Description: Plugins for the nagios network monitoring and management system
  Nagios is a host/service/network monitoring and management system. It has
  the following features:
@@ -56,8 +56,8 @@ Package: nagios-plugins-standard
 Architecture: any
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins
-Depends: ${shlibs:Depends}, ${misc:Depends}, fping, qstat, snmp, radiusclient1, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, ucf, nagios-plugins-basic
-Suggests: nagios-text | nagios, whois
+Depends: ${shlibs:Depends}, ${misc:Depends}, fping, qstat, snmp, radiusclient1, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, ucf, nagios-plugins-basic (>= 1.4.5-2)
+Suggests: nagios2 | nagios-text | nagios, whois
 Description: Plugins for the nagios network monitoring and management system
  Nagios is a host/service/network monitoring and management system. It has
  the following features:
