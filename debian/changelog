@@ -23,8 +23,10 @@ nagios-plugins (1.4.8-1) UNRELEASED; urgency=low
   * remove the following patches, which have been included upstream:
     - 28_check_tcp.expect_reporting.dpatch
     - 29_check_tcp.check_jabber-returns-warning.dpatch
+  * update debian/rules to reflect that config.{sub,guess} have changed
+    location in the upstream tarball.
 
- -- sean finney <seanius@debian.org>  Sun, 20 May 2007 20:12:32 +0200
+ -- sean finney <seanius@debian.org>  Sun, 20 May 2007 20:29:13 +0200
 
 nagios-plugins (1.4.5-2.1) unstable; urgency=low
 

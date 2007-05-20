@@ -58,8 +58,8 @@ config.status: configure
 	  exit 1; \
 	fi
 	
-	ln -sf /usr/share/misc/config.sub .
-	ln -sf /usr/share/misc/config.guess .
+	ln -sf /usr/share/misc/config.sub build-aux
+	ln -sf /usr/share/misc/config.guess build-aux
 	rm -f config.cache
 	
 	# Add here commands to configure the package.
