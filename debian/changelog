@@ -1,8 +1,10 @@
 nagios-plugins (1.4.8-2) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * fix typo in upstream configure script which caused some plugins
+    to disappear (closes: #425758).  thanks to Bernhard Schmidt for
+    catching it.
 
- -- sean finney <seanius@debian.org>  Sun, 20 May 2007 20:32:51 +0200
+ -- sean finney <seanius@debian.org>  Sun, 27 May 2007 22:32:52 +0200
 
 nagios-plugins (1.4.8-1) unstable; urgency=low
 
