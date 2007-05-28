@@ -1,3 +1,9 @@
+nagios-plugins (1.4.8-3) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- sean finney <sean@rangda.stickybit.se>  Mon, 28 May 2007 19:48:35 +0200
+
 nagios-plugins (1.4.8-2) unstable; urgency=low
 
   * fix typo in upstream configure script which caused some plugins
