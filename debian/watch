@@ -1,2 +1,2 @@
-version=2
-http://prdownloads.sourceforge.net/nagiosplug/nagios-plugins-([\d+\.a-z]+|\d+)\.tar\.gz
+version=3
+http://sf.net/nagiosplug/nagios-plugins-([\d+\.a-z]+|\d+)\.tar\.gz
