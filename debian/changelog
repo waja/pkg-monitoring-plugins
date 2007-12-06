@@ -1,14 +1,19 @@
-nagios-plugins (1.4.8-3) UNRELEASED; urgency=low
+nagios-plugins (1.4.10-1) unstable; urgency=low
 
   [jan wagner]
+  * new upstream 
+    - fixes CVE-2007-5198 (closes: #445475, #447639), thanks Steffen Joeris
+      and Nico Golde for NMU.
+    - fix for negate which may break existing commands: 
+       stop evaluating command line options through shell twice
+       enforce a full path for the command to run
   * add interface check with exclude to ifstatus.cfg
   * add ssh check with possibility of port specification to ssh.cfg
   * included fix for watch file provided by Raphael Geissert, thanks (closes:
     #449671).
   * include fix for several typos provided by Luca Falavigna, thanks (closes:
     #453012).
-  * merge changes from and ack NMUs. Thanks to Steffen Joeris (closes:
-    #445475) and Nico Golde (closes: #448372, #447639).
+  * merge changes from and ack NMU. Thanks Nico Golde (closes: #448372).
   * Don't ignore errors from make clean
   * Bump standards version to 3.7.3
   * added Vcs- fields and Homepage into source header's field
