@@ -7,8 +7,31 @@ nagios-plugins (1.4.8-3) UNRELEASED; urgency=low
     #449671).
   * include fix for several typos provided by Luca Falavigna, thanks (closes:
     #453012).
+  * merge changes from and ack NMUs. Thanks to Steffen Joeris (closes:
+    #445475) and Nico Golde (closes: #448372, #447639).
 
  -- sean finney <sean@rangda.stickybit.se>  Mon, 28 May 2007 19:48:35 +0200
+
+nagios-plugins (1.4.8-2.2) unstable; urgency=high
+
+  * Non-maintainer upload by testing-security team.
+  * Fix remote DoS which can be triggered by a remote attacker
+    via crafted snmpget replies (CVE-2007-5623) (Closes: #448372).
+  * Modifying CVE-2007-5198 patch since it is incomplete (Closes: #447639).
+
+ -- Nico Golde <nion@debian.org>  Sun, 28 Oct 2007 16:15:54 +0100
+
+nagios-plugins (1.4.8-2.1) unstable; urgency=high
+
+  * Non-maintainer upload by the testing-security team
+  * Include CVS patch to fix buffer overflow in redir function in
+    check_http.c, which was caused by parsing HTTP redirect strings
+    using sscanf (Closes: #445475)
+    Fixes: CVE-2007-5198
+  * Include fix for off-by-one error and a NULL pointer, which leads
+    to a segfault
+
+ -- Steffen Joeris <white@debian.org>  Sun, 14 Oct 2007 10:36:01 +0000
 
 nagios-plugins (1.4.8-2) unstable; urgency=low
 
