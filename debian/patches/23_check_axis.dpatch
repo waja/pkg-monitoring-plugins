@@ -1,24 +1,0 @@
-#! /bin/sh /usr/share/dpatch/dpatch-run
-## 23_check_axis.dpatch by Marc Haber <mh+debian-packages@zugschlus.de>
-##
-## All lines beginning with `## DP:' are a description of the patch.
-## DP: No description.
-
-@DPATCH@
-diff -urNad trunk~/contrib/check_axis.sh trunk/contrib/check_axis.sh
---- trunk~/contrib/check_axis.sh	2003-05-26 10:09:23.000000000 +0000
-+++ trunk/contrib/check_axis.sh	2006-01-20 19:00:46.000000000 +0000
-@@ -29,9 +29,11 @@
- status=`echo $lines | awk '{ print $3 }'`
- if [ "$status" == "Printing" ]; then
- 	bytes=`echo $lines | awk '{ print $4 }'`;
--	comments=`echo $lines | tr -d "" | awk '{ print $5 " " $6 }'`;
-+	comments=`echo $lines | tr -d "
-+" | awk '{ print $5 " " $6 }'`;
- else
--	comments=`echo $lines | tr -d "" | awk '{ print $4 " " $5 }'`;
-+	comments=`echo $lines | tr -d "
-+" | awk '{ print $4 " " $5 }'`;
- fi
- 
- comma=`echo $comments | grep , | wc -l`

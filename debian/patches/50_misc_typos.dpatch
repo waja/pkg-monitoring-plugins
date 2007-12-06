@@ -1,14 +1,15 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
-## 50_misc_typos.dpatch by  <andy@andrewprice.me.uk>
+## 50_misc_typos.dpatch by  <andy@andrewprice.me.uk> modified for 1.4.10 by 
+## Jan Wagner <waja@cyconet.org>
 ##
 ## All lines beginning with `## DP:' are a description of the patch.
 ## DP: This patch fixes various typos and grammatical errors in plugins/*.c.
 ## DP: It is based on Malcolm Parsons' patch posted at https://launchpad.net/bugs/64595
 
 @DPATCH@
-diff -urNad nagios-plugins-1.4.8~/plugins/check_dns.c nagios-plugins-1.4.8/plugins/check_dns.c
---- nagios-plugins-1.4.8~/plugins/check_dns.c	2007-01-28 21:46:40.000000000 +0000
-+++ nagios-plugins-1.4.8/plugins/check_dns.c	2007-06-17 17:00:18.000000000 +0100
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_dns.c nagios-plugins-1.4.10/plugins/check_dns.c
+--- nagios-plugins-1.4.10.orig/plugins/check_dns.c	2007-01-28 22:46:41.000000000 +0100
++++ nagios-plugins-1.4.10/plugins/check_dns.c	2007-12-06 14:17:22.000000000 +0100
 @@ -218,7 +218,7 @@
      printf (_("DNS CRITICAL - %s\n"),
              !strcmp (msg, "") ? _(" Probably a non-existent host/domain") : msg);
@@ -18,28 +19,28 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_dns.c nagios-plugins-1.4.8/plugi
              !strcmp (msg, "") ? _(" Probably a non-existent host/domain") : msg);
  
    return result;
-diff -urNad nagios-plugins-1.4.8~/plugins/check_http.c nagios-plugins-1.4.8/plugins/check_http.c
---- nagios-plugins-1.4.8~/plugins/check_http.c	2007-03-06 22:45:57.000000000 +0000
-+++ nagios-plugins-1.4.8/plugins/check_http.c	2007-06-17 17:28:18.000000000 +0100
-@@ -1084,7 +1084,7 @@
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_http.c nagios-plugins-1.4.10/plugins/check_http.c
+--- nagios-plugins-1.4.10.orig/plugins/check_http.c	2007-07-21 18:29:01.000000000 +0200
++++ nagios-plugins-1.4.10/plugins/check_http.c	2007-12-06 14:18:47.000000000 +0100
+@@ -1089,7 +1089,7 @@
    
    url = malloc (strcspn (pos, "\r\n"));
    if (url == NULL)
--    die (STATE_UNKNOWN, _("Could not allocate url\n"));
-+    die (STATE_UNKNOWN, _("Could not allocate URL\n"));
+-    die (STATE_UNKNOWN, _("HTTP UNKNOWN - Could not allocate url\n"));
++    die (STATE_UNKNOWN, _("HTTP UNKNOWN - Could not allocate URL\n"));
  
    while (pos) {
      sscanf (pos, "%[Ll]%*[Oo]%*[Cc]%*[Aa]%*[Tt]%*[Ii]%*[Oo]%*[Nn]:%n", xx, &i);
-@@ -1103,7 +1103,7 @@
+@@ -1120,7 +1120,7 @@
  
-     url = realloc (url, strcspn (pos, "\r\n"));
+     url = realloc (url, strcspn (pos, "\r\n") + 1);
      if (url == NULL)
--      die (STATE_UNKNOWN, _("could not allocate url\n"));
-+      die (STATE_UNKNOWN, _("could not allocate URL\n"));
+-      die (STATE_UNKNOWN, _("HTTP UNKNOWN - could not allocate url\n"));
++      die (STATE_UNKNOWN, _("HTTP UNKNOWN - Could not allocate URL\n"));
  
      /* URI_HTTP, URI_HOST, URI_PORT, URI_PATH */
-     if (sscanf (pos, HD1, type, addr, port, url) == 4) {
-@@ -1259,7 +1259,7 @@
+     if (sscanf (pos, HD1, type, addr, &i, url) == 4)
+@@ -1287,7 +1287,7 @@
    printf ("   %s\n", _("Connect via SSL. Port defaults to 443"));
    printf (" %s\n", "-C, --certificate=INTEGER");
    printf ("   %s\n", _("Minimum number of days a certificate has to be valid. Port defaults to 443"));
@@ -48,21 +49,21 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_http.c nagios-plugins-1.4.8/plug
  #endif
  
    printf (" %s\n", "-e, --expect=STRING");
-diff -urNad nagios-plugins-1.4.8~/plugins/check_ldap.c nagios-plugins-1.4.8/plugins/check_ldap.c
---- nagios-plugins-1.4.8~/plugins/check_ldap.c	2007-01-28 21:46:40.000000000 +0000
-+++ nagios-plugins-1.4.8/plugins/check_ldap.c	2007-06-17 17:03:03.000000000 +0100
-@@ -184,7 +184,7 @@
- 	if (ldap_bind_s (ld, ld_binddn, ld_passwd, LDAP_AUTH_SIMPLE) !=
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_ldap.c nagios-plugins-1.4.10/plugins/check_ldap.c
+--- nagios-plugins-1.4.10.orig/plugins/check_ldap.c	2007-07-08 00:20:40.000000000 +0200
++++ nagios-plugins-1.4.10/plugins/check_ldap.c	2007-12-06 14:19:23.000000000 +0100
+@@ -191,7 +191,7 @@
  			LDAP_SUCCESS) {
- 		/*ldap_perror(ld, "ldap_bind"); */
+ 		if (verbose)
+ 			ldap_perror(ld, "ldap_bind");
 -		printf (_("Could not bind to the ldap-server\n"));
 +		printf (_("Could not bind to the LDAP server\n"));
  		return STATE_CRITICAL;
  	}
  
-diff -urNad nagios-plugins-1.4.8~/plugins/check_mysql.c nagios-plugins-1.4.8/plugins/check_mysql.c
---- nagios-plugins-1.4.8~/plugins/check_mysql.c	2007-03-29 18:58:28.000000000 +0100
-+++ nagios-plugins-1.4.8/plugins/check_mysql.c	2007-06-17 17:09:27.000000000 +0100
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_mysql.c nagios-plugins-1.4.10/plugins/check_mysql.c
+--- nagios-plugins-1.4.10.orig/plugins/check_mysql.c	2007-03-29 19:58:28.000000000 +0200
++++ nagios-plugins-1.4.10/plugins/check_mysql.c	2007-12-06 14:19:57.000000000 +0100
 @@ -370,7 +370,7 @@
  
  	printf (_(COPYRIGHT), copyright, email);
@@ -72,9 +73,9 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_mysql.c nagios-plugins-1.4.8/plu
  
    printf ("\n\n");
    
-diff -urNad nagios-plugins-1.4.8~/plugins/check_procs.c nagios-plugins-1.4.8/plugins/check_procs.c
---- nagios-plugins-1.4.8~/plugins/check_procs.c	2007-03-06 17:29:15.000000000 +0000
-+++ nagios-plugins-1.4.8/plugins/check_procs.c	2007-06-17 17:16:34.000000000 +0100
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_procs.c nagios-plugins-1.4.10/plugins/check_procs.c
+--- nagios-plugins-1.4.10.orig/plugins/check_procs.c	2007-07-15 17:21:51.000000000 +0200
++++ nagios-plugins-1.4.10/plugins/check_procs.c	2007-12-06 14:22:31.000000000 +0100
 @@ -690,7 +690,7 @@
    printf ("  %s\n", _("PROCS   - number of processes (default)"));
    printf ("  %s\n", _("VSZ     - virtual memory size"));
@@ -111,10 +112,10 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_procs.c nagios-plugins-1.4.8/plu
  
  	printf (_(UT_SUPPORT));
  }
-diff -urNad nagios-plugins-1.4.8~/plugins/check_radius.c nagios-plugins-1.4.8/plugins/check_radius.c
---- nagios-plugins-1.4.8~/plugins/check_radius.c	2007-01-28 21:46:40.000000000 +0000
-+++ nagios-plugins-1.4.8/plugins/check_radius.c	2007-06-17 17:18:58.000000000 +0100
-@@ -302,7 +302,7 @@
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_radius.c nagios-plugins-1.4.10/plugins/check_radius.c
+--- nagios-plugins-1.4.10.orig/plugins/check_radius.c	2007-09-26 12:57:44.000000000 +0200
++++ nagios-plugins-1.4.10/plugins/check_radius.c	2007-12-06 14:24:05.000000000 +0100
+@@ -311,7 +311,7 @@
  	printf ("Copyright (c) 1999 Robert August Vincent II\n");
  	printf (COPYRIGHT, copyright, email);
  
@@ -123,7 +124,7 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_radius.c nagios-plugins-1.4.8/pl
  
    printf ("\n\n");
  
-@@ -327,16 +327,16 @@
+@@ -336,16 +336,16 @@
  
  	printf (_(UT_TIMEOUT), timeout_interval);
  
@@ -143,10 +144,10 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_radius.c nagios-plugins-1.4.8/pl
  
  	printf (_(UT_SUPPORT));
  }
-diff -urNad nagios-plugins-1.4.8~/plugins/check_snmp.c nagios-plugins-1.4.8/plugins/check_snmp.c
---- nagios-plugins-1.4.8~/plugins/check_snmp.c	2007-02-02 09:10:22.000000000 +0000
-+++ nagios-plugins-1.4.8/plugins/check_snmp.c	2007-06-17 17:21:46.000000000 +0100
-@@ -906,7 +906,7 @@
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_snmp.c nagios-plugins-1.4.10/plugins/check_snmp.c
+--- nagios-plugins-1.4.10.orig/plugins/check_snmp.c	2007-05-29 07:22:32.000000000 +0200
++++ nagios-plugins-1.4.10/plugins/check_snmp.c	2007-12-06 14:25:18.000000000 +0100
+@@ -917,7 +917,7 @@
  
  	printf (COPYRIGHT, copyright, email);
  
@@ -155,7 +156,7 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_snmp.c nagios-plugins-1.4.8/plug
  
    printf ("\n\n");
  
-@@ -941,8 +941,8 @@
+@@ -952,8 +952,8 @@
  	printf (" %s\n", "-o, --oid=OID(s)");
    printf ("    %s\n", _("Object identifier(s) or SNMP variables whose value you wish to query"));
    printf (" %s\n", "-m, --miblist=STRING");
@@ -166,21 +167,21 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_snmp.c nagios-plugins-1.4.8/plug
    printf (" %s\n", "-d, --delimiter=STRING");
    printf (_("    Delimiter to use when parsing returned data. Default is \"%s\""), DEFAULT_DELIMITER);
    printf ("    %s\n", _("Any data on the right hand side of the delimiter is considered"));
-diff -urNad nagios-plugins-1.4.8~/plugins/check_tcp.c nagios-plugins-1.4.8/plugins/check_tcp.c
---- nagios-plugins-1.4.8~/plugins/check_tcp.c	2007-02-14 10:11:06.000000000 +0000
-+++ nagios-plugins-1.4.8/plugins/check_tcp.c	2007-06-17 17:22:10.000000000 +0100
-@@ -623,7 +623,7 @@
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_tcp.c nagios-plugins-1.4.10/plugins/check_tcp.c
+--- nagios-plugins-1.4.10.orig/plugins/check_tcp.c	2007-06-03 16:40:13.000000000 +0200
++++ nagios-plugins-1.4.10/plugins/check_tcp.c	2007-12-06 14:25:56.000000000 +0100
+@@ -621,7 +621,7 @@
    printf (" %s\n", "-q, --quit=STRING");
    printf ("    %s\n", _("String to send server to initiate a clean close of the connection"));
- 	printf (" %s\n", "-r, --refuse=ok|warn|crit");
+   printf (" %s\n", "-r, --refuse=ok|warn|crit");
 -  printf ("    %s\n", _("Accept tcp refusals with states ok, warn, crit (default: crit)"));
 +  printf ("    %s\n", _("Accept TCP refusals with states ok, warn, crit (default: crit)"));
    printf (" %s\n", "-M, --mismatch=ok|warn|crit");
    printf ("    %s\n", _("Accept expected string mismatches with states ok, warn, crit (default: warn)"));
    printf (" %s\n", "-j, --jail");
-diff -urNad nagios-plugins-1.4.8~/plugins/check_ups.c nagios-plugins-1.4.8/plugins/check_ups.c
---- nagios-plugins-1.4.8~/plugins/check_ups.c	2007-01-28 21:46:41.000000000 +0000
-+++ nagios-plugins-1.4.8/plugins/check_ups.c	2007-06-17 17:26:33.000000000 +0100
+diff -Nur nagios-plugins-1.4.10.orig/plugins/check_ups.c nagios-plugins-1.4.10/plugins/check_ups.c
+--- nagios-plugins-1.4.10.orig/plugins/check_ups.c	2007-05-09 11:16:33.000000000 +0200
++++ nagios-plugins-1.4.10/plugins/check_ups.c	2007-12-06 14:27:26.000000000 +0100
 @@ -416,7 +416,7 @@
  	len = strlen(ptr);
  	if (len > 0 && ptr[len-1] == '\n') ptr[len-1]=0;
@@ -199,7 +200,7 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_ups.c nagios-plugins-1.4.8/plugi
  		return ERROR;
  	}
  	return OK;
-@@ -631,7 +631,7 @@
+@@ -635,7 +635,7 @@
  	printf ("%s\n", _("This plugin attempts to determine the status of a UPS (Uninterruptible Power"));
    printf ("%s\n", _("Supply) on a local or remote host. If the UPS is online or calibrating, the"));
    printf ("%s\n", _("plugin will return an OK state. If the battery is on it will return a WARNING"));
@@ -208,7 +209,7 @@ diff -urNad nagios-plugins-1.4.8~/plugins/check_ups.c nagios-plugins-1.4.8/plugi
    printf ("%s\n\n", _("state."));
  
  	printf ("%s\n", _("You may also specify a variable to check [such as temperature, utility voltage,"));
-@@ -639,7 +639,7 @@
+@@ -643,7 +643,7 @@
    printf ("%s\n", _("that variable.  If the remote host has multiple UPS that are being monitored you"));
    printf ("%s\n", _("will have to use the [ups] option to specify which UPS to check."));
  

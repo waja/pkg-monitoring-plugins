@@ -3,11 +3,7 @@
 14_check_log_paths.dpatch
 18_check_game_cmdline.dpatch
 22_check_smb_hostaddress.dpatch
-23_check_axis.dpatch
-25_check_tcp-expect.dpatch
 26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
-28_configure_typo.dpatch
-CVE-2007-5198.dpatch
 CVE-2007-5623.dpatch
 50_misc_typos.dpatch
