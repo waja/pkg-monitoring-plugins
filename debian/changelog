@@ -12,6 +12,7 @@ nagios-plugins (1.4.8-3) UNRELEASED; urgency=low
   * Don't ignore errors from make clean
   * Bump standards version to 3.7.3
   * added Vcs- fields and Homepage into source header's field
+  * modify 00list so 06_checkircd.dpatch can get patched in
 
  -- sean finney <sean@rangda.stickybit.se>  Mon, 28 May 2007 19:48:35 +0200
 
