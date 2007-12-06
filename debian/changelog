@@ -21,7 +21,7 @@ nagios-plugins (1.4.10-1) unstable; urgency=low
     libsnmp9-dev and libsnmp-dev, since only libsnmp-dev is in unstable and
     libsnmp9-dev in stable
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 06 Dec 2007 14:39:47 +0100
+ -- Sean Finney <seanius@debian.org>  Fri, 07 Dec 2007 00:55:42 +0100
 
 nagios-plugins (1.4.8-2.2) unstable; urgency=high
 
