@@ -114,7 +114,7 @@ really-clean:
 	rm -f build-stamp 
 
 	# Add here commands to clean up after the build process.
-	-$(MAKE) distclean
+	[ ! -f Makefile ] || $(MAKE) distclean
 	find -type d -name autom4te.cache -print0 | xargs -0 -r rm -rf \;
 	-rm -f platform.h auto-include.h
 	find -type d -name build -print0 | xargs -0 -r rm -rf \;

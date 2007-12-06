@@ -9,6 +9,9 @@ nagios-plugins (1.4.8-3) UNRELEASED; urgency=low
     #453012).
   * merge changes from and ack NMUs. Thanks to Steffen Joeris (closes:
     #445475) and Nico Golde (closes: #448372, #447639).
+  * Don't ignore errors from make clean
+  * Bump standards version to 3.7.3
+  * added Vcs- fields and Homepage into source header's field
 
  -- sean finney <sean@rangda.stickybit.se>  Mon, 28 May 2007 19:48:35 +0200
 
