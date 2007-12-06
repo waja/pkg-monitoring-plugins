@@ -5,6 +5,8 @@ nagios-plugins (1.4.8-3) UNRELEASED; urgency=low
   * add ssh check with possibility of port specification to ssh.cfg
   * included fix for watch file provided by Raphael Geissert, thanks (closes:
     #449671).
+  * include fix for several typos provided by Luca Falavigna, thanks (closes:
+    #453012).
 
  -- sean finney <sean@rangda.stickybit.se>  Mon, 28 May 2007 19:48:35 +0200
 
