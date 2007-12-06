@@ -1,10 +1,9 @@
 nagios-plugins (1.4.10-1) unstable; urgency=low
 
-  [jan wagner]
-  * new upstream 
+  * new upstream
     - fixes CVE-2007-5198 (closes: #445475, #447639), thanks Steffen Joeris
       and Nico Golde for NMU.
-    - fix for negate which may break existing commands: 
+    - fix for negate which may break existing commands:
        stop evaluating command line options through shell twice
        enforce a full path for the command to run
   * add interface check with exclude to ifstatus.cfg
@@ -19,7 +18,7 @@ nagios-plugins (1.4.10-1) unstable; urgency=low
   * added Vcs- fields and Homepage into source header's field
   * modify 00list so 06_checkircd.dpatch can get patched in
 
- -- sean finney <sean@rangda.stickybit.se>  Mon, 28 May 2007 19:48:35 +0200
+ -- Jan Wagner <waja@cyconet.org>  Thu, 06 Dec 2007 14:39:47 +0100
 
 nagios-plugins (1.4.8-2.2) unstable; urgency=high
 
