@@ -2,7 +2,7 @@ Source: nagios-plugins
 Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
-Uploaders: sean finney <seanius@debian.org>, Guido Trotter <ultrotter@debian.org>
+Uploaders: sean finney <seanius@debian.org>, Guido Trotter <ultrotter@debian.org>, Jan Wagner <waja@cyconet.org>
 Build-Depends: debhelper (>= 4.0.0), dpatch (>= 2.0.9), autotools-dev, libldap2-dev, libpq-dev | postgresql-dev, libmysqlclient15-dev | libmysqlclient12-dev | libmysqlclient-dev, libsnmp-dev | libsnmp9-dev, libradius1-dev, libkrb5-dev, libnet-snmp-perl, procps, coreutils, mawk | awk
 Homepage: http://nagiosplug.sourceforge.net
 Vcs-Browser: http://svn.debian.org/wsvn/pkg-nagios/nagios-snmp-plugins/
