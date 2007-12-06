@@ -17,6 +17,9 @@ nagios-plugins (1.4.10-1) unstable; urgency=low
   * Bump standards version to 3.7.3
   * added Vcs- fields and Homepage into source header's field
   * modify 00list so 06_checkircd.dpatch can get patched in
+  * removed libsnmp5-dev as depency option and turned around order of
+    libsnmp9-dev and libsnmp-dev, since only libsnmp-dev is in unstable and
+    libsnmp9-dev in stable
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 06 Dec 2007 14:39:47 +0100
 
