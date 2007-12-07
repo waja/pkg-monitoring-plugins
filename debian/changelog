@@ -6,6 +6,7 @@ nagios-plugins (1.4.10-2) UNRELEASED; urgency=low
 
 nagios-plugins (1.4.10-1) unstable; urgency=low
 
+  [ Jan Wagner ]
   * new upstream
     - fixes CVE-2007-5198 (closes: #445475, #447639), thanks Steffen Joeris
       and Nico Golde for NMU.
