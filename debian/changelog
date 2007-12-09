@@ -2,6 +2,7 @@ nagios-plugins (1.4.10-2) UNRELEASED; urgency=low
 
   [ Jan Wagner ]
   * fix Vcs- fields fields
+  * use $HOSTADDRESS$ instead of $HOSTNAME$ in dns.cfg (closes: #405244).
 
  -- Sean Finney <seanius@debian.org>  Fri, 07 Dec 2007 01:01:17 +0100
 
