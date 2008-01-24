@@ -5,5 +5,5 @@
 22_check_smb_hostaddress.dpatch
 26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
-CVE-2007-5623.dpatch
+28_check_pgsql_include_for_8.3.dpatch
 50_misc_typos.dpatch
