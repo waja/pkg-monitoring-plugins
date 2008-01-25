@@ -7,7 +7,7 @@ nagios-plugins (1.4.11-1) UNRELEASED; urgency=low
   * use $HOSTADDRESS$ instead of $HOSTNAME$ in dns.cfg (closes: #405244).
   * add typo fix for check_mailq into 50_misc_typos.dpatch (closes: #435525).
   * add 28_check_pgsql_include_for_8.3.dpatch to get check_pgsql working
-    together with libpq-dev
+    together with libpq-dev (closes: #462509).
 
  -- Sean Finney <seanius@debian.org>  Fri, 07 Dec 2007 01:01:17 +0100
 
