@@ -8,6 +8,8 @@ nagios-plugins (1.4.11-1) UNRELEASED; urgency=low
   * add typo fix for check_mailq into 50_misc_typos.dpatch (closes: #435525).
   * add 28_check_pgsql_include_for_8.3.dpatch to get check_pgsql working
     together with libpq-dev (closes: #462509).
+  * add 29_check_ntp_fixsefault_deprecate.dpatch to fix segfaults for
+    check_ntp and check_ntp_time
 
  -- Sean Finney <seanius@debian.org>  Fri, 07 Dec 2007 01:01:17 +0100
 

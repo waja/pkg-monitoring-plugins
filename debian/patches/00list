@@ -6,4 +6,5 @@
 26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
 28_check_pgsql_include_for_8.3.dpatch
+29_check_ntp_fixsefault_deprecate.dpatch
 50_misc_typos.dpatch
