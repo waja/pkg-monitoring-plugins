@@ -1,6 +1,5 @@
-nagios-plugins (1.4.11-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.11-1) unstable; urgency=low
 
-  [ Jan Wagner ]
   * new upstream release
   * drop CVE-2007-5623.dpatch since it's included upstream
   * fix Vcs- fields fields
@@ -14,7 +13,7 @@ nagios-plugins (1.4.11-1) UNRELEASED; urgency=low
     and check_ntp_time
   * migrate ntp.cfg to new check_ntp_peer
 
- -- Sean Finney <seanius@debian.org>  Fri, 07 Dec 2007 01:01:17 +0100
+ -- Jan Wagner <waja@cyconet.org>  Sat, 26 Jan 2008 12:08:45 +0100
 
 nagios-plugins (1.4.10-1) unstable; urgency=low
 
