@@ -12,6 +12,7 @@ nagios-plugins (1.4.11-1) UNRELEASED; urgency=low
     check_ntp and check_ntp_time
   * add 30_fix_check_ntp_options.dpatch to fix options help for check_ntp_peer
     and check_ntp_time
+  * migrate ntp.cfg to new check_ntp_peer
 
  -- Sean Finney <seanius@debian.org>  Fri, 07 Dec 2007 01:01:17 +0100
 
