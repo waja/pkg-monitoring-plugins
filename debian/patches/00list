@@ -8,4 +8,5 @@
 28_check_pgsql_include_for_8.3.dpatch
 29_check_ntp_fixsefault_deprecate.dpatch
 30_fix_check_ntp_options.dpatch
+31_check_disk_local_option.dpatch
 50_misc_typos.dpatch
