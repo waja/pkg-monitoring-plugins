@@ -1,3 +1,9 @@
+nagios-plugins (1.4-6sarge1) oldstable-security; urgency=high
+
+  * Fix CVE-2007-5198
+
+ -- Moritz Muehlenhoff <jmm@debian.org>  Tue,  5 Feb 2008 23:03:23 +0000
+
 nagios-plugins (1.4-6) unstable; urgency=low
 
   * Build-Depend on the *correct* libmysqlclient-dev
