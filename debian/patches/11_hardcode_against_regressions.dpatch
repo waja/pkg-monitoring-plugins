@@ -7,7 +7,7 @@
 @DPATCH@
 diff -urNad nagios-plugins-sarge~/config.h.in nagios-plugins-sarge/config.h.in
 --- nagios-plugins-sarge~/config.h.in	2005-02-04 01:47:45.000000000 +0100
-+++ nagios-plugins-sarge/config.h.in	2008-02-15 20:16:36.000000000 +0100
++++ nagios-plugins-sarge/config.h.in	2008-02-15 21:33:07.000000000 +0100
 @@ -632,6 +632,9 @@
  
  /* path to qmail-qstat */
@@ -18,3 +18,15 @@ diff -urNad nagios-plugins-sarge~/config.h.in nagios-plugins-sarge/config.h.in
  
  /* path to ntpdate binary */
  #undef PATH_TO_NTPDATE
+diff -urNad nagios-plugins-sarge~/configure nagios-plugins-sarge/configure
+--- nagios-plugins-sarge~/configure	2008-02-15 21:33:07.000000000 +0100
++++ nagios-plugins-sarge/configure	2008-02-15 21:35:06.000000000 +0100
+@@ -14347,7 +14347,7 @@
+ 
+ fi
+ 
+-if test "x$ac_cv_ping_has_timeout" != "xno"
++if test "x$ac_cv_ping_has_timeout" != "xno" || test -n "$PING_HAS_TIMEOUT"
+ then
+ 
+ cat >>confdefs.h <<\_ACEOF
