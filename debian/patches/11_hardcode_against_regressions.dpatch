@@ -1,0 +1,20 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 11_hardcode_against_regressions.dpatch by  <seanius@debian.org>
+##
+## All lines beginning with `## DP:' are a description of the patch.
+## DP: see #465749
+
+@DPATCH@
+diff -urNad nagios-plugins-sarge~/config.h.in nagios-plugins-sarge/config.h.in
+--- nagios-plugins-sarge~/config.h.in	2005-02-04 01:47:45.000000000 +0100
++++ nagios-plugins-sarge/config.h.in	2008-02-15 20:16:36.000000000 +0100
+@@ -632,6 +632,9 @@
+ 
+ /* path to qmail-qstat */
+ #undef PATH_TO_MAILQ
++#ifndef PATH_TO_MAILQ
++# define PATH_TO_MAILQ "/usr/bin/mailq"
++#endif
+ 
+ /* path to ntpdate binary */
+ #undef PATH_TO_NTPDATE

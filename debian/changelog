@@ -1,3 +1,16 @@
+nagios-plugins (1.4-6sarge2) UNRELEASED; urgency=high
+
+  * NMU prepared for the security team by the package maintainer.
+  * Fix the following regressions in the previous security upload:
+    - check_procs/check_nagios/check_swap all fail to build correctly unless 
+      /proc is mounted, so fail gracefully in that case.  closes: #465530
+    - check_mailq may default to /usr/sbin/mailq instead of /usr/bin/mailq
+      if the the ssmtp package is installed at build-time.  closes: #465749.
+    - check_ping may fail to build correctly due to assumptions about
+      host configuration and/or network connectivity.  closes: #465854.
+
+ -- Sean Finney <seanius@debian.org>  Fri, 15 Feb 2008 20:30:57 +0100
+
 nagios-plugins (1.4-6sarge1) oldstable-security; urgency=high
 
   * Fix CVE-2007-5198
