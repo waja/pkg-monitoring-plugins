@@ -1,4 +1,4 @@
-nagios-plugins (1.4-6sarge2) UNRELEASED; urgency=high
+nagios-plugins (1.4-6sarge2) oldstable-security; urgency=high
 
   * NMU prepared for the security team by the package maintainer.
   * Fix the following regressions in the previous security upload:
