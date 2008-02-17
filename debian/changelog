@@ -1,3 +1,9 @@
+nagios-plugins (1.4.5-1etch2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- sean finney <seanius@debian.org>  Sun, 17 Feb 2008 12:50:18 +0100
+
 nagios-plugins (1.4.5-1etch1) stable-security; urgency=high
 
   * Fix CVE-2007-5198 CVE-2007-5623
