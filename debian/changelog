@@ -1,3 +1,9 @@
+nagios-plugins (1.4.5-1etch1) stable-security; urgency=high
+
+  * Fix CVE-2007-5198 CVE-2007-5623
+
+ -- Moritz Muehlenhoff <jmm@debian.org>  Tue,  5 Feb 2008 23:48:55 +0100
+
 nagios-plugins (1.4.5-1) unstable; urgency=low
 
   * new upstream (bugfix only) release.  the following patches

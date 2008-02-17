@@ -7,3 +7,5 @@
 25_check_tcp-expect.dpatch
 26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
+28_CVE-2007-5198.dpatch
+29_CVE-2007-5623.dpatch
