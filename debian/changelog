@@ -10,6 +10,7 @@ nagios-plugins (1.4.11-2) UNRELEASED; urgency=low
   * add more authors from upstreams AUTHORS to changelog
   * include a more explicit copyright notice to copyright to make lintian
     happy
+  * include OpenSSL exception from upstream README into copyright
 
  -- sean finney <seanius@debian.org>  Sat, 26 Jan 2008 15:08:03 +0100
 
