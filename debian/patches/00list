@@ -9,4 +9,5 @@
 29_check_ntp_fixsefault_deprecate.dpatch
 30_fix_check_ntp_options.dpatch
 31_check_disk_local_option.dpatch
+32_check_ldap_pointer.dpatch
 50_misc_typos.dpatch
