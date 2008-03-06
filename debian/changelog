@@ -14,6 +14,8 @@ nagios-plugins (1.4.11-2) UNRELEASED; urgency=low
   * make use of dh_* -i for binary-indep and dh_* -s for binary-arch
     (Closes: #468467)
   * remove some unneeded and commented debhelper scripts in binary-arch
+  * remove postgresql-dev from build-depends, thats Lior Kaplan
+    <kaplan@debian.org> for reminding (Closes: #429977)
 
  -- sean finney <seanius@debian.org>  Sat, 26 Jan 2008 15:08:03 +0100
 
