@@ -1,6 +1,5 @@
-nagios-plugins (1.4.11-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.11-2) unstable; urgency=low
 
-  [ Jan Wagner ]
   * Remove Build-depends on libsnmp*-dev since it's not needed anymore
    (Closes: #429778)
   * fix check_disk --local by adding 31_check_disk_local_option.dpatch
@@ -17,7 +16,7 @@ nagios-plugins (1.4.11-2) UNRELEASED; urgency=low
   * remove postgresql-dev from build-depends, thanks Lior Kaplan
     <kaplan@debian.org> for reminding (Closes: #429977)
 
- -- sean finney <seanius@debian.org>  Sat, 26 Jan 2008 15:08:03 +0100
+ -- Jan Wagner <waja@cyconet.org>  Thu, 06 Mar 2008 22:07:31 +0100
 
 nagios-plugins (1.4.11-1) unstable; urgency=low
 
