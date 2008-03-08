@@ -166,11 +166,9 @@ binary-indep: build install
 	dh_installdocs -i
 	dh_installexamples -i command.cfg
 	dh_installman -i
-	dh_strip -i
 	dh_compress -i
 	dh_fixperms -i
 	dh_installdeb -i
-	dh_shlibdeps -i
 	dh_gencontrol -i
 	dh_md5sums -i
 	dh_builddeb -i
@@ -183,12 +181,9 @@ binary-arch: build install
 	dh_installdocs -s
 	dh_installexamples -s command.cfg
 	dh_installman -s
-#	dh_link
 	dh_strip -s
 	dh_compress -s
 	dh_fixperms -s -X utils.pm
-#	dh_perl
-#	dh_makeshlibs
 	dh_installdeb -s
 	dh_shlibdeps -s
 	dh_gencontrol -s
