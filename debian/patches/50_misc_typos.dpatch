@@ -2,7 +2,6 @@
 ## 50_misc_typos.dpatch by  <andy@andrewprice.me.uk> modified for 1.4.10 by 
 ## Jan Wagner <waja@cyconet.org>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: This patch fixes various typos and grammatical errors in plugins/*.c.
 ## DP: It is based on Malcolm Parsons' patch posted at https://launchpad.net/bugs/64595
 

@@ -1,7 +1,6 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 31_check_disk_local_option.dpatch by Jan Wagner <waja@cyconet.org>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: Fix local option for check_disk
 
 @DPATCH@

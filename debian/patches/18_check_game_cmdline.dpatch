@@ -1,7 +1,6 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 18_check_game_cmdline.dpatch by  <seanius@debian.org>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: No description.
 
 @DPATCH@

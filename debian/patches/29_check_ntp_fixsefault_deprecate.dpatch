@@ -1,7 +1,6 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 29_check_ntp_fixsefault_deprecate.dpatch by Thomas Guyot-Sionnest <dermoth@aei.ca>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: Fix check_ntp_time and check_ntp segfault, add deprecate hints
 
 @DPATCH@

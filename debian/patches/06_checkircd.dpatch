@@ -1,7 +1,6 @@
 #! /bin/sh -e
 ## 06_checkircd.dpatch by  <ultrotter@debian.org>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: No description.
 
 if [ $# -lt 1 ]; then

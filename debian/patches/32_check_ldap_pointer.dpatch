@@ -2,7 +2,6 @@
 ## 32_check_ldap_pointer.dpatch by Jan Wagner <waja@cyconet.org>
 ## patch provided by dann frazier <dannf@debian.org>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: Using deprecated interfaces of libldap API
 
 @DPATCH@

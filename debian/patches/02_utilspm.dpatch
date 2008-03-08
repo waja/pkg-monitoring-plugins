@@ -1,7 +1,6 @@
 #!/bin/sh -e
 ## 02_utilspm.dpatch by Guido Trotter <ultrotter@debian.org>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: Correct utils.pm script to begin with #!/usr/bin/perl
 
 if [ $# -lt 1 ]; then

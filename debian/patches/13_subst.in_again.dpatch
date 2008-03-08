@@ -1,7 +1,6 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 13_subst.in_again.dpatch by  <seanius@localhost.localdomain>
 ##
-## All lines beginning with `## DP:' are a description of the patch.
 ## DP: No description.
 
 @DPATCH@
