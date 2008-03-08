@@ -1,7 +1,7 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 13_subst.in_again.dpatch by  <seanius@localhost.localdomain>
 ##
-## DP: No description.
+## DP: Use /usr/lib/nagios/plugins as path.
 
 @DPATCH@
 diff -urNad sid2~/plugins-scripts/subst.in sid2/plugins-scripts/subst.in

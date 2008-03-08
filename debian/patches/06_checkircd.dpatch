@@ -1,7 +1,7 @@
 #! /bin/sh -e
 ## 06_checkircd.dpatch by  <ultrotter@debian.org>
 ##
-## DP: No description.
+## DP: Make it working on multihomed host, by choosing the kernel the correct interface
 
 if [ $# -lt 1 ]; then
     echo "`basename $0`: script expects -patch|-unpatch as argument" >&2

@@ -1,6 +1,7 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 27_check_radius_segfault.dpatch by Yasper Casper <komputnik@gmail.com>
 ##
+## DP: Fix for segfaulting check_radius plugin.
 
 @DPATCH@
 diff -urNad nagios-plugins-1.4.5~/plugins/check_radius.c nagios-plugins-1.4.5/plugins/check_radius.c

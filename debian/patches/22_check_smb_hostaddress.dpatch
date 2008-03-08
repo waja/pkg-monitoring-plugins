@@ -1,7 +1,7 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 22_check_smb_hostaddress.dpatch by  <seanius@localhost.localdomain>
 ##
-## DP: No description.
+## DP: Allow checking disk usage via host addresses.
 
 @DPATCH@
 diff -urNad sid~/plugins-scripts/check_disk_smb.pl sid/plugins-scripts/check_disk_smb.pl
