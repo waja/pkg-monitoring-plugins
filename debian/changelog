@@ -5,6 +5,7 @@ nagios-plugins (1.4.11-3) UNRELEASED; urgency=low
   * add missing descriptions to patches
   * add missing command definition for check_ldaps, thanks Michael Renner
     <robe@amd.co.at> for reporting it (Closes: #407310)
+  * remove sarge handholding for configfiles migration 
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 07 Mar 2008 17:37:49 +0100
 

@@ -156,7 +156,7 @@ install: build
 	# copy our dpkg-sourced functions etc into place
 	mkdir -p ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg
 	install -t ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg \
-		$(DEBIANDIR)/functions $(DEBIANDIR)/sarge.md5sums
+		$(DEBIANDIR)/functions
 
 # Build architecture-independent files here.
 binary-indep: build install
