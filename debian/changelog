@@ -1,5 +1,6 @@
 nagios-plugins (1.4.11-3) UNRELEASED; urgency=low
 
+  [ Jan Wagner ]
   * remove unneeded debhelper scripts from rules
   * remove senseless comments from patches
   * add missing descriptions to patches
@@ -7,7 +8,12 @@ nagios-plugins (1.4.11-3) UNRELEASED; urgency=low
     <robe@amd.co.at> for reporting it (Closes: #407310)
   * remove sarge handholding for configfiles migration 
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 07 Mar 2008 17:37:49 +0100
+  [ Alexander Wirt ]
+  * Call smbclient with -N (supress password prompt) if no password is
+    supplied. Thanks to Josip Rodin for the patch (Closes #425129) 
+  * Add myself to uploaders
+
+ -- Alexander Wirt <formorer@debian.org>  Fri, 02 May 2008 07:35:54 +0200
 
 nagios-plugins (1.4.11-2) unstable; urgency=low
 
