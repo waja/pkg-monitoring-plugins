@@ -7,13 +7,16 @@ nagios-plugins (1.4.11-3) UNRELEASED; urgency=low
   * add missing command definition for check_ldaps, thanks Michael Renner
     <robe@amd.co.at> for reporting it (Closes: #407310)
   * remove sarge handholding for configfiles migration 
+  * add nagios3 to Suggests (Closes: #479292)
+  * remove nagios-text and nagios from Suggests, keep nagios2 for backporting
+    for now
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is
     supplied. Thanks to Josip Rodin for the patch (Closes #425129) 
   * Add myself to uploaders
 
- -- Alexander Wirt <formorer@debian.org>  Fri, 02 May 2008 07:35:54 +0200
+ -- Jan Wagner <waja@cyconet.org>  Sun, 04 May 2008 13:38:59 +0200
 
 nagios-plugins (1.4.11-2) unstable; urgency=low
 
