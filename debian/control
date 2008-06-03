@@ -26,7 +26,7 @@ Description: Plugins for the nagios network monitoring and management system
      (for proactive problem resolution)
   *  Web output (current status, notifications, history, log file, etc.)
  .
- This meta-package will install the entire suite of plugins for nagios.
+ This metapackage will install the entire suite of plugins for nagios.
  If you are installing nagios plugins on a remote "satellite" server
  (using nagios-nrpe-server or nsca), you may be interested in the
  nagios-plugins-basic package.
