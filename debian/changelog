@@ -18,7 +18,7 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is
-    supplied. Thanks to Josip Rodin for the patch (Closes #425129)
+    supplied. Thanks to Josip Rodin for the patch (Closes: #425129)
   * Add myself to uploaders
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 04 May 2008 14:18:55 +0200
