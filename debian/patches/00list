@@ -6,6 +6,5 @@
 23_check_smb_password.dpatch
 26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
-28_check_pgsql_include_for_8.3.dpatch
 32_check_ldap_pointer.dpatch
 50_misc_typos.dpatch
