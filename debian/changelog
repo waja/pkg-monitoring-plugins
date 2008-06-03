@@ -15,6 +15,7 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
   * remove sarge handholding for configfiles migration
   * add nagios3 to Suggests and remove nagios2, nagios and nagios-text
     (Closes: #479292)
+  * adjust year in copyright
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is
