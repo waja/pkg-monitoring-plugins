@@ -1,18 +1,19 @@
-nagios-plugins (1.4.11-3) UNRELEASED; urgency=low
+nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
 
   [ Jan Wagner ]
+  * new upstream
   * remove unneeded debhelper scripts from rules
   * remove senseless comments from patches
   * add missing descriptions to patches
   * add missing command definition for check_ldaps, thanks Michael Renner
     <robe@amd.co.at> for reporting it (Closes: #407310)
-  * remove sarge handholding for configfiles migration 
+  * remove sarge handholding for configfiles migration
   * add nagios3 to Suggests and remove nagios2, nagios and nagios-text
     (Closes: #479292)
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is
-    supplied. Thanks to Josip Rodin for the patch (Closes #425129) 
+    supplied. Thanks to Josip Rodin for the patch (Closes #425129)
   * Add myself to uploaders
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 04 May 2008 14:18:55 +0200
