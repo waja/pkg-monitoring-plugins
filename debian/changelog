@@ -2,6 +2,10 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
 
   [ Jan Wagner ]
   * new upstream
+  * removed the following patches, cause fixed upstream
+    - 29_check_ntp_fixsefault_deprecate.dpatch
+    - 30_fix_check_ntp_options.dpatch
+    - 31_check_disk_local_option.dpatch
   * remove unneeded debhelper scripts from rules
   * remove senseless comments from patches
   * add missing descriptions to patches
