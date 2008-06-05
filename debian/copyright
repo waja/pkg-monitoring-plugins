@@ -53,6 +53,102 @@ From upstream README:
    This software is released under the GNU Public License with the additional
    exemption that compiling, linking and/or using OpenSSL is allowed.
 
+Files with differen Licenses:
+
+	lib/*.c
+	lib/tests/*.c
+	plugins/*.c
+	plugins/runcmd.h
+	plugins/common.h
+	plugins/netutils.h
+	plugins-root/check_*.c
+	gl/basename.c
+	gl/cloexec.c
+	gl/creat-safer.c
+	gl/c-strtod.c
+	gl/d*
+	gl/e*
+	gl/fcntl*
+	gl/fd-safer.c
+	gl/float.*
+	gl/floorf.c
+	gl/fsusage*
+	gl/full*
+	gl/gethostname.c
+	gl/getloadavg.c
+	gl/getopt*
+	gl/intprops.h
+	gl/math.in.h
+	gl/mountlist*
+	gl/open-safer.c
+	gl/pipe-safer.c
+	gl/safe-*
+	gl/stdlib.in.h
+	gl/strerror.c
+	gl/stripslash.c
+	gl/unistd-*
+	gl/xalloc*
+	gl/xmalloc.c
+	gl/xstrndup*
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 3 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+	gl/alloca.in.h
+	gl/as*
+	gl/base64*
+	gl/config.charset
+	gl/float+.h
+	gl/gai_strerror.c
+	gl/getaddrinfo*
+	gl/gettext.h
+	gl/inet_ntop*
+	gl/localcharset*
+	gl/malloc.c
+	gl/netinet_in.in.h
+	gl/printf-*
+	gl/ref-*
+	gl/reg*
+	gl/size_max.h
+	gl/snprintf.c
+	gl/stdbool.in.h
+	gl/stdint.in.h
+	gl/stdio.in.h
+	gl/strdup.c
+	gl/string.in.h
+	gl/strndup.c
+	gl/strnlen.c
+	gl/sys_socket.in.h
+	gl/unistd.in.h
+	gl/v*
+	gl/wchar.in.h
+	gl/wctype.in.h
+	gl/xsize.h
+
+   This program is free software; you can redistribute it and/or modify it
+   under the terms of the GNU General Public License as published
+   by the Free Software Foundation; either version 3, or (at your option)
+   any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   General Public License for more details.
+
+   You should have received a copy of the GNU General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+   USA.
 On Debian systems, the complete text of the GNU General
 Public License can be found in `/usr/share/common-licenses/GPL'.
 
