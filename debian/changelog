@@ -22,6 +22,8 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
     (Closes: #479292)
   * adjust year in copyright
   * include list of files which are GPL3 into copyright
+  * build depend on libradiusclient-ng-dev instead of libradius1-dev (for more
+    informations see REQUIREMENTS)
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is
