@@ -2,6 +2,10 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
 
   [ Jan Wagner ]
   * new upstream
+    - check_http supports now an IPv6 as value for parameter -H
+    (Closes: #457336)
+    - Enhanced check_smtp to actually print invalid response text
+    (Closes: #467493)
   * removed the following patches, cause fixed upstream
     - 28_check_pgsql_include_for_8.3.dpatch
     - 29_check_ntp_fixsefault_deprecate.dpatch
