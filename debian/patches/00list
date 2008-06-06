@@ -7,4 +7,5 @@
 26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
 32_check_ldap_pointer.dpatch
+33_fix_emb_check_disk_smb.dpatch
 50_misc_typos.dpatch
