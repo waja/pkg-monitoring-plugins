@@ -41,6 +41,11 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
     providing it (Closes: #482947)
   * provide new checks for check_http which makes use of "-H '$HOSTNAME'"
     (Closes: #423461)
+  * fixed check_radius command definition and removed static port in favor of
+    ability to provide it as 4th argument, since it was broken and unusable
+    anyways, thanks Josip Rodin <joy@debbugs.entuzijast.net> for profiding a
+    fix (Closes: #482942)
+  * mention the check_radius breakerage in NEWS.Debian
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is
