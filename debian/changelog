@@ -25,8 +25,10 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
   * build depend on libradiusclient-ng-dev instead of libradius1-dev (for more
     informations see REQUIREMENTS)
   * add 33_fix_emb_check_disk_smb.dpatch which fixes processing via embedded
-    perl of check_disk_smb (Closes: #478906)
-  * add 34_fix_smbclient_check_disk_smb.dpatch which fixes usage of smbclient
+    perl of check_disk_smb, thanks Stephane Chazelas <stephane@artesyncp.com>
+    for providing it (Closes: #478906)
+  * add 34_fix_smbclient_check_disk_smb.dpatch which fixes usage of smbclient,
+    thanks Stephane Chazelas <stephane@artesyncp.com> for providing it
     (Closes: #478942)
   * add 35_check_http_date.dpatch which fixes date parsing of check_http,
     thanks Hilko Bengen <bengen@debian.org> for providing it (Closes: #460097)
