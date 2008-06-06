@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 36_check_ldap_empty_base.dpatch by Jan Wagner <waja@cyconet.org>
+## patch provided by Stephane Chazelas <stephane@artesyncp.com>
+##
+## DP: allow empty ldap base 
+
+@DPATCH@
+diff -urNad nagios-plugins-1.4.12~/plugins/check_ldap.c nagios-plugins-1.4.12/plugins/check_ldap.c
+--- nagios-plugins-1.4.12~/plugins/check_ldap.c	2008-06-06 13:40:44.000000000 +0200
++++ nagios-plugins-1.4.12/plugins/check_ldap.c	2008-06-06 13:42:02.000000000 +0200
+@@ -378,7 +378,7 @@
+ 	if (ld_host==NULL || strlen(ld_host)==0)
+ 		usage4 (_("Please specify the host name\n"));
+ 
+-	if (ld_base==NULL || strlen(ld_base)==0)
++	if (ld_base == NULL)
+ 		usage4 (_("Please specify the LDAP base\n"));
+ 
+ 	return OK;
