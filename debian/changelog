@@ -28,6 +28,8 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
     perl of check_disk_smb (Closes: #478906)
   * add 34_fix_smbclient_check_disk_smb.dpatch which fixes usage of smbclient
     (Closes: #478942)
+  * add 35_check_http_date.dpatch which fixes date parsing of check_http,
+    thanks Hilko Bengen <bengen@debian.org> for providing it (Closes: #460097)
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is

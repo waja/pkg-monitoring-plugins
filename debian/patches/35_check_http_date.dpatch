@@ -1,0 +1,23 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 35_check_http_date.dpatch by Jan Wagner <waja@cyconet.org>
+## patch provided by Hilko Bengen <bengen@debian.org>
+##
+## DP: Prevents check_http from trying to extract Date or
+## DP: Last-Modified header from file content.N
+
+@DPATCH@
+diff -urNad nagios-plugins-1.4.12~/plugins/check_http.c nagios-plugins-1.4.12/plugins/check_http.c
+--- nagios-plugins-1.4.12~/plugins/check_http.c	2008-05-07 12:02:42.000000000 +0200
++++ nagios-plugins-1.4.12/plugins/check_http.c	2008-06-06 13:03:33.000000000 +0200
+@@ -598,7 +598,10 @@
+     /* Skip to the end of the header, including continuation lines. */
+     while (*s && !(*s == '\n' && (s[1] != ' ' && s[1] != '\t')))
+       s++;
+-    s++;
++
++    /* Avoid stepping over end-of-string marker */
++    if (*s)
++      s++;
+ 
+     /* Process this header. */
+     if (value && value > field+2) {
