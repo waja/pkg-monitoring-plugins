@@ -36,6 +36,9 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
   * add 36_check_ldap_empty_base.dpatch which allows empty ldap base, thanks
     to Stephane Chazelas <stephane@artesyncp.com> for providing it
     (Closes: #479984)
+  * add 37_check_radius_nas-ip-address.dpatch to add support for nas-ip to
+    check_radius, thanks Josip Rodin <joy@debbugs.entuzijast.net> for
+    providing it (Closes: #482947)
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is

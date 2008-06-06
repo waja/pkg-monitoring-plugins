@@ -11,4 +11,5 @@
 34_fix_smbclient_check_disk_smb.dpatch
 35_check_http_date.dpatch
 36_check_ldap_empty_base.dpatch
+37_check_radius_nas-ip-address.dpatch
 50_misc_typos.dpatch
