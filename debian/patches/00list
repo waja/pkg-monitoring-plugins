@@ -8,4 +8,5 @@
 27_check_radius_segfault.dpatch
 32_check_ldap_pointer.dpatch
 33_fix_emb_check_disk_smb.dpatch
+34_fix_smbclient_check_disk_smb.dpatch
 50_misc_typos.dpatch
