@@ -48,6 +48,7 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
   * mention the check_radius breakerage in NEWS.Debian
   * add check_linux_raid into package (Closes: #461999) and add
     38_fix_libexec.dpatch to fix libexec path
+  * Updating standards version to 3.8.0, no changes needed
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is
