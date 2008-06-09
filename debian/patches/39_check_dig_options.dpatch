@@ -1,0 +1,43 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 39_check_dig_options.dpatch by Jan Wagner <waja@cyconet.org>
+## patch provided by Matthias Eble <psychotrahe at users.sourceforge.net>
+##
+## DP: Add testcases for check_dig check_dig's -l option is mandatory
+
+@DPATCH@
+diff -urNad nagios-plugins-1.4.12~/plugins/check_dig.c nagios-plugins-1.4.12/plugins/check_dig.c
+--- nagios-plugins-1.4.12~/plugins/check_dig.c	2008-05-07 12:02:42.000000000 +0200
++++ nagios-plugins-1.4.12/plugins/check_dig.c	2008-06-09 22:31:59.000000000 +0200
+@@ -143,8 +143,10 @@
+     }
+   }
+ 
+-  if (result == STATE_UNKNOWN)
++  if (result == STATE_UNKNOWN) {
+     msg = (char *)_("No ANSWER SECTION found");
++    result = STATE_CRITICAL;
++  }
+ 
+   /* If we get anything on STDERR, at least set warning */
+   if(chld_err.buflen > 0) {
+@@ -295,7 +297,10 @@
+ int
+ validate_arguments (void)
+ {
+-  return OK;
++  if (query_address != NULL)
++    return OK;
++  else
++    return ERROR;
+ }
+ 
+ 
+@@ -357,7 +362,7 @@
+ print_usage (void)
+ {
+   printf (_("Usage:"));
+-  printf ("%s -H <host> -l <query_address> [-p <server port>]\n", progname);
++  printf ("%s -l <query_address> [-H <host>] [-p <server port>]\n", progname);
+   printf (" [-T <query type>] [-w <warning interval>] [-c <critical interval>]\n");
+   printf (" [-t <timeout>] [-a <expected answer address>] [-v]\n");
+ }

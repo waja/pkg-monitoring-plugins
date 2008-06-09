@@ -49,6 +49,8 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
   * add check_linux_raid into package (Closes: #461999) and add
     38_fix_libexec.dpatch to fix libexec path
   * Updating standards version to 3.8.0, no changes needed
+  * add 39_check_dig_options.dpatch which provides fix for no check for
+    mandatory parameter -l (Closes: #479013)
 
   [ Alexander Wirt ]
   * Call smbclient with -N (supress password prompt) if no password is
