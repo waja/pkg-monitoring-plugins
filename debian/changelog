@@ -1,4 +1,4 @@
-nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.12-1) unstable; urgency=low
 
   [ Jan Wagner ]
   * new upstream
@@ -59,7 +59,7 @@ nagios-plugins (1.4.12-1) UNRELEASED; urgency=low
     supplied. Thanks to Josip Rodin for the patch (Closes: #425129)
   * Add myself to uploaders
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 06 Jun 2008 12:25:59 +0200
+ -- Jan Wagner <waja@cyconet.org>  Tue, 17 Jun 2008 23:18:32 +0200
 
 nagios-plugins (1.4.11-2) unstable; urgency=low
 
