@@ -2,6 +2,7 @@ nagios-plugins (1.4.12-2) UNRELEASED; urgency=low
 
   * add 40_check_http_status_line.dpatch to add content of the status_line
     into the check_http output (Closes: #486932)
+  * clean patches from reject files left from dpatch-edit-patch
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 18 Jun 2008 13:53:00 +0200
 

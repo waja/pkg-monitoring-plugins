@@ -111,31 +111,6 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_procs.c nagios-plugins-1.4.12/p
  
  	printf (_(UT_SUPPORT));
  }
-diff -urNad nagios-plugins-1.4.12~/plugins/check_procs.c.rej nagios-plugins-1.4.12/plugins/check_procs.c.rej
---- nagios-plugins-1.4.12~/plugins/check_procs.c.rej	1970-01-01 01:00:00.000000000 +0100
-+++ nagios-plugins-1.4.12/plugins/check_procs.c.rej	2008-06-03 11:08:17.000000000 +0200
-@@ -0,0 +1,21 @@
-+***************
-+*** 781,789 ****
-+    printf ("  %s\n", _("Warning alert if > 10 processes with command arguments containing"));
-+    printf ("  %s\n\n", _("'/usr/local/bin/perl' and owned by root"));
-+    printf (" %s\n", "check_procs -w 50000 -c 100000 --metric=VSZ");
-+-   printf ("  %s\n\n", _("Alert if vsz of any processes over 50K or 100K"));
-+    printf (" %s\n", "check_procs -w 10 -c 20 --metric=CPU");
-+-   printf ("  %s\n\n", _("Alert if cpu of any processes over 10%% or 20%%"));
-+  
-+  	printf (_(UT_SUPPORT));
-+  }
-+--- 781,789 ----
-+    printf ("  %s\n", _("Warning alert if > 10 processes with command arguments containing"));
-+    printf ("  %s\n\n", _("'/usr/local/bin/perl' and owned by root"));
-+    printf (" %s\n", "check_procs -w 50000 -c 100000 --metric=VSZ");
-++   printf ("  %s\n\n", _("Alert if VSZ of any processes over 50K or 100K"));
-+    printf (" %s\n", "check_procs -w 10 -c 20 --metric=CPU");
-++   printf ("  %s\n\n", _("Alert if CPU of any processes over 10%% or 20%%"));
-+  
-+  	printf (_(UT_SUPPORT));
-+  }
 diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/plugins/check_radius.c
 --- nagios-plugins-1.4.12~/plugins/check_radius.c	2008-06-03 11:08:16.000000000 +0200
 +++ nagios-plugins-1.4.12/plugins/check_radius.c	2008-06-03 11:16:39.000000000 +0200
@@ -157,45 +132,6 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/
    printf ("%s\n", _("The server to test must be specified in the invocation, as well as a user"));
    printf ("%s\n", _("name and password. A configuration file may also be present. The format of"));
    printf ("%s\n", _("the configuration file is described in the radiusclient library sources."));
-diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c.rej nagios-plugins-1.4.12/plugins/check_radius.c.rej
---- nagios-plugins-1.4.12~/plugins/check_radius.c.rej	1970-01-01 01:00:00.000000000 +0100
-+++ nagios-plugins-1.4.12/plugins/check_radius.c.rej	2008-06-03 11:08:17.000000000 +0200
-@@ -0,0 +1,35 @@
-+***************
-+*** 350,365 ****
-+  
-+  	printf (_(UT_TIMEOUT), timeout_interval);
-+  
-+- 	printf ("%s\n", _("This plugin tests a radius server to see if it is accepting connections."));
-+    printf ("%s\n", _("The server to test must be specified in the invocation, as well as a user"));
-+    printf ("%s\n", _("name and password. A configuration file may also be present. The format of"));
-+    printf ("%s\n", _("the configuration file is described in the radiusclient library sources."));
-+  	printf ("%s\n", _("The password option presents a substantial security issue because the"));
-+    printf ("%s\n", _("password can be determined by careful watching of the command line in"));
-+    printf ("%s\n", _("a process listing.  This risk is exacerbated because nagios will"));
-+-   printf ("%s\n", _("run the plugin at regular prdictable intervals.  Please be sure that"));
-+    printf ("%s\n", _("the password used does not allow access to sensitive system resources,"));
-+-   printf ("%s\n", _("otherwise compormise could occur."));
-+  
-+  	printf (_(UT_SUPPORT));
-+  }
-+--- 350,365 ----
-+  
-+  	printf (_(UT_TIMEOUT), timeout_interval);
-+  
-++ 	printf ("%s\n", _("This plugin tests a RADIUS server to see if it is accepting connections."));
-+    printf ("%s\n", _("The server to test must be specified in the invocation, as well as a user"));
-+    printf ("%s\n", _("name and password. A configuration file may also be present. The format of"));
-+    printf ("%s\n", _("the configuration file is described in the radiusclient library sources."));
-+  	printf ("%s\n", _("The password option presents a substantial security issue because the"));
-+    printf ("%s\n", _("password can be determined by careful watching of the command line in"));
-+    printf ("%s\n", _("a process listing.  This risk is exacerbated because nagios will"));
-++   printf ("%s\n", _("run the plugin at regular predictable intervals.  Please be sure that"));
-+    printf ("%s\n", _("the password used does not allow access to sensitive system resources,"));
-++   printf ("%s\n", _("otherwise compromise could occur."));
-+  
-+  	printf (_(UT_SUPPORT));
-+  }
 diff -urNad nagios-plugins-1.4.12~/plugins/check_snmp.c nagios-plugins-1.4.12/plugins/check_snmp.c
 --- nagios-plugins-1.4.12~/plugins/check_snmp.c	2008-05-07 12:02:42.000000000 +0200
 +++ nagios-plugins-1.4.12/plugins/check_snmp.c	2008-06-03 11:08:17.000000000 +0200
@@ -270,44 +206,6 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_ups.c nagios-plugins-1.4.12/plu
    printf (" %s\n", _("Smart UPS Tools be installed on the remote host. If you do not have the"));
    printf (" %s\n", _("package installed on your system, you can download it from"));
    printf (" %s\n", _("http://www.networkupstools.org"));
-diff -urNad nagios-plugins-1.4.12~/plugins/check_ups.c.rej nagios-plugins-1.4.12/plugins/check_ups.c.rej
---- nagios-plugins-1.4.12~/plugins/check_ups.c.rej	1970-01-01 01:00:00.000000000 +0100
-+++ nagios-plugins-1.4.12/plugins/check_ups.c.rej	2008-06-03 11:08:17.000000000 +0200
-@@ -0,0 +1,34 @@
-+***************
-+*** 636,642 ****
-+  	printf ("%s\n", _("This plugin attempts to determine the status of a UPS (Uninterruptible Power"));
-+    printf ("%s\n", _("Supply) on a local or remote host. If the UPS is online or calibrating, the"));
-+    printf ("%s\n", _("plugin will return an OK state. If the battery is on it will return a WARNING"));
-+-   printf ("%s\n", _("state.If the UPS is off or has a low battery the plugin will return a CRITICAL"));
-+    printf ("%s\n\n", _("state."));
-+  
-+  	printf ("%s\n", _("You may also specify a variable to check [such as temperature, utility voltage,"));
-+--- 636,642 ----
-+  	printf ("%s\n", _("This plugin attempts to determine the status of a UPS (Uninterruptible Power"));
-+    printf ("%s\n", _("Supply) on a local or remote host. If the UPS is online or calibrating, the"));
-+    printf ("%s\n", _("plugin will return an OK state. If the battery is on it will return a WARNING"));
-++   printf ("%s\n", _("state. If the UPS is off or has a low battery the plugin will return a CRITICAL"));
-+    printf ("%s\n\n", _("state."));
-+  
-+  	printf ("%s\n", _("You may also specify a variable to check [such as temperature, utility voltage,"));
-+***************
-+*** 644,650 ****
-+    printf ("%s\n", _("that variable.  If the remote host has multiple UPS that are being monitored you"));
-+    printf ("%s\n", _("will have to use the [ups] option to specify which UPS to check."));
-+  
-+- 	printf ("%s\n", _("This plugin requires that the UPSD daemon distributed with Russel Kroll's"));
-+    printf ("%s\n", _("Smart UPS Tools be installed on the remote host.  If you do not have the"));
-+    printf ("%s\n", _("package installed on your system, you can download it from http://www.networkupstools.org"));
-+  
-+--- 644,650 ----
-+    printf ("%s\n", _("that variable.  If the remote host has multiple UPS that are being monitored you"));
-+    printf ("%s\n", _("will have to use the [ups] option to specify which UPS to check."));
-+  
-++ 	printf ("%s\n", _("This plugin requires that the UPSD daemon distributed with Russell Kroll's"));
-+    printf ("%s\n", _("Smart UPS Tools be installed on the remote host.  If you do not have the"));
-+    printf ("%s\n", _("package installed on your system, you can download it from http://www.networkupstools.org"));
-+  
 diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_mailq.pl nagios-plugins-1.4.12/plugins-scripts/check_mailq.pl
 --- nagios-plugins-1.4.12~/plugins-scripts/check_mailq.pl	2006-07-05 15:45:57.000000000 +0200
 +++ nagios-plugins-1.4.12/plugins-scripts/check_mailq.pl	2008-06-03 11:08:17.000000000 +0200
