@@ -1,0 +1,25 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 40_check_http_status_line.dpatch by Jan Wagner <waja@cyconet.org>
+## patch provided by Josip Rodin <joy@debbugs.entuzijast.net>
+##
+## DP: adds status_line to check_http output
+
+@DPATCH@
+--- check_http.c~	2008-06-19 11:42:25.000000000 +0200
++++ check_http.c	2008-06-19 11:42:25.000000000 +0200
+@@ -912,11 +912,12 @@
+   if (!strstr (status_line, server_expect)) {
+     if (server_port == HTTP_PORT)
+       asprintf (&msg,
+-                _("Invalid HTTP response received from host\n"));
++                _("Invalid HTTP response received from host: %s\n"),
++                status_line);
+     else
+       asprintf (&msg,
+-                _("Invalid HTTP response received from host on port %d\n"),
+-                server_port);
++                _("Invalid HTTP response received from host on port %d: %s\n"),
++                server_port, status_line);
+     die (STATE_CRITICAL, "%s", msg);
+   }
+ 
