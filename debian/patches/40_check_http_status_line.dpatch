@@ -5,9 +5,10 @@
 ## DP: adds status_line to check_http output
 
 @DPATCH@
---- check_http.c~	2008-06-19 11:42:25.000000000 +0200
-+++ check_http.c	2008-06-19 11:42:25.000000000 +0200
-@@ -912,11 +912,12 @@
+diff -urNad nagios-plugins-1.4.12~/plugins/check_http.c nagios-plugins-1.4.12/plugins/check_http.c
+--- nagios-plugins-1.4.12~/plugins/check_http.c	2008-08-23 15:34:17.000000000 +0200
++++ nagios-plugins-1.4.12/plugins/check_http.c	2008-08-23 15:36:20.000000000 +0200
+@@ -879,11 +879,12 @@
    if (!strstr (status_line, server_expect)) {
      if (server_port == HTTP_PORT)
        asprintf (&msg,
@@ -20,6 +21,6 @@
 -                server_port);
 +                _("Invalid HTTP response received from host on port %d: %s\n"),
 +                server_port, status_line);
-     die (STATE_CRITICAL, "%s", msg);
+     die (STATE_CRITICAL, "HTTP CRITICAL - %s", msg);
    }
  

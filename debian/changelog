@@ -1,6 +1,7 @@
 nagios-plugins (1.4.12-3) UNRELEASED; urgency=low
 
   * rename 40_check_http_status_line.patch to 40_check_http_status_line.dpatch
+    and make it able to apply
   * add 40_check_http_status_line.dpatch to 00list to really fix #486932
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 04 Jul 2008 17:04:02 +0200
