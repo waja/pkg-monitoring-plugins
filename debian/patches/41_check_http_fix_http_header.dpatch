@@ -1,0 +1,33 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 41_check_http_fix_http_header.dpatch by Jan Wagner <waja@cyconet.org>, taken
+## from upstream svn
+##
+## DP: Re-structure the HTTP 1.1 headers to prevent 301s on servers with virtual hosts
+
+@DPATCH@
+diff -urNad nagios-plugins-1.4.12~/plugins/check_http.c nagios-plugins-1.4.12/plugins/check_http.c
+--- nagios-plugins-1.4.12~/plugins/check_http.c	2008-08-23 15:41:49.000000000 +0200
++++ nagios-plugins-1.4.12/plugins/check_http.c	2008-08-23 15:50:14.000000000 +0200
+@@ -749,15 +749,17 @@
+   }
+ #endif /* HAVE_SSL */
+ 
+-  asprintf (&buf, "%s %s HTTP/1.0\r\n%s\r\n", http_method, server_url, user_agent);
++  /* If a hostname is provided, use HTTP/1.1 and send the hostname before the
++  *  Useragent. This fixes an issue with getting 301 responses from servers
++  *  with virtual hosts */
++  if (host_name)
++    asprintf (&buf, "%s %s HTTP/1.1\r\nHost: %s\r\n%s\r\n", http_method, server_url, host_name, user_agent);
++  else
++    asprintf (&buf, "%s %s HTTP/1.0\r\n%s\r\n", http_method, server_url, user_agent);
+ 
+   /* tell HTTP/1.1 servers not to keep the connection alive */
+   asprintf (&buf, "%sConnection: close\r\n", buf);
+ 
+-  /* optionally send the host header info */
+-  if (host_name)
+-    asprintf (&buf, "%sHost: %s:%d\r\n", buf, host_name, server_port);
+-
+   /* optionally send any other header tag */
+   if (http_opt_headers_count) {
+     for (i = 0; i < http_opt_headers_count ; i++) {
