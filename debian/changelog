@@ -1,3 +1,9 @@
+nagios-plugins (1.4.12-4) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Jan Wagner <waja@cyconet.org>  Sun, 24 Aug 2008 07:40:12 +0200
+
 nagios-plugins (1.4.12-3) unstable; urgency=low
 
   * rename 40_check_http_status_line.patch to 40_check_http_status_line.dpatch
