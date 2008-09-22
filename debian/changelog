@@ -4,6 +4,7 @@ nagios-plugins (1.4.12-4) UNRELEASED; urgency=low
     patch was incomplete
   * add warning and critical threshold to check_disk_smb_user command
     definition
+  * fix check_http?_hostname* command definitions
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 24 Aug 2008 07:40:12 +0200
 
