@@ -17,7 +17,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_http.c nagios-plugins-1.4.12/pl
 +  *  Useragent. This fixes an issue with getting 301 responses from servers
 +  *  with virtual hosts */
 +  if (host_name)
-+    asprintf (&buf, "%s %s HTTP/1.1\r\nHost: %s\r\n%s\r\n", http_method, server_url, host_name, user_agent);
++    asprintf (&buf, "%s %s HTTP/1.1\r\nHost: %s:%d\r\n%s\r\n", http_method, server_url, host_name, server_port, user_agent);
 +  else
 +    asprintf (&buf, "%s %s HTTP/1.0\r\n%s\r\n", http_method, server_url, user_agent);
  

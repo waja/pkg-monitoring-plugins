@@ -1,6 +1,7 @@
 nagios-plugins (1.4.12-4) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * add server_port back to 41_check_http_fix_http_header.dpatch,
+    patch was incomplete
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 24 Aug 2008 07:40:12 +0200
 
