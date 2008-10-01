@@ -1,4 +1,4 @@
-nagios-plugins (1.4.12-4) UNRELEASED; urgency=low
+nagios-plugins (1.4.12-4) unstable; urgency=low
 
   * add server_port back to 41_check_http_fix_http_header.dpatch,
     patch was incomplete
