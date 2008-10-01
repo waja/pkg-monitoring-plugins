@@ -1,3 +1,9 @@
+nagios-plugins (1.4.12-5) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Jan Wagner <waja@cyconet.org>  Thu, 02 Oct 2008 00:45:31 +0200
+
 nagios-plugins (1.4.12-4) unstable; urgency=low
 
   * add server_port back to 41_check_http_fix_http_header.dpatch,
