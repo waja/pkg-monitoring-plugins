@@ -1,6 +1,7 @@
 nagios-plugins (1.4.12-5) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * add missing auth pair parameter to check_https_auth_hostname* command
+    definitions
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 02 Oct 2008 00:45:31 +0200
 
