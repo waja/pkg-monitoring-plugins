@@ -2,6 +2,8 @@ nagios-plugins (1.4.12-5) UNRELEASED; urgency=low
 
   * add missing auth pair parameter to check_https_auth_hostname* command
     definitions
+  * changing check_cups command to use host headers anymore, since cups changed
+    it's behavior in etch (Closes: #505610)
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 02 Oct 2008 00:45:31 +0200
 
