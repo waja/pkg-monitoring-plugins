@@ -4,7 +4,7 @@ nagios-plugins (1.4.12-5) UNRELEASED; urgency=low
     definitions
   * changing check_cups command to use host headers anymore, since cups changed
     it's behavior in etch (Closes: #505610)
-  * add -e to all reconfigured check commands using check_disk, to only show
+  * add -e to all preconfigured check commands using check_disk, to only display
     effected partitions, when warning or critical (Closes: #395389)
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 02 Oct 2008 00:45:31 +0200
@@ -17,7 +17,7 @@ nagios-plugins (1.4.12-4) unstable; urgency=low
     definition
   * fix check_http?_hostname* command definitions
   * adjust 'check_ssh_4' command definition, it needs the v4 argument at first,
-    thanks Julien Ozog (Closes #500774).
+    thanks Julien Ozog (Closes: #500774).
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 24 Aug 2008 07:40:12 +0200
 
