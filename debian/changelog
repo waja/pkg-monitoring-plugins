@@ -1,15 +1,16 @@
-nagios-plugins (1.4.12-5) UNRELEASED; urgency=low
+nagios-plugins (1.4.12-5) unstable; urgency=low
 
   * add missing auth pair parameter to check_https_auth_hostname* command
     definitions
   * changing check_cups command to use host headers anymore, since cups changed
-    it's behavior in etch (Closes: #505610)
+    it's behavior in etch, thanks Maximilian Gass (Closes: #505610)
   * add -e to all preconfigured check commands using check_disk, to only display
-    effected partitions, when warning or critical (Closes: #395389)
+    effected partitions, when warning or critical, thanks to
+    Filip Van Raemdonck and Jacob L. Anawalt (Closes: #395389)
   * add 42_check_ups_logoutfix.dpatch to fix logout problem with check_ups
     (Closes: #387001)
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 02 Oct 2008 00:45:31 +0200
+ -- Jan Wagner <waja@cyconet.org>  Fri, 30 Jan 2009 22:50:35 +0100
 
 nagios-plugins (1.4.12-4) unstable; urgency=low
 
