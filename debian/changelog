@@ -6,6 +6,8 @@ nagios-plugins (1.4.12-5) UNRELEASED; urgency=low
     it's behavior in etch (Closes: #505610)
   * add -e to all preconfigured check commands using check_disk, to only display
     effected partitions, when warning or critical (Closes: #395389)
+  * add 42_check_ups_logoutfix.dpatch to fix logout problem with check_ups
+    (Closes: #387001)
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 02 Oct 2008 00:45:31 +0200
 

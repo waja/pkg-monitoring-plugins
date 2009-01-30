@@ -16,4 +16,5 @@
 39_check_dig_options.dpatch
 40_check_http_status_line.dpatch
 41_check_http_fix_http_header.dpatch
+42_check_ups_logoutfix.dpatch
 50_misc_typos.dpatch
