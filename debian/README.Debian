@@ -6,6 +6,16 @@ below is a collection of various bits of information that might be
 helpful to users of nagios-plugins in debian.
 
 ================================================================================
+how to use plugins
+================================================================================
+
+- you can invoke the plugins with "--help" to get help how to use the plugins
+- a short usage can be usualy obtained by just running the check without
+  arguments
+- if you need more informations, how to use plugins, have a look at:
+  http://nagios.sourceforge.net/docs/3_0/plugins.html
+
+================================================================================
 different plugin packages and how to avoid installing massive dependencies
 ================================================================================
 
@@ -33,7 +43,3 @@ where $plugin is the specific plugin you want to grant such privileges.
 
 of these two, the first is recommended because it's the simplest and
 has the same effect as the second.
-
-
- -- sean finney <seanius@debian.org>  Thu, 06 Oct 2005 04:48:16 -0400
-
