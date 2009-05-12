@@ -2,6 +2,7 @@ nagios-plugins (1.4.12-6) UNRELEASED; urgency=low
 
   * add trailing $ to check_httpname, thanks Daniel Pocock (Closes: #524629)
   * add informations into README.Debian how to use plugins (Closes: #525168)
+  * add check_nscp which uses the default port of NSClient++ (Closes: #528262)
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 01 Feb 2009 03:19:57 +0100
 
