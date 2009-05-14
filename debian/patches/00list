@@ -17,4 +17,5 @@
 40_check_http_status_line.dpatch
 41_check_http_fix_http_header.dpatch
 42_check_ups_logoutfix.dpatch
+43_check_ntp_segfaults.dpatch
 50_misc_typos.dpatch
