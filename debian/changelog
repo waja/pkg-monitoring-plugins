@@ -3,6 +3,8 @@ nagios-plugins (1.4.12-6) UNRELEASED; urgency=low
   * add trailing $ to check_httpname, thanks Daniel Pocock (Closes: #524629)
   * add informations into README.Debian how to use plugins (Closes: #525168)
   * add check_nscp which uses the default port of NSClient++ (Closes: #528262)
+  * providing some explanation about predefined check commands in README.Debian
+  * pointing to README.Debian in nt.cfg
   * add 43_check_ntp_segfaults.dpatch to fix buffer overflow in check_ntp and
     check_ntp_peer, thanks to Andreas Olsson (Closes: #528686)
 

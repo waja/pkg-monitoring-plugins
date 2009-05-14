@@ -16,6 +16,38 @@ how to use plugins
   http://nagios.sourceforge.net/docs/3_0/plugins.html
 
 ================================================================================
+predefined / shipped check commands
+================================================================================
+
+we are shipping predefined checks, to make users life easier. at the first look,
+this seems really nice. providing checks for every special case (see check_http)
+may end up in a unsupportable state of our package.
+for example one check is testing a service on a special port, where we provide
+a check command. after some time, this service changes its port after some time,
+cause the developers of this software decided for any reason to do so. changing
+the port in the existing check will break installations, which are using the
+service with the old behavior. new users will getting confused of not using the
+correct port for their shiny service.
+cause of this conflict, we try to provide flexible checks, which may look
+complicated at first, but giving the user more power.
+
+a good example for using such a general approach is check_nt / check_nscp. some
+3rd party sources (guessing they can traced back to one) are suggesting using
+two args in some way like:
+
+define command {
+command_name	check_nt
+command_line	$USER1$/check_nt -H $HOSTADDRESS$ -p 12489 -v $ARG1$ $ARG2$
+}
+
+beside specifying not the port, we are not using "$ARG2$", cause all arguments
+of "$ARG2$" can just be used in "$ARG1$" without any problem.
+this gives you the possibility to use every check in your service definition,
+without the problem about changes in your environment. you can easily change
+your service definition as soon your environment changes without breaking the
+command definition.
+
+================================================================================
 different plugin packages and how to avoid installing massive dependencies
 ================================================================================
 
@@ -27,7 +59,7 @@ nagios-plugins-basic package.
 plugins needing root privilege
 ================================================================================
 
-the check_dhcp and check_icmp plugins require root privileges to
+the check_dhcp, check_icmp and maybe others plugins require root privileges to
 run, because of the low-level packet mangling that they perform.
 but, in the interest of the "safe default", these plugins will not
 be installed with the suid bit set.  there are two recommended ways
