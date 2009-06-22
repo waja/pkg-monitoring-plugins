@@ -5,10 +5,10 @@
 ## DP: add nas-ip-address option
 
 @DPATCH@
-diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/plugins/check_radius.c
---- nagios-plugins-1.4.12~/plugins/check_radius.c	2008-06-06 15:00:49.000000000 +0200
-+++ nagios-plugins-1.4.12/plugins/check_radius.c	2008-06-06 15:02:33.000000000 +0200
-@@ -73,6 +73,7 @@
+diff -urNad nagios-plugins-1.4.13+git200906171632~/plugins/check_radius.c nagios-plugins-1.4.13+git200906171632/plugins/check_radius.c
+--- nagios-plugins-1.4.13+git200906171632~/plugins/check_radius.c	2009-06-17 22:33:18.000000000 +0200
++++ nagios-plugins-1.4.13+git200906171632/plugins/check_radius.c	2009-06-17 22:46:08.000000000 +0200
+@@ -69,6 +69,7 @@
  char *username = NULL;
  char *password = NULL;
  char *nasid = NULL;
@@ -16,7 +16,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/
  char *expect = NULL;
  char *config_file = NULL;
  unsigned short port = PW_AUTH_UDP_PORT;
-@@ -173,19 +174,26 @@
+@@ -169,19 +170,26 @@
  	memset (&data, 0, sizeof(data));
  	if (!(my_rc_avpair_add (&data.send_pairs, PW_SERVICE_TYPE, &service, 0) &&
  				my_rc_avpair_add (&data.send_pairs, PW_USER_NAME, username, 0) &&
@@ -26,8 +26,8 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/
 +				))
  		die (STATE_UNKNOWN, _("Out of Memory?"));
  
--	/* 
--	 * Fill in NAS-IP-Address 
+-	/*
+-	 * Fill in NAS-IP-Address
 -	 */
 -
 -	if ((client_id = my_rc_own_ipaddress ()) == 0)
@@ -53,7 +53,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/
  
  	my_rc_buildreq (&data, PW_ACCESS_REQUEST, server, port, (int)timeout_interval,
  	             retries);
-@@ -223,6 +231,7 @@
+@@ -219,6 +227,7 @@
  		{"username", required_argument, 0, 'u'},
  		{"password", required_argument, 0, 'p'},
  		{"nas-id", required_argument, 0, 'n'},
@@ -61,7 +61,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/
  		{"filename", required_argument, 0, 'F'},
  		{"expect", required_argument, 0, 'e'},
  		{"retries", required_argument, 0, 'r'},
-@@ -234,7 +243,7 @@
+@@ -230,7 +239,7 @@
  	};
  
  	while (1) {
@@ -70,7 +70,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/
  									 &option);
  
  		if (c == -1 || c == EOF || c == 1)
-@@ -279,6 +288,9 @@
+@@ -275,6 +284,9 @@
  		case 'n':									/* nas id */
  			nasid = optarg;
  			break;
@@ -80,7 +80,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/
  		case 'F':									/* configuration file */
  			config_file = optarg;
  			break;
-@@ -342,6 +354,8 @@
+@@ -338,6 +350,8 @@
    printf ("    %s\n", _("Password for autentication (SECURITY RISK)"));
    printf (" %s\n", "-n, --nas-id=STRING");
    printf ("    %s\n", _("NAS identifier"));
@@ -89,7 +89,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins/check_radius.c nagios-plugins-1.4.12/
    printf (" %s\n", "-F, --filename=STRING");
    printf ("    %s\n", _("Configuration file"));
    printf (" %s\n", "-e, --expect=STRING");
-@@ -377,8 +391,9 @@
+@@ -373,8 +387,9 @@
  print_usage (void)
  {
    printf (_("Usage:"));

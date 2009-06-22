@@ -13,9 +13,3 @@
 36_check_ldap_empty_base.dpatch
 37_check_radius_nas-ip-address.dpatch
 38_fix_libexec.dpatch
-39_check_dig_options.dpatch
-40_check_http_status_line.dpatch
-41_check_http_fix_http_header.dpatch
-42_check_ups_logoutfix.dpatch
-43_check_ntp_segfaults.dpatch
-50_misc_typos.dpatch

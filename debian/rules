@@ -130,6 +130,7 @@ install: build
 
 	# Add here commands to install the package into debian/nagios-plugins.
 	$(MAKE) install DESTDIR=${NP_BASIC_DIR}
+	$(MAKE) install-root DESTDIR=${NP_BASIC_DIR}
 	chmod 644 ${NP_BASIC_DIR}/usr/lib/nagios/plugins/utils.pm
 	# split up basic vs. standard plugins
 	for p in ${std_plugins}; do \

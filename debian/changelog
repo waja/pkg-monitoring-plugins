@@ -1,12 +1,35 @@
-nagios-plugins (1.4.12-6) UNRELEASED; urgency=low
+nagios-plugins (1.4.13+git200906171200-1) UNRELEASED; urgency=low
 
+  * new upstream
+    - check_http doesn't enforce port (Closes: #494835)
+    - check_http --onredirect=sticky follows using the same IP address
+      (Closes: #502529)
+    - Fixed buffer overflow in check_ntp/check_ntp_peer (Closes: #528686)
+    - Fixed check_mrtg returning UNKNOWN instead of OK (Closes: #335871)
+    - Fixed check_by_ssh interpretation of quotes in -C parameter
+      (Closes: #425312)
+    - Fixed coredump from check_nt when drive not found (Closes: #521097)
+    - Removed -n option in check_smtp's help and usage output (Closes: #525307)
+    - Fixed check_icmp --help output for warn and critical thresholds
+      (Closes: #530553)
+    - Fix potential buffer overflow in check_snmp - enforce MAX_OIDS limit
+      (Closes: #460405)
+  * adjusted the following patches for new upstream
+    - 13_subst.in_again.dpatch
+    - 37_check_radius_nas-ip-address.dpatch
+  * removed the following patches from 00list cause they where integrated
+    - 39_check_dig_options.dpatch
+    - 40_check_http_status_line.dpatch
+    - 41_check_http_fix_http_header.dpatch
+    - 42_check_ups_logoutfix.dpatch
+    - 43_check_ntp_segfaults.dpatch
+    - 50_misc_typos.dpatch
   * add trailing $ to check_httpname, thanks Daniel Pocock (Closes: #524629)
   * add informations into README.Debian how to use plugins (Closes: #525168)
   * add check_nscp which uses the default port of NSClient++ (Closes: #528262)
   * providing some explanation about predefined check commands in README.Debian
   * pointing to README.Debian in nt.cfg
-  * add 43_check_ntp_segfaults.dpatch to fix buffer overflow in check_ntp and
-    check_ntp_peer, thanks to Andreas Olsson (Closes: #528686)
+  * add 'make install-root' to debian/rules to get suid plugins installed again
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 01 Feb 2009 03:19:57 +0100
 

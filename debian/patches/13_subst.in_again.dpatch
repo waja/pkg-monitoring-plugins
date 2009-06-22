@@ -4,31 +4,10 @@
 ## DP: Use /usr/lib/nagios/plugins as path.
 
 @DPATCH@
-diff -urNad sid2~/plugins-scripts/subst.in sid2/plugins-scripts/subst.in
---- sid2~/plugins-scripts/subst.in	2005-08-31 00:11:42.000000000 +0200
-+++ sid2/plugins-scripts/subst.in	2005-10-07 22:37:45.000000000 +0200
-@@ -1,35 +1,9 @@
- #!/usr/bin/awk
- 
--function which(c,path) {
--	cmd = "test -x " c;
--
--	if (system(cmd)==0) {
--		return c;
--	} 
--
--	sub(/\/.*\//,"",c);
--  for (dir in path) {
--			cmd = "test -x " path[dir] "/" c;
--			if (system(cmd)==0) {
--					return path[dir] "/" c;
--			} 
--	}
--
--
--	return c;
--}
--
+diff -urNad nagios-plugins-1.4.13+git200906171200~/plugins-scripts/subst.in nagios-plugins-1.4.13+git200906171200/plugins-scripts/subst.in
+--- nagios-plugins-1.4.13+git200906171200~/plugins-scripts/subst.in	2009-05-20 06:44:12.000000000 +0200
++++ nagios-plugins-1.4.13+git200906171200/plugins-scripts/subst.in	2009-06-22 17:08:55.000000000 +0200
+@@ -22,14 +22,7 @@
  # used to replace "use lib utils.pm" with "use lib @libexecdir"
  #
  function led() {
@@ -44,20 +23,3 @@ diff -urNad sid2~/plugins-scripts/subst.in sid2/plugins-scripts/subst.in
  }
  
  BEGIN {
-@@ -58,16 +32,6 @@
- 	sub(/\=.*$/,"='@with_trusted_path@' # autoconf-derived");
- }
- 
--# If a script contains a reference to a fully qualified command, 
--# subst will replace the fully qualified command with whatever is
--# returned from the which subroutine
--#
--/^[^#]/ && /(\/.*)?\/(bin|sbin|lib|libexec)\// {
--	match($0,/(\/.*)?\/(bin|sbin|lib|libexec)\/[-_a-zA-Z0-9]+/);
--	c=substr($0,RSTART,RLENGTH);
--	sub(c,which(c,path));
--}
--
- {
- 	print;
- }
