@@ -1,4 +1,4 @@
-nagios-plugins (1.4.13+git200906171200-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.13+git200906171200-1) unstable; urgency=low
 
   * new upstream
     - check_http doesn't enforce port (Closes: #494835)
@@ -30,8 +30,9 @@ nagios-plugins (1.4.13+git200906171200-1) UNRELEASED; urgency=low
   * providing some explanation about predefined check commands in README.Debian
   * pointing to README.Debian in nt.cfg
   * add 'make install-root' to debian/rules to get suid plugins installed again
+  * bump standards version to 3.8.2 (no changes needed)
 
- -- Jan Wagner <waja@cyconet.org>  Sun, 01 Feb 2009 03:19:57 +0100
+ -- Jan Wagner <waja@cyconet.org>  Mon, 06 Jul 2009 20:21:42 +0200
 
 nagios-plugins (1.4.12-5) unstable; urgency=low
 
