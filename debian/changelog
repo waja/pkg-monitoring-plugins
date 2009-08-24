@@ -4,6 +4,8 @@ nagios-plugins (1.4.13+git200906171200-2) UNRELEASED; urgency=low
     the first position (Closes: #538487)
   * configure ps to use also etime with check_proc, thanks to
     Justin T Pryzby (Closes: #540107)
+  * removing vsz.cfg, check_vsz isn't available anymore and check_proc can be
+    used, thanks to Keith (Closes: #542700)
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 06 Aug 2009 00:11:51 +0200
 
