@@ -1,0 +1,33 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 39_check_ircd_fix_epn.dpatch by Alexander Wirt <formorer@formorer.de>
+##
+## DP: Fixes epn in check_ircd (#545940)
+
+@DPATCH@
+
+--- nagios-plugins-1.4.12~/plugins-scripts/check_ircd.pl	2009-08-23 09:40:38.000000000 +0200
++++ nagios-plugins-1.4.12/plugins-scripts/check_ircd.pl		2009-09-22 23:35:52.000000000 +0200
+@@ -194,19 +194,19 @@
+ 
+ 	if ($opt_h) {print_help(); exit $ERRORS{'OK'};}
+ 
+-	($opt_H) || ($opt_H = shift) || usage("Host name/address not specified\n");
++	($opt_H) || usage("Host name/address not specified\n");
+ 	my $remotehost = $1 if ($opt_H =~ /([-.A-Za-z0-9]+)/);
+ 	($remotehost) || usage("Invalid host: $opt_H\n");
+ 
+-	($opt_w) || ($opt_w = shift) || ($opt_w = 50);
++	($opt_w) || ($opt_w = 50);
+ 	my $warn = $1 if ($opt_w =~ /^([0-9]+)$/);
+ 	($warn) || usage("Invalid warning threshold: $opt_w\n");
+ 
+-	($opt_c) || ($opt_c = shift) || ($opt_c = 100);
++	($opt_c) || ($opt_c = 100);
+ 	my $crit = $1 if ($opt_c =~ /^([0-9]+)$/);
+ 	($crit) || usage("Invalid critical threshold: $opt_c\n");
+ 
+-	($opt_p) || ($opt_p = shift) || ($opt_p = 6667);
++	($opt_p) || ($opt_p = 6667);
+ 	my $remoteport = $1 if ($opt_p =~ /^([0-9]+)$/);
+ 	($remoteport) || usage("Invalid port: $opt_p\n");
+

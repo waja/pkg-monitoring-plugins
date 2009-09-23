@@ -13,3 +13,4 @@
 36_check_ldap_empty_base.dpatch
 37_check_radius_nas-ip-address.dpatch
 38_fix_libexec.dpatch
+39_check_ircd_fix_epn.dpatch
