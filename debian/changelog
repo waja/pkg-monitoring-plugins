@@ -11,6 +11,7 @@ nagios-plugins (1.4.13+git200906171200-2) UNRELEASED; urgency=low
   * droped unused patches from debian/patches
   * add 39_check_ircd_fix_epn.dpatch to fix epn, thanks to Hendrik Jaeger and
     Alexander Wirt (Closes: #545940)
+  * remove coreutils from build-depends, it's essential 
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 06 Aug 2009 00:11:51 +0200
 
