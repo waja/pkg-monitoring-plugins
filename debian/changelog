@@ -17,6 +17,7 @@ nagios-plugins (1.4.14-1) UNRELEASED; urgency=low
   * Update 06_checkircd.dpatch, which got fixed upstream
   * Add 40_check_http_proxy_auth.dpatch to make check_http able to check proxy
     authorization
+  * Update copyright, thanks to Robert Millan (Closes: 548303)
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 06 Aug 2009 00:11:51 +0200
 
