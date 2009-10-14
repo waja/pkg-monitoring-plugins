@@ -1,17 +1,19 @@
-nagios-plugins (1.4.13+git200906171200-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.14-1) UNRELEASED; urgency=low
 
-  * added libmysqlclient16-dev to build-deps and moved libmysqlclient-dev to
+  * New upstream release
+  * Added libmysqlclient16-dev to build-deps and moved libmysqlclient-dev to
     the first position (Closes: #538487)
-  * configure ps to use also etime with check_proc, thanks to
+  * Configure ps to use also etime with check_proc, thanks to
     Justin T Pryzby (Closes: #540107)
-  * removing vsz.cfg, check_vsz isn't available anymore and check_proc can be
+  * Removing vsz.cfg, check_vsz isn't available anymore and check_proc can be
     used, thanks to Keith (Closes: #542700)
   * Updating standards version to 3.8.3
     - Add README.source
-  * droped unused patches from debian/patches
-  * add 39_check_ircd_fix_epn.dpatch to fix epn, thanks to Hendrik Jaeger and
+  * Droped unused patches from debian/patches
+  * Add 39_check_ircd_fix_epn.dpatch to fix epn, thanks to Hendrik Jaeger and
     Alexander Wirt (Closes: #545940)
-  * remove coreutils from build-depends, it's essential 
+  * Remove coreutils from build-depends, it's essential
+  * Raise compat level to 5
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 06 Aug 2009 00:11:51 +0200
 
