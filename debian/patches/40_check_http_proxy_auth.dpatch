@@ -1,8 +1,8 @@
-#! /bin/sh -e
+#! /bin/sh /usr/share/dpatch/dpatch-run
 ## 40_check_http_proxy_auth.dpatch
 ## From: Thomas Guyot-Sionnest <dermoth@aei.ca>
 ## Date: Tue, 22 Sep 2009 01:20:33 +0000 (-0400)
-## Subject: Add proxy-authorization option to check_http (Peter Doherty - #2863772, Bryan Irvine... 
+## Subject: Add proxy-authorization option to check_http (Peter Doherty - #2863772, Bryan Irvine...
 ## X-Git-Url: http://repo.or.cz/w/nagiosplugins.git?a=commitdiff_plain;h=08199792ba8bf19c2dbdc27f68689e571d4240a9
 ##
 ## DP: Add proxy-authorization option to check_http
