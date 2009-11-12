@@ -18,8 +18,12 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
   * Add 40_check_http_proxy_auth.dpatch to make check_http able to check proxy
     authorization
   * Update copyright, thanks to Robert Millan (Closes: 548303)
+  * Depend on inetutils-ping instead of iputils-ping, thanks to Petr Salinger
+    (Closes: #555532)
+    - Use '-n -c %d %s' as ping argument, since unfortunately '-U -w %d' isn't
+      supported by inetutils-ping
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 11 Nov 2009 22:34:55 +0100
+ -- Jan Wagner <waja@cyconet.org>  Thu, 12 Nov 2009 02:19:28 +0100
 
 nagios-plugins (1.4.13+git200906171200-1) unstable; urgency=low
 
