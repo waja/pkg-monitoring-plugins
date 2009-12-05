@@ -8,12 +8,49 @@
 ## DP: Detect arguments passed via --with-ping[6]-command (SF #2908236 / Debian #555532)
 
 @DPATCH@
-
-diff --git a/configure.in b/configure.in
-index f354734..84b2050 100644
---- a/configure.in
-+++ b/configure.in
-@@ -877,10 +877,16 @@ ac_cv_ping_has_timeout=no
+diff -urNad nagios-plugins-1.4.14~/configure nagios-plugins-1.4.14/configure
+--- nagios-plugins-1.4.14~/configure	2009-09-16 10:38:03.000000000 +0200
++++ nagios-plugins-1.4.14/configure	2009-12-05 21:29:08.000000000 +0100
+@@ -26308,10 +26308,17 @@
+ then
+ 	{ echo "$as_me:$LINENO: result: (command-line) $with_ping_command" >&5
+ echo "${ECHO_T}(command-line) $with_ping_command" >&6; }
+-	if test -n "$ac_cv_ping_packets_first"
++	if echo "$with_ping_command" | grep '%d.*%d.*%s' >/dev/null
+ 	then
+ 		ac_cv_ping_packets_first=yes
+ 		ac_cv_ping_has_timeout=yes
++	elif echo "$with_ping_command" | grep '%d.*%s.*%d' >/dev/null || \
++	     echo "$with_ping_command" | grep '%s.*%d.*%d' >/dev/null
++	then
++		ac_cv_ping_has_timeout=yes
++	elif echo "$with_ping_command" | grep '%d.*%s' >/dev/null
++	then
++		ac_cv_ping_packets_first=yes
+ 	fi
+ 
+ elif [ "z$ac_cv_uname_s" = "zUnixWare" ] && \
+@@ -26436,7 +26443,15 @@
+ then
+ 	{ echo "$as_me:$LINENO: result: (command-line) $with_ping6_command" >&5
+ echo "${ECHO_T}(command-line) $with_ping6_command" >&6; }
+-	if test -n "$ac_cv_ping6_packets_first"
++	if echo "$with_ping6_command" | grep '%d.*%d.*%s' >/dev/null
++	then
++		ac_cv_ping6_packets_first=yes
++	elif echo "$with_ping6_command" | grep '%d.*%s.*%d' >/dev/null || \
++	     echo "$with_ping6_command" | grep '%s.*%d.*%d' >/dev/null
++	then
++		# Just keep same logic as ping (IPv4) if we ever need ac_cv_ping6_has_timeout
++		true
++	elif echo "$with_ping6_command" | grep '%d.*%s' >/dev/null
+ 	then
+ 		ac_cv_ping6_packets_first=yes
+ 	fi
+diff -urNad nagios-plugins-1.4.14~/configure.in nagios-plugins-1.4.14/configure.in
+--- nagios-plugins-1.4.14~/configure.in	2009-09-16 10:20:34.000000000 +0200
++++ nagios-plugins-1.4.14/configure.in	2009-12-05 21:29:08.000000000 +0100
+@@ -869,10 +869,17 @@
  if test -n "$with_ping_command"
  then
  	AC_MSG_RESULT([(command-line) $with_ping_command])
@@ -22,7 +59,8 @@ index f354734..84b2050 100644
  	then
  		ac_cv_ping_packets_first=yes
  		ac_cv_ping_has_timeout=yes
-+	elif echo "$with_ping_command" | grep '%d.*%s.*%d' >/dev/null
++	elif echo "$with_ping_command" | grep '%d.*%s.*%d' >/dev/null || \
++	     echo "$with_ping_command" | grep '%s.*%d.*%d' >/dev/null
 +	then
 +		ac_cv_ping_has_timeout=yes
 +	elif echo "$with_ping_command" | grep '%d.*%s' >/dev/null
@@ -31,6 +69,20 @@ index f354734..84b2050 100644
  	fi
  
  elif [[ "z$ac_cv_uname_s" = "zUnixWare" ]] && \
--- 
-1.6.5.1
-
+@@ -973,7 +980,15 @@
+ if test -n "$with_ping6_command"
+ then
+ 	AC_MSG_RESULT([(command-line) $with_ping6_command])
+-	if test -n "$ac_cv_ping6_packets_first"
++	if echo "$with_ping6_command" | grep '%d.*%d.*%s' >/dev/null
++	then
++		ac_cv_ping6_packets_first=yes
++	elif echo "$with_ping6_command" | grep '%d.*%s.*%d' >/dev/null || \
++	     echo "$with_ping6_command" | grep '%s.*%d.*%d' >/dev/null
++	then
++		# Just keep same logic as ping (IPv4) if we ever need ac_cv_ping6_has_timeout
++		true
++	elif echo "$with_ping6_command" | grep '%d.*%s' >/dev/null
+ 	then
+ 		ac_cv_ping6_packets_first=yes
+ 	fi
