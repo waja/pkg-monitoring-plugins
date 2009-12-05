@@ -33,7 +33,7 @@ Description: Plugins for the nagios network monitoring and management system
 
 Package: nagios-plugins-basic
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, procps, iputils-ping, ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, procps, inetutils-ping, ucf
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins, nagios-plugins-standard
 Suggests: nagios3

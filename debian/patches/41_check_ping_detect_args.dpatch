@@ -1,0 +1,36 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 41_check_ping_detect_args.dpatch
+## From: Thomas Guyot-Sionnest <dermoth@aei.ca>
+## Date: Fri, 4 Dec 2009 15:24:15 -0500
+## Subject: [PATCH] Detect arguments passed via --with-ping[6]-command (#2908236)
+### X-Git-Url: http://repo.or.cz/w/nagiosplugins.git?a=commitdiff_plain;h=08199792ba8bf19c2dbdc27f68689e571d4240a9
+##
+## DP: Detect arguments passed via --with-ping[6]-command (SF #2908236 / Debian #555532)
+
+@DPATCH@
+
+diff --git a/configure.in b/configure.in
+index f354734..84b2050 100644
+--- a/configure.in
++++ b/configure.in
+@@ -877,10 +877,16 @@ ac_cv_ping_has_timeout=no
+ if test -n "$with_ping_command"
+ then
+ 	AC_MSG_RESULT([(command-line) $with_ping_command])
+-	if test -n "$ac_cv_ping_packets_first"
++	if echo "$with_ping_command" | grep '%d.*%d.*%s' >/dev/null
+ 	then
+ 		ac_cv_ping_packets_first=yes
+ 		ac_cv_ping_has_timeout=yes
++	elif echo "$with_ping_command" | grep '%d.*%s.*%d' >/dev/null
++	then
++		ac_cv_ping_has_timeout=yes
++	elif echo "$with_ping_command" | grep '%d.*%s' >/dev/null
++	then
++		ac_cv_ping_packets_first=yes
+ 	fi
+ 
+ elif [[ "z$ac_cv_uname_s" = "zUnixWare" ]] && \
+-- 
+1.6.5.1
+
