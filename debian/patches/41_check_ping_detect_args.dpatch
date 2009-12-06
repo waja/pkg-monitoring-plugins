@@ -1,9 +1,9 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 41_check_ping_detect_args.dpatch
 ## From: Thomas Guyot-Sionnest <dermoth@aei.ca>
-## Date: Fri, 4 Dec 2009 15:24:15 -0500
-## Subject: [PATCH] Detect arguments passed via --with-ping[6]-command (#2908236)
-### X-Git-Url: http://repo.or.cz/w/nagiosplugins.git?a=commitdiff_plain;h=08199792ba8bf19c2dbdc27f68689e571d4240a9
+## Date: Fri, 4 Dec 2009 20:24:15 +0000 (-0500)
+## Subject: Detect arguments passed via --with-ping[6]-command (#2908236)
+## X-Git-Url: http://nagiosplug.git.sf.net/git/gitweb.cgi?p=nagiosplug/nagiosplug;a=commitdiff_plain;h=96a23a4c117a9c2665ca09e5964eacf028dbcdcf
 ##
 ## DP: Detect arguments passed via --with-ping[6]-command (SF #2908236 / Debian #555532)
 
