@@ -1,3 +1,11 @@
+nagios-plugins (1.4.14-1) unstable; urgency=low
+
+  if your are using check_linux_raid.pl or check_bgpstate (respectively the
+  check_snmp_bgpstate), they will be removed sometimes in the future, as
+  upstream will remove they shortly ... so be prepared!
+
+ -- Jan Wagner <waja@cyconet.org>  Mon, 07 Dec 2009 14:43:29 +0100
+
 nagios-plugins (1.4.12-1) unstable; urgency=low
 
   removed default port of check_radius definition in favor of the ability to
