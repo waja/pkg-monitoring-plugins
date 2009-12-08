@@ -25,6 +25,8 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
     - Add 41_check_ping_detect_args.dpatch, that to Thomas Guyot-Sionnest
   * Add hint to NEWS.Debian, that check_linux_raid.pl and check_bgpstate will
     be removed in the next future
+  * Add 42_check_linux_raid_fix_r10.dpatch, which fixes RAID Levels with more
+    than one digit, thanks to Matija Nalis (Closes: #534604)
 
  -- Jan Wagner <waja@cyconet.org>  Sat, 05 Dec 2009 02:46:35 +0100
 

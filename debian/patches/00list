@@ -16,3 +16,4 @@
 39_check_ircd_fix_epn.dpatch
 40_check_http_proxy_auth.dpatch
 41_check_ping_detect_args.dpatch
+42_check_linux_raid_fix_r10.dpatch
