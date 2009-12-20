@@ -27,8 +27,11 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
     be removed in the next future
   * Add 42_check_linux_raid_fix_r10.dpatch, which fixes RAID Levels with more
     than one digit, thanks to Matija Nalis (Closes: #534604, #514588)
+  * Move qstat from Depends to Recommends, since its just used for check_game
+    and that seems not really essential, leaving note in NEWS file, thanks to
+    Steve Lane (Closes: #561770)
 
- -- Jan Wagner <waja@cyconet.org>  Sat, 05 Dec 2009 02:46:35 +0100
+ -- Jan Wagner <waja@cyconet.org>  Sun, 20 Dec 2009 19:55:45 +0100
 
 nagios-plugins (1.4.13+git200906171200-1) unstable; urgency=low
 

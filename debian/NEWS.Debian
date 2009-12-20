@@ -1,14 +1,19 @@
 nagios-plugins (1.4.14-1) unstable; urgency=low
 
-  if your are using check_linux_raid.pl or check_bgpstate (respectively the
+  If your are using check_linux_raid.pl or check_bgpstate (respectively the
   check_snmp_bgpstate), they will be removed sometimes in the future, as
   upstream will remove they shortly ... so be prepared!
 
- -- Jan Wagner <waja@cyconet.org>  Mon, 07 Dec 2009 14:43:29 +0100
+  The qstat package is not a dependency any more but recommanded. As Recommands
+  installed by default these days, there shouldn't much users effected. If you
+  have turned off the installation of recommanded packages and you are using
+  check_quake, please install the qstat package again.
+
+ -- Jan Wagner <waja@cyconet.org>  Sun, 20 Dec 2009 20:01:07 +0100
 
 nagios-plugins (1.4.12-1) unstable; urgency=low
 
-  removed default port of check_radius definition in favor of the ability to
+  Removed default port of check_radius definition in favor of the ability to
   specify it as 4th argument.
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 06 Jun 2008 12:25:59 +0200
