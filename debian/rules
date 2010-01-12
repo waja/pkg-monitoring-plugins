@@ -14,6 +14,7 @@ include /usr/share/dpatch/dpatch.make
 # from having to guess our platform (since we know it already)
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_HOST_ARCH_OS    ?= $(shell dpkg-architecture -qDEB_HOST_ARCH_OS)
 
 CFLAGS = -Wall -g
 
@@ -46,6 +47,15 @@ endif
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
 	INSTALL_PROGRAM += -s
 endif
+
+ifeq ($(DEB_HOST_ARCH_OS),linux)
+PING_CONFIGURE_ARGS = --with-ping-command="/bin/ping -n -U -w %d -c %d %s" \
+                      --with-ping6-command="/bin/ping6 -n -U -w %d -c %d %s"
+else
+PING_CONFIGURE_ARGS = --with-ping-command="/bin/ping -n -c %d %s" \
+                      --with-ping6-command="/bin/ping6 -n -c %d %s"
+endif
+
 
 config.status: configure
 	export PATH=$(PATH)
@@ -81,8 +91,7 @@ config.status: configure
 		--with-ps-format="%s %d %d %d %d %d %f %s %s %n" \
 		--with-ps-cols=10 \
 		--with-ps-varlist="procstat,&procuid,&procpid,&procppid,&procvsz,&procrss,&procpcpu,procetime,procprog,&pos" \
-		--with-ping-command="/bin/ping -n -c %d %s" \
-		--with-ping6-command="/bin/ping6 -n -c %d %s" \
+		$(PING_CONFIGURE_ARGS) \
 		--with-nslookup-command="/usr/bin/nslookup -sil" \
 		--with-uptime-command="/usr/bin/uptime" \
 		--with-rpcinfo-command="/usr/bin/rpcinfo" \

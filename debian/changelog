@@ -18,11 +18,10 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
   * Add 40_check_http_proxy_auth.dpatch to make check_http able to check proxy
     authorization
   * Update copyright, thanks to Robert Millan (Closes: 548303)
-  * Depend on inetutils-ping instead of iputils-ping, thanks to Petr Salinger
+  * Depend on inetutils-ping on kfreebsd and hurd, thanks to Petr Salinger
     (Closes: #555532)
-    - Use '-n -c %d %s' as ping argument, since unfortunately '-U -w %d' isn't
-      supported by inetutils-ping
-    - Add 41_check_ping_detect_args.dpatch, that to Thomas Guyot-Sionnest
+    - Use '-n -c %d %s' as ping argument on archs where inetutils-ping is used
+    - Add 41_check_ping_detect_args.dpatch, thanks to Thomas Guyot-Sionnest
   * Add hint to NEWS.Debian, that check_linux_raid.pl and check_bgpstate will
     be removed in the next future
   * Add 42_check_linux_raid_fix_r10.dpatch, which fixes RAID Levels with more
