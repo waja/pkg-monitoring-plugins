@@ -10,9 +10,9 @@ how to use plugins
 ================================================================================
 
 - you can invoke the plugins with "--help" to get help how to use the plugins
-- a short usage can be usualy obtained by just running the check without
+- a short usage can be usually obtained by just running the check without
   arguments
-- if you need more informations, how to use plugins, have a look at:
+- if you need more information, how to use plugins, have a look at:
   http://nagios.sourceforge.net/docs/3_0/plugins.html
 
 ================================================================================

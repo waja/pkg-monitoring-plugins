@@ -11,7 +11,7 @@ Standards-Version: 3.8.3
 
 Package: nagios-plugins
 Architecture: all
-Depends: nagios-plugins-basic, nagios-plugins-standard
+Depends: ${misc:Depends}, nagios-plugins-basic, nagios-plugins-standard
 Suggests: nagios3
 Description: Plugins for the nagios network monitoring and management system
  Nagios is a host/service/network monitoring and management system. It has

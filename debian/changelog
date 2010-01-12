@@ -34,6 +34,9 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
     thanks to Justin T Pryzby for reporting (Closes: #563090)
   * Fix check-switch-alive* check commands by adding "-H" at the appropriate
     place
+  * Add lintian fixes
+    - Add ${misc:Depends} to nagios-plugins depencies
+    - Fix two spelling errors in README.Debian
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 20 Dec 2009 19:55:45 +0100
 
