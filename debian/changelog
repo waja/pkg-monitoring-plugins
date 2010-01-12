@@ -32,6 +32,8 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
     Steve Lane (Closes: #561770)
   * Add 02_check_icmp_links.dpatch to provide check_host and check_rta_multi,
     thanks to Justin T Pryzby for reporting (Closes: #563090)
+  * Fix check-switch-alive* check commands by adding "-H" at the appropriate
+    place
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 20 Dec 2009 19:55:45 +0100
 
