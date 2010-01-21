@@ -25,7 +25,7 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
   * Add hint to NEWS.Debian, that check_linux_raid.pl and check_bgpstate will
     be removed in the next future
   * Add 42_check_linux_raid_fix_r10.dpatch, which fixes RAID Levels with more
-    than one digit, thanks to Matija Nalis (Closes: #534604, #514588)
+    than one digit, thanks to Matija Nalis (Closes: #534604)
   * Move qstat from Depends to Recommends, since its just used for check_game
     and that seems not really essential, leaving note in NEWS file, thanks to
     Steve Lane (Closes: #561770)
