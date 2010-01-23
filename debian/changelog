@@ -1,6 +1,7 @@
 nagios-plugins (1.4.14-2) UNRELEASED; urgency=low
 
-  * cosmetic change to last changelog entry
+  * Cosmetic change to last changelog entry
+  * Add some hints to NEWS.Debian about the use on non-linux archs
 
  -- Jan Wagner <waja@cyconet.org>  Sat, 23 Jan 2010 01:39:31 +0100
 

@@ -9,6 +9,12 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
   have turned off the installation of recommanded packages and you are using
   check_quake, please install the qstat package again.
 
+  For all non linux archs, we depend on inetutils-ping, since now. As actually
+  inetutils-ping doesn't support a deadlines option (see #565137), it will be
+  likely, that you will get plugin timeouts from check_ping. As iputils-ping
+  is not an option here, due it's not available, you have to deal with that.
+  The suggestion would be in this case, to migrate over to check_icmp.
+
  -- Jan Wagner <waja@cyconet.org>  Sun, 20 Dec 2009 20:01:07 +0100
 
 nagios-plugins (1.4.12-1) unstable; urgency=low
