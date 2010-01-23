@@ -1,6 +1,6 @@
 nagios-plugins (1.4.14-2) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * cosmetic change to last changelog entry
 
  -- Jan Wagner <waja@cyconet.org>  Sat, 23 Jan 2010 01:39:31 +0100
 
@@ -23,7 +23,7 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
   * Update 06_checkircd.dpatch, which got fixed upstream
   * Add 40_check_http_proxy_auth.dpatch to make check_http able to check proxy
     authorization
-  * Update copyright, thanks to Robert Millan (Closes: 548303)
+  * Update copyright, thanks to Robert Millan (Closes: #548303)
   * Depend on inetutils-ping on kfreebsd and hurd, thanks to Petr Salinger
     (Closes: #555532)
     - Use '-n -c %d %s' as ping argument on archs where inetutils-ping is used
