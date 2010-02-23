@@ -2,6 +2,8 @@ nagios-plugins (1.4.14-2) UNRELEASED; urgency=low
 
   * Cosmetic change to last changelog entry
   * Add some hints to NEWS.Debian about the use on non-linux archs
+  * Bump Standards-Version to 3.8.4, no changes needed
+  * Add 1.0 to debian/source/format
 
  -- Jan Wagner <waja@cyconet.org>  Sat, 23 Jan 2010 01:39:31 +0100
 
