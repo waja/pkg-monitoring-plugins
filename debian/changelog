@@ -4,8 +4,10 @@ nagios-plugins (1.4.14-2) UNRELEASED; urgency=low
   * Add some hints to NEWS.Debian about the use on non-linux archs
   * Bump Standards-Version to 3.8.4, no changes needed
   * Add 1.0 to debian/source/format
+  * Add 43_check_http_large_pages_mleak.dpatch, taken from upstream, which
+    fixes memory leaks on large files
 
- -- Jan Wagner <waja@cyconet.org>  Sat, 23 Jan 2010 01:39:31 +0100
+ -- Jan Wagner <waja@cyconet.org>  Wed, 03 Mar 2010 08:13:31 +0100
 
 nagios-plugins (1.4.14-1) unstable; urgency=low
 
