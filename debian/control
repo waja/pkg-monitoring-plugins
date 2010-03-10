@@ -6,7 +6,7 @@ Uploaders: Sean Finney <seanius@debian.org>, Guido Trotter <ultrotter@debian.org
 Build-Depends: debhelper (>= 5), dpatch (>= 2.0.9), autotools-dev, libldap2-dev, libpq-dev, libmysqlclient-dev | libmysqlclient16-dev | libmysqlclient15-dev | libmysqlclient12-dev, libradiusclient-ng-dev, libkrb5-dev, libnet-snmp-perl, procps, mawk | awk
 Homepage: http://nagiosplug.sourceforge.net
 Vcs-Browser: http://svn.debian.org/wsvn/pkg-nagios/nagios-plugins/
-Vcs-Svn: svn://svn.debian.org/pkg-nagios/nagios-plugins/
+Vcs-Svn: svn://svn.debian.org/pkg-nagios/nagios-plugins/trunk/
 Standards-Version: 3.8.4
 
 Package: nagios-plugins
