@@ -1,0 +1,54 @@
+nagios-plugins on Debian
+==========================
+
+Some plugins require additional libraries and programs. To prevent you from
+having to install dozens of further packages that you don't actually need,
+there is no strict dependency on some of them. Rather, they are listed as
+recommendations.
+
+apt-get(8) and aptitude(8) will install recommended packages automatically by
+default. If you did not disable this feature you will have everything in place
+to operate all plugins when installing the "nagios-plugins-standard" package.
+Else you have to install missing dependencies manually (see the section "Plugin
+dependencies" below).
+
+Plugin dependencies:
+--------------------
+
+check_bgpstate: 
+  * libnet-snmp-perl
+  * whois
+
+check_breeze:
+  * snmp
+
+check_disk_smb:
+  * smbclient
+
+check_dns:
+  * dnsutils
+
+check_fping:
+  * fping
+
+check_game:
+  * qstat
+
+check_ifoperstatus:
+  * libnet-snmp-perl
+
+check_ifstatus:
+  * libnet-snmp-perl
+
+check_mailq:
+  * sendmail binary of qmail or one of the following packages
+    - postfix
+    - sendmail-bin
+    - exim4-daemon-heavy
+    - exim4-daemon-light
+
+check_oracle:
+  * procps
+
+check_wave:
+  * snmp

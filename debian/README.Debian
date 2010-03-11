@@ -6,6 +6,15 @@ below is a collection of various bits of information that might be
 helpful to users of nagios-plugins in debian.
 
 ================================================================================
+plugins and dependencies
+================================================================================
+
+some plugins require additional libraries and programs. to prevent you from
+having to install dozens of further packages that you don't actually need,
+there is no strict dependency on some of them.
+see /usr/share/doc/nagios-plugins-standard/README.Debian.plugins for details.
+
+================================================================================
 how to use plugins
 ================================================================================
 

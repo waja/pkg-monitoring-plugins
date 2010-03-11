@@ -11,7 +11,9 @@ nagios-plugins (1.4.14-2) UNRELEASED; urgency=low
   * Move check_mailq to nagios-plugins-standard, cause it depends
     postfix|sendmail|exim4 or qmail
     - Add "postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light" to
-      Suggests of nagios-plugins-standard
+      Recommends of nagios-plugins-standard
+  * Move remaining Depends binaries of nagios-plugins-standard to Recommends,
+    keeping Depends we have used at linking (for now)
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 03 Mar 2010 08:13:31 +0100
 
