@@ -7,6 +7,7 @@ nagios-plugins (1.4.14-2) UNRELEASED; urgency=low
   * Add 43_check_http_large_pages_mleak.dpatch, taken from upstream, which
     fixes memory leaks on large files
   * Add trailing trunk/ at Vcs-Svn-field
+  * Remove radiusclient1 from Dependencies, as check_radius seems not need it
   * Move check_mailq to nagios-plugins-standard, cause it depends
     postfix|sendmail|exim4 or qmail
     - Add "postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light" to
