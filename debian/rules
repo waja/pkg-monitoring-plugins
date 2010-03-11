@@ -29,12 +29,13 @@ std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
 	check_rpc check_snmp check_wave check_fping check_game \
 	check_radius check_mysql check_mysql_query check_pgsql \
 	check_disk_smb check_ldap check_ldaps \
+	check_mailq \
 	check_dns check_dig check_flexlm check_oracle
 
 basic_plugin_cfgs:=apt dhcp disk dummy ftp http load mail news ntp ping procs \
 	real ssh tcp_udp telnet users
 std_plugin_cfgs:=breeze disk-smb dns flexlm fping games hppjd ifstatus ldap \
-	mrtg mysql netware nt pgsql radius rpc-nfs snmp
+	mailq mrtg mysql netware nt pgsql radius rpc-nfs snmp
 
 PATH = /bin:/sbin:/usr/bin:/usr/sbin
 

@@ -1,3 +1,11 @@
+nagios-plugins (1.4.14-2) unstable; urgency=low
+
+  Moved check_mailq to nagios-plugins-standard, because it requires the mailq
+  binary and it is shipped with postfix, exim, sendmail and qmail, which is
+  the plugin is intended to check.
+
+ -- Jan Wagner <waja@cyconet.org>  Thu, 11 Mar 2010 13:24:23 +0100
+
 nagios-plugins (1.4.14-1) unstable; urgency=low
 
   If your are using check_linux_raid.pl or check_bgpstate (respectively the
