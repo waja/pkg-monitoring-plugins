@@ -1,4 +1,4 @@
-nagios-plugins (1.4.14-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.14-2) unstable; urgency=low
 
   * Cosmetic change to last changelog entry
   * Add some hints to NEWS.Debian about the use on non-linux archs
@@ -15,7 +15,7 @@ nagios-plugins (1.4.14-2) UNRELEASED; urgency=low
   * Move remaining Depends binaries of nagios-plugins-standard to Recommends,
     keeping Depends we have used at linking (for now)
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 03 Mar 2010 08:13:31 +0100
+ -- Jan Wagner <waja@cyconet.org>  Mon, 15 Mar 2010 22:41:29 +0100
 
 nagios-plugins (1.4.14-1) unstable; urgency=low
 
