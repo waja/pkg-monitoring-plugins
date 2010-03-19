@@ -4,18 +4,19 @@ nagios-plugins on Debian
 Some plugins require additional libraries and programs. To prevent you from
 having to install dozens of further packages that you don't actually need,
 there is no strict dependency on some of them. Rather, they are listed as
-recommendations.
+recommendations and suggests.
 
 apt-get(8) and aptitude(8) will install recommended packages automatically by
 default. If you did not disable this feature you will have everything in place
-to operate all plugins when installing the "nagios-plugins-standard" package.
+to operate all plugins when installing the "nagios-plugins-standard" package,
+beside the packages listed as suggests.
 Else you have to install missing dependencies manually (see the section "Plugin
 dependencies" below).
 
 Plugin dependencies:
 --------------------
 
-check_bgpstate: 
+check_bgpstate:
   * libnet-snmp-perl
   * whois
 

@@ -1,6 +1,8 @@
-nagios-plugins (1.4.14-3) UNRELEASED; urgency=low
+nagios-plugins (1.4.14-3) UNRELEASED; urgency=medium
 
   * Remove Sean and Guido from the Uploaders list
+  * Move postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
+    to Suggests, thanks to Glennie Vignarajah (CLoses: #574591)
 
  -- Jan Wagner <waja@cyconet.org>  Tue, 16 Mar 2010 09:35:20 +0100
 

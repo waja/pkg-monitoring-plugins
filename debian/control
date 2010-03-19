@@ -60,8 +60,8 @@ Architecture: any
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins
 Depends: ${shlibs:Depends}, ${misc:Depends}, ucf, nagios-plugins-basic (>= 1.4.5-2)
-Recommends: postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light, fping, snmp, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, whois, qstat
-Suggests: nagios3
+Recommends: fping, snmp, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, whois, qstat
+Suggests: nagios3, postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
 Description: Plugins for the nagios network monitoring and management system
  Nagios is a host/service/network monitoring and management system. It has
  the following features:
