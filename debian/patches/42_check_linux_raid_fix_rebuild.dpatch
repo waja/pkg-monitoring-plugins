@@ -1,0 +1,17 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 42_check_linux_raid_fix_rebuild.dpatch by Christoph Martin <martin@uni-mainz.de>
+##
+## DP: Return Warning when rebuilding volume
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagios-plugins-1.4.14~/contrib/check_linux_raid.pl nagios-plugins-1.4.14/contrib/check_linux_raid.pl
+--- nagios-plugins-1.4.14~/contrib/check_linux_raid.pl	2010-03-19 15:35:24.000000000 +0100
++++ nagios-plugins-1.4.14/contrib/check_linux_raid.pl	2010-03-19 15:37:35.000000000 +0100
+@@ -64,6 +64,7 @@
+ 			} elsif (/recovery = (.*?)\s/) {  
+ 				$recovery{$device} = $1;
+ 				($finish{$device}) = /finish=(.*?min)/;
++				$device=undef;
+ 			} elsif (/^\s*$/) {
+ 				$device=undef;
+ 			}
