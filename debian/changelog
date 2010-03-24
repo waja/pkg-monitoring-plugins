@@ -1,13 +1,13 @@
-nagios-plugins (1.4.14-3) UNRELEASED; urgency=medium
+nagios-plugins (1.4.14-3) unstable; urgency=low
 
-  * Remove Sean and Guido from the Uploaders list
+  * Remove Sean and Guido from the Uploaders list, thanks for your work
   * Move postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
     to Suggests, thanks to Glennie Vignarajah (CLoses: #574591)
   * Install NEWS.Debian and README.Debian* to the appropriate packages
   * Add 42_check_linux_raid_fix_rebuild.dpatch to return Warning when
     rebuilding volume, thanks to Christoph Martin (CLoses: #574612)
 
- -- Jan Wagner <waja@cyconet.org>  Tue, 16 Mar 2010 09:35:20 +0100
+ -- Jan Wagner <waja@cyconet.org>  Wed, 24 Mar 2010 20:05:13 +0100
 
 nagios-plugins (1.4.14-2) unstable; urgency=low
 
