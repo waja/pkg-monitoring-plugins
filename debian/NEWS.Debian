@@ -9,7 +9,7 @@ nagios-plugins (1.4.14-2) unstable; urgency=low
 nagios-plugins (1.4.14-1) unstable; urgency=low
 
   If your are using check_linux_raid.pl or check_bgpstate (respectively the
-  check_snmp_bgpstate), they will be removed sometimes in the future, as
+  check_snmp_bgpstate), they will be removed sometime in the future, as
   upstream will remove they shortly ... so be prepared!
 
   The qstat package is not a dependency any more but recommanded. As Recommands

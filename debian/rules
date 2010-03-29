@@ -174,9 +174,10 @@ install: build
 binary-indep: build install
 	dh_testdir -i
 	dh_testroot -i
-	dh_installchangelogs -i ChangeLog
+	dh_installchangelogs -i
 	dh_installdocs -i
-	dh_installexamples -i command.cfg
+	dh_link -i
+	dh_installexamples -i
 	dh_installman -i
 	dh_compress -i
 	dh_fixperms -i
@@ -189,9 +190,11 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir -s
 	dh_testroot -s
-	dh_installchangelogs -s ChangeLog
+	dh_installchangelogs -p nagios-plugins-basic -s ChangeLog
+	dh_installchangelogs -Nnagios-plugins-basic
 	dh_installdocs -s
-	dh_installexamples -s command.cfg
+	dh_link -s
+	dh_installexamples -s
 	dh_installman -s
 	dh_strip -s
 	dh_compress -s
@@ -203,4 +206,4 @@ binary-arch: build install
 	dh_builddeb -s
 
 binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary install 
+.PHONY: build clean binary-indep binary-arch binary install
