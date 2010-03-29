@@ -121,7 +121,7 @@ clean: really-clean unpatch
 really-clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp 
+	rm -f build-stamp
 
 	# Add here commands to clean up after the build process.
 	[ ! -f Makefile ] || $(MAKE) distclean
@@ -130,12 +130,12 @@ really-clean:
 	find -type d -name build -print0 | xargs -0 -r rm -rf \;
 	find \( -name config.sub -o -name config.guess \) -print0 | xargs -0 -r rm -f \;
 	-rm -f $(DEBIANDIR)/nagios-plugins-basic.postrm $(DEBIANDIR)/nagios-plugins-standard.postrm
-	dh_clean 
+	dh_clean
 
 install: build
 	dh_testdir
 	dh_testroot
-	dh_clean -k 
+	dh_prep
 	dh_installdirs
 
 	# Add here commands to install the package into debian/nagios-plugins.
