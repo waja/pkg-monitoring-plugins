@@ -1,0 +1,41 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 44_check_snmp_perfdata.dpatch
+## From: Thomas Guyot-Sionnest <dermoth@aei.ca>
+## Date: Wed, 31 Mar 2010 06:45:45 +0000 (02:45 -0400)
+## Subject: [PATCH] Fix regression introduced in #1867716 where partially valid performance strings would not be printed anymore
+## X-Git-Url: http://repo.or.cz/w/nagiosplugins.git/blobdiff/e7e9a99117d7e0a7189393b3a04366393620efab..e5690e3ddaebdd98bfd96c2303453e4e0d7ed318:/plugins/check_snmp.c
+##
+## DP: Fix regression introduced in #1867716
+
+@DPATCH@
+
+diff --git a/plugins/check_snmp.c b/plugins/check_snmp.c
+index dcb3138..fdb5819 100644
+--- a/plugins/check_snmp.c
++++ b/plugins/check_snmp.c
+@@ -117,7 +117,7 @@ int needmibs = FALSE;
+ int
+ main (int argc, char **argv)
+ {
+-	int i;
++	int i, len;
+ 	int iresult = STATE_UNKNOWN;
+ 	int result = STATE_UNKNOWN;
+ 	int return_code = 0;
+@@ -351,10 +351,14 @@ main (int argc, char **argv)
+ 		if (nunits > (size_t)0 && (size_t)i < nunits && unitv[i] != NULL)
+ 			asprintf (&outbuff, "%s %s", outbuff, unitv[i]);
+ 
+-		if (is_numeric(show)) {
++		/* Write perfdata with whatever can be parsed by strtod, if possible */
++		ptr = NULL;
++		strtod(show, &ptr);
++		if (ptr > show) {
+ 			strncat(perfstr, oidname, sizeof(perfstr)-strlen(perfstr)-1);
+ 			strncat(perfstr, "=", sizeof(perfstr)-strlen(perfstr)-1);
+-			strncat(perfstr, show, sizeof(perfstr)-strlen(perfstr)-1);
++			len = sizeof(perfstr)-strlen(perfstr)-1;
++			strncat(perfstr, show, len>ptr-show ? ptr-show : len);
+ 
+ 			if (type)
+ 				strncat(perfstr, type, sizeof(perfstr)-strlen(perfstr)-1);

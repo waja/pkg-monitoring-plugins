@@ -6,6 +6,7 @@ nagios-plugins (1.4.14-4) UNRELEASED; urgency=low
     - Provide package specific documentation with the packages
     - Provide symlinks from other packages
   * Remove debian/TODO cause it't totally outdated
+  * Add 44_check_snmp_perfdata.dpatch to fix regression related perfdata
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 24 Mar 2010 20:24:51 +0100
 
