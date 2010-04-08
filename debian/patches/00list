@@ -20,3 +20,4 @@
 42_check_linux_raid_fix_r10.dpatch
 43_check_http_large_pages_mleak.dpatch
 44_check_snmp_perfdata.dpatch
+45_check_http_sni_optional.dpatch
