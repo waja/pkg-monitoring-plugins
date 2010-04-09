@@ -10,7 +10,6 @@
 35_check_http_date.dpatch
 36_check_ldap_empty_base.dpatch
 37_check_radius_nas-ip-address.dpatch
-38_fix_libexec.dpatch
 39_check_ircd_fix_epn.dpatch
 40_check_http_proxy_auth.dpatch
 41_check_ping_detect_args.dpatch
