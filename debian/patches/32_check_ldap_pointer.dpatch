@@ -2,7 +2,7 @@
 ## 32_check_ldap_pointer.dpatch by Jan Wagner <waja@cyconet.org>
 ## patch provided by dann frazier <dannf@debian.org>
 ##
-## DP: Using deprecated interfaces of libldap API
+## DP: Using deprecated interfaces of libldap API (bugs.debian.org/463322)
 
 @DPATCH@
 --- nagios-plugins-1.4.11.orig/plugins/check_ldap.c	2007-07-07 16:20:40.000000000 -0600

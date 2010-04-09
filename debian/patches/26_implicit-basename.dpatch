@@ -1,7 +1,7 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 26-implicit-basename.dpatch by  <seanius@localhost.localdomain>
 ##
-## DP: Fix for implicit definition of basename function.
+## DP: Fix for implicit definition of basename function. (bugs.debian.org/396814)
 
 @DPATCH@
 diff -urNad nagios-plugins-1.4.4~/plugins/check_procs.c nagios-plugins-1.4.4/plugins/check_procs.c

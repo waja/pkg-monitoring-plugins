@@ -1,7 +1,7 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 39_check_ircd_fix_epn.dpatch by Alexander Wirt <formorer@formorer.de>
 ##
-## DP: Fixes epn in check_ircd (#545940)
+## DP: Fixes epn in check_ircd (#545940) (bugs.debian.org/545940)
 
 @DPATCH@
 

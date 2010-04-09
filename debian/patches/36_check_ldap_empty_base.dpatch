@@ -2,7 +2,7 @@
 ## 36_check_ldap_empty_base.dpatch by Jan Wagner <waja@cyconet.org>
 ## patch provided by Stephane Chazelas <stephane@artesyncp.com>
 ##
-## DP: allow empty ldap base 
+## DP: allow empty ldap base (bugs.debian.org/479984)
 
 @DPATCH@
 diff -urNad nagios-plugins-1.4.12~/plugins/check_ldap.c nagios-plugins-1.4.12/plugins/check_ldap.c

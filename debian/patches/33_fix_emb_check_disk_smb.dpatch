@@ -2,7 +2,7 @@
 ## 32_check_ldap_pointer.dpatch by Jan Wagner <waja@cyconet.org>
 ## patch provided by Stephane Chazelas <stephane@artesyncp.com>
 ##
-## DP: fix processing vi embedded perl interpreter
+## DP: fix processing vi embedded perl interpreter (bugs.debian.org/478906)
 
 @DPATCH@
 diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plugins-1.4.12/plugins-scripts/check_disk_smb.pl

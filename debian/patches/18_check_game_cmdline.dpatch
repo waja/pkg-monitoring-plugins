@@ -1,7 +1,7 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
 ## 18_check_game_cmdline.dpatch by  <seanius@debian.org>
 ##
-## DP: Fix usage.
+## DP: Fix usage. (bugs.debian.org/307905)
 
 @DPATCH@
 diff -urNad nagios-plugins~/plugins/check_game.c nagios-plugins/plugins/check_game.c

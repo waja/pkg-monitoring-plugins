@@ -3,7 +3,7 @@
 ## patch provided by Hilko Bengen <bengen@debian.org>
 ##
 ## DP: Prevents check_http from trying to extract Date or
-## DP: Last-Modified header from file content.N
+## DP: Last-Modified header from file content.N (bugs.debian.org/460097)
 
 @DPATCH@
 diff -urNad nagios-plugins-1.4.12~/plugins/check_http.c nagios-plugins-1.4.12/plugins/check_http.c

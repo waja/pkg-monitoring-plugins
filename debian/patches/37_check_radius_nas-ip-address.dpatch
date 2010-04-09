@@ -2,7 +2,7 @@
 ## 37_check_radius_nas-ip-address.dpatch by Jan Wagner <waja@cyconet.org>
 ## patch provided by Josip Rodin <joy@debbugs.entuzijast.net>
 ##
-## DP: add nas-ip-address option
+## DP: add nas-ip-address option (bugs.debian.org/482947)
 
 @DPATCH@
 diff -urNad nagios-plugins-1.4.13+git200906171632~/plugins/check_radius.c nagios-plugins-1.4.13+git200906171632/plugins/check_radius.c
