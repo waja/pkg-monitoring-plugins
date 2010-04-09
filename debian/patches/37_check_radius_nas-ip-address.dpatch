@@ -3,6 +3,7 @@
 ## patch provided by Josip Rodin <joy@debbugs.entuzijast.net>
 ##
 ## DP: add nas-ip-address option (bugs.debian.org/482947)
+## DP: Upstream bug is: http://sourceforge.net/tracker/index.php?func=detail&aid=1975646&group_id=29880&atid=397599
 
 @DPATCH@
 diff -urNad nagios-plugins-1.4.13+git200906171632~/plugins/check_radius.c nagios-plugins-1.4.13+git200906171632/plugins/check_radius.c

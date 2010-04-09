@@ -3,6 +3,7 @@
 ## patch provided by dann frazier <dannf@debian.org>
 ##
 ## DP: Using deprecated interfaces of libldap API (bugs.debian.org/463322)
+## DP: Upstream bug is: https://sourceforge.net/tracker/?func=detail&atid=397597&aid=1922579&group_id=29880
 
 @DPATCH@
 --- nagios-plugins-1.4.11.orig/plugins/check_ldap.c	2007-07-07 16:20:40.000000000 -0600

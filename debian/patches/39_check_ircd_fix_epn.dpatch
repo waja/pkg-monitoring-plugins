@@ -2,6 +2,7 @@
 ## 39_check_ircd_fix_epn.dpatch by Alexander Wirt <formorer@formorer.de>
 ##
 ## DP: Fixes epn in check_ircd (#545940) (bugs.debian.org/545940)
+## DP: Upstream bug is: https://sourceforge.net/tracker/?func=detail&atid=397597&aid=2864973&group_id=29880
 
 @DPATCH@
 

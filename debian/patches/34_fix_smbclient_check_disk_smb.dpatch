@@ -3,6 +3,7 @@
 ## patch provided by Stephane Chazelas <stephane@artesyncp.com>
 ##
 ## DP: Fixes use of smbclient (bugs.debian.org/478942)
+## DP: Upstream bug is: https://sourceforge.net/tracker/?func=detail&atid=397597&aid=1986260&group_id=29880
 
 @DPATCH@
 diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plugins-1.4.12/plugins-scripts/check_disk_smb.pl
