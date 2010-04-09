@@ -1,7 +1,6 @@
 02_check_icmp_links.dpatch
 06_checkircd.dpatch
 13_subst.in_again.dpatch
-14_check_log_paths.dpatch
 18_check_game_cmdline.dpatch
 22_check_smb_hostaddress.dpatch
 23_check_smb_password.dpatch
