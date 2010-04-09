@@ -4,7 +4,6 @@
 18_check_game_cmdline.dpatch
 22_check_smb_hostaddress.dpatch
 23_check_smb_password.dpatch
-26_implicit-basename.dpatch
 27_check_radius_segfault.dpatch
 32_check_ldap_pointer.dpatch
 33_fix_emb_check_disk_smb.dpatch

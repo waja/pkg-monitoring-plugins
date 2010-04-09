@@ -2,7 +2,9 @@ nagios-plugins (1.4.14-5) UNRELEASED; urgency=low
 
   * Adding links to bugreports into most of the patches
   * Dropping patches not needed anymore:
-    - 14_check_log_paths.dpatch
+    - 14_check_log_paths.dpatch: paths are fine now
+    - 26_implicit-basename.dpatch: no 'implicitly convertion' found in buildlog
+      without the patch
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 08 Apr 2010 23:54:05 +0200
 
