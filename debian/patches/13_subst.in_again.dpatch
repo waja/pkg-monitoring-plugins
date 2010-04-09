@@ -4,25 +4,6 @@
 ## DP: Use /usr/lib/nagios/plugins as path.
 
 @DPATCH@
-diff -urNad nagios-plugins-1.4.13+git200906171200~/plugins-scripts/subst.in nagios-plugins-1.4.13+git200906171200/plugins-scripts/subst.in
---- nagios-plugins-1.4.13+git200906171200~/plugins-scripts/subst.in	2009-05-20 06:44:12.000000000 +0200
-+++ nagios-plugins-1.4.13+git200906171200/plugins-scripts/subst.in	2009-06-22 17:08:55.000000000 +0200
-@@ -22,14 +22,7 @@
- # used to replace "use lib utils.pm" with "use lib @libexecdir"
- #
- function led() {
--	led1 = "@libexecdir@";
--	led2 = "@exec_prefix@";
--	led3 = "@prefix@";
--	if ( match(led1, /^\$\{exec_prefix\}/ ) != 0 ) {
--		return "\"" led3 "/libexec\" " ;
--	
--	}
--	return "\"" led1 "\"" ;
-+	return "\"/usr/lib/nagios/plugins\"" ;
- }
- 
- BEGIN {
 diff -urNad nagios-plugins-1.4.12~/contrib/check_linux_raid.pl nagios-plugins-1.4.12/contrib/check_linux_raid.pl
 --- nagios-plugins-1.4.12~/contrib/check_linux_raid.pl	2007-08-28 05:19:45.000000000 +0200
 +++ nagios-plugins-1.4.12/contrib/check_linux_raid.pl	2008-06-06 16:16:23.000000000 +0200
