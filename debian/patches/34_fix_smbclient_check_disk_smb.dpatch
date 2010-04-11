@@ -6,10 +6,10 @@
 ## DP: Upstream bug is: https://sourceforge.net/tracker/?func=detail&atid=397597&aid=1986260&group_id=29880
 
 @DPATCH@
-diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plugins-1.4.12/plugins-scripts/check_disk_smb.pl
---- nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl	2008-07-02 23:08:03.000000000 +0200
-+++ nagios-plugins-1.4.12/plugins-scripts/check_disk_smb.pl	2008-07-02 23:10:42.000000000 +0200
-@@ -26,17 +26,13 @@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagios-plugins-1.4.14~/plugins-scripts/check_disk_smb.pl nagios-plugins-1.4.14/plugins-scripts/check_disk_smb.pl
+--- nagios-plugins-1.4.14~/plugins-scripts/check_disk_smb.pl	2010-04-11 12:41:42.000000000 +0200
++++ nagios-plugins-1.4.14/plugins-scripts/check_disk_smb.pl	2010-04-11 12:42:34.000000000 +0200
+@@ -25,17 +25,13 @@
  use vars qw($opt_P $opt_V $opt_h $opt_H $opt_s $opt_W $opt_u $opt_p $opt_w $opt_c $opt_a $verbose);
  use vars qw($PROGNAME);
  use lib utils.pm ;
@@ -28,7 +28,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plug
  Getopt::Long::Configure('bundling');
  GetOptions
  	("v"   => \$verbose, "verbose"    => \$verbose,
-@@ -59,9 +55,7 @@
+@@ -58,9 +54,7 @@
  
  if ($opt_h) {print_help(); exit $ERRORS{'OK'};}
  
@@ -39,7 +39,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plug
  
  # Options checking
  
-@@ -73,13 +67,12 @@
+@@ -72,11 +66,11 @@
  my $share = $1 if ($opt_s =~ /^([-_.A-Za-z0-9]+\$?)$/);
  ($share) || usage("Invalid share: $opt_s\n");
  
@@ -53,11 +53,9 @@ diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plug
 -($opt_p) || ($opt_p = shift @ARGV) || ($opt_p = "");
 +defined($opt_p) || ($opt_p = shift @ARGV) || ($opt_p = "");
  my $pass = $1 if ($opt_p =~ /(.*)/);
--$pass = "-N" if ($opt_p eq "");
+ $pass = "-N" if ($opt_p eq "");
  
- ($opt_w) || ($opt_w = shift @ARGV) || ($opt_w = 85);
- my $warn = $1 if ($opt_w =~ /^([0-9]{1,2}\%?|100\%?|[0-9]+[kMG])$/);
-@@ -163,23 +156,19 @@
+@@ -162,23 +156,19 @@
  
  # Execute an "ls" on the share using smbclient program
  # get the results into $res
@@ -94,10 +92,10 @@ diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plug
  #Turn off alarm
  alarm(0);
  
-diff -urNad nagios-plugins-1.4.12~/plugins-scripts/utils.pm.in nagios-plugins-1.4.12/plugins-scripts/utils.pm.in
---- nagios-plugins-1.4.12~/plugins-scripts/utils.pm.in	2007-07-07 13:55:48.000000000 +0200
-+++ nagios-plugins-1.4.12/plugins-scripts/utils.pm.in	2008-07-02 23:08:04.000000000 +0200
-@@ -8,7 +8,8 @@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagios-plugins-1.4.14~/plugins-scripts/utils.pm.in nagios-plugins-1.4.14/plugins-scripts/utils.pm.in
+--- nagios-plugins-1.4.14~/plugins-scripts/utils.pm.in	2008-11-30 22:23:18.000000000 +0100
++++ nagios-plugins-1.4.14/plugins-scripts/utils.pm.in	2010-04-11 12:41:43.000000000 +0200
+@@ -7,7 +7,8 @@
  
  require Exporter;
  @ISA = qw(Exporter);
@@ -107,7 +105,7 @@ diff -urNad nagios-plugins-1.4.12~/plugins-scripts/utils.pm.in nagios-plugins-1.
  
  #use strict;
  #use vars($TIMEOUT %ERRORS);
-@@ -67,4 +68,29 @@
+@@ -64,4 +65,29 @@
  	}
  }
  
