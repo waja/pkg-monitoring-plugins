@@ -6,10 +6,10 @@
 ## DP: Upstream bug is: https://sourceforge.net/tracker/?func=detail&atid=397597&aid=1985338&group_id=29880
 
 @DPATCH@
-diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plugins-1.4.12/plugins-scripts/check_disk_smb.pl
---- nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl	2008-06-06 11:57:33.000000000 +0200
-+++ nagios-plugins-1.4.12/plugins-scripts/check_disk_smb.pl	2008-06-06 11:58:03.000000000 +0200
-@@ -65,27 +65,27 @@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagios-plugins-1.4.14~/plugins-scripts/check_disk_smb.pl nagios-plugins-1.4.14/plugins-scripts/check_disk_smb.pl
+--- nagios-plugins-1.4.14~/plugins-scripts/check_disk_smb.pl	2010-04-12 16:34:17.000000000 +0200
++++ nagios-plugins-1.4.14/plugins-scripts/check_disk_smb.pl	2010-04-12 16:37:57.000000000 +0200
+@@ -64,26 +64,26 @@
  
  # Options checking
  
@@ -31,7 +31,6 @@ diff -urNad nagios-plugins-1.4.12~/plugins-scripts/check_disk_smb.pl nagios-plug
 -($opt_p) || ($opt_p = shift) || ($opt_p = "");
 +($opt_p) || ($opt_p = shift @ARGV) || ($opt_p = "");
  my $pass = $1 if ($opt_p =~ /(.*)/);
- $pass = "-N" if ($opt_p eq "");
  
 -($opt_w) || ($opt_w = shift) || ($opt_w = 85);
 +($opt_w) || ($opt_w = shift @ARGV) || ($opt_w = 85);
