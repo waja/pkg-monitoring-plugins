@@ -12,6 +12,8 @@ nagios-plugins (1.4.14-5) UNRELEASED; urgency=low
     13_subst.in_again.dpatch
   * Fix 34_fix_smbclient_check_disk_smb.dpatch and drop
     23_check_smb_password.dpatch, thanks Holger Weiss for notification
+  * Update 39_check_ircd_fix_epn.dpatch with fix from upstream, thanks
+    Holger Weiss
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 08 Apr 2010 23:54:05 +0200
 
