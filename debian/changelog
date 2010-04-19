@@ -14,7 +14,8 @@ nagios-plugins (1.4.14-5) UNRELEASED; urgency=low
     23_check_smb_password.dpatch, thanks Holger Weiss for notification
   * Update 39_check_ircd_fix_epn.dpatch with fix from upstream, thanks
     Holger Weiss
-  * Add 03_check_smtp_help.dpatch to add the help output of "-F" to check_smtp
+  * Add 03_check_smtp_help.dpatch to add the help output of "-F" to check_smtp,
+    thanks to Josip Rodin (Closes: #578374)
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 08 Apr 2010 23:54:05 +0200
 
