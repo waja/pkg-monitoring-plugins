@@ -1,4 +1,4 @@
-nagios-plugins (1.4.14-5) UNRELEASED; urgency=low
+nagios-plugins (1.4.14-5) unstable; urgency=low
 
   * Adding links to Debian and Upstream bugreports into most of the patches
   * Dropping patches not needed anymore, thanks Holger Weiss for assisting:
@@ -17,7 +17,7 @@ nagios-plugins (1.4.14-5) UNRELEASED; urgency=low
   * Add 03_check_smtp_help.dpatch to add the help output of "-F" to check_smtp,
     thanks to Josip Rodin (Closes: #578374)
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 08 Apr 2010 23:54:05 +0200
+ -- Jan Wagner <waja@cyconet.org>  Sat, 08 May 2010 22:11:17 +0200
 
 nagios-plugins (1.4.14-4) unstable; urgency=low
 
