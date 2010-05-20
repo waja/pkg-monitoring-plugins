@@ -2,6 +2,8 @@ nagios-plugins (1.4.14-6) UNRELEASED; urgency=low
 
   * Rename 13_subst.in_again.dpatch to 01_subst.in.dpatch
   * Add missing 42_check_linux_raid_fix_rebuild.dpatch to patch list
+  * fix ssh_disk and make ssh_disk* better readable, thanks
+    Paul Slootman (Closes: 582272)
 
  -- Jan Wagner <waja@cyconet.org>  Sat, 08 May 2010 22:22:24 +0200
 
