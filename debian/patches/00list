@@ -19,3 +19,4 @@
 43_check_http_large_pages_mleak.dpatch
 44_check_snmp_perfdata.dpatch
 45_check_http_sni_optional.dpatch
+46_check_disk_fix_help.dpatch
