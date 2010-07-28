@@ -1,12 +1,28 @@
-nagios-plugins (1.4.14-6) UNRELEASED; urgency=low
+nagios-plugins (1.4.15-1) UNRELEASED; urgency=low
 
+  * New upstream release (Closes: #588273)
+  * Droped the following upstream integrated patches
+     - 03_check_smtp_help.dpatch
+     - 06_checkircd.dpatch
+     - 18_check_game_cmdline.dpatch
+     - 22_check_smb_hostaddress.dpatch
+     - 32_check_ldap_pointer.dpatch
+     - 33_fix_emb_check_disk_smb.dpatch
+     - 34_fix_smbclient_check_disk_smb.dpatch
+     - 35_check_http_date.dpatch
+     - 36_check_ldap_empty_base.dpatch
+     - 37_check_radius_nas-ip-address.dpatch
+     - 39_check_ircd_fix_epn.dpatch
+     - 40_check_http_proxy_auth.dpatch
+     - 41_check_ping_detect_args.dpatch
+     - 42_check_linux_raid_fix_r10.dpatch
+     - 42_check_linux_raid_fix_rebuild.dpatch
+     - 43_check_http_large_pages_mleak.dpatch
+     - 44_check_snmp_perfdata.dpatch
+     - 45_check_http_sni_optional.dpatch
   * Rename 13_subst.in_again.dpatch to 01_subst.in.dpatch
-  * Add missing 42_check_linux_raid_fix_rebuild.dpatch to patch list
   * Fix ssh_disk and make ssh_disk* better readable, thanks
     Paul Slootman (Closes: #582272)
-  * Add 46_check_disk_fix_help.dpatch, since --help seems to imply the
-    possibility to suffix unit values to warn/crit parameters, thanks
-    Justin T Pryzby for reporting (Closes: #588273)
 
  -- Jan Wagner <waja@cyconet.org>  Sat, 08 May 2010 22:22:24 +0200
 

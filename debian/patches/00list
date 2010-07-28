@@ -1,22 +1,3 @@
 01_subst.in.dpatch
 02_check_icmp_links.dpatch
 # commited upstream
-03_check_smtp_help.dpatch
-06_checkircd.dpatch
-18_check_game_cmdline.dpatch
-22_check_smb_hostaddress.dpatch
-32_check_ldap_pointer.dpatch
-33_fix_emb_check_disk_smb.dpatch
-34_fix_smbclient_check_disk_smb.dpatch
-35_check_http_date.dpatch
-36_check_ldap_empty_base.dpatch
-37_check_radius_nas-ip-address.dpatch
-39_check_ircd_fix_epn.dpatch
-40_check_http_proxy_auth.dpatch
-41_check_ping_detect_args.dpatch
-42_check_linux_raid_fix_r10.dpatch
-42_check_linux_raid_fix_rebuild.dpatch
-43_check_http_large_pages_mleak.dpatch
-44_check_snmp_perfdata.dpatch
-45_check_http_sni_optional.dpatch
-46_check_disk_fix_help.dpatch
