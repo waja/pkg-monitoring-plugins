@@ -1,6 +1,6 @@
 nagios-plugins (1.4.15-1) UNRELEASED; urgency=low
 
-  * New upstream release (Closes: #588273)
+  * New upstream release (Closes: #588273, #522631)
   * Droped the following upstream integrated patches
      - 03_check_smtp_help.dpatch
      - 06_checkircd.dpatch
