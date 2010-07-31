@@ -1,4 +1,4 @@
-nagios-plugins (1.4.15-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.15-1) unstable; urgency=low
 
   * New upstream release (Closes: #588273, #522631)
   * Droped the following upstream integrated patches
@@ -24,7 +24,7 @@ nagios-plugins (1.4.15-1) UNRELEASED; urgency=low
   * Fix ssh_disk and make ssh_disk* better readable, thanks
     Paul Slootman (Closes: #582272)
 
- -- Jan Wagner <waja@cyconet.org>  Sat, 08 May 2010 22:22:24 +0200
+ -- Jan Wagner <waja@cyconet.org>  Sat, 31 Jul 2010 10:34:04 +0200
 
 nagios-plugins (1.4.14-5) unstable; urgency=low
 
