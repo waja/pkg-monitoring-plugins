@@ -1,3 +1,9 @@
+nagios-plugins (1.4.15-2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Jan Wagner <waja@cyconet.org>  Sat, 31 Jul 2010 10:51:50 +0200
+
 nagios-plugins (1.4.15-1) unstable; urgency=low
 
   * New upstream release (Closes: #588273, #522631)
