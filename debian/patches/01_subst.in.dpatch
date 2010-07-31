@@ -1,5 +1,5 @@
 #! /bin/sh /usr/share/dpatch/dpatch-run
-## 13_subst.in_again.dpatch by  <seanius@localhost.localdomain>
+## 01_subst.in.dpatch by  <seanius@localhost.localdomain>
 ##
 ## DP: Use /usr/lib/nagios/plugins as path.
 

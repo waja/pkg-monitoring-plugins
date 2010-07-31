@@ -1,4 +1,32 @@
-nagios-plugins (1.4.14-5) UNRELEASED; urgency=low
+nagios-plugins (1.4.15-1) unstable; urgency=low
+
+  * New upstream release (Closes: #588273, #522631)
+  * Droped the following upstream integrated patches
+     - 03_check_smtp_help.dpatch
+     - 06_checkircd.dpatch
+     - 18_check_game_cmdline.dpatch
+     - 22_check_smb_hostaddress.dpatch
+     - 32_check_ldap_pointer.dpatch
+     - 33_fix_emb_check_disk_smb.dpatch
+     - 34_fix_smbclient_check_disk_smb.dpatch
+     - 35_check_http_date.dpatch
+     - 36_check_ldap_empty_base.dpatch
+     - 37_check_radius_nas-ip-address.dpatch
+     - 39_check_ircd_fix_epn.dpatch
+     - 40_check_http_proxy_auth.dpatch
+     - 41_check_ping_detect_args.dpatch
+     - 42_check_linux_raid_fix_r10.dpatch
+     - 42_check_linux_raid_fix_rebuild.dpatch
+     - 43_check_http_large_pages_mleak.dpatch
+     - 44_check_snmp_perfdata.dpatch
+     - 45_check_http_sni_optional.dpatch
+  * Rename 13_subst.in_again.dpatch to 01_subst.in.dpatch
+  * Fix ssh_disk and make ssh_disk* better readable, thanks
+    Paul Slootman (Closes: #582272)
+
+ -- Jan Wagner <waja@cyconet.org>  Sat, 31 Jul 2010 10:34:04 +0200
+
+nagios-plugins (1.4.14-5) unstable; urgency=low
 
   * Adding links to Debian and Upstream bugreports into most of the patches
   * Dropping patches not needed anymore, thanks Holger Weiss for assisting:
@@ -17,7 +45,7 @@ nagios-plugins (1.4.14-5) UNRELEASED; urgency=low
   * Add 03_check_smtp_help.dpatch to add the help output of "-F" to check_smtp,
     thanks to Josip Rodin (Closes: #578374)
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 08 Apr 2010 23:54:05 +0200
+ -- Jan Wagner <waja@cyconet.org>  Sat, 08 May 2010 22:11:17 +0200
 
 nagios-plugins (1.4.14-4) unstable; urgency=low
 
