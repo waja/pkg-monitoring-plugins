@@ -88,7 +88,7 @@ config.status: configure
 		--with-pgsql=/usr \
 		--with-mysql=/usr \
 		--with-proc-loadavg=/proc/loadavg \
-		--with-ps-command="/bin/ps axwo 'stat uid pid ppid vsz rss pcpu etime comm args'" \
+		--with-ps-command="/bin/ps axwwo 'stat uid pid ppid vsz rss pcpu etime comm args'" \
 		--with-ps-format="%s %d %d %d %d %d %f %s %s %n" \
 		--with-ps-cols=10 \
 		--with-ps-varlist="procstat,&procuid,&procpid,&procppid,&procvsz,&procrss,&procpcpu,procetime,procprog,&pos" \
