@@ -1,3 +1,4 @@
 01_subst.in.dpatch
 02_check_icmp_links.dpatch
+05_check_linux_raid_fix_striped.dpatch
 # commited upstream

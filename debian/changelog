@@ -1,10 +1,15 @@
-nagios-plugins (1.4.15-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.15-2) unstable; urgency=low
 
   [ Alexander Wirt ]
-  * Call ps with two "w" to ensure unlimited width of ps output 
-    (Closes: #596372) 
+  * Call ps with two "w" to ensure unlimited width of ps output
+    (Closes: #596372)
 
- -- Alexander Wirt <formorer@debian.org>  Fri, 10 Sep 2010 22:24:01 +0200
+  [ Jan Wagner ]
+  * Add 05_check_linux_raid_fix_striped.dpatch to fix bad output from
+    check_linux_raid with RAID0 and linear volumes, thanks to Thomas
+    Guyot-Sionnest (Closes: #579049) - LP: #621380
+
+ -- Jan Wagner <waja@cyconet.org>  Thu, 23 Sep 2010 09:24:39 +0200
 
 nagios-plugins (1.4.15-1) unstable; urgency=low
 
