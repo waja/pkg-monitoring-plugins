@@ -8,6 +8,7 @@ nagios-plugins (1.4.15-2) unstable; urgency=low
   * Add 05_check_linux_raid_fix_striped.dpatch to fix bad output from
     check_linux_raid with RAID0 and linear volumes, thanks to Thomas
     Guyot-Sionnest (Closes: #579049) - LP: #621380
+  * Bump Standards-Version to 3.9.1, no changes needed
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 23 Sep 2010 09:24:39 +0200
 
