@@ -4,6 +4,8 @@ nagios-plugins (1.4.15-3) UNRELEASED; urgency=low
     thanks to Adam Buchbinder
   * Add 11_check_disk_smb_NT_STATUS_ACCESS_DENIED.dpatch from upstream svn
     (Closes: #601696), thanks to Adam Buchbinder
+  * Fix broken symlink of README.Debian.plugins (Closes: #603414), thanks
+    Bernd Zeimetz
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 23 Sep 2010 11:24:55 +0200
 
