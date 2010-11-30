@@ -1,6 +1,9 @@
 nagios-plugins (1.4.15-3) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Add 10_check_disk_smb_spaces.dpatch from upstream svn (Closes: #601699),
+    thanks to Adam Buchbinder
+  * Add 11_check_disk_smb_NT_STATUS_ACCESS_DENIED.dpatch from upstream svn
+    (Closes: #601696), thanks to Adam Buchbinder
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 23 Sep 2010 11:24:55 +0200
 
