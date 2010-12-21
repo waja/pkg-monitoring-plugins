@@ -1,4 +1,4 @@
-nagios-plugins (1.4.15-3) UNRELEASED; urgency=low
+nagios-plugins (1.4.15-3) unstable; urgency=low
 
   * Add 10_check_disk_smb_spaces.dpatch from upstream svn (Closes: #601699),
     thanks to Adam Buchbinder
@@ -6,8 +6,14 @@ nagios-plugins (1.4.15-3) UNRELEASED; urgency=low
     (Closes: #601696), thanks to Adam Buchbinder
   * Fix broken symlink of README.Debian.plugins (Closes: #603414), thanks
     Bernd Zeimetz
+  * Add patches provided by upstream to fix regressions with check_snmp
+    introduced in 1.4.15 (Closes: 607736)
+    - 12_check_snmp_01_strings.dpatch
+    - 12_check_snmp_02_numeric.dpatch
+    - 12_check_snmp_03_state_based.dpatch
+    - 12_check_snmp_04_strings.dpatch
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 23 Sep 2010 11:24:55 +0200
+ -- Jan Wagner <waja@cyconet.org>  Wed, 22 Dec 2010 00:43:02 +0100
 
 nagios-plugins (1.4.15-2) unstable; urgency=low
 
