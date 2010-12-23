@@ -4,7 +4,4 @@
 05_check_linux_raid_fix_striped.dpatch
 10_check_disk_smb_spaces.dpatch
 11_check_disk_smb_NT_STATUS_ACCESS_DENIED.dpatch
-12_check_snmp_01_strings.dpatch
-12_check_snmp_02_numeric.dpatch
-12_check_snmp_03_state_based.dpatch
-12_check_snmp_04_strings.dpatch
+12_check_snmp_1.4.15_regression.dpatch
