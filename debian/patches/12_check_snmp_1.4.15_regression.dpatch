@@ -1,0 +1,180 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 12_check_snmp_1.4.15_regression.dpatch by
+## Thomas Guyot-Sionnest <dermoth@aei.ca>
+##
+## Original patch to make Timeticks works as in check_snmp v1.4.14, it turns
+## out is_numeric isn't so useful and treating all types as numeric works
+## best for backwards-compatibility. This is how it used to work in 1.4.14.
+##
+## As a special case, I also make calculate_rate look up for numeric values
+## as it would otherwise return the last value instead.
+##
+## DP: Remove that is_numeric madness
+
+@DPATCH@
+
+
+diff --git a/NEWS b/NEWS
+index ff92401..e3e8f37 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,5 +1,10 @@
+ This file documents the major additions and syntax changes between releases.
+ 
++ ...
++
++	FIXES
++	Make check_snmp work more like v1.4.14 with regard to using special values (Timeticks, STRING) as numeric thresholds.
++
+ 1.4.15 27th July 2010
+ 	ENHANCEMENTS
+ 	New check_ntp_peer -m and -n options to check the number of usable time sources ("truechimers")
+diff --git a/plugins/check_snmp.c b/plugins/check_snmp.c
+index f32a26e..d79da8c 100644
+--- a/plugins/check_snmp.c
++++ b/plugins/check_snmp.c
+@@ -169,7 +169,6 @@ main (int argc, char **argv)
+ 	char *state_string=NULL;
+ 	size_t response_length, current_length, string_length;
+ 	char *temp_string=NULL;
+-	int is_numeric=0;
+ 	time_t current_time;
+ 	double temp_double;
+ 	time_t duration;
+@@ -335,29 +334,24 @@ main (int argc, char **argv)
+ 		/* We strip out the datatype indicator for PHBs */
+ 		if (strstr (response, "Gauge: ")) {
+ 			show = strstr (response, "Gauge: ") + 7;
+-			is_numeric++;
+ 		} 
+ 		else if (strstr (response, "Gauge32: ")) {
+ 			show = strstr (response, "Gauge32: ") + 9;
+-			is_numeric++;
+ 		} 
+ 		else if (strstr (response, "Counter32: ")) {
+ 			show = strstr (response, "Counter32: ") + 11;
+-			is_numeric++;
+ 			is_counter=1;
+ 			if(!calculate_rate) 
+ 				strcpy(type, "c");
+ 		}
+ 		else if (strstr (response, "Counter64: ")) {
+ 			show = strstr (response, "Counter64: ") + 11;
+-			is_numeric++;
+ 			is_counter=1;
+ 			if(!calculate_rate)
+ 				strcpy(type, "c");
+ 		}
+ 		else if (strstr (response, "INTEGER: ")) {
+ 			show = strstr (response, "INTEGER: ") + 9;
+-			is_numeric++;
+ 		}
+ 		else if (strstr (response, "STRING: ")) {
+ 			show = strstr (response, "STRING: ") + 8;
+@@ -396,15 +390,17 @@ main (int argc, char **argv)
+ 			}
+ 
+ 		}
+-		else if (strstr (response, "Timeticks: "))
++		else if (strstr (response, "Timeticks: ")) {
+ 			show = strstr (response, "Timeticks: ");
++		}
+ 		else
+ 			show = response;
+ 
+ 		iresult = STATE_DEPENDENT;
+ 
+ 		/* Process this block for numeric comparisons */
+-		 if (is_numeric) {
++		/* Make some special values,like Timeticks numeric only if a threshold is defined */
++		if (thlds[i]->warning || thlds[i]->critical || calculate_rate) {
+ 			ptr = strpbrk (show, "0123456789");
+ 			if (ptr == NULL)
+ 				die (STATE_UNKNOWN,_("No valid data returned"));
+diff --git a/plugins/t/check_snmp.t b/plugins/t/check_snmp.t
+index 004ba1a..25a2999 100644
+--- a/plugins/t/check_snmp.t
++++ b/plugins/t/check_snmp.t
+@@ -8,7 +8,7 @@ use strict;
+ use Test::More;
+ use NPTest;
+ 
+-my $tests = 8+38+2+2;
++my $tests = 8+42+2+2;
+ plan tests => $tests;
+ my $res;
+ 
+@@ -124,6 +124,13 @@ SKIP: {
+ 		cmp_ok( $res->return_code, '==', 0, "Skipping all thresholds");
+ 		like($res->output, '/^SNMP OK - \d+ \w+ \d+\s.*$/', "Skipping all thresholds, result printed rather than parsed");
+ 
++		$res = NPTest->testCmd( "./check_snmp -H $host_snmp -C $snmp_community -o system.sysUpTime.0 -c 1000000000: -u '1/100 sec'");
++		cmp_ok( $res->return_code, '==', 2, "Timetick used as a threshold");
++		like($res->output, '/^SNMP CRITICAL - \*\d+\* 1\/100 sec.*$/', "Timetick used as a threshold, parsed as numeric");
++
++		$res = NPTest->testCmd( "./check_snmp -H $host_snmp -C $snmp_community -o system.sysUpTime.0");
++		cmp_ok( $res->return_code, '==', 0, "Timetick used as a string");
++		like($res->output, '/^SNMP OK - Timeticks:\s\(\d+\)\s+(?:\d+ days?,\s+)?\d+:\d+:\d+\.\d+\s.*$/', "Timetick used as a string, result printed rather than parsed");
+ 	}
+ 
+ 	# These checks need a complete command line. An invalid community is used so
+diff --git a/plugins/tests/check_snmp.t b/plugins/tests/check_snmp.t
+index e7ad192..c960f7b 100755
+--- a/plugins/tests/check_snmp.t
++++ b/plugins/tests/check_snmp.t
+@@ -51,7 +51,10 @@ if ($ARGV[0] && $ARGV[0] eq "-d") {
+ 	}
+ }
+ 
+-my $tests = 33;
++# We should merge that with $ENV{'NPTEST_CACHE'}, use one dir for all test data
++$ENV{'NAGIOS_PLUGIN_STATE_DIRECTORY'} ||= "/var/tmp";
++
++my $tests = 39;
+ if (-x "./check_snmp") {
+ 	plan tests => $tests;
+ } else {
+@@ -106,7 +109,7 @@ like($res->output, '/'.quotemeta('SNMP OK - And now have fun with with this: \"C
+ "And now have fun with with this: \"C:\\\\\"
+ because we\'re not done yet!"').'/m', "Attempt to confuse parser No.3");
+ 
+-system("rm /usr/local/nagios/var/check_snmp/*");
++system("rm -f ".$ENV{'NAGIOS_PLUGIN_STATE_DIRECTORY'}."/check_snmp/*");
+ $res = NPTest->testCmd( "./check_snmp -H 127.0.0.1 -C public -p $port_snmp -o .1.3.6.1.4.1.8072.3.2.67.10 --rate -w 600" );
+ is($res->return_code, 0, "Returns OK");
+ is($res->output, "No previous data to calculate rate - assume okay");
+@@ -170,5 +173,16 @@ $res = NPTest->testCmd( "./check_snmp -H 127.0.0.1 -C public -p $port_snmp -o .1
+ is($res->return_code, 0, "OK as string doesn't match but inverted" );
+ is($res->output, 'SNMP OK - "stringtests" | ', "OK as inverted string no match" );
+ 
++$res = NPTest->testCmd( "./check_snmp -H 127.0.0.1 -C public -p $port_snmp -o .1.3.6.1.4.1.8072.3.2.67.12 -w 4:5" );
++is($res->return_code, 1, "Numeric in string test" );
++is($res->output, 'SNMP WARNING - *3.5* | iso.3.6.1.4.1.8072.3.2.67.12=3.5 ', "WARNING threshold checks for string masquerading as number" );
++
++$res = NPTest->testCmd( "./check_snmp -H 127.0.0.1 -C public -p $port_snmp -o .1.3.6.1.4.1.8072.3.2.67.13" );
++is($res->return_code, 0, "Not really numeric test" );
++is($res->output, 'SNMP OK - "87.4startswithnumberbutshouldbestring" | ', "Check string with numeric start is still string" );
++
++$res = NPTest->testCmd( "./check_snmp -H 127.0.0.1 -C public -p $port_snmp -o .1.3.6.1.4.1.8072.3.2.67.14" );
++is($res->return_code, 0, "Not really numeric test (trying best to fool it)" );
++is($res->output, 'SNMP OK - "555\"I said\"" | ', "Check string with a double quote following is still a string (looks like the perl routine will always escape though)" );
+ 
+ 
+diff --git a/plugins/tests/check_snmp_agent.pl b/plugins/tests/check_snmp_agent.pl
+index 8784ab1..2ad8516 100644
+--- a/plugins/tests/check_snmp_agent.pl
++++ b/plugins/tests/check_snmp_agent.pl
+@@ -33,9 +33,9 @@ ends with with this: C:\\';
+ my $multilin5 = 'And now have fun with with this: "C:\\"
+ because we\'re not done yet!';
+ 
+-my @fields = (ASN_OCTET_STR, ASN_OCTET_STR, ASN_OCTET_STR, ASN_OCTET_STR, ASN_OCTET_STR, ASN_UNSIGNED, ASN_UNSIGNED, ASN_COUNTER, ASN_COUNTER64, ASN_UNSIGNED, ASN_COUNTER, ASN_OCTET_STR);
+-my @values = ($multiline, $multilin2, $multilin3, $multilin4, $multilin5, 4294965296, 1000, 4294965296, uint64("18446744073709351616"), int(rand(2**32)), 64000, "stringtests");
+-my @incrts = (undef, undef, undef, undef, undef, 1000, -500, 1000, 100000, undef, 666, undef);
++my @fields = (ASN_OCTET_STR, ASN_OCTET_STR, ASN_OCTET_STR, ASN_OCTET_STR, ASN_OCTET_STR, ASN_UNSIGNED, ASN_UNSIGNED, ASN_COUNTER, ASN_COUNTER64, ASN_UNSIGNED, ASN_COUNTER, ASN_OCTET_STR, ASN_OCTET_STR, ASN_OCTET_STR, ASN_OCTET_STR );
++my @values = ($multiline, $multilin2, $multilin3, $multilin4, $multilin5, 4294965296, 1000, 4294965296, uint64("18446744073709351616"), int(rand(2**32)), 64000, "stringtests", "3.5", "87.4startswithnumberbutshouldbestring", '555"I said"' );
++my @incrts = (undef, undef, undef, undef, undef, 1000, -500, 1000, 100000, undef, 666, undef, undef, undef, undef );
+ 
+ # Number of elements in our OID
+ my $oidelts;
+

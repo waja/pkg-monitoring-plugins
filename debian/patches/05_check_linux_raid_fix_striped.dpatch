@@ -1,0 +1,47 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 05_check_linux_raid_fix_striped.dpatch by Thomas Guyot-Sionnest <dermoth@aei.ca>
+##
+## DP: Fix RAID0 and linear volumes (http://bugs.debian.org/579049)
+## DP: Ubuntu bug: https://bugs.launchpad.net/ubuntu/+source/nagios-plugins/+bug/621380
+## DP: Upstream bug is: http://sourceforge.net/tracker/?func=detail&aid=3049988&group_id=29880&atid=397597
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagios-plugins-1.4.15~/contrib/check_linux_raid.pl nagios-plugins-1.4.15/contrib/check_linux_raid.pl
+--- nagios-plugins-1.4.15~/contrib/check_linux_raid.pl	2010-07-27 22:47:15.000000000 +0200
++++ nagios-plugins-1.4.15/contrib/check_linux_raid.pl	2010-09-23 09:00:11.000000000 +0200
+@@ -71,7 +71,8 @@
+ 		} elsif (/^($nextdev)\s*:/) {
+ 			$device=$1;
+ 			$devices{$device}=$device;
+-			if (/active/) {
++			if (/\sactive/) {
++				$status{$device} = ''; # Shall be filled later if available
+ 				$active{$device} = 1;
+ 			}
+ 		}
+@@ -80,7 +81,11 @@
+ }
+ 
+ foreach my $k (sort keys %devices){
+-	if ($status{$k} =~ /_/) {
++	if (!exists($status{$k})) {
++		$msg .= sprintf " %s inactive with no status information.",
++			$devices{$k};
++		$code = max_state($code, "CRITICAL");
++	} elsif ($status{$k} =~ /_/) {
+ 		if (defined $recovery{$k}) {
+ 			$msg .= sprintf " %s status=%s, recovery=%s, finish=%s.",
+ 				$devices{$k}, $status{$k}, $recovery{$k}, $finish{$k};
+@@ -94,10 +99,11 @@
+ 		$code = max_state($code, "OK");
+ 	} else {
+ 		if ($active{$k}) {
+-			$msg .= sprintf " %s active with no status information.\n",
++			$msg .= sprintf " %s active with no status information.",
+ 				$devices{$k};
+ 			$code = max_state($code, "OK");
+ 		} else {
++			# This should't run anymore, but is left as a catch-all
+ 			$msg .= sprintf " %s does not exist.\n", $devices{$k};
+ 			$code = max_state($code, "CRITICAL");
+ 		}

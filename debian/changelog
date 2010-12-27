@@ -1,10 +1,30 @@
-nagios-plugins (1.4.15-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.15-3) unstable; urgency=low
+
+  * Add 10_check_disk_smb_spaces.dpatch from upstream svn (Closes: #601699),
+    thanks to Adam Buchbinder
+  * Add 11_check_disk_smb_NT_STATUS_ACCESS_DENIED.dpatch from upstream svn
+    (Closes: #601696), thanks to Adam Buchbinder
+  * Fix broken symlink of README.Debian.plugins (Closes: #603414), thanks
+    Bernd Zeimetz
+  * Add patche provided by upstream to fix regressions with check_snmp
+    introduced in 1.4.15 (Closes: #607736)
+    - 12_check_snmp_1.4.15_regression.dpatch
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 22 Dec 2010 00:43:02 +0100
+
+nagios-plugins (1.4.15-2) unstable; urgency=low
 
   [ Alexander Wirt ]
-  * Call ps with two "w" to ensure unlimited width of ps output 
-    (Closes: #596372) 
+  * Call ps with two "w" to ensure unlimited width of ps output
+    (Closes: #596372)
 
- -- Alexander Wirt <formorer@debian.org>  Fri, 10 Sep 2010 22:24:01 +0200
+  [ Jan Wagner ]
+  * Add 05_check_linux_raid_fix_striped.dpatch to fix bad output from
+    check_linux_raid with RAID0 and linear volumes, thanks to Thomas
+    Guyot-Sionnest (Closes: #579049) - LP: #621380
+  * Bump Standards-Version to 3.9.1, no changes needed
+
+ -- Jan Wagner <waja@cyconet.org>  Thu, 23 Sep 2010 09:24:39 +0200
 
 nagios-plugins (1.4.15-1) unstable; urgency=low
 
