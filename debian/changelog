@@ -1,6 +1,10 @@
 nagios-plugins (1.4.15-4) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Add 13_check_smtp_greeting.dpatch (Closes: #611914), thanks Daniel Piddock
+    for spotting and Holger Weiss for providing a fix
+    - Abort immediately if we don't receive a server greeting or if the
+      greeting doesn't contain the "--expect"ed string (by default: "220")
+      instead of blindly sending the EHLO/HELO line.
 
  -- Jan Wagner <waja@cyconet.org>  Mon, 27 Dec 2010 22:13:48 +0100
 

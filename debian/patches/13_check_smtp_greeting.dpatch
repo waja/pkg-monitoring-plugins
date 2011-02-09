@@ -1,0 +1,37 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 13_check_smtp_greeting.dpatch
+## Holger Weiss <holger@zedat.fu-berlin.de>
+##
+## From: d16f3fb0a9bb37cc1ce73ef14b5de83e907ef23c Tue, 8 Feb 2011 16:07:52 +0000 (+0100)
+## From: Holger Weiss <holger@zedat.fu-berlin.de>
+## Date: Tue, 8 Feb 2011 16:07:52 +0000 (+0100)
+## Subject: [PATCH] check_smtp: Abort on missing/unexpected greeting
+## (Debian #611914)
+## X-Git-Url: http://nagiosplug.git.sourceforge.net/git/gitweb.cgi?p=nagiosplug%2Fnagiosplug;a=commitdiff_plain;h=d16f3fb0a9bb37cc1ce73ef14b5de83e907ef23c
+##
+## DP: Abort on missing/unexpected greeting (http://bugs.debian.org/611914)
+
+@DPATCH@
+
+diff --git a/plugins/check_smtp.c b/plugins/check_smtp.c
+index 3da724b..ed49163 100644
+--- a/plugins/check_smtp.c
++++ b/plugins/check_smtp.c
+@@ -183,7 +183,7 @@ main (int argc, char **argv)
+ 		/* return a WARNING status if we couldn't read any data */
+ 		if (recvlines(buffer, MAX_INPUT_BUFFER) <= 0) {
+ 			printf (_("recv() failed\n"));
+-			result = STATE_WARNING;
++			return STATE_WARNING;
+ 		}
+ 		else {
+ 			if (verbose)
+@@ -197,7 +197,7 @@ main (int argc, char **argv)
+ 				else
+ 					printf (_("Invalid SMTP response received from host on port %d: %s\n"),
+ 									server_port, buffer);
+-				result = STATE_WARNING;
++				return STATE_WARNING;
+ 			}
+ 		}
+ 
