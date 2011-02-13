@@ -5,6 +5,16 @@ nagios-plugins (1.4.15-4) UNRELEASED; urgency=low
     - Abort immediately if we don't receive a server greeting or if the
       greeting doesn't contain the "--expect"ed string (by default: "220")
       instead of blindly sending the EHLO/HELO line.
+  * Move libraries linked at compile time against checks of
+    nagios-plugins-standard from Depends to Recommends (Closes: #569028)
+    - Add slightly modified bin/gen_plugin_deps.pl from collectd source package
+    - Add linked libraries via bin/gen_plugin_deps.pl into
+      /usr/share/doc/nagios-plugins-standard/README.Debian.plugins
+    - Build-Depend on perl
+    - Create customized substvars for nagios-plugins-standard via
+      dpkg-shlibdeps in debian/rules
+    - Remove temporary files via clean target in debian/rules
+    - Add hint to NEWS.DebianAdd hint to NEWS.Debia
 
  -- Jan Wagner <waja@cyconet.org>  Mon, 27 Dec 2010 22:13:48 +0100
 

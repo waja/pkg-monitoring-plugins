@@ -1,3 +1,11 @@
+nagios-plugins (1.4.15-4) unstable; urgency=low
+
+  Moved linked libraries against nagios-plugins-standard from Depends to
+  Recommends and mention them in
+  /usr/share/doc/nagios-plugins-standard/README.Debian.plugins.
+
+ -- Jan Wagner <waja@cyconet.org>  Sun, 13 Feb 2011 22:51:54 +0100
+
 nagios-plugins (1.4.14-2) unstable; urgency=low
 
   Moved check_mailq to nagios-plugins-standard, because it requires the mailq

@@ -53,3 +53,5 @@ check_oracle:
 
 check_wave:
   * snmp
+
+@PLUGIN_DEPS@

@@ -121,7 +121,7 @@ clean: really-clean unpatch
 really-clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp
+	rm -f build-stamp debian/README.Debian.plugins debian/nagios-plugins-standard.substvars.in
 
 	# Add here commands to clean up after the build process.
 	[ ! -f Makefile ] || $(MAKE) distclean
@@ -169,6 +169,8 @@ install: build
 	mkdir -p ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg
 	install -t ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg \
 		$(DEBIANDIR)/functions
+	# generate debian/README.Debian.plugins
+	perl ./debian/bin/gen_plugin_deps.pl
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -200,7 +202,14 @@ binary-arch: build install
 	dh_compress -s
 	dh_fixperms -s -X utils.pm
 	dh_installdeb -s
-	dh_shlibdeps -s
+	dh_shlibdeps -s -Nnagios-plugins-standard
+	dpkg-shlibdeps -Tdebian/nagios-plugins-standard.substvars \
+		${NP_STD_DIR}/${NP_LIBEXEC}/check_dns
+	dpkg-shlibdeps -Tdebian/nagios-plugins-standard.substvars.in \
+		-dSuggests ${NP_STD_DIR}/${NP_LIBEXEC}/check_*
+	grep shlibs:Suggests debian/nagios-plugins-standard.substvars.in \
+		| sed -e 's/shlibs:Suggests/shlibs:Recommends/' \
+		>> debian/nagios-plugins-standard.substvars
 	dh_gencontrol -s
 	dh_md5sums -s
 	dh_builddeb -s
