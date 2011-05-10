@@ -20,7 +20,7 @@ nagios-plugins (1.4.15-4) UNRELEASED; urgency=low
     - Create customized substvars for nagios-plugins-standard via
       dpkg-shlibdeps in debian/rules
     - Remove temporary files via clean target in debian/rules
-    - Add hint to NEWS.DebianAdd hint to NEWS.Debia
+    - Add hint to NEWS.Debian
 
  -- Jan Wagner <waja@cyconet.org>  Mon, 27 Dec 2010 22:13:48 +0100
 
