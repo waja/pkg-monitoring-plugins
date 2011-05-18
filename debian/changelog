@@ -1,4 +1,4 @@
-nagios-plugins (1.4.15-3squeeze1) unstable; urgency=low
+nagios-plugins (1.4.15-3squeeze1) stable-proposed-updates; urgency=low
 
   * Add 14_check_icmp_multiple_ips.dpatch (Closes: #623702), thanks Max Kosmach
     for spotting and Sebastian Harl for providing a fix
