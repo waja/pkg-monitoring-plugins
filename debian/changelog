@@ -1,3 +1,14 @@
+nagios-plugins (1.4.15-3squeeze1) unstable; urgency=low
+
+  * Add 14_check_icmp_multiple_ips.dpatch (Closes: #623702), thanks Max Kosmach
+    for spotting and Sebastian Harl for providing a fix
+    - When specifying a host-name on the command line, each of its IPs is added
+      to the host table (and each one is pinged). So, the buffer has to be large
+      enough to hold all of the respective host objects. (argc - 1) only fits
+      hosts with a single IP.
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 18 May 2011 21:21:05 +0200
+
 nagios-plugins (1.4.15-3) unstable; urgency=low
 
   * Add 10_check_disk_smb_spaces.dpatch from upstream svn (Closes: #601699),
