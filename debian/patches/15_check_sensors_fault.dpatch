@@ -1,0 +1,32 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 15_check_sensors_fault.dpatch by Jan Wagner <waja@cyconet.org>
+##
+## DP: Report UNKNOWN if sensor is faulty (fixing #615133)
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagios-plugins-1.4.15~/plugins-scripts/check_sensors.sh nagios-plugins-1.4.15/plugins-scripts/check_sensors.sh
+--- nagios-plugins-1.4.15~/plugins-scripts/check_sensors.sh	2010-07-27 22:47:16.000000000 +0200
++++ nagios-plugins-1.4.15/plugins-scripts/check_sensors.sh	2011-05-17 22:17:38.000000000 +0200
+@@ -10,7 +10,7 @@
+ 
+ 
+ print_usage() {
+-	echo "Usage: $PROGNAME"
++	echo "Usage: $PROGNAME [--ignore-fault]"
+ }
+ 
+ print_help() {
+@@ -57,6 +57,13 @@
+ 		if echo ${sensordata} | egrep ALARM > /dev/null; then
+ 			echo SENSOR CRITICAL - Sensor alarm detected!
+ 			exit 2
++		elif echo ${sensordata} | egrep FAULT > /dev/null; then
++			echo SENSOR UNKNOWN - Sensor reported fault
++			if test "$1" != "-i" -a "$1" != "--ignore-fault"; then
++				exit 3
++			else
++				exit 0
++			fi
+ 		else
+ 			echo sensor ok
+ 			exit 0

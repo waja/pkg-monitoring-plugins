@@ -1,0 +1,27 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 14_check_icmp_multiple_ips.dpatch
+## Sebastian Harl <sh@teamix.net>
+##
+## From: 1374f80872412b64bd13f17e6edd70aa59437012 Mon Sep 17 00:00:00 2001
+## From: Sebastian Harl <sh@teamix.net>
+## Date: Thu, 28 Apr 2011 09:18:21 +0200
+## Subject: [PATCH] check_host: Allocate a large-enough buffer for the host table.
+## (Debian #623702)
+## X-Git-Url: http://nagiosplug.git.sourceforge.net/git/gitweb.cgi?p=nagiosplug/nagiosplug;a=commitdiff_plain;h=1374f80872412b64bd13f17e6edd70aa59437012
+##
+## DP: Allocate a large-enough buffer for the host table. (http://bugs.debian.org/623702)
+
+@DPATCH@
+
+--- a/plugins-root/check_icmp.c
++++ b/plugins-root/check_icmp.c
+@@ -621,7 +621,7 @@ main(int argc, char **argv)
+ 	}
+ 
+ 	host = list;
+-	table = malloc(sizeof(struct rta_host **) * (argc - 1));
++	table = malloc(sizeof(struct rta_host **) * targets);
+ 	i = 0;
+ 	while(host) {
+ 		host->id = i*packets;
+

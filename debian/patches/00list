@@ -6,3 +6,4 @@
 11_check_disk_smb_NT_STATUS_ACCESS_DENIED.dpatch
 12_check_snmp_1.4.15_regression.dpatch
 13_check_smtp_greeting.dpatch
+14_check_icmp_multiple_ips.dpatch
