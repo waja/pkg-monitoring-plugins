@@ -1,4 +1,4 @@
-nagios-plugins (1.4.15-4) UNRELEASED; urgency=low
+nagios-plugins (1.4.15-4) unstable; urgency=low
 
   * Add 13_check_smtp_greeting.dpatch (Closes: #611914), thanks Daniel Piddock
     for spotting and Holger Weiss for providing a fix
@@ -22,7 +22,7 @@ nagios-plugins (1.4.15-4) UNRELEASED; urgency=low
     - Remove temporary files via clean target in debian/rules
     - Add hint to NEWS.Debian
 
- -- Jan Wagner <waja@cyconet.org>  Mon, 27 Dec 2010 22:13:48 +0100
+ -- Jan Wagner <waja@cyconet.org>  Wed, 18 May 2011 16:31:35 +0200
 
 nagios-plugins (1.4.15-3) unstable; urgency=low
 
