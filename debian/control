@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 5), dpatch (>= 2.0.9), perl, autotools-dev, libldap
 Homepage: http://nagiosplug.sourceforge.net
 Vcs-Browser: http://svn.debian.org/wsvn/pkg-nagios/nagios-plugins/
 Vcs-Svn: svn://svn.debian.org/pkg-nagios/nagios-plugins/trunk/
-Standards-Version: 3.9.1
+Standards-Version: 3.9.2
 
 Package: nagios-plugins
 Architecture: all

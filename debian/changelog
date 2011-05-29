@@ -1,6 +1,7 @@
 nagios-plugins (1.4.15-5) UNRELEASED; urgency=low
 
   * Enable hardening options (Closes: #542728)
+  * Bump Standards-Version to 3.9.2, no changes needed
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 18 May 2011 16:55:55 +0200
 
