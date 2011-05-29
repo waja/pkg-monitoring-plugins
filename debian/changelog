@@ -1,6 +1,6 @@
 nagios-plugins (1.4.15-5) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Enable hardening options (Closes: #542728)
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 18 May 2011 16:55:55 +0200
 

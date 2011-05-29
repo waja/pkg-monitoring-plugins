@@ -6,6 +6,9 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
+# enable hardnening
+export DEB_BUILD_HARDENING=1
+
 PACKAGE = nagios-plugins
 
 include /usr/share/dpatch/dpatch.make
