@@ -2,6 +2,10 @@ nagios-plugins (1.4.15-5) UNRELEASED; urgency=low
 
   * Enable hardening options (Closes: #542728)
   * Bump Standards-Version to 3.9.2, no changes needed
+  * Updating package description (Closes: #640070), thanks to Christoph Anton
+    Mitterer
+    - Listing the checks of each package
+    - Hint added, that nagios-plugins-basic needs more packages (recommands)
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 18 May 2011 16:55:55 +0200
 

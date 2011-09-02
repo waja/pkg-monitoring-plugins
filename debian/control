@@ -13,18 +13,8 @@ Package: nagios-plugins
 Architecture: all
 Depends: ${misc:Depends}, nagios-plugins-basic, nagios-plugins-standard
 Suggests: nagios3
-Description: Plugins for the nagios network monitoring and management system
- Nagios is a host/service/network monitoring and management system. It has
- the following features:
- .
-  *  Monitoring of network services (via TCP port, SMTP, POP3, HTTP, NNTP,
-     PING, etc.)
-  *  Plugin interface to allow for user-developed service checks
-  *  Contact notifications when problems occur and get resolved (via email,
-     pager, or user-defined method)
-  *  Ability to define event handlers to be run during service or host events
-     (for proactive problem resolution)
-  *  Web output (current status, notifications, history, log file, etc.)
+Description: Plugins for nagios compatible monitoring systems (metapackage)
+ Plugins for nagios compatible monitoring systems like Nagios and Icinga.
  .
  This metapackage will install the entire suite of plugins for nagios.
  If you are installing nagios plugins on a remote "satellite" server
@@ -37,23 +27,27 @@ Depends: ${shlibs:Depends}, ${misc:Depends}, procps, iputils-ping [linux-any], i
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins, nagios-plugins-standard
 Suggests: nagios3
-Description: Plugins for the nagios network monitoring and management system
- Nagios is a host/service/network monitoring and management system. It has
- the following features:
+Description: Plugins for nagios compatible monitoring systems
+ Plugins for nagios compatible monitoring systems like Nagios and Icinga. It
+ contains the following plugins:
  .
-  *  Monitoring of network services (via TCP port, SMTP, POP3, HTTP, NNTP,
-     PING, etc.)
-  *  Plugin interface to allow for user-developed service checks
-  *  Contact notifications when problems occur and get resolved (via email,
-     pager, or user-defined method)
-  *  Ability to define event handlers to be run during service or host events
-     (for proactive problem resolution)
-  *  Web output (current status, notifications, history, log file, etc.)
+  check_apt, check_by_ssh, check_clamd, check_cluster,
+  check_dhcp, check_disk, check_dummy, check_file_age,
+  check_ftp, check_host, check_http, check_icmp,
+  check_ide_smart, check_imap, check_ircd, check_jabber,
+  check_load, check_log, check_mrtg, check_mrtgtraf,
+  check_nagios, check_nntp, check_nntps, check_nt,
+  check_ntp, check_ntp_peer, check_ntp_time, check_nwstat,
+  check_overcr,  check_ping, check_pop, check_procs,
+  check_real, check_rta_multi, check_sensors, check_simap,
+  check_smtp, check_spop, check_ssh, check_ssmtp,
+  check_swap, check_tcp, check_time, check_udp,
+  check_ups, check_users
  .
  This package provides a basic set of plugins with minimal external
  dependencies.  It is not likely to be useful by itself unless you are
- installing a remote "satellite" server (using nagios-nrpe-server or nsca,
- for example).
+ using a remote "satellite" system (using nagios-nrpe-server, check_by_ssh or
+ nsca, for example).
 
 Package: nagios-plugins-standard
 Architecture: any
@@ -62,18 +56,17 @@ Replaces: nagios-plugins
 Depends: ${shlibs:Depends}, ${misc:Depends}, ucf, nagios-plugins-basic (>= 1.4.5-2)
 Recommends: ${shlibs:Recommends}, fping, snmp, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, whois, qstat
 Suggests: nagios3, postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
-Description: Plugins for the nagios network monitoring and management system
- Nagios is a host/service/network monitoring and management system. It has
- the following features:
+Description: Plugins for nagios compatible monitoring systems
+ Plugins for nagios compatible monitoring systems like Nagios and Icinga. It
+ contains the following plugins:
  .
-  *  Monitoring of network services (via TCP port, SMTP, POP3, HTTP, NNTP,
-     PING, etc.)
-  *  Plugin interface to allow for user-developed service checks
-  *  Contact notifications when problems occur and get resolved (via email,
-     pager, or user-defined method)
-  *  Ability to define event handlers to be run during service or host events
-     (for proactive problem resolution)
-  *  Web output (current status, notifications, history, log file, etc.)
+  check_bgpstate, check_breeze, check_dig, check_disk_smb,
+  check_dns, check_flexlm, check_fping, check_game,
+  check_hpjd, check_ifoperstatus, check_ifstatus, check_ldap,
+  check_ldaps, check_linux_raid, check_mailq, check_mysql,
+  check_mysql_query, check_oracle, check_pgsql, check_radius,
+  check_rpc, check_snmp, check_wave
  .
  This package provides the suite of plugins that are most likely to be
- useful on a central nagios host.
+ useful on a central nagios host. Some scripts needs more packages installed
+ to work, which is implemented as recommands.
