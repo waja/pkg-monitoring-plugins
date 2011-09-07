@@ -9,8 +9,8 @@ nagios-plugins (1.4.15-5) unstable; urgency=low
   * Adding 16_check_raduis_fix_format-security.dpatch to fix error in
     check_radius when compiling with -Werror=format-security (hardening),
     thanks Thomas Guyot-Sionnesti - LP: #837085
-  * Adding 15_check_sensors_fault.dpatch to detect sensors in FAULT state
-    (Closes: #615133)
+  * Adding 15_check_sensors_fault.dpatch to detect sensors in FAULT state,
+    thank Holger Weiss (Closes: #615133)
   * Remove empty /usr/include from nagios-plugins-basic, thanks Ferenc Wagner
     (Closes: #630711)
 
