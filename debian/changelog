@@ -6,6 +6,8 @@ nagios-plugins (1.4.15-5) UNRELEASED; urgency=low
     Mitterer
     - Listing the checks of each package
     - Hint added, that nagios-plugins-basic needs more packages (recommands)
+  * Fix error in check_radius when compiling with -Werror=format-security
+    (hardening), thanks Thomas Guyot-Sionnesti - LP: #837085
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 18 May 2011 16:55:55 +0200
 
