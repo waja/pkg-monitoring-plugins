@@ -6,7 +6,7 @@
 @DPATCH@
 diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagios-plugins-1.4.15~/plugins-scripts/check_sensors.sh nagios-plugins-1.4.15/plugins-scripts/check_sensors.sh
 --- nagios-plugins-1.4.15~/plugins-scripts/check_sensors.sh	2010-07-27 22:47:16.000000000 +0200
-+++ nagios-plugins-1.4.15/plugins-scripts/check_sensors.sh	2011-05-17 22:17:38.000000000 +0200
++++ nagios-plugins-1.4.15/plugins-scripts/check_sensors.sh	2011-09-07 11:05:26.000000000 +0200
 @@ -10,7 +10,7 @@
  
  
@@ -16,15 +16,16 @@ diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' 
  }
  
  print_help() {
-@@ -57,6 +57,13 @@
+@@ -57,6 +57,14 @@
  		if echo ${sensordata} | egrep ALARM > /dev/null; then
  			echo SENSOR CRITICAL - Sensor alarm detected!
  			exit 2
 +		elif echo ${sensordata} | egrep FAULT > /dev/null; then
-+			echo SENSOR UNKNOWN - Sensor reported fault
 +			if test "$1" != "-i" -a "$1" != "--ignore-fault"; then
++				echo SENSOR UNKNOWN - Sensor reported fault
 +				exit 3
 +			else
++				echo sensor ok
 +				exit 0
 +			fi
  		else
