@@ -11,6 +11,8 @@ nagios-plugins (1.4.15-5) unstable; urgency=low
     thanks Thomas Guyot-Sionnesti - LP: #837085
   * Adding 15_check_sensors_fault.dpatch to detect sensors in FAULT state
     (Closes: #615133)
+  * Remove empty /usr/include from nagios-plugins-basic, thanks Ferenc Wagner
+    (Closes: #630711)
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 07 Sep 2011 12:23:56 +0200
 

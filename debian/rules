@@ -172,6 +172,8 @@ install: build
 	mkdir -p ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg
 	install -t ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg \
 		$(DEBIANDIR)/functions
+	# remove /usr/include from nagios-plugins-nasic (in case its empty)
+	rmdir ${NP_BASIC_DIR}/usr/include
 	# generate debian/README.Debian.plugins
 	perl ./debian/bin/gen_plugin_deps.pl
 
