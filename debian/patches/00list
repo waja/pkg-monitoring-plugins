@@ -7,5 +7,5 @@
 12_check_snmp_1.4.15_regression.dpatch
 13_check_smtp_greeting.dpatch
 14_check_icmp_multiple_ips.dpatch
-# 15_check_sensors_fault.dpatch
+15_check_sensors_fault.dpatch
 16_check_raduis_fix_format-security.dpatch
