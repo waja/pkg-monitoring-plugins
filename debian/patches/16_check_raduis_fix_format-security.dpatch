@@ -1,0 +1,24 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 16_check_raduis_fix_format-security.dpatch
+## From 055b2570eddff9a312dc1445bb7de4a6d7c4887d Mon Sep 17 00:00:00 2001
+## From: Thomas Guyot-Sionnest <dermoth@aei.ca>
+## Date: Tue, 6 Sep 2011 23:20:21 -0400
+## Subject: [PATCH] Make GCC happy
+## X-Git-Url: http://nagiosplug.git.sourceforge.net/git/gitweb.cgi?p=nagiosplug/nagiosplug;a=commitdiff_plain;h=055b2570eddff9a312dc1445bb7de4a6d7c4887d
+##
+## DP: It won't trust us about msg containing no format string, and fail miserably
+## when compiled with -Werror=format-security. (https://bugs.launchpad.net/bugs/837085)
+
+@DPATCH@
+
+--- a/plugins/check_radius.c
++++ b/plugins/check_radius.c
+@@ -211,7 +211,7 @@ main (int argc, char **argv)
+ 	if (result == OK_RC)
+ 		die (STATE_OK, _("Auth OK"));
+ 	(void)snprintf(msg, sizeof(msg), _("Unexpected result code %d"), result);
+-	die (STATE_UNKNOWN, msg);
++	die (STATE_UNKNOWN, "%s", msg);
+ }
+ 
+ 

@@ -23,9 +23,9 @@ use strict;
 use warnings;
 
 # actual not needed
-#my $extra_deps = {
+my $extra_deps = {
 #	sensors => [ 'lm-sensors' ],
-#};
+};
 
 my $infile  = "debian/README.Debian.plugins.in";
 my $outfile = "debian/README.Debian.plugins";

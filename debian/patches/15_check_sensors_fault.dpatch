@@ -1,0 +1,40 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 15_check_sensors_fault.dpatch by Holger Weiss <holger@zedat.fu-berlin.de>
+##
+## From 276c5b98bf619eabd8b0bd5fc3ff60c0a59489a7 Mon Sep 17 00:00:00 2001
+## From: Holger Weiss <holger@zedat.fu-berlin.de>
+## Date: Wed, 7 Sep 2011 13:55:53 +0200
+## Subject: [PATCH] check_sensors: Detect FAULT status
+##
+## DP: Return an UNKNOWN status if a faulty sensor is detected.  This can be
+## suppressed with the new "--ignore-fault" option.
+
+@DPATCH@
+
+--- a/plugins-scripts/check_sensors.sh
++++ b/plugins-scripts/check_sensors.sh
+@@ -10,7 +10,7 @@ REVISION="@NP_VERSION@"
+ 
+ 
+ print_usage() {
+-	echo "Usage: $PROGNAME"
++	echo "Usage: $PROGNAME" [--ignore-fault]
+ }
+ 
+ print_help() {
+@@ -57,9 +57,12 @@ case "$1" in
+ 		if echo ${sensordata} | egrep ALARM > /dev/null; then
+ 			echo SENSOR CRITICAL - Sensor alarm detected!
+ 			exit 2
+-		else
+-			echo sensor ok
+-			exit 0
++		elif echo ${sensordata} | egrep FAULT > /dev/null \
++		    && test "$1" != "-i" -a "$1" != "--ignore-fault"; then
++			echo SENSOR UNKNOWN - Sensor reported fault
++			exit 3
+ 		fi
++		echo sensor ok
++		exit 0
+ 		;;
+ esac
