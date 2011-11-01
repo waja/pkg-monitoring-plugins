@@ -1,6 +1,6 @@
 nagios-plugins (1.4.15-6) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Add icinga as recommand as alternative for nagios3
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 07 Sep 2011 15:33:55 +0200
 
