@@ -56,8 +56,8 @@ ifeq ($(DEB_HOST_ARCH_OS),linux)
 PING_CONFIGURE_ARGS = --with-ping-command="/bin/ping -n -U -w %d -c %d %s" \
                       --with-ping6-command="/bin/ping6 -n -U -w %d -c %d %s"
 else
-PING_CONFIGURE_ARGS = --with-ping-command="/bin/ping -n -c %d %s" \
-                      --with-ping6-command="/bin/ping6 -n -c %d %s"
+PING_CONFIGURE_ARGS = --with-ping-command="/bin/ping -n -w %d -c %d %s" \
+                      --with-ping6-command="/bin/ping6 -n -w %d -c %d %s"
 endif
 
 
