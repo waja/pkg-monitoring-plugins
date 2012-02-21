@@ -4,6 +4,10 @@ nagios-plugins (1.4.15-6) UNRELEASED; urgency=low
   * Add '-w %d' as ping argument for check_ping on non-linux plattforms, as
     inetutils-ping is now supporting this, thanks Guillem Jover for bringing
     this up (Closes: #655023)
+  * Adding 17_check_smtp_fix_duplicate_cert_message.dpatch and
+    17_check_tcp_fix_duplicate_cert_message.dpatch (Closes: #654682), to fix
+    duplicate messages when certificate errors occures, thanks Sebastian Harl
+    for reporting
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 07 Sep 2011 15:33:55 +0200
 

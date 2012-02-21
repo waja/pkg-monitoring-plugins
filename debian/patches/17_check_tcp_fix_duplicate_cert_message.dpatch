@@ -1,0 +1,28 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 17_check_tcp_fix_duplicate_cert_message.dpatch
+## From 4d06603060fc1233861b164870f0d3a2e0d8d2eb Fri, 15 Jul 2011 20:19:15 +0000 (+0100)
+## From: Ton Voon <ton.voon@opsera.com>
+## Date: Tue, 6 Sep 2011 23:20:21 -0400
+## Subject: [PATCH] Fix check_smtp and check_tcp where duplicate messages were displayed for certificate... 
+## X-Git-Url: http://nagiosplug.git.sourceforge.net/git/gitweb.cgi?p=nagiosplug/nagiosplug;a=commitdiff_plain;h=4d06603060fc1233861b164870f0d3a2e0d8d2eb
+##
+## DP: Fix check_tcp where duplicate messages were displayed for certificate errors
+
+@DPATCH@
+
+--- a/plugins/check_tcp.c
++++ b/plugins/check_tcp.c
+@@ -236,12 +236,9 @@ main (int argc, char **argv)
+ 		result = np_net_ssl_init(sd);
+ 		if (result == STATE_OK && check_cert == TRUE) {
+ 			result = np_net_ssl_check_cert(days_till_exp);
+-			if(result != STATE_OK) {
+-				printf(_("CRITICAL - Cannot retrieve server certificate.\n"));
+-			}
+ 		}
+ 	}
+-	if(result != STATE_OK){
++	if(result != STATE_OK || check_cert == TRUE){
+ 		np_net_ssl_cleanup();
+ 		if(sd) close(sd);
+ 		return result;
