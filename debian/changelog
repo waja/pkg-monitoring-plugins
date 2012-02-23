@@ -9,6 +9,8 @@ nagios-plugins (1.4.15-6) UNRELEASED; urgency=low
     duplicate messages when certificate errors occures, thanks Sebastian Harl
     for reporting
   * Add build-arch and build-indep targets to debian/rules
+  * Add 03_check_disk_smb_perfdata.dpatch to add perfdata to check_disk_smb
+   (Closes: #654259), thanks to G. Leimua
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 07 Sep 2011 15:33:55 +0200
 
