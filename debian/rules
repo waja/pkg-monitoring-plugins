@@ -112,7 +112,9 @@ config.status: configure
 		--disable-rpath
 
 
-build: patch-stamp build-stamp
+build: build-arch build-indep
+build-arch: patch-stamp build-stamp
+build-indep: patch-stamp build-stamp
 
 build-stamp:  config.status
 	dh_testdir

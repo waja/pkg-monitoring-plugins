@@ -8,6 +8,7 @@ nagios-plugins (1.4.15-6) UNRELEASED; urgency=low
     17_check_tcp_fix_duplicate_cert_message.dpatch (Closes: #654682), to fix
     duplicate messages when certificate errors occures, thanks Sebastian Harl
     for reporting
+  * Add build-arch and build-indep targets to debian/rules
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 07 Sep 2011 15:33:55 +0200
 
