@@ -14,6 +14,8 @@ nagios-plugins (1.4.15-6) UNRELEASED; urgency=low
   * Add 18_check_snmp_labels.dpatch to fix multiple labels in check_snmp
    (Closes: #647020), thanks to Oskar Liljeblad
   * Updating Vcs-Browser field
+  * Add 19_check_http_help.dpatch to clarify that check_http won't verify
+    certificates (Closes: #644627), thanks to Michael Renner
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 07 Sep 2011 15:33:55 +0200
 

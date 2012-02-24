@@ -13,3 +13,4 @@
 17_check_smtp_fix_duplicate_cert_message.dpatch
 03_check_disk_smb_perfdata.dpatch
 18_check_snmp_labels.dpatch
+19_check_http_help.dpatch
