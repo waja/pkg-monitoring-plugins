@@ -1,5 +1,6 @@
 01_subst.in.dpatch
 02_check_icmp_links.dpatch
+04_check_snmp_labels.dpatch
 # commited upstream
 05_check_linux_raid_fix_striped.dpatch
 10_check_disk_smb_spaces.dpatch
