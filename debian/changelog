@@ -11,7 +11,7 @@ nagios-plugins (1.4.15-6) UNRELEASED; urgency=low
   * Add build-arch and build-indep targets to debian/rules
   * Add 03_check_disk_smb_perfdata.dpatch to add perfdata to check_disk_smb
    (Closes: #654259), thanks to G. Leimua
-  * Add 04_check_snmp_labels.dpatch to fix multiple labels in check_snmp
+  * Add 18_check_snmp_labels.dpatch to fix multiple labels in check_snmp
    (Closes: #647020), thanks to Oskar Liljeblad
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 07 Sep 2011 15:33:55 +0200

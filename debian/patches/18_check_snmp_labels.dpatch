@@ -1,0 +1,34 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 18_check_snmp_labels.dpatch
+## From 0e3fa54782f8cbb47af058c4bf13688e8b23865b Mon Sep 17 00:00:00 2001
+## From: Holger Weiss <holger@zedat.fu-berlin.de>
+## Date: Fri, 24 Feb 2012 12:29:00 +0100
+## Subject: [PATCH] Accept multiple labels specified with "-l"
+## X-Git-Url: http://nagiosplug.git.sourceforge.net/git/gitweb.cgi?p=nagiosplug/nagiosplug;a=patch;h=0e3fa54782f8cbb47af058c4bf13688e8b23865b
+##
+## DP: check_snmp: fix multiple labels. (http://bugs.debian.org/647020)
+
+@DPATCH@
+
+--- a/plugins/check_snmp.c
++++ b/plugins/check_snmp.c
+@@ -749,7 +749,7 @@ process_arguments (int argc, char **argv)
+ 					if (labels == NULL)
+ 						die (STATE_UNKNOWN, _("Could not reallocate labels\n"));
+ 				}
+-				labels++;
++				nlabels++;
+ 				ptr = thisarg (ptr);
+ 				if (strstr (ptr, "'") == ptr)
+ 					labels[nlabels - 1] = ptr + 1;
+@@ -1072,8 +1072,8 @@ print_help (void)
+ 
+ 	printf ("\n");
+ 	printf ("%s\n", _("Notes:"));
+-	printf (" %s\n", _("- Multiple OIDs may be indicated by a comma or space-delimited list (lists with"));
+-	printf ("   %s %i %s\n", _("internal spaces must be quoted). Maximum:"), MAX_OIDS, _("OIDs."));
++	printf (" %s\n", _("- Multiple OIDs (and labels) may be indicated by a comma or space-delimited  "));
++	printf ("   %s %i %s\n", _("list (lists with internal spaces must be quoted). Maximum:"), MAX_OIDS, _("OIDs."));
+ 
+ 	printf(" -%s", UT_THRESHOLDS_NOTES);
+ 
