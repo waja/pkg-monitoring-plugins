@@ -23,6 +23,7 @@ CFLAGS = -Wall -g
 
 DEBIANDIR=$(CURDIR)/debian
 NP_LIBEXEC:=/usr/lib/nagios/plugins
+NP_COMMON_DIR:=$(DEBIANDIR)/nagios-plugins-common
 NP_BASIC_DIR:=$(DEBIANDIR)/nagios-plugins-basic
 NP_BASIC_TEMPLATES:=$(NP_BASIC_DIR)/usr/share/nagios-plugins/templates-basic
 NP_STD_DIR:=$(DEBIANDIR)/nagios-plugins-standard
@@ -34,6 +35,8 @@ std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
 	check_disk_smb check_ldap check_ldaps \
 	check_mailq \
 	check_dns check_dig check_flexlm check_oracle
+
+common_files:=negate urlize utils.pm utils.sh
 
 basic_plugin_cfgs:=apt dhcp disk dummy ftp http load mail news ntp ping procs \
 	real ssh tcp_udp telnet users
@@ -150,6 +153,10 @@ install: build
 	# split up basic vs. standard plugins
 	for p in ${std_plugins}; do \
 		mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/$$p ${NP_STD_DIR}/${NP_LIBEXEC}; \
+	done
+	# slit out common files
+	for p in ${common_files}; do \
+		mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/$$p ${NP_COMMON_DIR}/${NP_LIBEXEC}; \
 	done
 	# now do the same for their configs, copying them into seperate
 	# "template" directories outside of /usr/share/doc for ucf to use.
