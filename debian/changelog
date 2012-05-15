@@ -2,6 +2,8 @@ nagios-plugins (1.4.15-6) UNRELEASED; urgency=low
 
   * Add nagios-plugins-common package which ships files possibly needed also by
     other plugin packages
+  * Removed check_bgpstate and check_linux_raid from package
+    - Deleted 01_subst.in.dpatch and 05_check_linux_raid_fix_striped.dpatch
   * Add icinga as recommand as alternative for nagios3
   * Add '-w %d' as ping argument for check_ping on non-linux plattforms, as
     inetutils-ping is now supporting this, thanks Guillem Jover for bringing
