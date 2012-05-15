@@ -12,6 +12,7 @@ Standards-Version: 3.9.2
 Package: nagios-plugins
 Architecture: all
 Depends: ${misc:Depends}, nagios-plugins-basic, nagios-plugins-standard
+Recommends: nagios-plugins-common
 Suggests: nagios3 | icinga
 Description: Plugins for nagios compatible monitoring systems (metapackage)
  Plugins for nagios compatible monitoring systems like Nagios and Icinga.

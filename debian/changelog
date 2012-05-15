@@ -22,6 +22,7 @@ nagios-plugins (1.4.15-6) UNRELEASED; urgency=low
     certificates (Closes: #644627), thanks to Michael Renner
   * Add check_jabber and check_jabber_4 command definitions
   * Add check_mysql_slave command definition
+  * Recommand nagios-plugins-common via nagios-plugins
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 07 Sep 2011 15:33:55 +0200
 
