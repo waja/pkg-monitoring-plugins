@@ -178,8 +178,8 @@ install: build
 		< $(DEBIANDIR)/nagios-plugins-standard.postrm.in \
 		> $(DEBIANDIR)/nagios-plugins-standard.postrm
 	# copy our dpkg-sourced functions etc into place
-	mkdir -p ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg
-	install -t ${NP_BASIC_DIR}/usr/share/nagios-plugins/dpkg \
+	mkdir -p ${NP_COMMON_DIR}/usr/share/nagios-plugins/dpkg
+	install -t ${NP_COMMON_DIR}/usr/share/nagios-plugins/dpkg \
 		$(DEBIANDIR)/functions
 	# remove /usr/include from nagios-plugins-nasic (in case its empty)
 	rmdir ${NP_BASIC_DIR}/usr/include
