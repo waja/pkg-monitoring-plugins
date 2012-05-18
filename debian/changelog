@@ -1,6 +1,8 @@
 nagios-plugins (1.4.15-7) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Recommand nagios-plugins-contrib via nagios-plugins, drop
+    nagios-plugins-common which gets installed by nagios-plugins-basic
+    anyways
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 18 May 2012 12:27:45 +0200
 
