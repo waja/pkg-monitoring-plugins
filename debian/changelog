@@ -1,3 +1,9 @@
+nagios-plugins (1.4.15-7) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Jan Wagner <waja@cyconet.org>  Fri, 18 May 2012 12:27:45 +0200
+
 nagios-plugins (1.4.15-6) unstable; urgency=low
 
   * Add nagios-plugins-common package which ships files possibly needed also by
