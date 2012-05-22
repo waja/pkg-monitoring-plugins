@@ -1,3 +1,13 @@
+nagios-plugins (1.4.15-7) unstable; urgency=low
+
+  * Recommand nagios-plugins-contrib via nagios-plugins, drop
+    nagios-plugins-common which gets installed by nagios-plugins-basic
+    anyways
+  * Add Replaces: nagios-plugins-basic to nagios-plugins-common
+    (Closes: #673891), thanks to Christoph Anton Mitterer
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 22 May 2012 20:00:03 +0200
+
 nagios-plugins (1.4.15-6) unstable; urgency=low
 
   * Add nagios-plugins-common package which ships files possibly needed also by
