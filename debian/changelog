@@ -1,3 +1,9 @@
+nagios-plugins (1.4.15-8) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 22 May 2012 21:07:50 +0200
+
 nagios-plugins (1.4.15-7) unstable; urgency=low
 
   * Recommand nagios-plugins-contrib via nagios-plugins, drop
