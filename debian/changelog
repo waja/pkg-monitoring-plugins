@@ -1,6 +1,6 @@
 nagios-plugins (1.4.16~pre1-1) UNRELEASED; urgency=low
 
-  * New upstream snapshot
+  * New upstream snapshot (Closes: #662638, #514588)
   * Droped the following upstream integrated patches
     - 10_check_disk_smb_spaces.dpatch
     - 11_check_disk_smb_NT_STATUS_ACCESS_DENIED.dpatch
