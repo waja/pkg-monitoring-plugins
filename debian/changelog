@@ -13,6 +13,7 @@ nagios-plugins (1.4.16~pre1-1) UNRELEASED; urgency=low
     - 17_check_smtp_fix_duplicate_cert_message.dpatch
     - 18_check_snmp_labels.dpatch
     - 19_check_http_help.dpatch
+  * Add 00_fix_release_version.dpatch to fix release version
 
  -- Jan Wagner <waja@cyconet.org>  Tue, 22 May 2012 21:07:50 +0200
 

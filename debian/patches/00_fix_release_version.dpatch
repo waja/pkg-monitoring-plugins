@@ -1,0 +1,12 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 00_fix_release_version.dpatch by Jan Wagner <waja@cyconet.org>
+##
+## DP: Fix release version
+
+@DPATCH@
+diff -urNad '--exclude=CVS' '--exclude=.svn' '--exclude=.git' '--exclude=.arch' '--exclude=.hg' '--exclude=_darcs' '--exclude=.bzr' nagios-plugins-1.4.16~pre1~/release nagios-plugins-1.4.16~pre1/release
+--- nagios-plugins-1.4.16~pre1~/release	2012-06-12 00:01:32.000000000 +0200
++++ nagios-plugins-1.4.16~pre1/release	2012-06-13 12:42:38.000000000 +0200
+@@ -1 +1 @@
+-1.4.15-59-ga80e
++1.4.16~pre1
