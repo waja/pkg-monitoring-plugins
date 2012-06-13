@@ -1,6 +1,18 @@
-nagios-plugins (1.4.15-8) UNRELEASED; urgency=low
+nagios-plugins (1.4.16~pre1-1) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * New upstream snapshot
+  * Droped the following upstream integrated patches
+    - 10_check_disk_smb_spaces.dpatch
+    - 11_check_disk_smb_NT_STATUS_ACCESS_DENIED.dpatch
+    - 12_check_snmp_1.4.15_regression.dpatch
+    - 13_check_smtp_greeting.dpatch
+    - 14_check_icmp_multiple_ips.dpatch
+    - 15_check_sensors_fault.dpatch
+    - 16_check_raduis_fix_format-security.dpatch
+    - 17_check_tcp_fix_duplicate_cert_message.dpatch
+    - 17_check_smtp_fix_duplicate_cert_message.dpatch
+    - 18_check_snmp_labels.dpatch
+    - 19_check_http_help.dpatch
 
  -- Jan Wagner <waja@cyconet.org>  Tue, 22 May 2012 21:07:50 +0200
 
