@@ -4,26 +4,21 @@
 ## From: Holger Weiss <holger@zedat.fu-berlin.de>
 ## Date: Thu, 14 Jun 2012 00:39:55 +0200
 ## Subject: [PATCH] check_dhcp: Don't misinterpret the "siaddr" field
-## X-Git-Url: http://nagiosplug.git.sourceforge.net/git/gitweb.cgi?p=nagiosplug/nagiosplug;a=patch;h=d796c16327e6e315dd528f17e8bd597c5f506730
+## X-Git-Url: https://github.com/nagios-plugins/nagios-plugins/commit/4d5276273287ef59881b541ba96279e91974a4b2.patch
 ##
 ## DP: RFC 2131 (2.) says: "DHCP clarifies the interpretation of the 'siaddr' field as the address of the server to use in the next step of the client's bootstrap process."  So, we shouldn't interpret this field as the DHCP server's own address.  (#3503921 - Jason Ellison)
 
 @DPATCH@
 
-diff --git a/THANKS.in b/THANKS.in
-index 32a8868..943acdb 100644
---- a/THANKS.in
-+++ b/THANKS.in
-@@ -273,3 +273,4 @@ Jason Lunn
- Alex Griffin
- Marc Remy
- Matej Vela
-+Jason Ellison
+---
+ plugins-root/check_dhcp.c |   13 ++++---------
+ 1 file changed, 4 insertions(+), 9 deletions(-)
+
 diff --git a/plugins-root/check_dhcp.c b/plugins-root/check_dhcp.c
 index ac89274..b02ee49 100644
 --- a/plugins-root/check_dhcp.c
 +++ b/plugins-root/check_dhcp.c
-@@ -141,7 +141,7 @@ typedef struct dhcp_packet_struct{
+@@ -141,7 +141,7 @@
          u_int16_t flags;                /* flags */
          struct in_addr ciaddr;          /* IP address of this machine (if we already have one) */
          struct in_addr yiaddr;          /* IP address of this machine (offered by the DHCP server) */
@@ -58,5 +53,5 @@ index ac89274..b02ee49 100644
  	new_offer->server_address=serv_ident.s_addr?serv_ident:source;
  	new_offer->offered_address=offer_packet->yiaddr;
 -- 
-1.7.10.4
+1.7.10
 
