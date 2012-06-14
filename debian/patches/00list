@@ -2,3 +2,5 @@
 00_fix_release_version.dpatch
 # commited upstream
 03_check_disk_smb_perfdata.dpatch
+10_check_dhcp_Fix-handling-of-pad-options.dpatch
+11_check_dhcp_Don-t-misinterpret-the-siaddr-field.dpatch

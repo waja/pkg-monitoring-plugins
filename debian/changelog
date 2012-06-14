@@ -13,6 +13,9 @@ nagios-plugins (1.4.16~pre1-1) UNRELEASED; urgency=low
     - 17_check_smtp_fix_duplicate_cert_message.dpatch
     - 18_check_snmp_labels.dpatch
     - 19_check_http_help.dpatch
+  * Added the following upstream patches
+    - 10_check_dhcp_Fix-handling-of-pad-options.dpatch
+    - 11_check_dhcp_Don-t-misinterpret-the-siaddr-field.dpatch
   * Add 00_fix_release_version.dpatch to fix release version
   * Bump Standards-Version to 3.9.3, no changes needed
 
