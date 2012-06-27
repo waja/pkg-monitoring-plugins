@@ -7,12 +7,12 @@ Build-Depends: debhelper (>= 5), dpatch (>= 2.0.9), perl, autotools-dev, libldap
 Homepage: http://nagiosplug.sourceforge.net
 Vcs-Browser: http://anonscm.debian.org/viewvc/pkg-nagios/nagios-plugins/
 Vcs-Svn: svn://svn.debian.org/pkg-nagios/nagios-plugins/trunk/
-Standards-Version: 3.9.2
+Standards-Version: 3.9.3
 
 Package: nagios-plugins
 Architecture: all
 Depends: ${misc:Depends}, nagios-plugins-basic, nagios-plugins-standard
-Recommends: nagios-plugins-common
+Recommends: nagios-plugins-contrib
 Suggests: nagios3 | icinga
 Description: Plugins for nagios compatible monitoring systems (metapackage)
  Plugins for nagios compatible monitoring systems like Nagios and Icinga.
@@ -25,7 +25,7 @@ Description: Plugins for nagios compatible monitoring systems (metapackage)
 Package: nagios-plugins-common
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ucf
-Breaks: nagios-plugins-basic (<= 1.4.15-5)
+Replaces: nagios-plugins-basic (<= 1.4.15-5)
 Suggests: nagios3 | icinga
 Description: Common files for plugins for nagios compatible monitoring
  Common files for plugins for nagios compatible monitoring systems like Nagios
@@ -36,7 +36,7 @@ Description: Common files for plugins for nagios compatible monitoring
 Package: nagios-plugins-basic
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, procps, iputils-ping [linux-any], inetutils-ping [kfreebsd-any hurd-any], ucf
-Pre-Depends: nagios-plugins-common
+Pre-Depends: nagios-plugins-common (>= 1.4.15-6)
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins, nagios-plugins-standard
 Suggests: nagios3 | icinga

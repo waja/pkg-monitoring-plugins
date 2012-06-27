@@ -1,3 +1,48 @@
+nagios-plugins (1.4.16-1) unstable; urgency=low
+
+  * New upstream release
+   - Drop 00_fix_release_version.dpatch
+  * Droped the following upstream integrated patches
+    - 03_check_disk_smb_perfdata.dpatch
+    - 10_check_dhcp_Fix-handling-of-pad-options.dpatch
+    - 11_check_dhcp_Don-t-misinterpret-the-siaddr-field.dpatch
+  * Updated debian/copyright
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 27 Jun 2012 23:06:52 +0200
+
+nagios-plugins (1.4.16~pre1-1) unstable; urgency=medium
+
+  * New upstream snapshot (Closes: #662638, #514588)
+  * Droped the following upstream integrated patches
+    - 10_check_disk_smb_spaces.dpatch
+    - 11_check_disk_smb_NT_STATUS_ACCESS_DENIED.dpatch
+    - 12_check_snmp_1.4.15_regression.dpatch
+    - 13_check_smtp_greeting.dpatch
+    - 14_check_icmp_multiple_ips.dpatch
+    - 15_check_sensors_fault.dpatch
+    - 16_check_raduis_fix_format-security.dpatch
+    - 17_check_tcp_fix_duplicate_cert_message.dpatch
+    - 17_check_smtp_fix_duplicate_cert_message.dpatch
+    - 18_check_snmp_labels.dpatch
+    - 19_check_http_help.dpatch
+  * Added the following upstream patches
+    - 10_check_dhcp_Fix-handling-of-pad-options.dpatch
+    - 11_check_dhcp_Don-t-misinterpret-the-siaddr-field.dpatch
+  * Add 00_fix_release_version.dpatch to fix release version
+  * Bump Standards-Version to 3.9.3, no changes needed
+
+ -- Jan Wagner <waja@cyconet.org>  Thu, 14 Jun 2012 10:39:44 +0200
+
+nagios-plugins (1.4.15-7) unstable; urgency=low
+
+  * Recommand nagios-plugins-contrib via nagios-plugins, drop
+    nagios-plugins-common which gets installed by nagios-plugins-basic
+    anyways
+  * Add Replaces: nagios-plugins-basic to nagios-plugins-common
+    (Closes: #673891), thanks to Christoph Anton Mitterer
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 22 May 2012 20:00:03 +0200
+
 nagios-plugins (1.4.15-6) unstable; urgency=low
 
   * Add nagios-plugins-common package which ships files possibly needed also by
