@@ -1,4 +1,4 @@
-nagios-plugins (1.4.16-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.16-1) unstable; urgency=low
 
   * New upstream release
    - Drop 00_fix_release_version.dpatch
@@ -8,7 +8,7 @@ nagios-plugins (1.4.16-1) UNRELEASED; urgency=low
     - 11_check_dhcp_Don-t-misinterpret-the-siaddr-field.dpatch
   * Updated debian/copyright
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 14 Jun 2012 10:55:42 +0200
+ -- Jan Wagner <waja@cyconet.org>  Wed, 27 Jun 2012 23:06:52 +0200
 
 nagios-plugins (1.4.16~pre1-1) unstable; urgency=medium
 
