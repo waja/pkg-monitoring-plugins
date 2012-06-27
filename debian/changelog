@@ -1,6 +1,11 @@
-nagios-plugins (1.4.16~pre1-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.16-1) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * New upstream release
+   - Drop 00_fix_release_version.dpatch
+  * Droped the following upstream integrated patches
+    - 03_check_disk_smb_perfdata.dpatch
+    - 10_check_dhcp_Fix-handling-of-pad-options.dpatch
+    - 11_check_dhcp_Don-t-misinterpret-the-siaddr-field.dpatch
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 14 Jun 2012 10:55:42 +0200
 
