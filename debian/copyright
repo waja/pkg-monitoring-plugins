@@ -26,6 +26,7 @@ Upstream Authors:	Felipe Gustavo de Almeida
 			Matthew Kent
 			Harper Mann
 			Benoit Mortier
+			Sven Nierlein
 			Nathan Vonnahme
 			Ton Voon
 			Holger Weiss
@@ -34,6 +35,41 @@ Upstream Authors:	Felipe Gustavo de Almeida
 Copyright:
 
 Copyright (C) 1985, 2009 Free Software Foundation, Inc.
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This package is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+ On Debian systems, the complete text of the GNU General
+ Public License version 3 can be found in "/usr/share/common-licenses/GPL-3".
+
+From upstream README:
+
+   This software is released under the GNU Public License with the additional
+   exemption that compiling, linking and/or using OpenSSL is allowed.
+
+Files with different Licenses:
+
+	build-aux/config.guess
+	build-aux/config.sub
+	build-aux/ltmain.sh
+	contrib/check_cpqarray.c
+	contrib/check_linux_raid.pl
+	contrib/check_traceroute-pure_perl.pl
+	contrib/check_cluster2.c
+	contrib/check_snmp_printer.pl
+	contrib/check_http-with-client-certificate.c
+	contrib/check_cluster.c
+	plugins-scripts/check_mailq.pl
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -47,24 +83,8 @@ Copyright (C) 1985, 2009 Free Software Foundation, Inc.
 
     You should have received a copy of the GNU General Public License
     along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
-    USA.
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-From upstream README:
-
-   This software is released under the GNU Public License with the additional
-   exemption that compiling, linking and/or using OpenSSL is allowed.
-
-Files with different Licenses:
-
-	lib/*.c
-	lib/tests/*.c
-	plugins/*.c
-	plugins/runcmd.h
-	plugins/common.h
-	plugins/netutils.h
-	plugins-root/check_*.c
-	plugins-root/pst3.c
 	gl/alloca.in.h
 	gl/as*
 	gl/base64*

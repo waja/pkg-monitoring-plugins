@@ -6,6 +6,7 @@ nagios-plugins (1.4.16-1) UNRELEASED; urgency=low
     - 03_check_disk_smb_perfdata.dpatch
     - 10_check_dhcp_Fix-handling-of-pad-options.dpatch
     - 11_check_dhcp_Don-t-misinterpret-the-siaddr-field.dpatch
+  * Updated debian/copyright
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 14 Jun 2012 10:55:42 +0200
 
