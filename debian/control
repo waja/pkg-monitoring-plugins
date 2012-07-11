@@ -35,7 +35,7 @@ Description: Common files for plugins for nagios compatible monitoring
 
 Package: nagios-plugins-basic
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, procps, iputils-ping [linux-any], inetutils-ping [kfreebsd-any hurd-any], ucf
+Depends: ${shlibs:Depends}, ${misc:Depends}, procps, iputils-ping [linux-any], inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any], ucf
 Pre-Depends: nagios-plugins-common (>= 1.4.15-6)
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins, nagios-plugins-standard
