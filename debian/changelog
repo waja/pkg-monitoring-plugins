@@ -3,6 +3,8 @@ nagios-plugins (1.4.16-2) UNRELEASED; urgency=low
   * Add versioned dependency to inetutils-ping (Closes: #680416), thanks to
     Robert Millan
   * Move nagios-plugins-contrib from Recommends to Suggests
+  * Define the path for rpcinfo on ubuntu to /usr/sbin and depended on rpcbind
+    - LP: #1086151
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 27 Jun 2012 23:14:40 +0200
 
