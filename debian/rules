@@ -112,6 +112,7 @@ config.status: configure
 		--with-proc-meminfo="/proc/meminfo" \
 		--with-dig-command="/usr/bin/dig" \
 		--with-apt-get-command="/usr/bin/apt-get" \
+		--enable-extra-opts \
 		--disable-rpath
 
 
