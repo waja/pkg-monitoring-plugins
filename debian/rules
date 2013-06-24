@@ -29,14 +29,6 @@ NP_BASIC_TEMPLATES:=$(NP_BASIC_DIR)/usr/share/nagios-plugins/templates-basic
 NP_STD_DIR:=$(DEBIANDIR)/nagios-plugins-standard
 NP_STD_TEMPLATES:=$(NP_STD_DIR)/usr/share/nagios-plugins/templates-standard
 
-ifeq ($(shell dpkg-vendor --derives-from Ubuntu && echo yes),yes)
-	DEPSUBSTVARS = -Vdist:Depends="rpcbind"
-	RPCINFO_CONFIGURE_ARGS = /usr/sbin/rpcinfo
-else
-	DEPSUBSTVARS = -Vdist:Depends=""
-	RPCINFO_CONFIGURE_ARGS = /usr/bin/rpcinfo
-endif
-
 std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
 	check_rpc check_snmp check_wave check_fping check_game \
 	check_radius check_mysql check_mysql_query check_pgsql \
@@ -109,7 +101,7 @@ config.status: configure
 		$(PING_CONFIGURE_ARGS) \
 		--with-nslookup-command="/usr/bin/nslookup -sil" \
 		--with-uptime-command="/usr/bin/uptime" \
-		--with-rpcinfo-command=${RPCINFO_CONFIGURE_ARGS} \
+		--with-rpcinfo-command="/usr/sbin/rpcinfo" \
 		--with-smbclient-command="/usr/bin/smbclient" \
 		--with-snmpget-command="/usr/bin/snmpget" \
 		--with-snmpgetnext-command="/usr/bin/snmpgetnext" \

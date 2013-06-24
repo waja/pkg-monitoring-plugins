@@ -51,6 +51,9 @@ check_mailq:
 check_oracle:
   * procps
 
+check_rpc:
+  * rpcbind
+
 check_wave:
   * snmp
 
