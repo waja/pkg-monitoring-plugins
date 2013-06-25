@@ -1,0 +1,39 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_check_apt_perfdata.dpatch by Jan Wagner <waja@cyconet.org>
+##
+## From 93c1dcba62b6499bef97a6cc9a274eb049de634a Mon Sep 17 00:00:00 2001
+## From: Jan Wagner <waja@cyconet.org>
+## Date: Tue, 25 Jun 2013 11:11:41 +0200
+## Subject: [PATCH] Fixed SF.net bug 1614553, Debian bug #708343, Adding
+## performace data
+
+@DPATCH@
+---
+ plugins/check_apt.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/check_apt.c b/plugins/check_apt.c
+index 7ec2d55..433055b 100644
+--- a/plugins/check_apt.c
++++ b/plugins/check_apt.c
+@@ -116,7 +116,7 @@ int main (int argc, char **argv) {
+ 		result = max_state(result, STATE_OK);
+ 	}
+ 
+-	printf(_("APT %s: %d packages available for %s (%d critical updates). %s%s%s%s\n"),
++	printf(_("APT %s: %d packages available for %s (%d critical updates). %s%s%s%s|available_upgrades=%d;;;0 critical_updates=%d;;;0\n"),
+ 	       state_text(result),
+ 	       packages_available,
+ 	       (upgrade==DIST_UPGRADE)?"dist-upgrade":"upgrade",
+@@ -124,7 +124,9 @@ int main (int argc, char **argv) {
+ 	       (stderr_warning)?" warnings detected":"",
+ 	       (stderr_warning && exec_warning)?",":"",
+ 	       (exec_warning)?" errors detected":"",
+-	       (stderr_warning||exec_warning)?". run with -v for information.":""
++	       (stderr_warning||exec_warning)?". run with -v for information.":"",
++	        packages_available,
++		   sec_count
+ 	       );
+ 
+ 	return result;
+

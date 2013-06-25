@@ -1,4 +1,5 @@
 02_check_icmp_links.dpatch
 05_fix_gets_undefined_in_iso_c11.dpatch
+10_check_apt_perfdata.dpatch
 # commited upstream
 

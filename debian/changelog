@@ -9,6 +9,8 @@ nagios-plugins (1.4.16-2) UNRELEASED; urgency=low
   * Enable Extra-Opts by adding --enable-extra-opts to configure flags
     (Closes: #698119)
   * Fix FTBFS: do not assume that gets is defined (LP: #1097848).
+  * Add performance data to check_apt: 10_check_apt_perfdata.dpatch
+    (Closes: #708343)
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 27 Jun 2012 23:14:40 +0200
 
