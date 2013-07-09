@@ -15,6 +15,20 @@ nagios-plugins (1.4.16-2) UNRELEASED; urgency=low
     (Closes: #708343)
   * Fixing NULL pointer dereference in check_nt (Closes: #714281), thanks to
     Vaclav Ovsik
+  * Add additional arguments to command definitions in (Closes: #709297):
+    - dhcp.cfg
+    - dns.cfg
+    - ftp.cfg
+    - http.cfg
+    - mail.cfg
+    - mysql.cfg
+    - news.cfg
+    - ntp.cfg
+    - pgsql.cfg
+    - procs.cfg
+    - ssh.cfg
+    - tcp_udp.cfg
+    - telnet.cfg
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 27 Jun 2012 23:14:40 +0200
 
