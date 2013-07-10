@@ -1,4 +1,4 @@
-nagios-plugins (1.4.16-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.16-2) unstable; urgency=low
 
   * Add versioned dependency to inetutils-ping (Closes: #680416), thanks to
     Robert Millan
@@ -8,13 +8,29 @@ nagios-plugins (1.4.16-2) UNRELEASED; urgency=low
     - Closes: #713839, thanks to Russell Sim
   * Enable Extra-Opts by adding --enable-extra-opts to configure flags
     (Closes: #698119)
-  * Fix FTBFS: do not assume that gets is defined (LP: #1097848).
+  * Fix FTBFS: do not assume that gets is defined
+    - LP: #1097848
+    - Closes: #701406
   * Add performance data to check_apt: 10_check_apt_perfdata.dpatch
     (Closes: #708343)
   * Fixing NULL pointer dereference in check_nt (Closes: #714281), thanks to
     Vaclav Ovsik
+  * Add additional arguments to command definitions in (Closes: #709297):
+    - dhcp.cfg
+    - dns.cfg
+    - ftp.cfg
+    - http.cfg
+    - mail.cfg
+    - mysql.cfg
+    - news.cfg
+    - ntp.cfg
+    - pgsql.cfg
+    - procs.cfg
+    - ssh.cfg
+    - tcp_udp.cfg
+    - telnet.cfg
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 27 Jun 2012 23:14:40 +0200
+ -- Jan Wagner <waja@cyconet.org>  Wed, 10 Jul 2013 15:08:23 +0200
 
 nagios-plugins (1.4.16-1) unstable; urgency=low
 
