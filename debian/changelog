@@ -1,6 +1,6 @@
 nagios-plugins (1.4.16-3) UNRELEASED; urgency=low
 
-  * NOT RELEASED YET
+  * Fixed check_squid* command definitions
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 10 Jul 2013 15:16:26 +0200
 
