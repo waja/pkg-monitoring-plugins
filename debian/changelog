@@ -3,7 +3,8 @@ nagios-plugins (1.4.16-3) UNRELEASED; urgency=low
   * Fixed check_squid* command definitions
   * Add double threshold to check_smtp (LP: #318703)
     - 12_check_smtp_double_threshold.dpatch
-  * Remove the additional argument from check_ssh (Closes: #717229)
+  * Remove the additional argument from check_ssh and check_proc
+    (Closes: #717229)
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 10 Jul 2013 15:16:26 +0200
 
