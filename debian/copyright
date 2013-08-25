@@ -34,7 +34,7 @@ Upstream Authors:	Felipe Gustavo de Almeida
 
 Copyright:
 
-Copyright (C) 1985, 2009 Free Software Foundation, Inc.
+Copyright (C) 1985, 2013 Free Software Foundation, Inc.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -116,11 +116,8 @@ Files with different Licenses:
 	gl/math.in.h
 	gl/mountlist*
 	gl/netinet_in.in.h
-	gl/open-safer.c
-	gl/pipe-safer.c
 	gl/printf-*
 	gl/ref-*
-	gl/reg*
 	gl/safe-*
 	gl/size_max.h
 	gl/snprintf.c
@@ -128,7 +125,6 @@ Files with different Licenses:
 	gl/stdint.in.h
 	gl/stdio.in.h
 	gl/stdlib.in.h
-	gl/strdup.c
 	gl/strerror.c
 	gl/string.in.h
 	gl/stripslash.c
@@ -136,11 +132,11 @@ Files with different Licenses:
 	gl/strnlen.c
 	gl/sys_socket.in.h
 	gl/unistd.in.h
-	gl/unistd-*
 	gl/v*
 	gl/wchar.in.h
 	gl/wctype.in.h
-	gl/xalloc*
+	gl/xalloc.h
+	gl/xalloc-die.c
 	gl/xmalloc.c
 	gl/xsize.h
 	gl/xstrndup*
@@ -160,6 +156,23 @@ Files with different Licenses:
     License along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
     USA.
+
+	gl/reg*
+	gl/mktime.c
+
+    The GNU C Library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU General Public
+    License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version.
+
+    The GNU C Library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public
+    License along with the GNU C Library; if not, see
+    <http://www.gnu.org/licenses/>.
 
 	Makefile.in
 	gl/Makefile.in
@@ -206,7 +219,7 @@ Files with different Licenses:
 	gl/m4/l*.m4
 	gl/m4/m*.m4
 	gl/m4/n*.m4
-	gl/m4/open.m4
+	gl/m4/off_t.m4
 	gl/m4/p*.m4
 	gl/m4/r*.m4
 	gl/m4/s*.m4

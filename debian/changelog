@@ -1,6 +1,7 @@
 nagios-plugins (1.4.16+git20130823-1) UNRELEASED; urgency=low
 
   * New upstream git snapshot (fae168a68b)
+    - Adjust debian/copyright
   * Droped the following upstream integrated patches
     - 05_fix_gets_undefined_in_iso_c11.dpatch
     - 10_check_apt_perfdata.dpatch
