@@ -6,6 +6,7 @@ nagios-plugins (1.4.16+git20130823-1) UNRELEASED; urgency=low
     - 10_check_apt_perfdata.dpatch
     - 11_check_nt_npe.dpatch
     - 12_check_smtp_double_threshold.dpatch
+  * Fix removing empty /usr/include
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 23 Aug 2013 22:45:43 +0200
 
