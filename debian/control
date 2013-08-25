@@ -66,7 +66,7 @@ Architecture: any
 Conflicts: nagios-plugins (<= 1.4.2-3)
 Replaces: nagios-plugins
 Depends: ${shlibs:Depends}, ${misc:Depends}, ucf, nagios-plugins-basic (>= 1.4.5-2)
-Recommends: ${shlibs:Recommends}, fping, snmp, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, whois, qstat, rpcbind
+Recommends: ${shlibs:Recommends}, fping, snmp, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, qstat, rpcbind
 Suggests: nagios3 | icinga, postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
 Description: Plugins for nagios compatible monitoring systems
  Plugins for nagios compatible monitoring systems like Nagios and Icinga. It
