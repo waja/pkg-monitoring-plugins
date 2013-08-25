@@ -3,7 +3,7 @@ Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
-Build-Depends: debhelper (>= 5), dpatch (>= 2.0.9), perl, autotools-dev, libldap2-dev, libpq-dev, libmysqlclient-dev | libmysqlclient16-dev | libmysqlclient15-dev, libradiusclient-ng-dev, libkrb5-dev, libnet-snmp-perl, procps, mawk | awk, hardening-wrapper
+Build-Depends: debhelper (>= 5), dpatch (>= 2.0.9), perl, autotools-dev, libdbi-dev, libldap2-dev, libpq-dev, libmysqlclient-dev | libmysqlclient16-dev | libmysqlclient15-dev, libradiusclient-ng-dev, libkrb5-dev, libnet-snmp-perl, procps, mawk | awk, hardening-wrapper
 Homepage: http://nagiosplug.sourceforge.net
 Vcs-Browser: http://anonscm.debian.org/viewvc/pkg-nagios/nagios-plugins/
 Vcs-Svn: svn://svn.debian.org/pkg-nagios/nagios-plugins/trunk/
@@ -72,7 +72,7 @@ Description: Plugins for nagios compatible monitoring systems
  Plugins for nagios compatible monitoring systems like Nagios and Icinga. It
  contains the following plugins:
  .
-  check_bgpstate, check_breeze, check_dig, check_disk_smb,
+  check_bgpstate, check_breeze, check_dbi, check_dig, check_disk_smb,
   check_dns, check_flexlm, check_fping, check_game,
   check_hpjd, check_ifoperstatus, check_ifstatus, check_ldap,
   check_ldaps, check_linux_raid, check_mailq, check_mysql,

@@ -34,7 +34,8 @@ std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
 	check_radius check_mysql check_mysql_query check_pgsql \
 	check_disk_smb check_ldap check_ldaps \
 	check_mailq \
-	check_dns check_dig check_flexlm check_oracle
+	check_dns check_dig check_flexlm check_oracle \
+	check_dbi
 
 common_files:=negate urlize utils.pm utils.sh
 
