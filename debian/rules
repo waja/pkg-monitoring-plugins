@@ -168,9 +168,6 @@ install: build
 	for c in ${std_plugin_cfgs}; do \
 		cp $(DEBIANDIR)/pluginconfig/$${c}.cfg ${NP_STD_TEMPLATES}; \
 	done
-	# install check_bgpstate from contrib
-	#install -m 755 contrib/check_bgpstate.pl ${NP_STD_DIR}/${NP_LIBEXEC}/check_bgpstate
-	#install -m 755 contrib/check_linux_raid.pl ${NP_STD_DIR}/${NP_LIBEXEC}/check_linux_raid
 	# dynamically create the postrm scripts using a template, so that we
 	# don't have to define the same list of plugin configs over and over.
 	sed -e 's/@BASIC_PLUGINS@/${basic_plugin_cfgs}/' \
