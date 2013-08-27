@@ -11,6 +11,9 @@ nagios-plugins (1.4.16+git20130823-1) UNRELEASED; urgency=low
   * Add new check_dbi into nagios-plugins-standard
   * Remove whois from Recommands, as check_bgpstate is removed
   * Cleanup debian/rules from unused stuff
+  * Provide informations about repackaging
+    - Extend debian/README.source
+    - Add debian/source/repack.sh
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 23 Aug 2013 22:45:43 +0200
 
