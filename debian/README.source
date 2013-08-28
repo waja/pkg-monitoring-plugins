@@ -7,7 +7,7 @@ Since Version 1.5.0 we are repackaging the upstream tarball to stop providing:
  * perlmods/
  * contrib/
 
-Therefor you should use the script debian/source/repack.sh:
+Therefor you should use the script debian/bin/repack.sh:
 
  repack.sh <upstream-tarball>
 
