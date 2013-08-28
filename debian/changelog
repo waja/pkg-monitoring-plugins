@@ -1,6 +1,6 @@
-nagios-plugins (1.4.16+git20130823-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.16+git20130827-1) UNRELEASED; urgency=low
 
-  * New upstream git snapshot (fae168a68b)
+  * New upstream git snapshot (5789548373)
     - Adjust debian/copyright
   * Droped the following upstream integrated patches
     - 05_fix_gets_undefined_in_iso_c11.dpatch
