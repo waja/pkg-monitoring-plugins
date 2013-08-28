@@ -14,6 +14,7 @@ nagios-plugins (1.4.16+git20130827-1) UNRELEASED; urgency=low
   * Provide information about repackaging
     - Extend debian/README.source
     - Add debian/bin/repack.sh
+  * Updating standards version to 3.9.4 (no changes needed)
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 23 Aug 2013 22:45:43 +0200
 
