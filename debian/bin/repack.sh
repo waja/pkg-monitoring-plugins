@@ -27,10 +27,9 @@ srcdir="$tdir/$distdir"
 sed -i 's/perlmods\/Makefile\ //' $srcdir/configure
 sed -i '/perlmods\/Makefile/d' $srcdir/configure
 #echo "Adjusting $srcdir/Makefile*"
-sed -i 's/\ contrib\ / /' $srcdir/Makefile*
 sed -i 's/perlmods\ //' $srcdir/Makefile*
-#echo "Removing $srcdir/perlmods/ and $srcdir/contrib/"
-rm -rf $srcdir/perlmods/ $srcdir/contrib/
+#echo "Removing $srcdir/perlmods/
+rm -rf $srcdir/perlmods/
 
 #tarball=$(echo $tarball|sed 's/\.orig\.tar\.gz/+dfsg.orig.tar.gz/')
 tar -cof "${tarball/.gz}" -C $tdir/ $distdir
