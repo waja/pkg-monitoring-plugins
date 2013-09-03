@@ -1,4 +1,4 @@
-nagios-plugins (1.4.16+git20130827-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.16+git20130902-1) UNRELEASED; urgency=low
 
   * New upstream git snapshot (5789548373)
     - Adjust debian/copyright
