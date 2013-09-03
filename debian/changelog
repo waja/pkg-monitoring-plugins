@@ -1,3 +1,9 @@
+nagios-plugins (1.4.16+git20130902-2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 03 Sep 2013 15:46:36 +0200
+
 nagios-plugins (1.4.16+git20130902-1) unstable; urgency=medium
 
   * New upstream git snapshot (5789548373)
