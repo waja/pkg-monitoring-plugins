@@ -171,8 +171,6 @@ Files with different Licenses:
 	gl/Makefile.in
 	lib/Makefile.in
 	lib/tests/Makefile.in
-	perlmods/Makefile
-	perlmods/Makefile.in
 	plugins/Makefile.in
 	plugins-root/Makefile.in
 	plugins-scripts/Makefile.in
