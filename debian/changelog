@@ -1,4 +1,4 @@
-nagios-plugins (1.4.16+git20130902-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.16+git20130902-1) unstable; urgency=medium
 
   * New upstream git snapshot (5789548373)
     - Adjust debian/copyright
@@ -21,7 +21,7 @@ nagios-plugins (1.4.16+git20130902-1) UNRELEASED; urgency=low
   * Remove command.cfg from examples in nagios-plugins-common, it was removed
     upstream
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 23 Aug 2013 22:45:43 +0200
+ -- Jan Wagner <waja@cyconet.org>  Tue, 03 Sep 2013 15:13:11 +0200
 
 nagios-plugins (1.4.16-3) unstable; urgency=medium
 
