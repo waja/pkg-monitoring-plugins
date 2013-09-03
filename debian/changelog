@@ -18,6 +18,8 @@ nagios-plugins (1.4.16+git20130902-1) UNRELEASED; urgency=low
   * Add libfreeradius-client-dev to build-deps and remove libradiusclient-ng-dev
     (Closes: #721621)
   * Remove traces of contrib/ from debian/copyright
+  * Remove command.cfg from examples in nagios-plugins-common, it was removed
+    upstream
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 23 Aug 2013 22:45:43 +0200
 
