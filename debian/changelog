@@ -17,6 +17,7 @@ nagios-plugins (1.4.16+git20130902-1) UNRELEASED; urgency=low
   * Updating standards version to 3.9.4 (no changes needed)
   * Add libfreeradius-client-dev to build-deps and remove libradiusclient-ng-dev
     (Closes: #721621)
+  * Remove traces of contrib/ from debian/copyright
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 23 Aug 2013 22:45:43 +0200
 
