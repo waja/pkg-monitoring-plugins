@@ -1,4 +1,10 @@
-nagios-plugins (1.4.16+git20130911-1) UNRELEASED; urgency=medium
+nagios-plugins (1.4.16+git20130911-2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 11 Sep 2013 13:14:21 +0200
+
+nagios-plugins (1.4.16+git20130911-1) unstable; urgency=medium
 
   * New upstream git snapshot (ca9ce71576)
     - Don't mark SSL_METHOD variable as "const"
@@ -6,7 +12,7 @@ nagios-plugins (1.4.16+git20130911-1) UNRELEASED; urgency=medium
     - Fix GCC's -Wimplicit-function-declaration warnings
     - Fix GCC's -Wuninitialized warnings
 
- -- Jan Wagner <waja@cyconet.org>  Tue, 10 Sep 2013 16:13:28 +0200
+ -- Jan Wagner <waja@cyconet.org>  Wed, 11 Sep 2013 13:02:31 +0200
 
 nagios-plugins (1.4.16+git20130910-1) unstable; urgency=medium
 
