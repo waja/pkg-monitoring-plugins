@@ -1,4 +1,26 @@
-nagios-plugins (1.4.16+git20130827-1) UNRELEASED; urgency=low
+nagios-plugins (1.4.16+git20130911-1) unstable; urgency=medium
+
+  * New upstream git snapshot (ca9ce71576)
+    - Don't mark SSL_METHOD variable as "const"
+    - Move global variables from .h to .c files
+    - Fix GCC's -Wimplicit-function-declaration warnings
+    - Fix GCC's -Wuninitialized warnings
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 11 Sep 2013 13:02:31 +0200
+
+nagios-plugins (1.4.16+git20130910-1) unstable; urgency=medium
+
+  * New upstream git snapshot (cfb50add53)
+    - check_tcp: Don't close connection too early
+    - check_http: s/--proxy_authorization/--proxy-authorization/
+    - check_snmp: Initialize size_t value to 0, not NULL
+    - Update bundled libtool files
+    - check_icmp: Minor whitespace/indentation fixes
+    - check_icmp: Support "--help" and "--version"
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 10 Sep 2013 14:01:39 +0200
+
+nagios-plugins (1.4.16+git20130902-1) unstable; urgency=medium
 
   * New upstream git snapshot (5789548373)
     - Adjust debian/copyright
@@ -15,8 +37,13 @@ nagios-plugins (1.4.16+git20130827-1) UNRELEASED; urgency=low
     - Extend debian/README.source
     - Add debian/bin/repack.sh
   * Updating standards version to 3.9.4 (no changes needed)
+  * Add libfreeradius-client-dev to build-deps and remove libradiusclient-ng-dev
+    (Closes: #721621)
+  * Remove traces of contrib/ from debian/copyright
+  * Remove command.cfg from examples in nagios-plugins-common, it was removed
+    upstream
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 23 Aug 2013 22:45:43 +0200
+ -- Jan Wagner <waja@cyconet.org>  Tue, 03 Sep 2013 15:13:11 +0200
 
 nagios-plugins (1.4.16-3) unstable; urgency=medium
 
