@@ -1,6 +1,10 @@
-nagios-plugins (1.4.16+git20130910-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.16+git20130911-1) UNRELEASED; urgency=medium
 
-  * NOT RELEASED YET
+  * New upstream git snapshot (ca9ce71576)
+    - Don't mark SSL_METHOD variable as "const"
+    - Move global variables from .h to .c files
+    - Fix GCC's -Wimplicit-function-declaration warnings
+    - Fix GCC's -Wuninitialized warnings
 
  -- Jan Wagner <waja@cyconet.org>  Tue, 10 Sep 2013 16:13:28 +0200
 
