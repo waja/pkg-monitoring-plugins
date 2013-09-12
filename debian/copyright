@@ -62,13 +62,6 @@ Files with different Licenses:
 	build-aux/config.guess
 	build-aux/config.sub
 	build-aux/ltmain.sh
-	contrib/check_cpqarray.c
-	contrib/check_linux_raid.pl
-	contrib/check_traceroute-pure_perl.pl
-	contrib/check_cluster2.c
-	contrib/check_snmp_printer.pl
-	contrib/check_http-with-client-certificate.c
-	contrib/check_cluster.c
 	plugins-scripts/check_mailq.pl
 
     This program is free software; you can redistribute it and/or modify
@@ -178,8 +171,6 @@ Files with different Licenses:
 	gl/Makefile.in
 	lib/Makefile.in
 	lib/tests/Makefile.in
-	perlmods/Makefile
-	perlmods/Makefile.in
 	plugins/Makefile.in
 	plugins-root/Makefile.in
 	plugins-scripts/Makefile.in
