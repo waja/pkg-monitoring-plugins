@@ -1,6 +1,14 @@
-nagios-plugins (1.4.16+git20130912-2) UNRELEASED; urgency=low
+nagios-plugins (1.4.16+git20130919-1) UNRELEASED; urgency=medium
 
-  * NOT RELEASED YET
+  * New upstream git snapshot ()
+    - check_pgsql: Don't exit UNKNOWN instead of OK (Closes: #723738)
+    - check_dhcp: fix mac address and interface number detection on solaris
+    - check_disk: get_fs_usage hasn't been run if using groups
+    - check_disk_smb: verify path to smbclient
+    - check_tcp: use receive timeout for checks that expect response
+    - check_load: add alternative uptime syntaxcheck_udp: try nc.traditional too
+    - check_udp: unified nc syntax
+    - check_fping: some fping versions set loss to 0% by mistake
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 13 Sep 2013 01:04:28 +0200
 
