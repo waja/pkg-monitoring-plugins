@@ -1,6 +1,6 @@
-nagios-plugins (1.4.16+git20130919-1) UNRELEASED; urgency=medium
+nagios-plugins (1.4.16+git20130919-1) unstable; urgency=medium
 
-  * New upstream git snapshot ()
+  * New upstream git snapshot (6f0366c8b8)
     - check_pgsql: Don't exit UNKNOWN instead of OK (Closes: #723738)
     - check_dhcp: fix mac address and interface number detection on solaris
     - check_disk: get_fs_usage hasn't been run if using groups
@@ -10,7 +10,7 @@ nagios-plugins (1.4.16+git20130919-1) UNRELEASED; urgency=medium
     - check_udp: unified nc syntax
     - check_fping: some fping versions set loss to 0% by mistake
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 13 Sep 2013 01:04:28 +0200
+ -- Jan Wagner <waja@cyconet.org>  Fri, 20 Sep 2013 11:40:38 +0200
 
 nagios-plugins (1.4.16+git20130912-1) unstable; urgency=medium
 
