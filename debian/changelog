@@ -1,3 +1,9 @@
+nagios-plugins (1.5-2) UNRELEASED; urgency=low
+
+  * NOT RELEASED YET
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 02 Oct 2013 20:14:38 +0200
+
 nagios-plugins (1.5-1) unstable; urgency=medium
 
   * New upstream release
@@ -63,7 +69,7 @@ nagios-plugins (1.4.16+git20130910-1) unstable; urgency=medium
 
 nagios-plugins (1.4.16+git20130902-1) unstable; urgency=medium
 
-  * New upstream git snapshot (5789548373)
+  * New upstream git snapshot (5789548373) (Closes: #522812)
     - Adjust debian/copyright
   * Droped the following upstream integrated patches
     - 05_fix_gets_undefined_in_iso_c11.dpatch
