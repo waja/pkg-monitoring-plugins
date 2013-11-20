@@ -1,6 +1,7 @@
 nagios-plugins (1.5-2) UNRELEASED; urgency=low
 
   * Update Licensing text from upstream README
+  * Updated Homepage to https://www.nagios-plugins.org/
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 02 Oct 2013 20:14:38 +0200
 
