@@ -1,22 +1,21 @@
-/******************************************************************************
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: test_cmd.c 1732 2007-06-03 15:58:22Z psychotrahe $
- 
-******************************************************************************/
+/*****************************************************************************
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id$
+* 
+*****************************************************************************/
 
 #include "common.h"
 #include "utils_cmd.h"
@@ -51,7 +50,7 @@ main (int argc, char **argv)
 	int c;
 	int result = UNSET;
 
-	plan_tests(50);
+	plan_tests(51);
 
 	diag ("Running plain echo command, set one");
 
@@ -202,7 +201,17 @@ main (int argc, char **argv)
 	ok (chld_err.lines == 1,
 			"...but does give an error line");
 	ok (strstr(chld_err.line[0],"non-existant-file") != NULL, "And missing filename is in error message");
-	ok (result == 127, "Get return code 127 from /bin/sh");
+	ok (result != 0, "Get non-zero return code from /bin/sh");
+
+
+	/* ensure everything is empty again */
+	result = UNSET;
+
+	command = (char *)malloc(COMMAND_LINE);
+  strcpy(command, "/bin/sh -c 'exit 7'");
+  result = cmd_run (command, NULL, NULL, 0);
+
+  ok (result == 7, "Get return code 7 from /bin/sh");
 
 
 	/* ensure everything is empty again */

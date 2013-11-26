@@ -1,35 +1,34 @@
 /*****************************************************************************
- *
- * CHECK_CLUSTER2.C - Host and Service Cluster Plugin for Nagios 2.x
- *
- * Copyright (c) 2000-2004 Ethan Galstad (nagios@nagios.org)
- * Copyright (c) 2007 nagios-plugins team
- * License: GPL
- * Last Modified: $Date: 2007-12-11 05:57:35 +0000 (Tue, 11 Dec 2007) $
- *
- * License Information:
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- *
- * $Id: check_cluster.c 1861 2007-12-11 05:57:35Z dermoth $
- * 
-******************************************************************************/
+* 
+* check_cluster.c - Host and Service Cluster Plugin for Nagios 2.x
+* 
+* License: GPL
+* Copyright (c) 2000-2004 Ethan Galstad (nagios@nagios.org)
+* Copyright (c) 2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_cluster.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_cluster";
-const char *revision = "$Revision: 1861 $";
-const char *copyright = "2007";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -74,6 +73,9 @@ int main(int argc, char **argv){
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts(&argc, argv, progname);
 
 	if(process_arguments(argc,argv)==ERROR)
 		usage(_("Could not parse arguments"));
@@ -237,6 +239,7 @@ print_help(void)
 
 	printf("\n");
 	printf("%s\n", _("Options:"));
+	printf(_(UT_EXTRA_OPTS));
 	printf (" %s\n", "-s, --service");
 	printf ("    %s\n", _("Check service cluster status"));
 	printf (" %s\n", "-h, --host");
@@ -257,12 +260,13 @@ print_help(void)
 
 	printf("\n");
 	printf("%s\n", _("Notes:"));
-	printf(" %s\n", _("See:"));
-	printf(" %s\n", ("http://nagiosplug.sourceforge.net/developer-guidelines.html#THRESHOLDFORMAT"));
-	printf(" %s\n", _("for THRESHOLD format and examples."));
+	printf(_(UT_THRESHOLDS_NOTES));
+#ifdef NP_EXTRA_OPTS
+	printf ("\n");
+	printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf(_(UT_SUPPORT));
-	printf("\n");
 }
 
 

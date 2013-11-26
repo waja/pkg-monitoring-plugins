@@ -1,19 +1,34 @@
 /*****************************************************************************
- *
- * utils_base.c
- *
- * Library of useful functions for plugins
- * These functions are tested with libtap. See tests/ directory
- *
- * Copyright (c) 2006 Nagios Plugin Development Team
- * License: GPL
- *
- * $Revision: 1768 $
- * $Date: 2007-07-29 13:42:05 +0100 (Sun, 29 Jul 2007) $
- ****************************************************************************/
+*
+* utils_base.c
+*
+* License: GPL
+* Copyright (c) 2006 Nagios Plugins Development Team
+*
+* Last Modified: $Date: 2008-03-11 00:10:23 +0000 (Tue, 11 Mar 2008) $
+*
+* Library of useful functions for plugins
+* 
+*
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: utils_base.c 1938 2008-03-11 00:10:23Z tonvoon $
+*
+*****************************************************************************/
 
-#include <stdarg.h>
 #include "common.h"
+#include <stdarg.h>
 #include "utils_base.h"
 
 void
@@ -105,10 +120,6 @@ _set_thresholds(thresholds **my_thresholds, char *warn_string, char *critical_st
 		}
 	}
 
-	if (*my_thresholds > 0) {	/* Not sure why, but sometimes could be -1 */
-		/* printf("Freeing here: %d\n", *my_thresholds); */
-		free(*my_thresholds);
-	}
 	*my_thresholds = temp_thresholds;
 
 	return 0;

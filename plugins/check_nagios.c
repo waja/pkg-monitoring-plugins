@@ -1,45 +1,43 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_nagios plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 1999-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_nagios plugin
-*
-*  This plugin checks the status of the Nagios process on the local machine
-*  The plugin will check to make sure the Nagios status log is no older than
-*  the number of minutes specified by the expires option.
-*  It also checks the process table for a process matching the command argument.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin checks the status of the Nagios process on the local machine.
+* The plugin will check to make sure the Nagios status log is no older than
+* the number of minutes specified by the expires option.
+* It also checks the process table for a process matching the command
+* argument.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: check_nagios.c 1590 2007-01-28 21:46:41Z hweiss $
- 
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_nagios.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_nagios";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "1999-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -89,6 +87,9 @@ main (int argc, char **argv)
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage_va(_("Could not parse arguments"));
@@ -287,10 +288,11 @@ print_help (void)
   printf ("%s\n", _("It also checks the process table for a process matching the command argument."));
 
   printf ("\n\n");
-  
+
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (" %s\n", "-F, --filename=FILE");
   printf ("    %s\n", _("Name of the log file to check"));
@@ -299,9 +301,17 @@ print_help (void)
   printf (" %s\n", "-C, --command=STRING");
   printf ("    %s\n", _("Substring to search for in process arguments"));
   printf (_(UT_VERBOSE));
+
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
+
   printf ("\n");
   printf ("%s\n", _("Examples:"));
   printf (" %s\n", "check_nagios -e 5 -F /usr/local/nagios/var/status.log -C /usr/local/nagios/bin/nagios");
+
   printf (_(UT_SUPPORT));
 }
 

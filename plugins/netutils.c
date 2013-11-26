@@ -1,35 +1,34 @@
-/****************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios plugins network utilities
-*
+* 
 * License: GPL
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
-*
-* Last Modified: $Date: 2007-09-24 01:30:14 +0100 (Mon, 24 Sep 2007) $
-*
+* Copyright (c) 2003-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-01-31 11:27:22 +0000 (Thu, 31 Jan 2008) $
+* 
 * Description:
-*
+* 
 * This file contains commons functions used in many of the plugins.
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: netutils.c 1794 2007-09-24 00:30:14Z hweiss $
-*
-****************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: netutils.c 1918 2008-01-31 11:27:22Z dermoth $
+* 
+*****************************************************************************/
 
 #define LOCAL_TIMEOUT_ALARM_HANDLER
 
@@ -168,7 +167,8 @@ np_net_connect (const char *host_name, int port, int *sd, int proto)
 	struct addrinfo hints;
 	struct addrinfo *r, *res;
 	struct sockaddr_un su;
-	char port_str[6];
+	char port_str[6], host[MAX_HOST_ADDRESS_LENGTH];
+	size_t len;
 	int socktype, result;
 
 	socktype = (proto == IPPROTO_UDP) ? SOCK_DGRAM : SOCK_STREAM;
@@ -180,8 +180,18 @@ np_net_connect (const char *host_name, int port, int *sd, int proto)
 		hints.ai_protocol = proto;
 		hints.ai_socktype = socktype;
 
+		len = strlen (host_name);
+		/* check for an [IPv6] address (and strip the brackets) */
+		if (len >= 2 && host_name[0] == '[' && host_name[len - 1] == ']') {
+			host_name++;
+			len -= 2;
+		}
+		if (len >= sizeof(host))
+			return STATE_UNKNOWN;
+		memcpy (host, host_name, len);
+		host[len] = '\0';
 		snprintf (port_str, sizeof (port_str), "%d", port);
-		result = getaddrinfo (host_name, port_str, &hints, &res);
+		result = getaddrinfo (host, port_str, &hints, &res);
 
 		if (result != 0) {
 			printf ("%s\n", gai_strerror (result));

@@ -1,40 +1,38 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_disk plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-12-08 16:34:05 +0000 (Sat, 08 Dec 2007) $
-*
+* Copyright (c) 1999-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_disk plugin
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_disk.c 1848 2007-12-08 16:34:05Z dermoth $
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_disk.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_disk";
 const char *program_name = "check_disk";  /* Required for coreutils libs */
-const char *revision = "$Revision: 1848 $";
-const char *copyright = "1999-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "1999-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 
@@ -194,6 +192,9 @@ main (int argc, char **argv)
 
   mount_list = read_file_system_list (0);
 
+  /* Parse extra opts if any */
+  argv = np_extra_opts (&argc, argv, progname);
+
   if (process_arguments (argc, argv) == ERROR)
     usage4 (_("Could not parse arguments"));
 
@@ -222,7 +223,7 @@ main (int argc, char **argv)
 
     temp_list = temp_list->name_next;
   }
-  
+
   /* Process for every path in list */
   for (path = path_select_list; path; path=path->name_next) {
 
@@ -256,7 +257,7 @@ main (int argc, char **argv)
 
         for (temp_list = path_select_list; temp_list; temp_list=temp_list->name_next) {
           if (temp_list->group && ! (strcmp(temp_list->group, path->group))) {
-            
+
             stat_path(path);
             get_fs_usage (temp_list->best_match->me_mountdir, temp_list->best_match->me_devname, &tmpfsp);
 
@@ -265,10 +266,11 @@ main (int argc, char **argv)
                                 (fsp.fsu_blocks + tmpfsp.fsu_blocks);  /* Size of a block.  */
             fsp.fsu_blocks    += tmpfsp.fsu_blocks;     /* Total blocks. */
             fsp.fsu_bfree     += tmpfsp.fsu_bfree;      /* Free blocks available to superuser. */
-            fsp.fsu_bavail    += tmpfsp.fsu_bavail;     /* Free blocks available to non-superuser. */
+            /* Gnulib workaround - see comment about it a few lines below */
+            fsp.fsu_bavail    += (tmpfsp.fsu_bavail > tmpfsp.fsu_bfree ? 0 : tmpfsp.fsu_bavail); /* Free blocks available to non-superuser. */
             fsp.fsu_files     += tmpfsp.fsu_files;      /* Total file nodes. */
             fsp.fsu_ffree     += tmpfsp.fsu_ffree;      /* Free file nodes. */
-            
+
             if (verbose > 3)
               printf("Group %s: add %llu blocks (%s) \n", path->group, tmpfsp.fsu_bavail, temp_list->name);
              /* printf("Group %s: add %u blocks (%s)\n", temp_list->name); *//* path->group, tmpfsp.fsu_bavail, temp_list->name); */
@@ -319,7 +321,7 @@ main (int argc, char **argv)
         me->me_mountdir, total, available, available_to_root, used, fsp.fsu_files, fsp.fsu_ffree);
 
       dused_pct = calculate_percent( used, used + available );	/* used + available can never be > uintmax */
-     
+
       dfree_pct = 100 - dused_pct;
       dused_units = used*fsp.fsu_blocksize/mult;
       dfree_units = available*fsp.fsu_blocksize/mult;
@@ -386,10 +388,10 @@ main (int argc, char **argv)
       asprintf (&perf, "%s %s", perf,
                 perfdata ((!strcmp(me->me_mountdir, "none") || display_mntp) ? me->me_devname : me->me_mountdir,
                           dused_units, units,
-			  (warning_high_tide != UINT_MAX ? TRUE : FALSE), warning_high_tide,
-			  (critical_high_tide != UINT_MAX ? TRUE : FALSE), critical_high_tide,
-			  TRUE, 0,
-			  TRUE, dtotal_units));
+                          (warning_high_tide != UINT_MAX ? TRUE : FALSE), warning_high_tide,
+                          (critical_high_tide != UINT_MAX ? TRUE : FALSE), critical_high_tide,
+                          TRUE, 0,
+                          TRUE, dtotal_units));
 
       if (disk_result==STATE_OK && erronly && !verbose)
         continue;
@@ -475,8 +477,6 @@ process_arguments (int argc, char **argv)
     {"iwarning", required_argument, 0, 'W'},
     /* Dang, -C is taken. We might want to reshuffle this. */
     {"icritical", required_argument, 0, 'K'},
-    {"local", required_argument, 0, 'l'},
-    {"stat-remote-fs", required_argument, 0, 'L'},
     {"kilobytes", required_argument, 0, 'k'},
     {"megabytes", required_argument, 0, 'm'},
     {"units", required_argument, 0, 'u'},
@@ -493,6 +493,8 @@ process_arguments (int argc, char **argv)
     {"ignore-ereg-partition", required_argument, 0, 'i'},
     {"ignore-eregi-path", required_argument, 0, 'I'},
     {"ignore-eregi-partition", required_argument, 0, 'I'},
+    {"local", no_argument, 0, 'l'},
+    {"stat-remote-fs", no_argument, 0, 'L'},
     {"mountpoint", no_argument, 0, 'M'},
     {"errors-only", no_argument, 0, 'e'},
     {"exact-match", no_argument, 0, 'E'},
@@ -540,7 +542,7 @@ process_arguments (int argc, char **argv)
         }
       } else {
         if (*optarg == '@') {
-	  warn_freespace_units = optarg;
+          warn_freespace_units = optarg;
         } else {
           asprintf(&warn_freespace_units, "@%s", optarg);
         }
@@ -684,12 +686,12 @@ process_arguments (int argc, char **argv)
       while (temp_list) {
         if (temp_list->best_match) {
           if (np_regex_match_mount_entry(temp_list->best_match, &re)) {
-        
+
               if (verbose >=3)
-   	        printf("ignoring %s matching regex\n", temp_list->name);
+                printf("ignoring %s matching regex\n", temp_list->name);
 
               temp_list = np_del_parameter(temp_list, previous);
-              /* pointer to first element needs to be uüdated if first item gets deleted */
+              /* pointer to first element needs to be updated if first item gets deleted */
               if (previous == NULL)
                 path_select_list = temp_list;
           } else {
@@ -723,7 +725,7 @@ process_arguments (int argc, char **argv)
         regerror (err, &re, errbuf, MAX_INPUT_BUFFER);
         die (STATE_UNKNOWN, "DISK %s: %s - %s\n",_("UNKNOWN"), _("Could not compile regular expression"), errbuf);
       }
-          
+
       for (me = mount_list; me; me = me->me_next) {
         if (np_regex_match_mount_entry(me, &re)) {
           fnd = TRUE;
@@ -777,7 +779,7 @@ process_arguments (int argc, char **argv)
       crit_usedinodes_percent = NULL;
       warn_freeinodes_percent = NULL;
       crit_freeinodes_percent = NULL;
-    
+
       path_selected = FALSE;
       group = NULL;
       break;
@@ -829,11 +831,17 @@ print_path (const char *mypath)
 void
 set_all_thresholds (struct parameter_list *path) 
 {
+    if (path->freespace_units != NULL) free(path->freespace_units);
     set_thresholds(&path->freespace_units, warn_freespace_units, crit_freespace_units);
+    if (path->freespace_percent != NULL) free (path->freespace_percent);
     set_thresholds(&path->freespace_percent, warn_freespace_percent, crit_freespace_percent);
+    if (path->usedspace_units != NULL) free (path->usedspace_units);
     set_thresholds(&path->usedspace_units, warn_usedspace_units, crit_usedspace_units);
+    if (path->usedspace_percent != NULL) free (path->usedspace_percent);
     set_thresholds(&path->usedspace_percent, warn_usedspace_percent, crit_usedspace_percent);
+    if (path->usedinodes_percent != NULL) free (path->usedinodes_percent);
     set_thresholds(&path->usedinodes_percent, warn_usedinodes_percent, crit_usedinodes_percent);
+    if (path->freeinodes_percent != NULL) free (path->freeinodes_percent);
     set_thresholds(&path->freeinodes_percent, warn_freeinodes_percent, crit_freeinodes_percent);
 }
 
@@ -870,7 +878,7 @@ INPUT ERROR: C_DF (%lu) should be less than W_DF (%lu) and both should be greate
     print_path (mypath);
     return ERROR;
   }
-  
+
   return OK;
 }
 
@@ -898,6 +906,7 @@ print_help (void)
   print_usage ();
 
   printf (_(UT_HELP_VRSN));
+  printf (_(UT_EXTRA_OPTS));
 
   printf (" %s\n", "-w, --warning=INTEGER");
   printf ("    %s\n", _("Exit with WARNING status if less than INTEGER units of disk are free"));
@@ -950,6 +959,13 @@ print_help (void)
   printf (_(UT_VERBOSE));
   printf (" %s\n", "-X, --exclude-type=TYPE");
   printf ("    %s\n", _("Ignore all filesystems of indicated type (may be repeated)"));
+
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
+
   printf ("\n");
   printf ("%s\n", _("Examples:"));
   printf (" %s\n", "check_disk -w 10% -c 5% -p /tmp -p /var -C -w 100000 -c 50000 -p /");
@@ -959,6 +975,7 @@ print_help (void)
   printf ("    %s\n", _("are grouped which means the freespace thresholds are applied to all disks together"));
   printf (" %s\n", "check_disk -w 100M -c 50M -C -w 1000M -c 500M -p /foo -C -w 5% -c 3% -p /bar");
   printf ("    %s\n", _("Checks /foo for 1000M/500M and /bar for 5/3%. All remaining volumes use 100M/50M"));
+
   printf (_(UT_SUPPORT));
 }
 

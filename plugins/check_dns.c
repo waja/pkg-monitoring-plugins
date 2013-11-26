@@ -1,43 +1,40 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_dns plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 2000-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-13 10:14:45 +0100 (Tue, 13 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_dns plugin
-*
-*  LIMITATION: nslookup on Solaris 7 can return output over 2 lines, which will not 
-*  be picked up by this plugin
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* LIMITATION: nslookup on Solaris 7 can return output over 2 lines, which
+* will not be picked up by this plugin
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*
-* $Id: check_dns.c 1590 2007-01-28 21:46:41Z hweiss $
-*
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_dns.c 1992 2008-05-13 09:14:45Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_dns";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1992 $";
+const char *copyright = "2000-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -57,17 +54,30 @@ char query_address[ADDRESS_LENGTH] = "";
 char dns_server[ADDRESS_LENGTH] = "";
 char ptr_server[ADDRESS_LENGTH] = "";
 int verbose = FALSE;
-char expected_address[ADDRESS_LENGTH] = "";
-int match_expected_address = FALSE;
+char **expected_address = NULL;
+int expected_address_cnt = 0;
+
 int expect_authority = FALSE;
 thresholds *time_thresholds = NULL;
+
+static int
+qstrcmp(const void *p1, const void *p2)
+{
+	/* The actual arguments to this function are "pointers to
+	   pointers to char", but strcmp() arguments are "pointers
+	   to char", hence the following cast plus dereference */
+	return strcmp(* (char * const *) p1, * (char * const *) p2);
+}
+
 
 int
 main (int argc, char **argv)
 {
   char *command_line = NULL;
   char input_buffer[MAX_INPUT_BUFFER];
-  char *address = NULL;
+  char *address = NULL; /* comma seperated str with addrs/ptrs (sorted) */
+  char **addresses = NULL;
+  int n_addresses = 0;
   char *msg = NULL;
   char *temp_buffer = NULL;
   int non_authoritative = FALSE;
@@ -88,6 +98,9 @@ main (int argc, char **argv)
   if (signal (SIGALRM, popen_timeout_alarm_handler) == SIG_ERR) {
     usage_va(_("Cannot catch SIGALRM"));
   }
+
+  /* Parse extra opts if any */
+  argv=np_extra_opts (&argc, argv, progname);
 
   if (process_arguments (argc, argv) == ERROR) {
     usage_va(_("Could not parse arguments"));
@@ -110,12 +123,17 @@ main (int argc, char **argv)
 
   /* scan stdout */
   for(i = 0; i < chld_out.lines; i++) {
+    if (addresses == NULL)  
+      addresses = malloc(sizeof(*addresses)*10);
+    else if (!(n_addresses % 10))
+      addresses = realloc(addresses,sizeof(*addresses) * (n_addresses + 10));
+
     if (verbose)
       puts(chld_out.line[i]);
 
     if (strstr (chld_out.line[i], ".in-addr.arpa")) {
       if ((temp_buffer = strstr (chld_out.line[i], "name = ")))
-        address = strdup (temp_buffer + 7);
+        addresses[n_addresses++] = strdup (temp_buffer + 7);
       else {
         msg = (char *)_("Warning plugin error");
         result = STATE_WARNING;
@@ -133,7 +151,7 @@ main (int argc, char **argv)
       /* Strip leading spaces */
       for (; *temp_buffer != '\0' && *temp_buffer == ' '; temp_buffer++)
         /* NOOP */;
-      
+
       strip(temp_buffer);
       if (temp_buffer==NULL || strlen(temp_buffer)==0) {
         die (STATE_CRITICAL,
@@ -141,15 +159,12 @@ main (int argc, char **argv)
              NSLOOKUP_COMMAND);
       }
 
-      if (address == NULL)
-        address = strdup (temp_buffer);
-      else
-        asprintf(&address, "%s,%s", address, temp_buffer);
+      addresses[n_addresses++] = strdup(temp_buffer);
     }
-
     else if (strstr (chld_out.line[i], _("Non-authoritative answer:"))) {
       non_authoritative = TRUE;
     }
+
 
     result = error_scan (chld_out.line[i]);
     if (result != STATE_OK) {
@@ -171,17 +186,39 @@ main (int argc, char **argv)
     }
   }
 
-  /* If we got here, we should have an address string,
-   * and we can segfault if we do not */
-  if (address==NULL || strlen(address)==0)
+  if (addresses) {
+    int i,slen;
+    char *adrp;
+    qsort(addresses, n_addresses, sizeof(*addresses), qstrcmp);
+    for(i=0, slen=1; i < n_addresses; i++) {
+      slen += strlen(addresses[i])+1;
+    }
+    adrp = address = malloc(slen);
+    for(i=0; i < n_addresses; i++) {
+      if (i) *adrp++ = ',';
+      strcpy(adrp, addresses[i]);
+      adrp += strlen(addresses[i]);
+    }
+    *adrp = 0;
+  } else
     die (STATE_CRITICAL,
          _("DNS CRITICAL - '%s' msg parsing exited with no address\n"),
          NSLOOKUP_COMMAND);
 
   /* compare to expected address */
-  if (result == STATE_OK && match_expected_address && strcmp(address, expected_address)) {
+  if (result == STATE_OK && expected_address_cnt > 0) {
     result = STATE_CRITICAL;
-    asprintf(&msg, _("expected '%s' but got '%s'"), expected_address, address);
+    temp_buffer = "";
+    for (i=0; i<expected_address_cnt; i++) {
+      /* check if we get a match and prepare an error string */
+      if (strcmp(address, expected_address[i]) == 0) result = STATE_OK;
+      asprintf(&temp_buffer, "%s%s; ", temp_buffer, expected_address[i]);
+    }
+    if (result == STATE_CRITICAL) {
+      /* Strip off last semicolon... */
+      temp_buffer[strlen(temp_buffer)-2] = '\0';
+      asprintf(&msg, _("expected '%s' but got '%s'"), temp_buffer, address);
+    }
   }
 
   /* check if authoritative */
@@ -357,8 +394,9 @@ process_arguments (int argc, char **argv)
     case 'a': /* expected address */
       if (strlen (optarg) >= ADDRESS_LENGTH)
         die (STATE_UNKNOWN, _("Input buffer overflow\n"));
-      strcpy (expected_address, optarg);
-      match_expected_address = TRUE;
+      expected_address = (char **)realloc(expected_address, (expected_address_cnt+1) * sizeof(char**));
+      expected_address[expected_address_cnt] = strdup(optarg);
+      expected_address_cnt++;
       break;
     case 'A': /* expect authority */
       expect_authority = TRUE;
@@ -416,19 +454,23 @@ print_help (void)
   printf ("%s\n", _("This plugin uses the nslookup program to obtain the IP address for the given host/domain query."));
   printf ("%s\n", _("An optional DNS server to use may be specified."));
   printf ("%s\n", _("If no DNS server is specified, the default server(s) specified in /etc/resolv.conf will be used."));
-  
+
   printf ("\n\n");
 
   print_usage ();
-  
+
   printf (_(UT_HELP_VRSN));
-  
+  printf (_(UT_EXTRA_OPTS));
+
   printf (" -H, --hostname=HOST\n");
   printf ("    %s\n", _("The name or address you want to query"));
   printf (" -s, --server=HOST\n");
   printf ("    %s\n", _("Optional DNS server you want to use for the lookup"));
   printf (" -a, --expected-address=IP-ADDRESS|HOST\n");
-  printf ("    %s\n", _("Optional IP-ADDRESS you expect the DNS server to return. HOST must end with ."));
+  printf ("    %s\n", _("Optional IP-ADDRESS you expect the DNS server to return. HOST must end with"));
+  printf ("    %s\n", _("a dot (.). This option can be repeated multiple times (Returns OK if any"));
+  printf ("    %s\n", _("value match). If multiple addresses are returned at once, you have to match"));
+  printf ("    %s\n", _("the whole string of addresses separated with commas (sorted alphabetically)."));
   printf (" -A, --expect-authority\n");
   printf ("    %s\n", _("Optionally expect the DNS server to be authoritative for the lookup"));
   printf (" -w, --warning=seconds\n");
@@ -437,6 +479,13 @@ print_help (void)
   printf ("    %s\n", _("Return critical if elapsed time exceeds value. Default off"));
 
   printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
+
   printf (_(UT_SUPPORT));
 }
 

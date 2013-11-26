@@ -1,45 +1,43 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_ups plugin
-*
+* 
 * License: GPL
 * Copyright (c) 2000 Tom Shields
 *               2004 Alain Richard <alain.richard@equation.fr>
 *               2004 Arnaud Quette <arnaud.quette@mgeups.com>
-* Copyright (c) 2002-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-10-25 21:43:04 +0100 (Thu, 25 Oct 2007) $
-*
+* Copyright (c) 2002-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains Network UPS Tools plugin for Nagios
-*
-*  This plugin tests the UPS service on the specified host.Network UPS Tools
-*  from www.networkupstools.org must be running for thisplugin to work.
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin tests the UPS service on the specified host.Network UPS Tools
+* from www.networkupstools.org must be running for thisplugin to work.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*  $Id: check_ups.c 1810 2007-10-25 20:43:04Z tonvoon $
-*
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_ups.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_ups";
-const char *revision = "$Revision: 1810 $";
-const char *copyright = "2002-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -120,6 +118,9 @@ main (int argc, char **argv)
 	ups_status = strdup ("N/A");
 	data = strdup ("");
 	message = strdup ("");
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
@@ -603,7 +604,7 @@ print_help (void)
 	printf ("Copyright (c) 2004 Arnaud Quette <arnaud.quette@mgeups.com>\n");
 	printf (COPYRIGHT, copyright, email);
 
-	printf ("%s\n", _("This plugin tests the UPS service on the specified host.Network UPS Tools "));
+	printf ("%s\n", _("This plugin tests the UPS service on the specified host. Network UPS Tools"));
   printf ("%s\n", _("from www.networkupstools.org must be running for thisplugin to work."));
 
   printf ("\n\n");
@@ -611,6 +612,7 @@ print_help (void)
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_HOST_PORT), 'p', myport);
 
@@ -630,22 +632,27 @@ print_help (void)
 /*	printf (_(UT_VERBOSE)); */
 
   printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  
 	printf ("%s\n", _("This plugin attempts to determine the status of a UPS (Uninterruptible Power"));
   printf ("%s\n", _("Supply) on a local or remote host. If the UPS is online or calibrating, the"));
   printf ("%s\n", _("plugin will return an OK state. If the battery is on it will return a WARNING"));
   printf ("%s\n", _("state.If the UPS is off or has a low battery the plugin will return a CRITICAL"));
-  printf ("%s\n\n", _("state."));
+  printf ("%s\n", _("state."));
 
-	printf ("%s\n", _("You may also specify a variable to check [such as temperature, utility voltage,"));
-  printf ("%s\n", _("battery load, etc.]  as well as warning and critical thresholds for the value of"));
-  printf ("%s\n", _("that variable.  If the remote host has multiple UPS that are being monitored you"));
-  printf ("%s\n", _("will have to use the [ups] option to specify which UPS to check."));
-
-	printf ("%s\n", _("This plugin requires that the UPSD daemon distributed with Russel Kroll's"));
-  printf ("%s\n", _("Smart UPS Tools be installed on the remote host.  If you do not have the"));
-  printf ("%s\n", _("package installed on your system, you can download it from http://www.networkupstools.org"));
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (" %s\n", _("You may also specify a variable to check (such as temperature, utility voltage,"));
+  printf (" %s\n", _("battery load, etc.)  as well as warning and critical thresholds for the value"));
+  printf (" %s\n", _("of that variable.  If the remote host has multiple UPS that are being monitored"));
+  printf (" %s\n", _("you will have to use the --ups option to specify which UPS to check."));
+  printf ("\n");
+  printf (" %s\n", _("This plugin requires that the UPSD daemon distributed with Russel Kroll's"));
+  printf (" %s\n", _("Smart UPS Tools be installed on the remote host. If you do not have the"));
+  printf (" %s\n", _("package installed on your system, you can download it from"));
+  printf (" %s\n", _("http://www.networkupstools.org"));
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

@@ -1,44 +1,41 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_mysql plugin
-*
+* 
 * License: GPL
-*  Copyright (c) 1999 Didi Rieder (adrieder@sbox.tu-graz.ac.at)
-*  Copyright (c) 1999-2006 nagios-plugins team
-*  Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
-*
-* Last Modified: $Date: 2007-12-10 07:52:00 +0000 (Mon, 10 Dec 2007) $
+* Copyright (c) 1999 Didi Rieder (adrieder@sbox.tu-graz.ac.at)
+* Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
+* Copyright (c) 1999-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
 *
 * Description:
-*
+* 
 * This file contains the check_mysql plugin
-*
-*  This program tests connections to a mysql server
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This program tests connections to a mysql server
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_mysql.c 1859 2007-12-10 07:52:00Z dermoth $
-*
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_mysql.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_mysql";
-const char *revision = "$Revision: 1859 $";
-const char *copyright = "1999-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #define SLAVERESULTSIZE 70
@@ -53,6 +50,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 char *db_user = NULL;
 char *db_host = NULL;
+char *db_socket = NULL;
 char *db_pass = NULL;
 char *db = NULL;
 unsigned int db_port = MYSQL_PORT;
@@ -84,6 +82,9 @@ main (int argc, char **argv)
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
@@ -93,7 +94,7 @@ main (int argc, char **argv)
 	mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"client");
 
 	/* establish a connection to the server and error checking */
-	if (!mysql_real_connect(&mysql,db_host,db_user,db_pass,db,db_port,NULL,0)) {
+	if (!mysql_real_connect(&mysql,db_host,db_user,db_pass,db,db_port,db_socket,0)) {
 		if (mysql_errno (&mysql) == CR_UNKNOWN_HOST)
 			die (STATE_WARNING, "%s\n", mysql_error (&mysql));
 		else if (mysql_errno (&mysql) == CR_VERSION_ERROR)
@@ -246,6 +247,7 @@ process_arguments (int argc, char **argv)
 	int option = 0;
 	static struct option longopts[] = {
 		{"hostname", required_argument, 0, 'H'},
+		{"socket", required_argument, 0, 's'},
 		{"database", required_argument, 0, 'd'},
 		{"username", required_argument, 0, 'u'},
 		{"password", required_argument, 0, 'p'},
@@ -263,7 +265,7 @@ process_arguments (int argc, char **argv)
 		return ERROR;
 
 	while (1) {
-		c = getopt_long (argc, argv, "hvVSP:p:u:d:H:c:w:", longopts, &option);
+		c = getopt_long (argc, argv, "hvVSP:p:u:d:H:s:c:w:", longopts, &option);
 
 		if (c == -1 || c == EOF)
 			break;
@@ -277,14 +279,23 @@ process_arguments (int argc, char **argv)
 				usage2 (_("Invalid hostname/address"), optarg);
 			}
 			break;
-		case 'd':									/* hostname */
+		case 's':									/* socket */
+			db_socket = optarg;
+			break;
+		case 'd':									/* database */
 			db = optarg;
 			break;
 		case 'u':									/* username */
 			db_user = optarg;
 			break;
 		case 'p':									/* authentication information: password */
-			db_pass = optarg;
+			db_pass = strdup(optarg);
+
+			/* Delete the password from process list */
+			while (*optarg != '\0') {
+				*optarg = 'X';
+				optarg++;
+			}
 			break;
 		case 'P':									/* critical time threshold */
 			db_port = atoi (optarg);
@@ -373,29 +384,43 @@ print_help (void)
 	printf ("%s\n", _("This program tests connections to a mysql server"));
 
   printf ("\n\n");
-  
+
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
+  printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
-	printf (_(UT_HOST_PORT), 'P', myport);
+  printf (_(UT_HOST_PORT), 'P', myport);
+  printf (" %s\n", "-s, --socket=STRING");
+  printf ("    %s\n", _("Use the specified socket (has no effect if -H is used)"));
 
-	printf (" %s\n", "-d, --database=STRING");
+  printf (" %s\n", "-d, --database=STRING");
   printf ("    %s\n", _("Check database with indicated name"));
   printf (" %s\n", "-u, --username=STRING");
   printf ("    %s\n", _("Connect using the indicated username"));
   printf (" %s\n", "-p, --password=STRING");
   printf ("    %s\n", _("Use the indicated password to authenticate the connection"));
-  printf ("    %s\n", _("==> IMPORTANT: THIS FORM OF AUTHENTICATION IS NOT SECURE!!! <=="));
-  printf ("    %s\n", _("Your clear-text password will be visible as a process table entry"));
+  printf ("    ==> %s <==\n", _("IMPORTANT: THIS FORM OF AUTHENTICATION IS NOT SECURE!!!"));
+  printf ("    %s\n", _("Your clear-text password could be visible as a process table entry"));
   printf (" %s\n", "-S, --check-slave");
   printf ("    %s\n", _("Check if the slave thread is running properly."));
   printf (" %s\n", "-w, --warning");
-  printf ("    %s\n", _("Exit with WARNING status if slave server is more than INTEGER seconds behind master"));
+  printf ("    %s\n", _("Exit with WARNING status if slave server is more than INTEGER seconds"));
+  printf ("    %s\n", _("behind master"));
   printf (" %s\n", "-c, --critical");
-  printf ("    %s\n", _("Exit with CRITICAL status if slave server is more then INTEGER seconds behind master"));
-  printf (" %s\n", _("There are no required arguments. By default, the local database with"));
-  printf (_("a server listening on MySQL standard port %d will be checked\n"), MYSQL_PORT);
+  printf ("    %s\n", _("Exit with CRITICAL status if slave server is more then INTEGER seconds"));
+  printf ("    %s\n", _("behind master"));
+
+  printf ("\n");
+  printf (" %s\n", _("There are no required arguments. By default, the local database is checked"));
+  printf (" %s\n", _("using the default unix socket. You can force TCP on localhost by using an"));
+  printf (" %s\n", _("IP address or FQDN ('localhost' will use the socket as well)."));
+
+#ifdef NP_EXTRA_OPTS
+	printf ("\n");
+	printf ("%s\n", _("Notes:"));
+	printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }
@@ -405,5 +430,6 @@ void
 print_usage (void)
 {
 	printf (_("Usage:"));
-  printf ("%s [-d database] [-H host] [-P port] [-u user] [-p password] [-S]\n",progname);
+  printf (" %s [-d database] [-H host] [-P port] [-s socket]\n",progname);
+  printf ("       [-u user] [-p password] [-S]\n");
 }

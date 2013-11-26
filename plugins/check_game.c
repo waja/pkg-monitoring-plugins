@@ -1,41 +1,40 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_game plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 2002-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_game plugin
-*
+* 
 * This plugin tests game server connections with the specified host.
 * using the qstat program
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_game.c 1991 2008-05-07 10:02:42Z dermoth $
 *
-* $Id: check_game.c 1590 2007-01-28 21:46:41Z hweiss $
 *****************************************************************************/
 
 const char *progname = "check_game";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "2002-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2002-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -79,7 +78,10 @@ main (int argc, char **argv)
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
   textdomain (PACKAGE);
-  
+
+  /* Parse extra opts if any */
+  argv=np_extra_opts (&argc, argv, progname);
+
   if (process_arguments (argc, argv) == ERROR)
     usage_va(_("Could not parse arguments"));
 
@@ -88,7 +90,7 @@ main (int argc, char **argv)
   /* create the command line to execute */
   asprintf (&command_line, "%s -raw %s -%s %s",
             PATH_TO_QSTAT, QSTAT_DATA_DELIMITER, game_type, server_ip);
-  
+
   if (port)
     asprintf (&command_line, "%s:%-d", command_line, port);
 
@@ -299,11 +301,12 @@ print_help (void)
   printf (_("This plugin tests game server connections with the specified host."));
 
   printf ("\n\n");
- 
+
   print_usage ();
 
   printf (_(UT_HELP_VRSN));
-  
+  printf (_(UT_EXTRA_OPTS));
+
   printf (" %s\n", "-p");
   printf ("    %s\n", _("Optional port of which to connect"));
   printf (" %s\n", "gf");
@@ -315,13 +318,15 @@ print_help (void)
 
   printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
 
+  printf ("\n");
   printf ("%s\n", _("Notes:"));
-
-  printf ("%s\n", _("This plugin uses the 'qstat' command, the popular game server status query tool ."));
-
-  printf ("%s\n", _("If you don't have the package installed, you will need to download it from"));
-
-  printf ("%s\n", _("http://www.activesw.com/people/steve/qstat.html before you can use this plugin."));
+  printf (" %s\n", _("This plugin uses the 'qstat' command, the popular game server status query tool."));
+  printf (" %s\n", _("If you don't have the package installed, you will need to download it from"));
+  printf (" %s\n", _("http://www.activesw.com/people/steve/qstat.html before you can use this plugin."));
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
   printf (_(UT_SUPPORT));
 }

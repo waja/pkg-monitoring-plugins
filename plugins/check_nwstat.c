@@ -1,43 +1,40 @@
-/******************************************************************************
-*
-* Nagios check_nwstat plugin
-*
-* License: GPL
-* Copyright (c) 2000-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
-* Description:
-*
-* This file contains the check_nwstat plugin
-*
-*  This plugin attempts to contact the MRTGEXT NLM running on a
-*  Novell server to gather the requested system information.
+/*****************************************************************************
 * 
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* Nagios check_nwstat plugin
+* 
+* License: GPL
+* Copyright (c) 2000-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
+* Description:
+* 
+* This file contains the check_nwstat plugin
+* 
+* This plugin attempts to contact the MRTGEXT NLM running on a
+* Novell server to gather the requested system information.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: check_nwstat.c 1590 2007-01-28 21:46:41Z hweiss $
- 
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_nwstat.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_nwstat";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -172,6 +169,9 @@ main(int argc, char **argv) {
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts(&argc, argv, progname);
 
 	if (process_arguments(argc,argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
@@ -521,14 +521,14 @@ main(int argc, char **argv) {
 			result=STATE_OK;
 		else
 			result=STATE_WARNING;
- 
+
 		close(sd);
 		my_tcp_connect (server_address, server_port, &sd);
 
 		send_buffer = strdup ("S13\r\n");
 		result=send_tcp_request(sd,send_buffer,recv_buffer,sizeof(recv_buffer));
 		temp_buffer=strtok(recv_buffer,"\r\n");
- 
+
 		asprintf (&output_message,_("Directory Services Database is %s (DS version %s)"),(result==STATE_OK)?"open":"closed",temp_buffer);
 
 		/* check to see if logins are enabled */
@@ -596,7 +596,7 @@ main(int argc, char **argv) {
 			return result;
 
 		max_packet_receive_buffers=atoi(recv_buffer);
- 
+
 		percent_used_packet_receive_buffers=(unsigned long)(((double)used_packet_receive_buffers/(double)max_packet_receive_buffers)*100.0);
 
 		if (vars_to_check==UPRB) {
@@ -610,7 +610,7 @@ main(int argc, char **argv) {
 			else if (check_warning_value==TRUE && percent_used_packet_receive_buffers >= warning_value)
 				result=STATE_WARNING;
 		}
- 
+
 		asprintf (&output_message,_("%lu of %lu (%lu%%) packet receive buffers used"),used_packet_receive_buffers,max_packet_receive_buffers,percent_used_packet_receive_buffers);
 
 		/* check SAP table entries */
@@ -626,9 +626,9 @@ main(int argc, char **argv) {
 		result=send_tcp_request(sd,send_buffer,recv_buffer,sizeof(recv_buffer));
 		if (result!=STATE_OK)
 			return result;
- 
+
 		sap_entries=atoi(recv_buffer);
- 
+
 		if (check_critical_value==TRUE && sap_entries >= critical_value)
 			result=STATE_CRITICAL;
 		else if (check_warning_value==TRUE && sap_entries >= warning_value)
@@ -814,9 +814,9 @@ main(int argc, char **argv) {
 		result=send_tcp_request(sd,send_buffer,recv_buffer,sizeof(recv_buffer));
 		if (result!=STATE_OK)
 			return result;
- 
+
 		open_files=atoi(recv_buffer);
- 
+
 		if (check_critical_value==TRUE && open_files >= critical_value)
 			result=STATE_CRITICAL;
 		else if (check_warning_value==TRUE && open_files >= warning_value)
@@ -839,9 +839,9 @@ main(int argc, char **argv) {
 		result=send_tcp_request(sd,send_buffer,recv_buffer,sizeof(recv_buffer));
 		if (result!=STATE_OK)
 			return result;
- 
+
 		abended_threads=atoi(recv_buffer);
- 
+
 		if (check_critical_value==TRUE && abended_threads >= critical_value)
 			result=STATE_CRITICAL;
 		else if (check_warning_value==TRUE && abended_threads >= warning_value)
@@ -863,9 +863,9 @@ main(int argc, char **argv) {
 		result=send_tcp_request(sd,send_buffer,recv_buffer,sizeof(recv_buffer));
 		if (result!=STATE_OK)
 			return result;
- 
+
 		max_service_processes=atoi(recv_buffer);
- 
+
 		close(sd);
 		my_tcp_connect (server_address, server_port, &sd);
 
@@ -873,9 +873,9 @@ main(int argc, char **argv) {
 		result=send_tcp_request(sd,send_buffer,recv_buffer,sizeof(recv_buffer));
 		if (result!=STATE_OK)
 			return result;
- 
+
 		current_service_processes=atoi(recv_buffer);
- 
+
 		if (check_critical_value==TRUE && current_service_processes >= critical_value)
 			result=STATE_CRITICAL;
 		else if (check_warning_value==TRUE && current_service_processes >= warning_value)
@@ -1610,6 +1610,7 @@ void print_help(void)
 	print_usage();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_HOST_PORT), 'p', myport);
 
@@ -1676,7 +1677,10 @@ void print_help(void)
   printf (" %s\n", _("  (available from http://www.engr.wisc.edu/~drews/mrtg/)"));
   printf (" %s\n", _("- Values for critical thresholds should be lower than warning thresholds"));
   printf (" %s\n", _("  when the following variables are checked: VPF, VKF, LTCH, CBUFF, DCB, "));
-  printf (" %S\n", _("  TCB, LRUS and LRUM.\n"));
+  printf (" %s\n", _("  TCB, LRUS and LRUM."));
+#ifdef NP_EXTRA_OPTS
+  printf (" -%s", _(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

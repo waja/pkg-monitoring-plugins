@@ -1,49 +1,44 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_dhcp plugin
-*
+* 
 * License: GPL
 * Copyright (c) 2001-2004 Ethan Galstad (nagios@nagios.org)
-* Copyright (c) 2001-2006 Nagios Plugin Development Team
-*
-* Last Modified: $Date: 2007-10-25 21:43:04 +0100 (Thu, 25 Oct 2007) $
-*
+* Copyright (c) 2001-2007 Nagios Plugin Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_dhcp plugin
-*
-*  This plugin tests the availability of DHCP servers on a network.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin tests the availability of DHCP servers on a network.
+* 
+* Unicast mode was originally implemented by Heiti of Boras Kommun with
+* general improvements as well as usability fixes and "forward"-porting by
+* Andreas Ericsson of OP5 AB.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_dhcp.c 1810 2007-10-25 20:43:04Z tonvoon $
-*
-* ------------------------------------------------------------------------
-* Unicast mode was originally implemented by Heiti of Boras Kommun with
-* general improvements as well as usability fixes and "forward"-porting by
-* Andreas Ericsson of OP5 AB.
-* ------------------------------------------------------------------------
-*
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_dhcp.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
 *****************************************************************************/
 
 const char *progname = "check_dhcp";
-const char *revision = "$Revision: 1810 $";
-const char *copyright = "2001-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2001-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -273,13 +268,16 @@ int main(int argc, char **argv){
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts(&argc, argv, progname);
+
 	if(process_arguments(argc,argv)!=OK){
 		usage4 (_("Could not parse arguments"));
 		}
 
 	/* this plugin almost certainly needs root permissions. */
 	np_warn_if_not_root();
-	
+
 	/* create socket for DHCP communications */
 	dhcp_socket=create_dhcp_socket();
 
@@ -321,7 +319,7 @@ int get_hardware_address(int sock,char *interface_name){
 
 	strncpy((char *)&ifr.ifr_name,interface_name,sizeof(ifr.ifr_name)-1);
 	ifr.ifr_name[sizeof(ifr.ifr_name)-1]='\0';
-	
+
 	/* try and grab hardware address of requested interface */
 	if(ioctl(sock,SIOCGIFHWADDR,&ifr)<0){
                 printf(_("Error: Could not get hardware address of interface '%s'\n"),interface_name);
@@ -511,7 +509,7 @@ int send_dhcp_discover(int sock){
 		opts += sizeof(requested_address);
 	        }
 	discover_packet.options[opts++]=DHCP_OPTION_END;
-	
+
 	/* unicast fields */
 	if(unicast)
 		discover_packet.giaddr.s_addr = my_ip.s_addr;
@@ -576,7 +574,7 @@ int get_dhcp_offer(int sock){
 
 		result=OK;
 		result=receive_dhcp_packet(&offer_packet,sizeof(offer_packet),sock,dhcpoffer_timeout,&source);
-		
+
 		if(result!=OK){
 			if(verbose)
 				printf(_("Result=ERROR\n"));
@@ -957,7 +955,7 @@ int free_requested_server_list(void){
 		next_server=this_server->next;
 		free(this_server);
 	        }
-	
+
 	return OK;
         }
 
@@ -982,7 +980,7 @@ int get_results(void){
 				/* get max lease time we were offered */
 				if(temp_offer->lease_time>max_lease_time || temp_offer->lease_time==DHCP_INFINITE_TIME)
 					max_lease_time=temp_offer->lease_time;
-				
+
 				/* see if we got the address we requested */
 				if(!memcmp(&requested_address,&temp_offer->offered_address,sizeof(requested_address)))
 					received_requested_address=TRUE;
@@ -1014,7 +1012,7 @@ int get_results(void){
 			/* get max lease time we were offered */
 			if(temp_offer->lease_time>max_lease_time || temp_offer->lease_time==DHCP_INFINITE_TIME)
 				max_lease_time=temp_offer->lease_time;
-				
+
 			/* see if we got the address we requested */
 			if(!memcmp(&requested_address,&temp_offer->offered_address,sizeof(requested_address)))
 				received_requested_address=TRUE;
@@ -1392,7 +1390,7 @@ void print_help(void){
 
 	printf("Copyright (c) 2001-2004 Ethan Galstad (nagios@nagios.org)\n");
 	printf (COPYRIGHT, copyright, email);
-	
+
 	printf("%s\n", _("This plugin tests the availability of DHCP servers on a network."));
 
   printf ("\n\n");
@@ -1400,6 +1398,7 @@ void print_help(void){
 	print_usage();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_VERBOSE));
 
@@ -1416,17 +1415,24 @@ void print_help(void){
   printf (" %s\n", "-u, --unicast");
   printf ("    %s\n", _("Unicast testing: mimic a DHCP relay, requires -s"));
 
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
+
+  printf (_(UT_SUPPORT));
 	return;
 	}
 
 
 void
 print_usage(void){
-	
+
   printf (_("Usage:"));
   printf (" %s [-v] [-u] [-s serverip] [-r requestedip] [-t timeout]\n",progname);
   printf ("                  [-i interface] [-m mac]\n");
-  
+
 	return;
 	}
 

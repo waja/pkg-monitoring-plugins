@@ -1,43 +1,40 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_mrtg plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-02-06 21:03:21 +0000 (Tue, 06 Feb 2007) $
-*
+* Copyright (c) 1999-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_mrtg plugin
-*
-*  This plugin will check either the average or maximum value of one of the
-*  two variables recorded in an MRTG log file.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin will check either the average or maximum value of one of the
+* two variables recorded in an MRTG log file.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: check_mrtg.c 1611 2007-02-06 21:03:21Z opensides $
- 
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_mrtg.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_mrtg";
-const char *revision =  "$Revision: 1611 $";
-const char *copyright = "1999-2006";
+const char *revision =  "$Revision: 1991 $";
+const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -74,6 +71,9 @@ main (int argc, char **argv)
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments\n"));
@@ -326,10 +326,11 @@ print_help (void)
   printf ("%s\n", _("two variables recorded in an MRTG log file."));
 
   printf ("\n\n");
-  
+
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (" %s\n", "-F, --logfile=FILE");
   printf ("   %s\n", _("The MRTG log file containing the data you want to monitor"));
@@ -349,25 +350,30 @@ print_help (void)
   printf ("   %s\n", _("Option units label for data (Example: Packets/Sec, Errors/Sec,"));
   printf ("   %s\n", _("\"Bytes Per Second\", \"%% Utilization\")"));
 
-	printf ("%s\n", _("If the value exceeds the <vwl> threshold, a WARNING status is returned. If"));
-  printf ("%s\n", _("the value exceeds the <vcl> threshold, a CRITICAL status is returned.  If"));
-  printf ("%s\n", _("the data in the log file is older than <expire_minutes> old, a WARNING"));
-  printf ("%s\n", _("status is returned and a warning message is printed."));
+  printf ("\n");
+	printf (" %s\n", _("If the value exceeds the <vwl> threshold, a WARNING status is returned. If"));
+  printf (" %s\n", _("the value exceeds the <vcl> threshold, a CRITICAL status is returned.  If"));
+  printf (" %s\n", _("the data in the log file is older than <expire_minutes> old, a WARNING"));
+  printf (" %s\n", _("status is returned and a warning message is printed."));
 
-	printf ("%s\n", _("This plugin is useful for monitoring MRTG data that does not correspond to"));
-  printf ("%s\n", _("bandwidth usage.  (Use the check_mrtgtraf plugin for monitoring bandwidth)."));
-  printf ("%s\n", _("It can be used to monitor any kind of data that MRTG is monitoring - errors,"));
-  printf ("%s\n", _("packets/sec, etc.  I use MRTG in conjuction with the Novell NLM that allows"));
-  printf ("%s\n", _("me to track processor utilization, user connections, drive space, etc and"));
-  printf ("%s\n\n", _("this plugin works well for monitoring that kind of data as well."));
+  printf ("\n");
+	printf (" %s\n", _("This plugin is useful for monitoring MRTG data that does not correspond to"));
+  printf (" %s\n", _("bandwidth usage.  (Use the check_mrtgtraf plugin for monitoring bandwidth)."));
+  printf (" %s\n", _("It can be used to monitor any kind of data that MRTG is monitoring - errors,"));
+  printf (" %s\n", _("packets/sec, etc.  I use MRTG in conjuction with the Novell NLM that allows"));
+  printf (" %s\n", _("me to track processor utilization, user connections, drive space, etc and"));
+  printf (" %s\n\n", _("this plugin works well for monitoring that kind of data as well."));
 
 	printf ("%s\n", _("Notes:"));
   printf (" %s\n", _("- This plugin only monitors one of the two variables stored in the MRTG log"));
-  printf (" %s\n", _("  file.  If you want to monitor both values you will have to define two"));
-  printf (" %s\n", _("  commands with different values for the <variable> argument.  Of course,"));
-  printf (" %s\n", _("you can always hack the code to make this plugin work for you..."));
+  printf ("   %s\n", _("file.  If you want to monitor both values you will have to define two"));
+  printf ("   %s\n", _("commands with different values for the <variable> argument.  Of course,"));
+  printf ("   %s\n", _("you can always hack the code to make this plugin work for you..."));
   printf (" %s\n", _("- MRTG stands for the Multi Router Traffic Grapher.  It can be downloaded from"));
-  printf (" %s\n", "http://ee-staff.ethz.ch/~oetiker/webtools/mrtg/mrtg.html");
+  printf ("   %s\n", "http://ee-staff.ethz.ch/~oetiker/webtools/mrtg/mrtg.html");
+#ifdef NP_EXTRA_OPTS
+	printf (" -%s", _(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

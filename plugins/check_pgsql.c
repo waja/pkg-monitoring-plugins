@@ -1,42 +1,39 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_pgsql plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 1999-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_pgsql plugin
-*
-*  Test whether a PostgreSQL Database is accepting connections.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* Test whether a PostgreSQL Database is accepting connections.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: check_pgsql.c 1590 2007-01-28 21:46:41Z hweiss $
- 
- *****************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_pgsql.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_pgsql";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "1999-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -44,6 +41,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "netutils.h"
 #include <libpq-fe.h>
+#include <pg_config_manual.h>
 
 #define DEFAULT_DB "template1"
 #define DEFAULT_HOST "127.0.0.1"
@@ -151,6 +149,9 @@ main (int argc, char **argv)
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
@@ -414,6 +415,7 @@ print_help (void)
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_HOST_PORT), 'P', myport);
 
@@ -440,12 +442,20 @@ print_help (void)
   printf (" %s\n", _("specified database, and then disconnects. If no database is specified, it"));
   printf (" %s\n", _("connects to the template1 database, which is present in every functioning"));
   printf (" %s\n\n", _("PostgreSQL DBMS."));
+
 	printf (" %s\n", _("The plugin will connect to a local postmaster if no host is specified. To"));
   printf (" %s\n", _("connect to a remote host, be sure that the remote postmaster accepts TCP/IP"));
   printf (" %s\n\n", _("connections (start the postmaster with the -i option)."));
+
 	printf (" %s\n", _("Typically, the nagios user (unless the --logname option is used) should be"));
   printf (" %s\n", _("able to connect to the database without a password. The plugin can also send"));
   printf (" %s\n", _("a password, but no effort is made to obsure or encrypt the password."));
+
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

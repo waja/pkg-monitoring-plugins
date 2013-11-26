@@ -2,7 +2,7 @@
 #
 # Post Office Protocol (POP) Server Tests via check_pop
 #
-# $Id: check_pop.t 1345 2006-03-22 15:45:49Z tonvoon $
+# $Id: check_pop.t 1901 2008-01-08 11:57:24Z tonvoon $
 #
 
 use strict;

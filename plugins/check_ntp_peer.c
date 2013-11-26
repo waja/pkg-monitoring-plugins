@@ -1,49 +1,46 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_ntp_peer plugin
-*
+* 
 * License: GPL
-* Copyright (c) 2006 sean finney <seanius@seanius.net>
-* Copyright (c) 2007 nagios-plugins team
-*
-* Last Modified: $Date: 2007-12-11 13:31:22 +0000 (Tue, 11 Dec 2007) $
-*
+* Copyright (c) 2006 Sean Finney <seanius@seanius.net>
+* Copyright (c) 2006-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_ntp_peer plugin
-*
-*  This plugin checks an NTP server independent of any commandline
-*  programs or external libraries.
-*
-*  Use this plugin to check the health of an NTP server. It supports
-*  checking the offset with the sync peer, the jitter and stratum. This
-*  plugin will not check the clock offset between the local host and NTP
-*  server; please use check_ntp_time for that purpose.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin checks an NTP server independent of any commandline
+* programs or external libraries.
+* 
+* Use this plugin to check the health of an NTP server. It supports
+* checking the offset with the sync peer, the jitter and stratum. This
+* plugin will not check the clock offset between the local host and NTP
+* server; please use check_ntp_time for that purpose.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: check_ntp_peer.c 1864 2007-12-11 13:31:22Z dermoth $
- 
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_ntp_peer.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
 *****************************************************************************/
 
 const char *progname = "check_ntp_peer";
-const char *revision = "$Revision: 1864 $";
-const char *copyright = "2007";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2006-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -63,6 +60,7 @@ static short do_jitter=0;
 static char *jwarn="-1:5000";
 static char *jcrit="-1:10000";
 static int syncsource_found=0;
+static int li_alarm=0;
 
 int process_arguments (int, char **);
 thresholds *offset_thresholds = NULL;
@@ -267,6 +265,7 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 		if(read(conn, &req, SIZEOF_NTPCM(req)) == -1)
 			die(STATE_CRITICAL, "NTP CRITICAL: No response from NTP server\n");
 		DBG(print_ntp_control_message(&req));
+		if (LI(req.flags) == LI_ALARM) li_alarm = 1;
 		/* Each peer identifier is 4 bytes in the data section, which
 	 	 * we represent as a ntp_assoc_status_pair datatype.
 	 	 */
@@ -296,6 +295,10 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 	if(! syncsource_found){
 		status = STATE_WARNING;
 		if(verbose) printf("warning: no synchronization source found\n");
+	}
+	if(li_alarm){
+		status = STATE_WARNING;
+		if(verbose) printf("warning: LI_ALARM bit is set\n");
 	}
 
 
@@ -549,6 +552,9 @@ int main(int argc, char *argv[]){
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
@@ -597,6 +603,8 @@ int main(int argc, char *argv[]){
 	}
 	if(!syncsource_found)
 		asprintf(&result_line, "%s %s,", result_line, _("Server not synchronized"));
+	else if(li_alarm)
+		asprintf(&result_line, "%s %s,", result_line, _("Server has the LI_ALARM bit set"));
 
 	if(offset_result == STATE_UNKNOWN){
 		asprintf(&result_line, "%s %s", result_line, _("Offset unknown"));
@@ -633,6 +641,7 @@ void print_help(void){
 
 	print_usage();
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 	printf (_(UT_HOST_PORT), 'p', "123");
 	printf (" %s\n", "-q, --quiet");
 	printf ("    %s\n", _("Returns UNKNOWN instead of CRITICAL or WARNING if server isn't synchronized"));
@@ -640,37 +649,42 @@ void print_help(void){
 	printf ("    %s\n", _("Offset to result in warning status (seconds)"));
 	printf (" %s\n", "-c, --critical=THRESHOLD");
 	printf ("    %s\n", _("Offset to result in critical status (seconds)"));
-	printf (" %s\n", "-W, --warning=THRESHOLD");
+	printf (" %s\n", "-W, --swarn=THRESHOLD");
 	printf ("    %s\n", _("Warning threshold for stratum"));
-	printf (" %s\n", "-W, --critical=THRESHOLD");
+	printf (" %s\n", "-C, --scrit=THRESHOLD");
 	printf ("    %s\n", _("Critical threshold for stratum"));
-	printf (" %s\n", "-j, --warning=THRESHOLD");
+	printf (" %s\n", "-j, --jwarn=THRESHOLD");
 	printf ("    %s\n", _("Warning threshold for jitter"));
-	printf (" %s\n", "-k, --critical=THRESHOLD");
+	printf (" %s\n", "-k, --jcrit=THRESHOLD");
 	printf ("    %s\n", _("Critical threshold for jitter"));
 	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
 	printf (_(UT_VERBOSE));
 
 	printf("\n");
+	printf("%s\n", _("This plugin checks an NTP server independent of any commandline"));
+	printf("%s\n\n", _("programs or external libraries."));
+
 	printf("%s\n", _("Notes:"));
-	printf(" %s\n", _("This plugin checks an NTP server independent of any commandline"));
-	printf(" %s\n\n", _("programs or external libraries."));
 	printf(" %s\n", _("Use this plugin to check the health of an NTP server. It supports"));
 	printf(" %s\n", _("checking the offset with the sync peer, the jitter and stratum. This"));
 	printf(" %s\n", _("plugin will not check the clock offset between the local host and NTP"));
-	printf(" %s\n\n", _("server; please use check_ntp_time for that purpose."));
-
-	printf(" %s\n", _("See:"));
-	printf(" %s\n", ("http://nagiosplug.sourceforge.net/developer-guidelines.html#THRESHOLDFORMAT"));
-	printf(" %s\n", _("for THRESHOLD format and examples."));
+	printf(" %s\n", _("server; please use check_ntp_time for that purpose."));
+	printf("\n");
+	printf(_(UT_THRESHOLDS_NOTES));
+#ifdef NP_EXTRA_OPTS
+	printf("\n");
+	printf(_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf("\n");
 	printf("%s\n", _("Examples:"));
 	printf(" %s\n", _("Simple NTP server check:"));
 	printf("  %s\n", ("./check_ntp_peer -H ntpserv -w 0.5 -c 1"));
+	printf("\n");
 	printf(" %s\n", _("Check jitter too, avoiding critical notifications if jitter isn't available"));
 	printf(" %s\n", _("(See Notes above for more details on thresholds formats):"));
 	printf("  %s\n", ("./check_ntp_peer -H ntpserv -w 0.5 -c 1 -j -1:100 -k -1:200"));
+	printf("\n");
 	printf(" %s\n", _("Check only stratum:"));
 	printf("  %s\n", ("./check_ntp_peer -H ntpserv -W 4 -C 6"));
 

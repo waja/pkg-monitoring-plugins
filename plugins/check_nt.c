@@ -1,44 +1,43 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_nt plugin
-*
+* 
 * License: GPL
 * Copyright (c) 2000-2002 Yves Rubin (rubiyz@yahoo.com)
-* Copyright (c) 2003-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 2003-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_nt plugin
-*
-*  This plugin collects data from the NSClient service running on a
-*  Windows NT/2000/XP/2003 server.
-*  This requires NSClient software to run on NT (http://nsclient.ready2run.nl/)
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin collects data from the NSClient service running on a
+* Windows NT/2000/XP/2003 server.
+* This plugin requires NSClient software to run on NT
+* (http://nsclient.ready2run.nl/)
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_nt.c 1590 2007-01-28 21:46:41Z hweiss $
-*
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_nt.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
 *****************************************************************************/
 
 const char *progname = "check_nt";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "2003-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -55,7 +54,8 @@ enum checkvars {
 	CHECK_PROCSTATE,
 	CHECK_MEMUSE,
 	CHECK_COUNTER,
-	CHECK_FILEAGE
+	CHECK_FILEAGE,
+	CHECK_INSTANCES
 };
 
 enum {
@@ -122,6 +122,9 @@ int main(int argc, char **argv){
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	if(process_arguments(argc,argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
@@ -157,7 +160,7 @@ int main(int argc, char **argv){
 			return_code=STATE_OK;
 			temp_string = strdup (_("CPU Load"));
 			temp_string_perf = strdup (" ");
-      
+
 			/* loop until one of the parameters is wrong or not present */
 			while (lvalue_list[0+offset]> (unsigned long)0 &&
 						 lvalue_list[0+offset]<=(unsigned long)17280 && 
@@ -185,7 +188,7 @@ int main(int argc, char **argv){
 				asprintf(&temp_string_perf,"%s%s",temp_string_perf,perfdata);
 				offset+=3;	/* move across the array */
 			}
-      
+
 			if (strlen(temp_string)>10) {  /* we had at least one loop */
 				output_message = strdup (temp_string);
 				perfdata = temp_string_perf;
@@ -414,7 +417,7 @@ int main(int argc, char **argv){
 					return_code=STATE_WARNING;	
 				else
 					return_code=STATE_OK;	
-			} 
+			}
 			else {                                       /* inverse thresholds */
 				if(check_critical_value==TRUE && age_in_minutes <= critical_value)
 					return_code=STATE_CRITICAL;
@@ -423,6 +426,21 @@ int main(int argc, char **argv){
 				else
 					return_code=STATE_OK;	
 			}
+		}
+		break;
+
+	case CHECK_INSTANCES:		
+		if (value_list==NULL)
+			output_message = strdup (_("No counter specified"));
+		else {
+			asprintf(&send_buffer,"%s&10&%s", req_password,value_list);
+			fetch_data (server_address, server_port, send_buffer);
+			if (!strncmp(recv_buffer,"ERROR",5)) {
+				printf("NSClient - %s\n",recv_buffer);
+				exit(STATE_UNKNOWN);
+			}
+			asprintf(&output_message,"%s",recv_buffer);			
+			return_code=STATE_OK;
 		}
 		break;
 
@@ -483,14 +501,13 @@ int process_arguments(int argc, char **argv){
       strcpy(argv[c],"-c");
 	}
 
-	while (1){
+	while (1) {
 		c = getopt_long(argc,argv,"+hVH:t:c:w:p:v:l:s:d:",longopts,&option);
 
 		if (c==-1||c==EOF||c==1)
 			break;
 
-		switch (c)
-			{
+		switch (c) {
 			case '?': /* print short usage statement if args not parsable */
 			usage5 ();
 			case 'h': /* help */
@@ -533,6 +550,8 @@ int process_arguments(int argc, char **argv){
 					vars_to_check=CHECK_COUNTER;
 				else if(!strcmp(optarg,"FILEAGE"))
 					vars_to_check=CHECK_FILEAGE;
+				else if(!strcmp(optarg,"INSTANCES"))
+					vars_to_check=CHECK_INSTANCES;
 				else
 					return ERROR;
 				break;
@@ -624,12 +643,13 @@ void print_help(void)
   printf ("%s\n", _("Windows NT/2000/XP/2003 server."));
 
   printf ("\n\n");
-  
+
 	print_usage();
 	
   printf (_(UT_HELP_VRSN));
+  printf (_(UT_EXTRA_OPTS));
 
-    printf ("%s\n", _("Options:"));
+  printf ("%s\n", _("Options:"));
   printf (" %s\n", "-H, --hostname=HOST");
   printf ("   %s\n", _("Name of the host to check"));
   printf (" %s\n", "-p, --port=INTEGER");
@@ -671,7 +691,7 @@ void print_help(void)
   printf (" %s\n", "MEMUSE =");
   printf ("  %s\n", _("Memory use."));
   printf ("  %s\n", _("Warning and critical thresholds can be specified with -w and -c."));
-  printf (" %s\n,", "SERVICESTATE =");
+  printf (" %s\n", "SERVICESTATE =");
   printf ("  %s\n", _("Check the state of one or several services."));
   printf ("  %s\n", _("Request a -l parameters with the following syntax:"));
   printf ("  %s\n", _("-l <service1>,<service2>,<service3>,..."));
@@ -686,18 +706,38 @@ void print_help(void)
   printf ("  %s\n", _("-l \"\\\\<performance object>\\\\counter\",\"<description>"));
   printf ("  %s\n", _("The <description> parameter is optional and is given to a printf "));
   printf ("  %s\n", _("output command which requires a float parameter."));
-  printf ("  %s\n\n", _("If <description> does not include \"%%\", it is used as a label."));
+  printf ("  %s\n", _("If <description> does not include \"%%\", it is used as a label."));
   printf ("  %s\n", _("Some examples:"));
   printf ("  %s\n", "\"Paging file usage is %%.2f %%%%\"");
-  printf ("  %s\n\n", "\"%%.f %%%% paging file used.\"");
-  printf (_("Notes:"));
+  printf ("  %s\n", "\"%%.f %%%% paging file used.\"");
+  printf (" %s\n", "INSTANCES =");  
+  printf ("  %s\n", _("Check any performance counter object of Windows NT/2000."));
+  printf ("  %s\n", _("Syntax: check_nt -H <hostname> -p <port> -v INSTANCES -l <counter object>"));
+  printf ("  %s\n", _("<counter object> is a Windows Perfmon Counter object (eg. Process),"));
+  printf ("  %s\n", _("if it is two words, it should be enclosed in quotes"));
+  printf ("  %s\n", _("The returned results will be a comma-separated list of instances on "));
+  printf ("  %s\n", _(" the selected computer for that object."));
+  printf ("  %s\n", _("The purpose of this is to be run from command line to determine what instances"));
+  printf ("  %s\n", _(" are available for monitoring without having to log onto the Windows server"));
+  printf ("  %s\n", _("  to run Perfmon directly."));
+  printf ("  %s\n", _("It can also be used in scripts that automatically create Nagios service"));
+  printf ("  %s\n", _(" configuration files."));
+  printf ("  %s\n", _("Some examples:"));
+  printf ("  %s\n\n", _("check_nt -H 192.168.1.1 -p 1248 -v INSTANCES -l Process"));
+
+  printf ("%s\n", _("Notes:"));
   printf (" %s\n", _("- The NSClient service should be running on the server to get any information"));
-  printf (" %s\n", "(http://nsclient.ready2run.nl).");
+  printf ("   %s\n", "(http://nsclient.ready2run.nl).");
   printf (" %s\n", _("- Critical thresholds should be lower than warning thresholds"));
   printf (" %s\n", _("- Default port 1248 is sometimes in use by other services. The error"));
-  printf (" %s\n", _("output when this happens contains \"Cannot map xxxxx to protocol number\"."));
-  printf (" %s\n", _("One fix for this is to change the port to something else on check_nt "));
-  printf (" %s\n", _("and on the client service it\'s connecting to."));
+  printf ("   %s\n", _("output when this happens contains \"Cannot map xxxxx to protocol number\"."));
+  printf ("   %s\n", _("One fix for this is to change the port to something else on check_nt "));
+  printf ("   %s\n", _("and on the client service it\'s connecting to."));
+#ifdef NP_EXTRA_OPTS
+  printf (" -%s", _(UT_EXTRA_OPTS_NOTES));
+#endif
+
+  printf (_(UT_SUPPORT));
 }
 
 

@@ -1,42 +1,40 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_hpjd plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 2000-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_hpjd plugin
-*
-*  This plugin tests the STATUS of an HP printer with a JetDirect card.
-*  Net-snmp must be installed on the computer running the plugin.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin tests the STATUS of an HP printer with a JetDirect card.
+* Net-SNMP must be installed on the computer running the plugin.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_hpjd.c 1590 2007-01-28 21:46:41Z hweiss $
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_hpjd.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
 *****************************************************************************/
 
 const char *progname = "check_hpjd";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -101,6 +99,9 @@ main (int argc, char **argv)
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
@@ -392,17 +393,25 @@ print_help (void)
 	printf (COPYRIGHT, copyright, email);
 
 	printf ("%s\n", _("This plugin tests the STATUS of an HP printer with a JetDirect card."));
-  printf ("%s\n", _("Net-snmp must be installed on the computer running the plugin."));
+	printf ("%s\n", _("Net-snmp must be installed on the computer running the plugin."));
 
-  printf ("\n\n");
-  
+	printf ("\n\n");
+
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (" %s\n", "-C, --community=STRING");
-  printf ("    %s", _("The SNMP community name "));
-  printf (_("(default=%s)"), DEFAULT_COMMUNITY);
+	printf ("    %s", _("The SNMP community name "));
+	printf (_("(default=%s)"), DEFAULT_COMMUNITY);
+	printf ("\n");
+
+#ifdef NP_EXTRA_OPTS
+	printf ("\n");
+	printf ("%s\n", _("Notes:"));
+	printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

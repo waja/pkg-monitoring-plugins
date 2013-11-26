@@ -1,36 +1,35 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios plugins net utilities include file
-*
+* 
 * License: GPL
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
-*
-* Last Modified: $Date: 2007-01-24 22:47:25 +0000 (Wed, 24 Jan 2007) $
-*
+* Copyright (c) 2003-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-01-31 11:45:28 +0000 (Thu, 31 Jan 2008) $
+* 
 * Description:
-*
+* 
 * This file contains common include files and function definitions
 * used in many of the plugins.
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: netutils.h 1580 2007-01-24 22:47:25Z tonvoon $
-*
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: netutils.h 1919 2008-01-31 11:45:28Z dermoth $
+* 
+*****************************************************************************/
 
 #ifndef _NETUTILS_H_
 #define _NETUTILS_H_

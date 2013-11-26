@@ -1,39 +1,37 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_by_ssh plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-09-23 13:26:03 +0100 (Sun, 23 Sep 2007) $
-*
+* Copyright (c) 2000-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-27 22:31:13 +0100 (Tue, 27 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_by_ssh plugin
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_by_ssh.c 1792 2007-09-23 12:26:03Z psychotrahe $
 * 
-******************************************************************************/
- 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_by_ssh.c 2002 2008-05-27 21:31:13Z tonvoon $
+* 
+*****************************************************************************/
+
 const char *progname = "check_by_ssh";
-const char *revision = "$Revision: 1792 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 2002 $";
+const char *copyright = "2000-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -78,6 +76,9 @@ main (int argc, char **argv)
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	/* process arguments */
 	if (process_arguments (argc, argv) == ERROR)
 		usage_va(_("Could not parse arguments"));
@@ -99,11 +100,11 @@ main (int argc, char **argv)
 	if (skip_stderr == -1) /* --skip-stderr specified without argument */
 		skip_stderr = chld_err.lines;
 
-	/* UNKNOWN if (non-skipped) output found on stderr */
+	/* UNKNOWN or worse if (non-skipped) output found on stderr */
 	if(chld_err.lines > skip_stderr) {
 		printf (_("Remote command execution failed: %s\n"),
 		        chld_err.line[skip_stderr]);
-		return STATE_UNKNOWN;
+		return max_state_alt(result, STATE_UNKNOWN);
 	}
 
 	/* this is simple if we're not supposed to be passive.
@@ -132,21 +133,20 @@ main (int argc, char **argv)
 	local_time = time (NULL);
 	commands = 0;
 	for(i = skip_stdout; i < chld_out.lines; i++) {
-		status_text = strstr (chld_out.line[i], "STATUS CODE: ");
-		if (status_text == NULL) {
-			printf ("%s", chld_out.line[i]);
-			return result;
-		}
+		status_text = chld_out.line[i++];
+		if (i == chld_out.lines || strstr (chld_out.line[i], "STATUS CODE: ") == NULL)
+			die (STATE_UNKNOWN, _("%s: Error parsing output\n"), progname);
+
 		if (service[commands] && status_text
-			&& sscanf (status_text, "STATUS CODE: %d", &cresult) == 1)
+			&& sscanf (chld_out.line[i], "STATUS CODE: %d", &cresult) == 1)
 		{
 			fprintf (fp, "[%d] PROCESS_SERVICE_CHECK_RESULT;%s;%s;%d;%s\n",
 			         (int) local_time, host_shortname, service[commands++],
-			         cresult, chld_out.line[i]);
+			         cresult, status_text);
 		}
 	}
 	
-	/* force an OK state */
+	/* Multiple commands and passive checking should always return OK */
 	return result;
 }
 
@@ -307,7 +307,7 @@ process_arguments (int argc, char **argv)
 				asprintf (&remotecmd, "%s", argv[c]);
 	}
 
-	if (commands > 1)
+	if (commands > 1 || passive)
 		asprintf (&remotecmd, "%s;echo STATUS CODE: $?;", remotecmd);
 
 	if (remotecmd == NULL || strlen (remotecmd) <= 1)
@@ -347,10 +347,12 @@ print_help (void)
 	printf (_("This plugin uses SSH to execute commands on a remote host"));
 
   printf ("\n\n");
-  
+
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_HOST_PORT), 'p', "none");
 
@@ -365,7 +367,7 @@ print_help (void)
   printf (" %s\n", "-E, --skip-stderr[=n]");
   printf ("    %s\n", _("Ignore all or (if specified) first n lines on STDERR [optional]"));
   printf (" %s\n", "-f");
-  printf ("    %s\n", _("tells ssh to fork rather than create a tty [optional]"));
+  printf ("    %s\n", _("tells ssh to fork rather than create a tty [optional]. This will always return OK if ssh is executed"));
   printf (" %s\n","-C, --command='COMMAND STRING'");
   printf ("    %s\n", _("command to execute on the remote machine"));
   printf (" %s\n","-l, --logname=USERNAME");
@@ -384,6 +386,8 @@ print_help (void)
   printf ("    %s\n", _("Tell ssh to suppress warning and diagnostic messages [optional]"));
 	printf (_(UT_WARN_CRIT));
 	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+	printf (_(UT_VERBOSE));
+	printf("\n");
   printf (" %s\n", _("The most common mode of use is to refer to a local identity file with"));
   printf (" %s\n", _("the '-i' option. In this mode, the identity pair should have a null"));
   printf (" %s\n", _("passphrase and the public key should be listed in the authorized_keys"));
@@ -391,6 +395,7 @@ print_help (void)
   printf (" %s\n", _("only one command on the remote server. If the remote SSH server tracks"));
   printf (" %s\n", _("invocation arguments, the one remote program may be an agent that can"));
   printf (" %s\n", _("execute additional commands as proxy"));
+  printf("\n");
   printf (" %s\n", _("To use passive mode, provide multiple '-C' options, and provide"));
   printf (" %s\n", _("all of -O, -s, and -n options (servicelist order must match '-C'options)"));
   printf ("\n");
@@ -400,8 +405,14 @@ print_help (void)
   printf (" %s\n", "[1080933700] PROCESS_SERVICE_CHECK_RESULT;flint;c1;0; up 2 days");
   printf (" %s\n", "[1080933700] PROCESS_SERVICE_CHECK_RESULT;flint;c2;0; up 2 days");
   printf (" %s\n", "[1080933700] PROCESS_SERVICE_CHECK_RESULT;flint;c3;0; up 2 days");
-	printf (_(UT_VERBOSE));
-	printf (_(UT_SUPPORT));
+
+#ifdef NP_EXTRA_OPTS
+	printf("\n");
+	printf("%s\n", _("Notes:"));
+	printf(_(UT_EXTRA_OPTS_NOTES));
+#endif
+
+	printf(_(UT_SUPPORT));
 }
 
 

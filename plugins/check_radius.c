@@ -1,42 +1,39 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_radius plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-12-10 07:52:00 +0000 (Mon, 10 Dec 2007) $
-*
+* Copyright (c) 1999-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-20 08:57:13 +0100 (Tue, 20 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_radius plugin
-*
-*  Tests to see if a radius server is accepting connections.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* Tests to see if a radius server is accepting connections.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_radius.c 1859 2007-12-10 07:52:00Z dermoth $
 * 
-*******************************************************************************/
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_radius.c 1994 2008-05-20 07:57:13Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_radius";
-const char *revision = "$Revision: 1859 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1994 $";
+const char *copyright = "2000-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -152,6 +149,9 @@ main (int argc, char **argv)
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
@@ -260,7 +260,13 @@ process_arguments (int argc, char **argv)
 			username = optarg;
 			break;
 		case 'p':									/* password */
-			password = optarg;
+			password = strdup(optarg);
+
+			/* Delete the password from process list */
+			while (*optarg != '\0') {
+				*optarg = 'X';
+				optarg++;
+			}
 			break;
 		case 'n':									/* nas id */
 			nasid = optarg;
@@ -318,6 +324,7 @@ print_help (void)
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_HOST_PORT), 'P', myport);
 
@@ -336,16 +343,22 @@ print_help (void)
 
 	printf (_(UT_TIMEOUT), timeout_interval);
 
-	printf ("%s\n", _("This plugin tests a radius server to see if it is accepting connections."));
+  printf ("\n");
+  printf ("%s\n", _("This plugin tests a radius server to see if it is accepting connections."));
   printf ("%s\n", _("The server to test must be specified in the invocation, as well as a user"));
   printf ("%s\n", _("name and password. A configuration file may also be present. The format of"));
   printf ("%s\n", _("the configuration file is described in the radiusclient library sources."));
 	printf ("%s\n", _("The password option presents a substantial security issue because the"));
-  printf ("%s\n", _("password can be determined by careful watching of the command line in"));
-  printf ("%s\n", _("a process listing.  This risk is exacerbated because nagios will"));
-  printf ("%s\n", _("run the plugin at regular prdictable intervals.  Please be sure that"));
-  printf ("%s\n", _("the password used does not allow access to sensitive system resources,"));
-  printf ("%s\n", _("otherwise compormise could occur."));
+  printf ("%s\n", _("password can possibly be determined by careful watching of the command line"));
+  printf ("%s\n", _("in a process listing. This risk is exacerbated because nagios will"));
+  printf ("%s\n", _("run the plugin at regular predictable intervals. Please be sure that"));
+  printf ("%s\n", _("the password used does not allow access to sensitive system resources."));
+
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

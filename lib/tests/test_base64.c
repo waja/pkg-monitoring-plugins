@@ -1,25 +1,24 @@
-/******************************************************************************
-
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
- the Free Software Foundation; either version 2 of the License, or
- (at your option) any later version.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU General Public License
- along with this program; if not, write to the Free Software
- Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: test_base64.c 1819 2007-11-09 23:24:45Z dermoth $
- 
-******************************************************************************/
+/*****************************************************************************
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: test_base64.c 1927 2008-02-13 04:07:39Z dermoth $
+* 
+*****************************************************************************/
 
 #include "common.h"
-#include "base64.h"
+#include "gl/base64.h"
 #include "tap.h"
 
 int
@@ -249,7 +248,7 @@ main (int argc, char **argv)
 	0x2b,0x00,0x1f,0x0c,0x28,0x59,0x0a,0x16,0x49,0x5a,0x5c,0x64,0x65,0x4b,0x11,0x29,
 	0x15,0x36,0x5a,0x65,0x19,0x4f,0x60,0x23,0x3a,0x3a,0x13,0x25,0x02,0x78,0x4c,0x54
 	};
-  char b64_known[1368] = {
+  char b64_known[1369] = {
 	0x43,0x7a,0x42,0x45,0x59,0x6e,0x77,0x69,0x48,0x77,0x30,0x46,0x5a,0x79,0x77,0x71,
 	0x4f,0x53,0x46,0x47,0x43,0x46,0x42,0x6d,0x4e,0x44,0x63,0x4c,0x52,0x55,0x73,0x34,
 	0x4d,0x67,0x5a,0x36,0x50,0x6e,0x38,0x4d,0x51,0x42,0x68,0x72,0x4c,0x57,0x42,0x4d,
@@ -335,13 +334,13 @@ main (int argc, char **argv)
 	0x48,0x33,0x41,0x41,0x4c,0x6d,0x59,0x55,0x50,0x48,0x38,0x72,0x41,0x42,0x38,0x4d,
 	0x4b,0x46,0x6b,0x4b,0x46,0x6b,0x6c,0x61,0x58,0x47,0x52,0x6c,0x53,0x78,0x45,0x70,
 	0x46,0x54,0x5a,0x61,0x5a,0x52,0x6c,0x50,0x59,0x43,0x4d,0x36,0x4f,0x68,0x4d,0x6c,
-	0x41,0x6e,0x68,0x4d,0x56,0x41,0x3d,0x3d
+	0x41,0x6e,0x68,0x4d,0x56,0x41,0x3d,0x3d,0x00
 	};
 	char *b64_test;
 
 	plan_tests(1);
 
-	b64_test = base64 (random, 1024);
+	base64_encode_alloc (random, 1024, &b64_test);
 
 	ok(strcmp(b64_known, b64_test) == 0,
 	   "Test matching a base64 encoded 1024 bytes random string");

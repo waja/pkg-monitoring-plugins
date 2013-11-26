@@ -1,34 +1,32 @@
 /*****************************************************************************
-*
+* 
 * Nagios check_dig plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 2002-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_dig plugin
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_dig.c 1590 2007-01-28 21:46:41Z hweiss $
-*
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_dig.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
 *****************************************************************************/
 
 /* Hackers note:
@@ -38,8 +36,8 @@
  *  because on some architectures those strings are in non-writable memory */
 
 const char *progname = "check_dig";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "2002-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2002-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -59,6 +57,7 @@ char *query_address = NULL;
 char *record_type = "A";
 char *expected_address = NULL;
 char *dns_server = NULL;
+char *dig_args = "";
 int verbose = FALSE;
 int server_port = DEFAULT_PORT;
 double warning_interval = UNDEFINED;
@@ -85,12 +84,15 @@ main (int argc, char **argv)
   if (signal (SIGALRM, popen_timeout_alarm_handler) == SIG_ERR)
     usage_va(_("Cannot catch SIGALRM"));
 
+  /* Parse extra opts if any */
+  argv=np_extra_opts (&argc, argv, progname);
+
   if (process_arguments (argc, argv) == ERROR)
     usage_va(_("Could not parse arguments"));
 
   /* get the command to run */
-  asprintf (&command_line, "%s @%s -p %d %s -t %s",
-            PATH_TO_DIG, dns_server, server_port, query_address, record_type);
+  asprintf (&command_line, "%s @%s -p %d %s -t %s %s",
+            PATH_TO_DIG, dns_server, server_port, query_address, record_type, dig_args);
 
   alarm (timeout_interval);
   gettimeofday (&tv, NULL);
@@ -192,6 +194,7 @@ process_arguments (int argc, char **argv)
     {"warning", required_argument, 0, 'w'},
     {"critical", required_argument, 0, 'c'},
     {"timeout", required_argument, 0, 't'},
+    {"dig-arguments", required_argument, 0, 'A'},
     {"verbose", no_argument, 0, 'v'},
     {"version", no_argument, 0, 'V'},
     {"help", no_argument, 0, 'h'},
@@ -205,7 +208,7 @@ process_arguments (int argc, char **argv)
     return ERROR;
 
   while (1) {
-    c = getopt_long (argc, argv, "hVvt:l:H:w:c:T:p:a:", longopts, &option);
+    c = getopt_long (argc, argv, "hVvt:l:H:w:c:T:p:a:A:", longopts, &option);
 
     if (c == -1 || c == EOF)
       break;
@@ -255,6 +258,9 @@ process_arguments (int argc, char **argv)
       else {
         usage_va(_("Timeout interval must be a positive integer - %s"), optarg);
       }
+      break;
+    case 'A':                 /* dig arguments */
+      dig_args = strdup(optarg);
       break;
     case 'v':                 /* verbose */
       verbose = TRUE;
@@ -314,17 +320,34 @@ print_help (void)
 
   printf (_(UT_HELP_VRSN));
 
+  printf (_(UT_EXTRA_OPTS));
+
   printf (_(UT_HOST_PORT), 'p', myport);
 
-  printf (" %s\n","-l, --lookup=STRING");
-  printf ("    %s\n",_("machine name to lookup"));
+  printf (" %s\n","-l, --query_address=STRING");
+  printf ("    %s\n",_("Machine name to lookup"));
   printf (" %s\n","-T, --record_type=STRING");
-  printf ("    %s\n",_("record type to lookup (default: A)"));
+  printf ("    %s\n",_("Record type to lookup (default: A)"));
   printf (" %s\n","-a, --expected_address=STRING");
-  printf ("    %s\n",_("an address expected to be in the answer section.if not set, uses whatever was in -l"));
+  printf ("    %s\n",_("An address expected to be in the answer section. If not set, uses whatever"));
+  printf ("    %s\n",_("was in -l"));
+  printf (" %s\n","-A, --dig-arguments=STRING");
+  printf ("    %s\n",_("Pass STRING as argument(s) to dig"));
   printf (_(UT_WARN_CRIT));
   printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
   printf (_(UT_VERBOSE));
+
+  printf ("\n");
+  printf ("%s\n", _("Examples:"));
+  printf (" %s\n", "check_dig -H DNSSERVER -l www.example.com -A \"+tcp\"");
+  printf (" %s\n", "This will send a tcp query to DNSSERVER for www.example.com");
+
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
+
   printf (_(UT_SUPPORT));
 }
 
@@ -334,7 +357,7 @@ void
 print_usage (void)
 {
   printf (_("Usage:"));
-  printf ("%s -H host -l lookup [-p <server port>] [-T <query type>]", progname);
-  printf (" [-w <warning interval>] [-c <critical interval>] [-t <timeout>]");
-  printf (" [-a <expected answer address>] [-v]\n");
+  printf ("%s -H <host> -l <query_address> [-p <server port>]\n", progname);
+  printf (" [-T <query type>] [-w <warning interval>] [-c <critical interval>]\n");
+  printf (" [-t <timeout>] [-a <expected answer address>] [-v]\n");
 }

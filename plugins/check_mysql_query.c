@@ -1,42 +1,40 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_mysql_query plugin
-*
+* 
 * License: GPL
-* Copyright (c) 2006 nagios-plugins team, after Didi Rieder (check_mysql)
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 2006-2007 Nagios Plugins Development Team
+* Original code from check_mysql, copyright 1999 Didi Rieder
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_mysql_query plugin
-*
-*  This plugin is for running arbitrary SQL and checking the results
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin is for running arbitrary SQL and checking the results
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-* CHECK_MYSQL_QUERY.C
-*
-* $Id: check_mysql_query.c 1590 2007-01-28 21:46:41Z hweiss $
-*
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_mysql_query.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_mysql_query";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -49,6 +47,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 char *db_user = NULL;
 char *db_host = NULL;
+char *db_socket = NULL;
 char *db_pass = NULL;
 char *db = NULL;
 unsigned int db_port = MYSQL_PORT;
@@ -79,6 +78,9 @@ main (int argc, char **argv)
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
@@ -88,7 +90,7 @@ main (int argc, char **argv)
 	mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"client");
 
 	/* establish a connection to the server and error checking */
-	if (!mysql_real_connect(&mysql,db_host,db_user,db_pass,db,db_port,NULL,0)) {
+	if (!mysql_real_connect(&mysql,db_host,db_user,db_pass,db,db_port,db_socket,0)) {
 		if (mysql_errno (&mysql) == CR_UNKNOWN_HOST)
 			die (STATE_WARNING, "QUERY %s: %s\n", _("WARNING"), mysql_error (&mysql));
 		else if (mysql_errno (&mysql) == CR_VERSION_ERROR)
@@ -172,6 +174,7 @@ process_arguments (int argc, char **argv)
 	int option = 0;
 	static struct option longopts[] = {
 		{"hostname", required_argument, 0, 'H'},
+		{"socket", required_argument, 0, 's'},
 		{"database", required_argument, 0, 'd'},
 		{"username", required_argument, 0, 'u'},
 		{"password", required_argument, 0, 'p'},
@@ -189,7 +192,7 @@ process_arguments (int argc, char **argv)
 		return ERROR;
 
 	while (1) {
-		c = getopt_long (argc, argv, "hvVSP:p:u:d:H:q:w:c:", longopts, &option);
+		c = getopt_long (argc, argv, "hvVSP:p:u:d:H:s:q:w:c:", longopts, &option);
 
 		if (c == -1 || c == EOF)
 			break;
@@ -203,14 +206,17 @@ process_arguments (int argc, char **argv)
 				usage2 (_("Invalid hostname/address"), optarg);
 			}
 			break;
-		case 'd':									/* hostname */
+		case 's':									/* socket */
+			db_socket = optarg;
+			break;
+		case 'd':									/* database */
 			db = optarg;
 			break;
 		case 'u':									/* username */
 			db_user = optarg;
 			break;
 		case 'p':									/* authentication information: password */
-			asprintf(&db_pass, "%s", optarg);
+			db_pass = strdup(optarg);
 
 			/* Delete the password from process list */
 			while (*optarg != '\0') {
@@ -291,10 +297,13 @@ print_help (void)
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 	printf (" -q, --query=STRING\n");
 	printf ("    %s\n", _("SQL query to run. Only first column in first row will be read"));
 	printf (_(UT_WARN_CRIT_RANGE));
 	printf (_(UT_HOST_PORT), 'P', myport);
+	printf (" %s\n", "-s, --socket=STRING");
+	printf ("    %s\n", _("Use the specified socket (has no effect if -H is used)"));
 	printf (" -d, --database=STRING\n");
 	printf ("    %s\n", _("Database to check"));
 	printf (" -u, --username=STRING\n");
@@ -302,11 +311,17 @@ print_help (void)
 	printf (" -p, --password=STRING\n");
 	printf ("    %s\n", _("Password to login with"));
 	printf ("    ==> %s <==\n", _("IMPORTANT: THIS FORM OF AUTHENTICATION IS NOT SECURE!!!"));
+	printf ("    %s\n", _("Your clear-text password could be visible as a process table entry"));
 
 	printf ("\n");
+	printf (" %s\n", _("A query is required. The result from the query should be numeric."));
+	printf (" %s\n", _("For extra security, create a user with minimal access."));
 
-	printf ("%s\n", _("A query is required. The result from the query should be numeric."));
-	printf ("%s\n", _("For extra security, create a user with minimal access."));
+#ifdef NP_EXTRA_OPTS
+	printf ("\n");
+	printf ("%s\n", _("Notes:"));
+	printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }
@@ -316,6 +331,6 @@ void
 print_usage (void)
 {
   printf (_("Usage:"));
-	printf ("%s -q SQL_query [-w warn] [-c crit]\n",progname);
-  printf ("[-d database] [-H host] [-P port] [-u user] [-p password]\n");
+  printf (" %s -q SQL_query [-w warn] [-c crit] [-H host] [-P port] [-s socket]\n",progname);
+  printf ("       [-d database] [-u user] [-p password]\n");
 }

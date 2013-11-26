@@ -1,41 +1,38 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_snmp plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2007 nagios-plugins team
-*
-* Last Modified: $Date: 2007-12-10 07:52:00 +0000 (Mon, 10 Dec 2007) $
-*
+* Copyright (c) 1999-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_snmp plugin
-*
-*  Check status of remote machines and obtain system information via SNMP
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* Check status of remote machines and obtain system information via SNMP
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_snmp.c 1859 2007-12-10 07:52:00Z dermoth $
 * 
-******************************************************************************/
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_snmp.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_snmp";
-const char *revision = "$Revision: 1859 $";
+const char *revision = "$Revision: 1991 $";
 const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -178,6 +175,9 @@ main (int argc, char **argv)
 	/* miblist = strdup (DEFAULT_MIBLIST); */
 	timeout_interval = DEFAULT_TIMEOUT;
 	retries = DEFAULT_RETRIES;
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
@@ -935,6 +935,7 @@ print_help (void)
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_HOST_PORT), 'p', DEFAULT_PORT);
 
@@ -996,27 +997,33 @@ print_help (void)
 
 	printf (_(UT_VERBOSE));
 
-	printf ("%s\n", _("This plugin uses the 'snmpget' command included with the NET-SNMP package."));
+  printf ("\n");
+  printf ("%s\n", _("This plugin uses the 'snmpget' command included with the NET-SNMP package."));
   printf ("%s\n", _("if you don't have the package installed, you will need to download it from"));
   printf ("%s\n", _("http://net-snmp.sourceforge.net before you can use this plugin."));
 
-	printf ("%s\n", _("- Multiple OIDs may be indicated by a comma- or space-delimited list (lists with"));
-  printf ("%s\n", _(" internal spaces must be quoted) [max 8 OIDs]"));
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (" %s\n", _("- Multiple OIDs may be indicated by a comma- or space-delimited list (lists with"));
+  printf ("   %s\n", _("internal spaces must be quoted) [max 8 OIDs]"));
 
-	printf ("%s\n", _("- Ranges are inclusive and are indicated with colons. When specified as"));
-  printf ("%s\n", _(" 'min:max' a STATE_OK will be returned if the result is within the indicated"));
-  printf ("%s\n", _(" range or is equal to the upper or lower bound. A non-OK state will be"));
-  printf ("%s\n", _(" returned if the result is outside the specified range."));
+  printf (" %s\n", _("- Ranges are inclusive and are indicated with colons. When specified as"));
+  printf ("   %s\n", _("'min:max' a STATE_OK will be returned if the result is within the indicated"));
+  printf ("   %s\n", _("range or is equal to the upper or lower bound. A non-OK state will be"));
+  printf ("   %s\n", _("returned if the result is outside the specified range."));
 
-	printf ("%s\n", _("- If specified in the order 'max:min' a non-OK state will be returned if the"));
-  printf ("%s\n", _(" result is within the (inclusive) range."));
+  printf (" %s\n", _("- If specified in the order 'max:min' a non-OK state will be returned if the"));
+  printf ("   %s\n", _("result is within the (inclusive) range."));
 
-	printf ("%s\n", _("- Upper or lower bounds may be omitted to skip checking the respective limit."));
-  printf ("%s\n", _("- Bare integers are interpreted as upper limits."));
-  printf ("%s\n", _("- When checking multiple OIDs, separate ranges by commas like '-w 1:10,1:,:20'"));
-  printf ("%s\n", _("- Note that only one string and one regex may be checked at present"));
-  printf ("%s\n", _("- All evaluation methods other than PR, STR, and SUBSTR expect that the value"));
-  printf ("%s\n", _(" returned from the SNMP query is an unsigned integer."));
+  printf (" %s\n", _("- Upper or lower bounds may be omitted to skip checking the respective limit."));
+  printf (" %s\n", _("- Bare integers are interpreted as upper limits."));
+  printf (" %s\n", _("- When checking multiple OIDs, separate ranges by commas like '-w 1:10,1:,:20'"));
+  printf (" %s\n", _("- Note that only one string and one regex may be checked at present"));
+  printf (" %s\n", _("- All evaluation methods other than PR, STR, and SUBSTR expect that the value"));
+  printf ("   %s\n", _("returned from the SNMP query is an unsigned integer."));
+#ifdef NP_EXTRA_OPTS
+  printf (" -%s", _(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

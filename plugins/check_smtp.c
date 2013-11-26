@@ -1,51 +1,47 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_smtp plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-11-09 21:17:03 +0000 (Fri, 09 Nov 2007) $
-*
+* Copyright (c) 2000-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_smtp plugin
-*
-*  This plugin will attempt to open an SMTP connection with the host.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin will attempt to open an SMTP connection with the host.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*
-* $Id: check_smtp.c 1817 2007-11-09 21:17:03Z dermoth $
 * 
-******************************************************************************/
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_smtp.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_smtp";
-const char *revision = "$Revision: 1817 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
-
-#include <ctype.h>
 
 #include "common.h"
 #include "netutils.h"
 #include "utils.h"
 #include "base64.h"
+
+#include <ctype.h>
 
 #ifdef HAVE_SSL
 int check_cert = FALSE;
@@ -141,6 +137,9 @@ main (int argc, char **argv)
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
@@ -198,10 +197,10 @@ main (int argc, char **argv)
 			/* make sure we find the response we are looking for */
 			if (!strstr (buffer, server_expect)) {
 				if (server_port == SMTP_PORT)
-					printf (_("Invalid SMTP response received from host\n"));
+					printf (_("Invalid SMTP response received from host: %s\n"), buffer);
 				else
-					printf (_("Invalid SMTP response received from host on port %d\n"),
-									server_port);
+					printf (_("Invalid SMTP response received from host on port %d: %s\n"),
+									server_port, buffer);
 				result = STATE_WARNING;
 			}
 		}
@@ -370,7 +369,8 @@ main (int argc, char **argv)
 					}
 
 					/* encode authuser with base64 */
-					abuf = base64 (authuser, strlen(authuser));
+					base64_encode_alloc (authuser, strlen(authuser), &abuf);
+					/* FIXME: abuf shouldn't have enough space to strcat a '\r\n' into it. */
 					strcat (abuf, "\r\n");
 					my_send(abuf, strlen(abuf));
 					if (verbose)
@@ -390,7 +390,8 @@ main (int argc, char **argv)
 						break;
 					}
 					/* encode authpass with base64 */
-					abuf = base64 (authpass, strlen(authpass));
+					base64_encode_alloc (authpass, strlen(authpass), &abuf);
+					/* FIXME: abuf shouldn't have enough space to strcat a '\r\n' into it. */
 					strcat (abuf, "\r\n");
 					my_send(abuf, strlen(abuf));
 					if (verbose) {
@@ -773,6 +774,7 @@ print_help (void)
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_HOST_PORT), 'p', myport);
 
@@ -813,6 +815,12 @@ print_help (void)
   printf ("%s\n", _("STATE_CRITICAL, other errors return STATE_UNKNOWN.  Successful"));
   printf ("%s\n", _("connects, but incorrect reponse messages from the host result in"));
   printf ("%s\n", _("STATE_WARNING return values."));
+
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

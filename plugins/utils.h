@@ -16,9 +16,17 @@ suite of plugins. */
 /* now some functions etc are being defined in ../lib/utils_base.c */
 #include "utils_base.h"
 
+#ifdef NP_EXTRA_OPTS
+/* Include extra-opts functions if compiled in */
+#include "extra_opts.h"
+#else
+/* else, fake np_extra_opts */
+#define np_extra_opts(acptr,av,pr) av
+#endif
+
 /* Standardize version information, termination */
 
-/* $Id: utils.h 1829 2007-11-23 04:18:16Z dermoth $ */
+/* $Id: utils.h 1991 2008-05-07 10:02:42Z dermoth $ */
 
 void support (void);
 char *clean_revstring (const char *);
@@ -173,10 +181,26 @@ char *fperfdata (const char *,
  -t, --timeout=INTEGER\n\
     Seconds before connection times out (default: %d)\n"
 
+#ifdef NP_EXTRA_OPTS
+#define UT_EXTRA_OPTS "\
+ --extra-opts=[section][@file]\n\
+    Read additionnal options from ini file\n"
+#define UT_EXTRA_OPTS_NOTES "\
+ See: http://nagiosplugins.org/extra-opts for --extra-opts usage and examples.\n"
+#else
+#define UT_EXTRA_OPTS ""
+#define UT_EXTRA_OPTS_NOTES ""
+#endif
+
+#define UT_THRESHOLDS_NOTES "\
+ See:\n\
+ http://nagiosplug.sourceforge.net/developer-guidelines.html#THRESHOLDFORMAT\n\
+ for THRESHOLD format and examples.\n"
+
 #define UT_SUPPORT "\n\
 Send email to nagios-users@lists.sourceforge.net if you have questions\n\
 regarding use of this software. To submit patches or suggest improvements,\n\
-send email to nagiosplug-devel@lists.sourceforge.net\n"
+send email to nagiosplug-devel@lists.sourceforge.net\n\n"
 
 #define UT_NOWARRANTY "\n\
 The nagios plugins come with ABSOLUTELY NO WARRANTY. You may redistribute\n\

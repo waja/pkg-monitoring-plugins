@@ -1,42 +1,39 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_ping plugin
-*
+* 
 * License: GPL
-* Copyright (c) 2000-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-10-25 21:43:04 +0100 (Thu, 25 Oct 2007) $
-*
+* Copyright (c) 2000-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_ping plugin
-*
-*  Use the ping program to check connection statistics for a remote host.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* Use the ping program to check connection statistics for a remote host.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: check_ping.c 1810 2007-10-25 20:43:04Z tonvoon $
- 
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_ping.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_ping";
-const char *revision = "$Revision: 1810 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -94,6 +91,9 @@ main (int argc, char **argv)
 
 	addresses = malloc (sizeof(char*) * max_addr);
 	addresses[0] = NULL;
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
@@ -165,7 +165,16 @@ main (int argc, char **argv)
 							state_text (this_result), warn_text, pl, rta);
 		if (display_html == TRUE)
 			printf ("</A>");
-		printf ("\n");
+
+		/* Print performance data */
+		printf("|%s", fperfdata ("rta", (double) rta, "ms",
+		                          wrta>0?TRUE:FALSE, wrta,
+		                          crta>0?TRUE:FALSE, crta,
+		                          TRUE, 0, FALSE, 0));
+		printf(" %s\n", perfdata ("pl", (long) pl, "%",
+		                          wpl>0?TRUE:FALSE, wpl,
+		                          cpl>0?TRUE:FALSE, cpl,
+		                          TRUE, 0, FALSE, 0));
 
 		if (verbose >= 2)
 			printf ("%f:%d%% %f:%d%%\n", wrta, wpl, crta, cpl);
@@ -558,6 +567,7 @@ print_help (void)
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_IPv46));
 
@@ -575,18 +585,22 @@ print_help (void)
 
 	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
 
+  printf ("\n");
 	printf ("%s\n", _("THRESHOLD is <rta>,<pl>% where <rta> is the round trip average travel"));
   printf ("%s\n", _("time (ms) which triggers a WARNING or CRITICAL state, and <pl> is the"));
   printf ("%s\n", _("percentage of packet loss to trigger an alarm state."));
 
-  printf ("\n\n");
-
+  printf ("\n");
 	printf ("%s\n", _("This plugin uses the ping command to probe the specified host for packet loss"));
   printf ("%s\n", _("(percentage) and round trip average (milliseconds). It can produce HTML output"));
   printf ("%s\n", _("linking to a traceroute CGI contributed by Ian Cass. The CGI can be found in"));
   printf ("%s\n", _("the contrib area of the downloads section at http://www.nagios.org/"));
 
-  printf ("\n\n");
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf (_(UT_SUPPORT));
 }

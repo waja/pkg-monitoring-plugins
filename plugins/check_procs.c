@@ -1,49 +1,49 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_procs plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-07-15 16:21:51 +0100 (Sun, 15 Jul 2007) $
-*
+* Copyright (c) 2000-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_procs plugin
-*
-*  Checks all processes and generates WARNING or CRITICAL states if the specified
-*  metric is outside the required threshold ranges. The metric defaults to number
-*  of processes.  Search filters can be applied to limit the processes to check.
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* Checks all processes and generates WARNING or CRITICAL states if the
+* specified metric is outside the required threshold ranges. The metric
+* defaults to number of processes.  Search filters can be applied to limit
+* the processes to check.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_procs.c 1758 2007-07-15 15:21:51Z psychotrahe $
 * 
-******************************************************************************/
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_procs.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_procs";
 const char *program_name = "check_procs";  /* Required for coreutils libs */
-const char *revision = "$Revision: 1758 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
 #include "popen.h"
 #include "utils.h"
+#include "regex.h"
 
 #include <pwd.h>
 
@@ -70,6 +70,7 @@ int options = 0; /* bitmask of filter criteria to test against */
 #define RSS  128
 #define PCPU 256
 #define ELAPSED 512
+#define EREG_ARGS 1024
 /* Different metrics */
 char *metric_name;
 enum metric {
@@ -90,10 +91,13 @@ float pcpu;
 char *statopts;
 char *prog;
 char *args;
+char *input_filename = NULL;
+regex_t re_args;
 char *fmt;
 char *fails;
 char tmp[MAX_INPUT_BUFFER];
 
+FILE *ps_input = NULL;
 
 
 int
@@ -139,6 +143,9 @@ main (int argc, char **argv)
 	asprintf (&metric_name, "PROCS");
 	metric = METRIC_PROCS;
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
@@ -154,25 +161,31 @@ main (int argc, char **argv)
 	if (verbose >= 2)
 		printf (_("CMD: %s\n"), PS_COMMAND);
 
-	child_process = spopen (PS_COMMAND);
-	if (child_process == NULL) {
-		printf (_("Could not open pipe: %s\n"), PS_COMMAND);
-		return STATE_UNKNOWN;
+	if (input_filename == NULL) {
+		ps_input = spopen (PS_COMMAND);
+		if (ps_input == NULL) {
+			printf (_("Could not open pipe: %s\n"), PS_COMMAND);
+			return STATE_UNKNOWN;
+		}
+		child_stderr = fdopen (child_stderr_array[fileno (ps_input)], "r");
+		if (child_stderr == NULL)
+			printf (_("Could not open stderr for %s\n"), PS_COMMAND);
+	} else {
+		ps_input = fopen(input_filename, "r");
+		if (ps_input == NULL) {
+			die( STATE_UNKNOWN, _("Error opening %s\n"), input_filename );
+		}
 	}
 
-	child_stderr = fdopen (child_stderr_array[fileno (child_process)], "r");
-	if (child_stderr == NULL)
-		printf (_("Could not open stderr for %s\n"), PS_COMMAND);
-
 	/* flush first line */
-	fgets (input_buffer, MAX_INPUT_BUFFER - 1, child_process);
+	fgets (input_buffer, MAX_INPUT_BUFFER - 1, ps_input);
 	while ( input_buffer[strlen(input_buffer)-1] != '\n' )
-		fgets (input_buffer, MAX_INPUT_BUFFER - 1, child_process);
+		fgets (input_buffer, MAX_INPUT_BUFFER - 1, ps_input);
 
-	while (fgets (input_buffer, MAX_INPUT_BUFFER - 1, child_process)) {
+	while (fgets (input_buffer, MAX_INPUT_BUFFER - 1, ps_input)) {
 		asprintf (&input_line, "%s", input_buffer);
 		while ( input_buffer[strlen(input_buffer)-1] != '\n' ) {
-			fgets (input_buffer, MAX_INPUT_BUFFER - 1, child_process);
+			fgets (input_buffer, MAX_INPUT_BUFFER - 1, ps_input);
 			asprintf (&input_line, "%s%s", input_line, input_buffer);
 		}
 
@@ -212,6 +225,8 @@ main (int argc, char **argv)
 				resultsum |= STAT;
 			if ((options & ARGS) && procargs && (strstr (procargs, args) != NULL))
 				resultsum |= ARGS;
+			if ((options & EREG_ARGS) && procargs && (regexec(&re_args, procargs, (size_t) 0, NULL, 0) == 0))
+				resultsum |= EREG_ARGS;
 			if ((options & PROG) && procprog && (strcmp (prog, procprog) == 0))
 				resultsum |= PROG;
 			if ((options & PPID) && (procppid == ppid))
@@ -232,6 +247,12 @@ main (int argc, char **argv)
 				continue;
 
 			procs++;
+			if (verbose >= 2) {
+				printf ("Matched: uid=%d vsz=%d rss=%d pid=%d ppid=%d pcpu=%.2f stat=%s etime=%s prog=%s args=%s\n", 
+					procuid, procvsz, procrss,
+					procpid, procppid, procpcpu, procstat, 
+					procetime, procprog, procargs);
+			}
 
 			if (metric == METRIC_VSZ)
 				i = check_thresholds (procvsz);
@@ -263,19 +284,21 @@ main (int argc, char **argv)
 	}
 
 	/* If we get anything on STDERR, at least set warning */
-	while (fgets (input_buffer, MAX_INPUT_BUFFER - 1, child_stderr)) {
-		if (verbose)
-			printf ("STDERR: %s", input_buffer);
-		result = max_state (result, STATE_WARNING);
-		printf (_("System call sent warnings to stderr\n"));
-	}
+	if (input_filename == NULL) {
+		while (fgets (input_buffer, MAX_INPUT_BUFFER - 1, child_stderr)) {
+			if (verbose)
+				printf ("STDERR: %s", input_buffer);
+			result = max_state (result, STATE_WARNING);
+			printf (_("System call sent warnings to stderr\n"));
+		}
 	
-	(void) fclose (child_stderr);
+		(void) fclose (child_stderr);
 
-	/* close the pipe */
-	if (spclose (child_process)) {
-		printf (_("System call returned nonzero status\n"));
-		result = max_state (result, STATE_WARNING);
+		/* close the pipe */
+		if (spclose (ps_input)) {
+			printf (_("System call returned nonzero status\n"));
+			result = max_state (result, STATE_WARNING);
+		}
 	}
 
 	if (found == 0) {							/* no process lines parsed so return STATE_UNKNOWN */
@@ -327,6 +350,9 @@ process_arguments (int argc, char **argv)
 	char *user;
 	struct passwd *pw;
 	int option = 0;
+	int err;
+	int cflags = REG_NOSUB | REG_EXTENDED;
+	char errbuf[MAX_INPUT_BUFFER];
 	static struct option longopts[] = {
 		{"warning", required_argument, 0, 'w'},
 		{"critical", required_argument, 0, 'c'},
@@ -343,6 +369,8 @@ process_arguments (int argc, char **argv)
 		{"help", no_argument, 0, 'h'},
 		{"version", no_argument, 0, 'V'},
 		{"verbose", no_argument, 0, 'v'},
+		{"ereg-argument-array", required_argument, 0, CHAR_MAX+1},
+		{"input-file", required_argument, 0, CHAR_MAX+2},
 		{0, 0, 0, 0}
 	};
 
@@ -417,13 +445,13 @@ process_arguments (int argc, char **argv)
 				pw = getpwuid ((uid_t) uid);
 				/*  check to be sure user exists */
 				if (pw == NULL)
-					usage2 (_("UID %s was not found"), optarg);
+					usage2 (_("UID was not found"), optarg);
 			}
 			else {
 				pw = getpwnam (optarg);
 				/*  check to be sure user exists */
 				if (pw == NULL)
-					usage2 (_("User name %s was not found"), optarg);
+					usage2 (_("User name was not found"), optarg);
 				/*  then get uid */
 				uid = pw->pw_uid;
 			}
@@ -450,6 +478,15 @@ process_arguments (int argc, char **argv)
 				args = optarg;
 			asprintf (&fmt, "%s%sargs '%s'", (fmt ? fmt : ""), (options ? ", " : ""), args);
 			options |= ARGS;
+			break;
+		case CHAR_MAX+1:
+			err = regcomp(&re_args, optarg, cflags);
+			if (err != 0) {
+				regerror (err, &re_args, errbuf, MAX_INPUT_BUFFER);
+				die (STATE_UNKNOWN, "PROCS %s: %s - %s\n", _("UNKNOWN"), _("Could not compile regular expression"), errbuf);
+			}
+			asprintf (&fmt, "%s%sregex args '%s'", (fmt ? fmt : ""), (options ? ", " : ""), optarg);
+			options |= EREG_ARGS;
 			break;
 		case 'r': 					/* RSS */
 			if (sscanf (optarg, "%d%[^0-9]", &rss, tmp) == 1) {
@@ -499,6 +536,9 @@ process_arguments (int argc, char **argv)
 			usage4 (_("Metric must be one of PROCS, VSZ, RSS, CPU, ELAPSED!"));
 		case 'v':									/* command */
 			verbose++;
+			break;
+		case CHAR_MAX+2:
+			input_filename = optarg;
 			break;
 		}
 	}
@@ -667,7 +707,7 @@ print_help (void)
 {
 	print_revision (progname, revision);
 
-	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>");
+	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);
 
 	printf ("%s\n", _("Checks all processes and generates WARNING or CRITICAL states if the specified"));
@@ -675,16 +715,15 @@ print_help (void)
   printf ("%s\n", _("of processes.  Search filters can be applied to limit the processes to check."));
 
   printf ("\n\n");
-  
+
 	print_usage ();
 
-	printf ("%s\n", _("Required Arguments:"));
+  printf (_(UT_HELP_VRSN));
+  printf (_(UT_EXTRA_OPTS));
   printf (" %s\n", "-w, --warning=RANGE");
   printf ("   %s\n", _("Generate warning state if metric is outside this range"));
   printf (" %s\n", "-c, --critical=RANGE");
   printf ("   %s\n", _("Generate critical state if metric is outside this range"));
-
-	printf ("%s\n", _("Optional Arguments:"));
   printf (" %s\n", "-m, --metric=TYPE");
   printf ("  %s\n", _("Check thresholds against metric. Valid types:"));
   printf ("  %s\n", _("PROCS   - number of processes (default)"));
@@ -700,7 +739,8 @@ print_help (void)
 	printf (" %s\n", "-v, --verbose");
   printf ("    %s\n", _("Extra information. Up to 3 verbosity levels"));
 
-	printf ("%s\n", "Optional Filters:");
+  printf ("\n");
+	printf ("%s\n", "Filters:");
   printf (" %s\n", "-s, --state=STATUSFLAGS");
   printf ("   %s\n", _("Only scan for processes that have, in the output of `ps`, one or"));
   printf ("   %s\n", _("more of the status flags you specify (for example R, Z, S, RS,"));
@@ -717,6 +757,8 @@ print_help (void)
   printf ("   %s\n", _("Only scan for processes with user name or ID indicated."));
   printf (" %s\n", "-a, --argument-array=STRING");
   printf ("   %s\n", _("Only scan for processes with args that contain STRING."));
+  printf (" %s\n", "--ereg-argument-array=STRING");
+  printf ("   %s\n", _("Only scan for processes with args that contain the regex STRING."));
   printf (" %s\n", "-C, --command=COMMAND");
   printf ("   %s\n", _("Only scan for exact matches of COMMAND (without path)."));
 
@@ -732,6 +774,12 @@ the specified threshold ranges. The process count can be filtered by\n\
 process owner, parent process PID, current state (e.g., 'Z'), or may\n\
 be the total number of running processes\n\n"));
 
+#ifdef NP_EXTRA_OPTS
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+  printf ("\n");
+#endif
+
 	printf ("%s\n", _("Examples:"));
   printf (" %s\n", "check_procs -w 2:2 -c 2:1024 -C portsentry");
   printf ("  %s\n", _("Warning if not two processes with command name portsentry."));
@@ -742,7 +790,7 @@ be the total number of running processes\n\n"));
   printf (" %s\n", "check_procs -w 50000 -c 100000 --metric=VSZ");
   printf ("  %s\n\n", _("Alert if vsz of any processes over 50K or 100K"));
   printf (" %s\n", "check_procs -w 10 -c 20 --metric=CPU");
-  printf ("  %s\n\n", _("Alert if cpu of any processes over 10%% or 20%%"));
+  printf ("  %s\n", _("Alert if cpu of any processes over 10%% or 20%%"));
 
 	printf (_(UT_SUPPORT));
 }
@@ -750,7 +798,7 @@ be the total number of running processes\n\n"));
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf (_("Usage: "));
 	printf ("%s -w <range> -c <range> [-m metric] [-s state] [-p ppid]\n", progname);
   printf (" [-u user] [-r rss] [-z vsz] [-P %%cpu] [-a argument-array]\n");
   printf (" [-C command] [-t timeout] [-v]\n");

@@ -1,52 +1,49 @@
- /******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_icmp plugin
-*
+* 
 * License: GPL
-* Copyright (c) 2005-2007 nagios-plugins team
-*
+* Copyright (c) 2005-2008 Nagios Plugins Development Team
 * Original Author : Andreas Ericsson <ae@op5.se>
-*
-* Last Modified: $Date: 2007-12-11 05:57:35 +0000 (Tue, 11 Dec 2007) $
-*
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_icmp plugin
-*
-*  Relevant RFC's: 792 (ICMP), 791 (IP)
-*
-*  This program was modeled somewhat after the check_icmp program,
-*  which was in turn a hack of fping (www.fping.org) but has been
-*  completely rewritten since to generate higher precision rta values,
-*  and support several different modes as well as setting ttl to control.
-*  redundant routes. The only remainders of fping is currently a few
-*  function names.
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* Relevant RFC's: 792 (ICMP), 791 (IP)
+* 
+* This program was modeled somewhat after the check_icmp program,
+* which was in turn a hack of fping (www.fping.org) but has been
+* completely rewritten since to generate higher precision rta values,
+* and support several different modes as well as setting ttl to control.
+* redundant routes. The only remainders of fping is currently a few
+* function names.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_icmp.c 1861 2007-12-11 05:57:35Z dermoth $
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_icmp.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 /* progname may change */
 /* char *progname = "check_icmp"; */
 char *progname;
-const char *revision = "$Revision: 1861 $";
-const char *copyright = "2005-2007";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2005-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 /** nagios plugins basic includes */
@@ -54,6 +51,10 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include "netutils.h"
 #include "utils.h"
 
+#if HAVE_SYS_SOCKIO_H
+#include <sys/sockio.h>
+#endif
+#include <sys/ioctl.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <stdio.h>
@@ -66,6 +67,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include <ctype.h>
 #include <netdb.h>
 #include <sys/socket.h>
+#include <net/if.h>
 #include <netinet/in_systm.h>
 #include <netinet/in.h>
 #include <netinet/ip.h>
@@ -79,7 +81,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 # define MAXTTL	255
 #endif
 #ifndef INADDR_NONE
-# define INADDR_NONE 0xffffffU
+# define INADDR_NONE (in_addr_t)(-1)
 #endif
 
 #ifndef SOL_IP
@@ -178,14 +180,16 @@ void print_help (void);
 void print_usage (void);
 static u_int get_timevar(const char *);
 static u_int get_timevaldiff(struct timeval *, struct timeval *);
+static in_addr_t get_ip_address(const char *);
 static int wait_for_reply(int, u_int);
 static int recvfrom_wto(int, char *, unsigned int, struct sockaddr *, u_int *);
 static int send_icmp_ping(int, struct rta_host *);
 static int get_threshold(char *str, threshold *th);
 static void run_checks(void);
+static void set_source_ip(char *);
 static int add_target(char *);
 static int add_target_ip(char *, struct in_addr *);
-static int handle_random_icmp(struct icmp *, struct sockaddr_in *);
+static int handle_random_icmp(char *, struct sockaddr_in *);
 static unsigned short icmp_checksum(unsigned short *, int);
 static void finish(int);
 static void crash(const char *, ...);
@@ -235,10 +239,10 @@ crash(const char *fmt, ...)
 }
 
 
-static char *
+static const char *
 get_icmp_error_msg(unsigned char icmp_type, unsigned char icmp_code)
 {
-	char *msg = "unreachable";
+	const char *msg = "unreachable";
 
 	if(debug > 1) printf("get_icmp_error_msg(%u, %u)\n", icmp_type, icmp_code);
 	switch(icmp_type) {
@@ -292,19 +296,18 @@ get_icmp_error_msg(unsigned char icmp_type, unsigned char icmp_code)
 }
 
 static int
-handle_random_icmp(struct icmp *p, struct sockaddr_in *addr)
+handle_random_icmp(char *packet, struct sockaddr_in *addr)
 {
-	struct icmp sent_icmp;
+	struct icmp p, sent_icmp;
 	struct rta_host *host = NULL;
-	unsigned char *ptr;
 
-	if(p->icmp_type == ICMP_ECHO && p->icmp_id == pid) {
+	memcpy(&p, packet, sizeof(p));
+	if(p.icmp_type == ICMP_ECHO && p.icmp_id == pid) {
 		/* echo request from us to us (pinging localhost) */
 		return 0;
 	}
 
-	ptr = (unsigned char *)p;
-	if(debug) printf("handle_random_icmp(%p, %p)\n", (void *)p, (void *)addr);
+	if(debug) printf("handle_random_icmp(%p, %p)\n", (void *)&p, (void *)addr);
 
 	/* only handle a few types, since others can't possibly be replies to
 	 * us in a sane network (if it is anyway, it will be counted as lost
@@ -316,15 +319,15 @@ handle_random_icmp(struct icmp *p, struct sockaddr_in *addr)
 	 * TIMXCEED actually sends a proper icmp response we will have passed
 	 * too many hops to have a hope of reaching it later, in which case it
 	 * indicates overconfidence in the network, poor routing or both. */
-	if(p->icmp_type != ICMP_UNREACH && p->icmp_type != ICMP_TIMXCEED &&
-	   p->icmp_type != ICMP_SOURCEQUENCH && p->icmp_type != ICMP_PARAMPROB)
+	if(p.icmp_type != ICMP_UNREACH && p.icmp_type != ICMP_TIMXCEED &&
+	   p.icmp_type != ICMP_SOURCEQUENCH && p.icmp_type != ICMP_PARAMPROB)
 	{
 		return 0;
 	}
 
 	/* might be for us. At least it holds the original package (according
 	 * to RFC 792). If it isn't, just ignore it */
-	memcpy(&sent_icmp, ptr + 28, sizeof(sent_icmp));
+	memcpy(&sent_icmp, packet + 28, sizeof(sent_icmp));
 	if(sent_icmp.icmp_type != ICMP_ECHO || sent_icmp.icmp_id != pid ||
 	   sent_icmp.icmp_seq >= targets)
 	{
@@ -336,7 +339,7 @@ handle_random_icmp(struct icmp *p, struct sockaddr_in *addr)
 	host = table[sent_icmp.icmp_seq];
 	if(debug) {
 		printf("Received \"%s\" from %s for ICMP ECHO sent to %s.\n",
-			   get_icmp_error_msg(p->icmp_type, p->icmp_code),
+			   get_icmp_error_msg(p.icmp_type, p.icmp_code),
 			   inet_ntoa(addr->sin_addr), host->name);
 	}
 
@@ -347,7 +350,7 @@ handle_random_icmp(struct icmp *p, struct sockaddr_in *addr)
 
 	/* source quench means we're sending too fast, so increase the
 	 * interval and mark this packet lost */
-	if(p->icmp_type == ICMP_SOURCEQUENCH) {
+	if(p.icmp_type == ICMP_SOURCEQUENCH) {
 		pkt_interval *= pkt_backoff_factor;
 		target_interval *= target_backoff_factor;
 	}
@@ -355,8 +358,8 @@ handle_random_icmp(struct icmp *p, struct sockaddr_in *addr)
 		targets_down++;
 		host->flags |= FLAG_LOST_CAUSE;
 	}
-	host->icmp_type = p->icmp_type;
-	host->icmp_code = p->icmp_code;
+	host->icmp_type = p.icmp_type;
+	host->icmp_code = p.icmp_code;
 	host->error_addr.s_addr = addr->sin_addr.s_addr;
 
 	return 0;
@@ -375,7 +378,7 @@ main(int argc, char **argv)
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
-	
+
 	/* print a helpful error message if geteuid != 0 */
 	np_warn_if_not_root();
 
@@ -444,9 +447,12 @@ main(int argc, char **argv)
 		packets = 5;
 	}
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts(&argc, argv, progname);
+
 	/* parse the arguments */
 	for(i = 1; i < argc; i++) {
-		while((arg = getopt(argc, argv, "vhVw:c:n:p:t:H:i:b:I:l:m:")) != EOF) {
+		while((arg = getopt(argc, argv, "vhVw:c:n:p:t:H:s:i:b:I:l:m:")) != EOF) {
 			switch(arg) {
 			case 'v':
 				debug++;
@@ -488,6 +494,9 @@ main(int argc, char **argv)
 				if(ptr) {
 					crit_down = (unsigned char)strtoul(ptr + 1, NULL, 0);
 				}
+				break;
+			case 's': /* specify source IP address */
+				set_source_ip(optarg);
 				break;
       case 'V':                 /* version */
         /*print_revision (progname, revision);*/ /* FIXME: Why? */
@@ -640,7 +649,7 @@ run_checks()
 								 table[t]->name);
 				continue;
 			}
-			
+
 			/* we're still in the game, so send next packet */
 			(void)send_icmp_ping(icmp_sock, table[t]);
 			result = wait_for_reply(icmp_sock, target_interval);
@@ -748,13 +757,13 @@ wait_for_reply(int sock, u_int t)
 		memcpy(&icp, buf + hlen, sizeof(icp));
 
 		if(icp.icmp_id != pid) {
-			handle_random_icmp(&icp, &resp_addr);
+			handle_random_icmp(buf + hlen, &resp_addr);
 			continue;
 		}
 
 		if(icp.icmp_type != ICMP_ECHOREPLY || icp.icmp_seq >= targets) {
 			if(debug > 2) printf("not a proper ICMP_ECHOREPLY\n");
-			handle_random_icmp(&icp, &resp_addr);
+			handle_random_icmp(buf + hlen, &resp_addr);
 			continue;
 		}
 
@@ -887,7 +896,7 @@ finish(int sig)
 	unsigned char pl;
 	double rta;
 	struct rta_host *host;
-	char *status_string[] =
+	const char *status_string[] =
 	{"OK", "WARNING", "CRITICAL", "UNKNOWN", "DEPENDENT"};
 	int hosts_ok = 0;
 	int hosts_warn = 0;
@@ -1101,7 +1110,7 @@ add_target(char *arg)
 
 		/* this is silly, but it works */
 		if(mode == MODE_HOSTCHECK || mode == MODE_ALL) {
-			printf("mode: %d\n", mode);
+			if(debug > 2) printf("mode: %d\n", mode);
 			continue;
 		}
 		break;
@@ -1109,6 +1118,40 @@ add_target(char *arg)
 
 	return 0;
 }
+
+static void
+set_source_ip(char *arg)
+{
+	struct sockaddr_in src;
+
+	memset(&src, 0, sizeof(src));
+	src.sin_family = AF_INET;
+	if((src.sin_addr.s_addr = inet_addr(arg)) == INADDR_NONE)
+		src.sin_addr.s_addr = get_ip_address(arg);
+	if(bind(icmp_sock, (struct sockaddr *)&src, sizeof(src)) == -1)
+		crash("Cannot bind to IP address %s", arg);
+}
+
+/* TODO: Move this to netutils.c and also change check_dhcp to use that. */
+static in_addr_t
+get_ip_address(const char *ifname)
+{
+#if defined(SIOCGIFADDR)
+	struct ifreq ifr;
+	struct sockaddr_in ip;
+
+	strncpy(ifr.ifr_name, ifname, sizeof(ifr.ifr_name) - 1);
+	ifr.ifr_name[sizeof(ifr.ifr_name) - 1] = '\0';
+	if(ioctl(icmp_sock, SIOCGIFADDR, &ifr) == -1)
+		crash("Cannot determine IP address of interface %s", ifname);
+	memcpy(&ip, &ifr.ifr_addr, sizeof(ip));
+	return ip.sin_addr.s_addr;
+#else
+	errno = 0;
+	crash("Cannot get interface IP address on this platform.");
+#endif
+}
+
 /*
  * u = micro
  * m = milli
@@ -1213,16 +1256,17 @@ print_help(void)
 {
 
   /*print_revision (progname, revision);*/ /* FIXME: Why? */
-  
+
   printf ("Copyright (c) 2005 Andreas Ericsson <ae@op5.se>\n");
   printf (COPYRIGHT, copyright, email);
-  
+
   printf ("\n\n");
-  
+
   print_usage ();
-  
+
   printf (_(UT_HELP_VRSN));
-  
+  printf (_(UT_EXTRA_OPTS));
+
   printf (" %s\n", "-H");
   printf ("    %s\n", _("specify a target"));
   printf (" %s\n", "-w");
@@ -1231,6 +1275,8 @@ print_help(void)
   printf (" %s\n", "-c");
   printf ("    %s", _("critical threshold (currently "));
   printf ("%0.3fms,%u%%)\n", (float)crit.rta, crit.pl);
+  printf (" %s\n", "-s");
+  printf ("    %s\n", _("specify a source IP address or device name"));
   printf (" %s\n", "-n");
   printf ("    %s", _("number of packets to send (currently "));
   printf ("%u)\n",packets);
@@ -1255,23 +1301,28 @@ print_help(void)
   printf ("    %s\n", _("verbose"));
 
   printf ("\n");
-	printf ("%s\n\n", _("The -H switch is optional. Naming a host (or several) to check is not."));
-  printf ("%s\n", _("Threshold format for -w and -c is 200.25,60% for 200.25 msec RTA and 60%"));
-  printf ("%s\n", _("packet loss.  The default values should work well for most users."));
-  printf ("%s\n", _("You can specify different RTA factors using the standardized abbreviations"));
-  printf ("%s\n\n", _("us (microseconds), ms (milliseconds, default) or just plain s for seconds."));
+  printf ("%s\n", _("Notes:"));
+  printf (" %s\n", _("The -H switch is optional. Naming a host (or several) to check is not."));
+  printf ("\n");
+  printf (" %s\n", _("Threshold format for -w and -c is 200.25,60% for 200.25 msec RTA and 60%"));
+  printf (" %s\n", _("packet loss.  The default values should work well for most users."));
+  printf (" %s\n", _("You can specify different RTA factors using the standardized abbreviations"));
+  printf (" %s\n", _("us (microseconds), ms (milliseconds, default) or just plain s for seconds."));
 /* -d not yet implemented */
 /*  printf ("%s\n", _("Threshold format for -d is warn,crit.  12,14 means WARNING if >= 12 hops"));
   printf ("%s\n", _("are spent and CRITICAL if >= 14 hops are spent."));
   printf ("%s\n\n", _("NOTE: Some systems decrease TTL when forming ICMP_ECHOREPLY, others do not."));*/
-  printf ("%s\n\n", _("The -v switch can be specified several times for increased verbosity."));
-
+  printf ("\n");
+  printf (" %s\n", _("The -v switch can be specified several times for increased verbosity."));
 /*  printf ("%s\n", _("Long options are currently unsupported."));
   printf ("%s\n", _("Options marked with * require an argument"));
 */
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
+
   printf (_(UT_SUPPORT));
-  
-  printf (_(UT_NOWARRANTY));
 }
 
 
@@ -1280,5 +1331,5 @@ void
 print_usage (void)
 {
   printf (_("Usage:"));
-  printf(" %s [options] [-H] host1 host2 hostn\n", progname);
+  printf(" %s [options] [-H] host1 host2 hostN\n", progname);
 }
