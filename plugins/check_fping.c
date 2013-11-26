@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_fping.c,v 1.27 2006/10/19 00:25:16 opensides Exp $
+ $Id: check_fping.c,v 1.28 2007/01/28 21:46:40 hweiss Exp $
  
 ******************************************************************************/
 
 const char *progname = "check_fping";
-const char *revision = "$Revision: 1.27 $";
+const char *revision = "$Revision: 1.28 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -258,7 +258,7 @@ process_arguments (int argc, char **argv)
 
     switch (c) {
     case '?':                 /* print short usage statement if args not parsable */
-      usage2 (_("Unknown argument"), optarg);
+      usage5 ();
     case 'h':                 /* help */
       print_help ();
       exit (STATE_OK);

@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 23:53:28 $
+* Last Modified: $Date: 2007/03/06 22:29:27 $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *
-* $Id: check_smtp.c,v 1.54 2006/10/19 23:53:28 opensides Exp $
+* $Id: check_smtp.c,v 1.59 2007/03/06 22:29:27 tonvoon Exp $
 * 
 ******************************************************************************/
 
 const char *progname = "check_smtp";
-const char *revision = "$Revision: 1.54 $";
+const char *revision = "$Revision: 1.59 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -169,9 +169,8 @@ main (int argc, char **argv)
 	int result = STATE_UNKNOWN;
 	char *cmd_str = NULL;
 	char *helocmd = NULL;
-	char *error_msg = NULL;
+	char *error_msg = "";
 	struct timeval tv;
-	struct hostent *hp;
 
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
@@ -180,7 +179,7 @@ main (int argc, char **argv)
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
-	/* initialize the HELO command with the localhostname */
+	/* If localhostname not set on command line, use gethostname to set */
 	if(! localhostname){
 		localhostname = malloc (HOST_MAX_BYTES);
 		if(!localhostname){
@@ -191,16 +190,14 @@ main (int argc, char **argv)
 			printf(_("gethostname() failed!\n"));
 			return STATE_CRITICAL;
 		}
-		hp = gethostbyname(localhostname);
-		if(!hp) helocmd = localhostname;
-		else helocmd = hp->h_name;
-	} else {
-		helocmd = localhostname;
 	}
 	if(use_ehlo)
-		asprintf (&helocmd, "%s%s%s", SMTP_EHLO, helocmd, "\r\n");
+		asprintf (&helocmd, "%s%s%s", SMTP_EHLO, localhostname, "\r\n");
 	else
-		asprintf (&helocmd, "%s%s%s", SMTP_HELO, helocmd, "\r\n");
+		asprintf (&helocmd, "%s%s%s", SMTP_HELO, localhostname, "\r\n");
+
+	if (verbose)
+		printf("HELOCMD: %s", helocmd);
 
 	/* initialize the MAIL command with optional FROM command  */
 	asprintf (&cmd_str, "%sFROM: %s%s", mail_command, from_arg, "\r\n");
@@ -298,14 +295,14 @@ main (int argc, char **argv)
 		 * we resent EHLO via TLS.
 		 */
 		if (my_send(helocmd, strlen(helocmd)) <= 0) {
-			printf(_("SMTP UNKNOWN - Cannot send EHLO command via TLS.\n"));
+			printf("%s\n", _("SMTP UNKNOWN - Cannot send EHLO command via TLS."));
 			my_close();
 			return STATE_UNKNOWN;
 		}
 		if (verbose)
 			printf(_("sent %s"), helocmd);
 		if ((n = my_recv(buffer, MAX_INPUT_BUFFER - 1)) <= 0) {
-			printf(_("SMTP UNKNOWN - Cannot read EHLO response via TLS.\n"));
+			printf("%s\n", _("SMTP UNKNOWN - Cannot read EHLO response via TLS."));
 			my_close();
 			return STATE_UNKNOWN;
 		}
@@ -318,7 +315,7 @@ main (int argc, char **argv)
 		  if ( check_cert ) {
 		    result = np_net_ssl_check_cert(days_till_exp);
 		    if(result != STATE_OK){
-		      printf (_("CRITICAL - Cannot retrieve server certificate.\n"));
+		      printf ("%s\n", _("CRITICAL - Cannot retrieve server certificate."));
 		    }
 		    my_close();
 		    return result;
@@ -383,12 +380,12 @@ main (int argc, char **argv)
 				do {
 					if (authuser == NULL) {
 						result = STATE_CRITICAL;
-						error_msg = _("no authuser specified, ");
+						asprintf(&error_msg, _("no authuser specified, "));
 						break;
 					}
 					if (authpass == NULL) {
 						result = STATE_CRITICAL;
-						error_msg = _("no authpass specified, ");
+						asprintf(&error_msg, _("no authpass specified, "));
 						break;
 					}
 
@@ -398,7 +395,7 @@ main (int argc, char **argv)
 						printf (_("sent %s\n"), "AUTH LOGIN");
 
 					if((ret = my_recv(buffer, MAXBUF - 1)) < 0){
-						error_msg = _("recv() failed after AUTH LOGIN, \n");
+						asprintf(&error_msg, _("recv() failed after AUTH LOGIN, "));
 						result = STATE_WARNING;
 						break;
 					}
@@ -408,7 +405,7 @@ main (int argc, char **argv)
 
 					if (strncmp (buffer, "334", 3) != 0) {
 						result = STATE_CRITICAL;
-						error_msg = _("invalid response received after AUTH LOGIN, ");
+						asprintf(&error_msg, _("invalid response received after AUTH LOGIN, "));
 						break;
 					}
 
@@ -421,7 +418,7 @@ main (int argc, char **argv)
 
 					if ((ret = my_recv(buffer, MAX_INPUT_BUFFER-1)) == -1) {
 						result = STATE_CRITICAL;
-						error_msg = _("recv() failed after sending authuser, ");
+						asprintf(&error_msg, _("recv() failed after sending authuser, "));
 						break;
 					}
 					buffer[ret] = 0;
@@ -430,7 +427,7 @@ main (int argc, char **argv)
 					}
 					if (strncmp (buffer, "334", 3) != 0) {
 						result = STATE_CRITICAL;
-						error_msg = _("invalid response received after authuser, ");
+						asprintf(&error_msg, _("invalid response received after authuser, "));
 						break;
 					}
 					/* encode authpass with base64 */
@@ -442,7 +439,7 @@ main (int argc, char **argv)
 					}
 					if ((ret = my_recv(buffer, MAX_INPUT_BUFFER-1)) == -1) {
 						result = STATE_CRITICAL;
-						error_msg = _("recv() failed after sending authpass, ");
+						asprintf(&error_msg, _("recv() failed after sending authpass, "));
 						break;
 					}
 					buffer[ret] = 0;
@@ -451,14 +448,14 @@ main (int argc, char **argv)
 					}
 					if (strncmp (buffer, "235", 3) != 0) {
 						result = STATE_CRITICAL;
-						error_msg = _("invalid response received after authpass, ");
+						asprintf(&error_msg, _("invalid response received after authpass, "));
 						break;
 					}
 					break;
 				} while (0);
 			} else {
 				result = STATE_CRITICAL;
-				error_msg = _("only authtype LOGIN is supported, ");
+				asprintf(&error_msg, _("only authtype LOGIN is supported, "));
 			}
 		}
 
@@ -484,7 +481,7 @@ main (int argc, char **argv)
 
 	printf (_("SMTP %s - %s%.3f sec. response time%s%s|%s\n"),
 			state_text (result),
-			(error_msg == NULL ? "" : error_msg),
+			error_msg,
 			elapsed_time,
 			verbose?", ":"", verbose?buffer:"",
 			fperfdata ("time", elapsed_time, "s",
@@ -665,7 +662,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 

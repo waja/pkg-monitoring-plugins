@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  
- $Id: check_load.c,v 1.32 2006/10/19 00:25:16 opensides Exp $
+ $Id: check_load.c,v 1.33 2007/01/28 21:46:40 hweiss Exp $
 
 ******************************************************************************/
 
 const char *progname = "check_load";
-const char *revision = "$Revision: 1.32 $";
+const char *revision = "$Revision: 1.33 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -236,7 +236,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 

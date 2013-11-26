@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2002-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 23:53:28 $
+* Last Modified: $Date: 2007/01/28 21:46:41 $
 *
 * Description:
 *
@@ -29,7 +29,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: negate.c,v 1.26 2006/10/19 23:53:28 opensides Exp $
+* $Id: negate.c,v 1.27 2007/01/28 21:46:41 hweiss Exp $
 
 @@-<article>
 
@@ -69,7 +69,7 @@
 ******************************************************************************/
 
 const char *progname = "negate";
-const char *revision = "$Revision: 1.26 $";
+const char *revision = "$Revision: 1.27 $";
 const char *copyright = "2002-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -189,7 +189,7 @@ process_arguments (int argc, char **argv)
 
 		switch (c) {
 		case '?':     /* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 			break;
 		case 'h':     /* help */
 			print_help ();

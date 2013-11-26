@@ -8,8 +8,8 @@
  * Copyright (c) 2006 Nagios Plugin Development Team
  * License: GPL
  *
- * $Revision: 1.50 $
- * $Date: 2006/07/13 12:50:21 $
+ * $Revision: 1.51 $
+ * $Date: 2007/01/28 21:46:41 $
  ****************************************************************************/
 
 #define LOCAL_TIMEOUT_ALARM_HANDLER
@@ -90,6 +90,13 @@ void
 usage4 (const char *msg)
 {
 	printf ("%s: %s\n", progname, msg);
+	print_usage();
+	exit (STATE_UNKNOWN);
+}
+
+void
+usage5 (void)
+{
 	print_usage();
 	exit (STATE_UNKNOWN);
 }

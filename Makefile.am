@@ -1,21 +1,22 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = lib plugins plugins-scripts plugins-root m4 po
+SUBDIRS = gl lib plugins plugins-scripts plugins-root po
 
 EXTRA_DIST = config.rpath \
-	ABOUT-NLS ACKNOWLEDGEMENTS AUTHORS BUGS CHANGES CODING FAQ LEGAL \
+	ABOUT-NLS ACKNOWLEDGEMENTS AUTHORS BUGS CODING FAQ LEGAL NEWS \
 	REQUIREMENTS SUPPORT THANKS \
 	NPTest.pm contrib pkg nagios-plugins.spec \
 	config_test/Makefile config_test/run_tests config_test/child_test.c \
 	tools/tinderbox_build
 
-ACLOCAL_AMFLAGS = -I m4
+ACLOCAL_AMFLAGS = -I gl/m4 -I m4
 
 localedir = $(datadir)/locale
 DEFS = -DLOCALEDIR=\"$(localedir)\"
 
 dist-hook:
 	make THANKS nagios-plugins.spec pkg/fedora/nagios-plugins.spec
+	rm -rf `find $(distdir) -name CVS`
 
 install-root:
 	cd plugins-root && $(MAKE) $@

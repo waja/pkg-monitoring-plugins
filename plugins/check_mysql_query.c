@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2006 nagios-plugins team, after Didi Rieder (check_mysql)
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 * CHECK_MYSQL_QUERY.C
 *
-* $Id: check_mysql_query.c,v 1.5 2006/10/19 00:25:16 opensides Exp $
+* $Id: check_mysql_query.c,v 1.6 2007/01/28 21:46:40 hweiss Exp $
 *
 ******************************************************************************/
 
 const char *progname = "check_mysql_query";
-const char *revision = "$Revision: 1.5 $";
+const char *revision = "$Revision: 1.6 $";
 const char *copyright = "2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -240,7 +240,7 @@ process_arguments (int argc, char **argv)
 			critical = optarg;
 			break;
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 

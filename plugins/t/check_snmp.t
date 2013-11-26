@@ -2,7 +2,7 @@
 #
 # Simple Network Management Protocol (SNMP) Test via check_snmp
 #
-# $Id: check_snmp.t,v 1.2 2005/07/25 01:47:15 illumino Exp $
+# $Id: check_snmp.t,v 1.3 2006/12/23 18:59:36 dermoth Exp $
 #
 
 use strict;
@@ -35,13 +35,13 @@ if ( -x "./check_snmp" )
 		  { 0 => 'continue',  3 => 'skip' }, '/^SNMP OK - \d+/',		%exceptions );
 
   $t += checkCmd( "./check_snmp -H $host_snmp -C $snmp_community -o host.hrSWRun.hrSWRunTable.hrSWRunEntry.hrSWRunIndex.1 -w 1:1 -c 1:1",
-		  { 0 => 'continue',  3 => 'skip' }, '/^SNMP OK - 1\s*$/',		%exceptions );
+		  { 0 => 'continue',  3 => 'skip' }, '/^SNMP OK - 1\s.*$/',		%exceptions );
 
   $t += checkCmd( "./check_snmp -H $host_snmp -C $snmp_community -o host.hrSWRun.hrSWRunTable.hrSWRunEntry.hrSWRunIndex.1 -w 0   -c 1:",
-		  { 1 => 'continue',  3 => 'skip' }, '/^SNMP WARNING - \*1\*\s*$/',	%exceptions );
+		  { 1 => 'continue',  3 => 'skip' }, '/^SNMP WARNING - \*1\*\s.*$/',	%exceptions );
 
   $t += checkCmd( "./check_snmp -H $host_snmp -C $snmp_community -o host.hrSWRun.hrSWRunTable.hrSWRunEntry.hrSWRunIndex.1 -w  :0 -c 0",
-		  { 2 => 'continue',  3 => 'skip' }, '/^SNMP CRITICAL - \*1\*\s*$/',	%exceptions );
+		  { 2 => 'continue',  3 => 'skip' }, '/^SNMP CRITICAL - \*1\*\s.*$/',	%exceptions );
 
   $t += checkCmd( "./check_snmp -H $host_nonresponsive -C $snmp_community -o system.sysUpTime.0 -w 1: -c 1:", 3, '/SNMP problem - /' );
 

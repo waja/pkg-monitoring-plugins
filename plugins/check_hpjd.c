@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -31,11 +31,11 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_hpjd.c,v 1.34 2006/10/19 00:25:16 opensides Exp $
+* $Id: check_hpjd.c,v 1.35 2007/01/28 21:46:40 hweiss Exp $
 *****************************************************************************/
 
 const char *progname = "check_hpjd";
-const char *revision = "$Revision: 1.34 $";
+const char *revision = "$Revision: 1.35 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -351,7 +351,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 

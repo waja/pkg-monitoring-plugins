@@ -71,7 +71,7 @@ TOUCH="/bin/touch"
 
 PROGNAME=`/bin/basename $0`
 PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
-REVISION=`echo '$Revision: 1.7 $' | sed -e 's/[^0-9.]//g'`
+REVISION=`echo '$Revision: 1.8 $' | sed -e 's/[^0-9.]//g'`
 
 . $PROGPATH/utils.sh
 
@@ -197,7 +197,7 @@ else
     $CHMOD 600 $tempdiff
 fi
 
-$DIFF $logfile $oldlog > $tempdiff
+$DIFF $logfile $oldlog | $GREP -v "^>" > $tempdiff
 
 # Count the number of matching log entries we have
 count=`$GREP -c "$query" $tempdiff`

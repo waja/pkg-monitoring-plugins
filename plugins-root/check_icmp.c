@@ -3,11 +3,11 @@
 * Nagios check_icmp plugin
 *
 * License: GPL
-* Copyright (c) 2005-2006 nagios-plugins team
+* Copyright (c) 2005-2007 nagios-plugins team
 *
 * Original Author : Andreas Ericsson <ae@op5.se>
 *
-* Last Modified: $Date: 2006/10/24 21:54:06 $
+* Last Modified: $Date: 2007/03/27 06:53:57 $
 *
 * Description:
 *
@@ -38,15 +38,15 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_icmp.c,v 1.8 2006/10/24 21:54:06 opensides Exp $
+* $Id: check_icmp.c,v 1.12 2007/03/27 06:53:57 dermoth Exp $
 * 
 *****************************************************************************/
 
 /* progname may change */
 /* char *progname = "check_icmp"; */
 char *progname;
-const char *revision = "$Revision: 1.8 $";
-const char *copyright = "2005-2006";
+const char *revision = "$Revision: 1.12 $";
+const char *copyright = "2005-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 /** nagios plugins basic includes */
@@ -212,6 +212,7 @@ static struct timeval prog_start;
 static unsigned long long max_completion_time = 0;
 static unsigned char ttl = 0;	/* outgoing ttl */
 static unsigned int warn_down = 1, crit_down = 1; /* host down threshold values */
+static int min_hosts_alive = -1;
 float pkt_backoff_factor = 1.5;
 float target_backoff_factor = 1.5;
 
@@ -394,7 +395,8 @@ main(int argc, char **argv)
 	environ = NULL;
 
 	/* use the pid to mark packets as ours */
-	pid = getpid();
+	/* Some systems have 32-bit pid_t so mask off only 16 bits */
+	pid = getpid() & 0xffff;
 	/* printf("pid = %u\n", pid); */
 
 	/* get calling name the old-fashioned way for portability instead
@@ -437,7 +439,7 @@ main(int argc, char **argv)
 
 	/* parse the arguments */
 	for(i = 1; i < argc; i++) {
-		while((arg = getopt(argc, argv, "vhVw:c:n:p:t:H:i:b:I:l:")) != EOF) {
+		while((arg = getopt(argc, argv, "vhVw:c:n:p:t:H:i:b:I:l:m:")) != EOF) {
 			switch(arg) {
 			case 'v':
 				debug++;
@@ -471,6 +473,9 @@ main(int argc, char **argv)
 			case 'l':
 				ttl = (unsigned char)strtoul(optarg, NULL, 0);
 				break;
+			case 'm':
+				min_hosts_alive = (int)strtoul(optarg, NULL, 0);
+				break;
 			case 'd': /* implement later, for cluster checks */
 				warn_down = (unsigned char)strtoul(optarg, &ptr, 0);
 				if(ptr) {
@@ -478,7 +483,7 @@ main(int argc, char **argv)
 				}
 				break;
       case 'V':                 /* version */
-        //print_revision (progname, revision);
+        /*print_revision (progname, revision);*/ /* FIXME: Why? */
         exit (STATE_OK);
       case 'h':                 /* help */
         print_help ();
@@ -585,6 +590,11 @@ main(int argc, char **argv)
 	if(packets > 20) {
 		errno = 0;
 		crash("packets is > 20 (%d)", packets);
+	}
+
+	if(min_hosts_alive < -1) {
+		errno = 0;
+		crash("minimum alive hosts is negative (%i)", min_hosts_alive);
 	}
 
 	host = list;
@@ -879,6 +889,8 @@ finish(int sig)
 	struct rta_host *host;
 	char *status_string[] =
 	{"OK", "WARNING", "CRITICAL", "UNKNOWN", "DEPENDENT"};
+	int hosts_ok = 0;
+	int hosts_warn = 0;
 
 	alarm(0);
 	if(debug > 1) printf("finish(%d) called\n", sig);
@@ -911,13 +923,25 @@ finish(int sig)
 		}
 		host->pl = pl;
 		host->rta = rta;
-		if(!status && (pl >= warn.pl || rta >= warn.rta)) status = STATE_WARNING;
-		if(pl >= crit.pl || rta >= crit.rta) status = STATE_CRITICAL;
+		if(pl >= crit.pl || rta >= crit.rta) {
+			status = STATE_CRITICAL;
+		}
+		else if(!status && (pl >= warn.pl || rta >= warn.rta)) {
+			status = STATE_WARNING;
+			hosts_warn++;
+		}
+		else {
+			hosts_ok++;
+		}
 
 		host = host->next;
 	}
 	/* this is inevitable */
 	if(!targets_alive) status = STATE_CRITICAL;
+	if(min_hosts_alive > -1) {
+		if(hosts_ok >= min_hosts_alive) status = STATE_OK;
+		else if((hosts_ok + hosts_warn) >= min_hosts_alive) status = STATE_WARNING;
+	}
 	printf("%s - ", status_string[status]);
 
 	host = list;
@@ -964,10 +988,15 @@ finish(int sig)
 		host = host->next;
 	}
 
+	if(min_hosts_alive > -1) {
+		if(hosts_ok >= min_hosts_alive) status = STATE_OK;
+		else if((hosts_ok + hosts_warn) >= min_hosts_alive) status = STATE_WARNING;
+	}
+
 	/* finish with an empty line */
 	puts("");
-	if(debug) printf("targets: %u, targets_alive: %u\n",
-					 targets, targets_alive);
+	if(debug) printf("targets: %u, targets_alive: %u, hosts_ok: %u, hosts_warn: %u, min_hosts_alive: %i\n",
+					 targets, targets_alive, hosts_ok, hosts_warn, min_hosts_alive);
 
 	exit(status);
 }
@@ -1183,7 +1212,7 @@ void
 print_help(void)
 {
 
-  //print_revision (progname, revision);
+  /*print_revision (progname, revision);*/ /* FIXME: Why? */
   
   printf ("Copyright (c) 2005 Andreas Ericsson <ae@op5.se>\n");
   printf (COPYRIGHT, copyright, email);
@@ -1201,7 +1230,7 @@ print_help(void)
   printf ("%0.3fms,%u%%)\n", (float)warn.rta / 1000 , warn.pl / 1000);
   printf (" %s\n", "-c");
   printf ("    %s", _("critical threshold (currently "));
-  printf ("%0.3fms,%u%%)\n", (float)crit.rta), crit.pl;
+  printf ("%0.3fms,%u%%)\n", (float)crit.rta, crit.pl);
   printf (" %s\n", "-n");
   printf ("    %s", _("number of packets to send (currently "));
   printf ("%u)\n",packets);
@@ -1211,6 +1240,9 @@ print_help(void)
   printf (" %s\n", "-I");
   printf ("    %s", _("max target interval (currently "));
   printf ("%0.3fms)\n", (float)target_interval / 1000);
+  printf (" %s\n", "-m");
+  printf ("    %s",_("number of alive hosts required for success"));
+  printf ("\n");
   printf (" %s\n", "-l");
   printf ("    %s", _("TTL on outgoing packets (currently "));
   printf ("%u)", ttl);
@@ -1228,10 +1260,12 @@ print_help(void)
   printf ("%s\n", _("packet loss.  The default values should work well for most users."));
   printf ("%s\n", _("You can specify different RTA factors using the standardized abbreviations"));
   printf ("%s\n\n", _("us (microseconds), ms (milliseconds, default) or just plain s for seconds."));
-  printf ("%s\n", _("Threshold format for -d is warn,crit.  12,14 means WARNING if >= 12 hops"));
+/* -d not yet implemented */
+/*  printf ("%s\n", _("Threshold format for -d is warn,crit.  12,14 means WARNING if >= 12 hops"));
   printf ("%s\n", _("are spent and CRITICAL if >= 14 hops are spent."));
-  printf ("%s\n\n", _("NOTE: Some systems decrease TTL when forming ICMP_ECHOREPLY, others do not."));
+  printf ("%s\n\n", _("NOTE: Some systems decrease TTL when forming ICMP_ECHOREPLY, others do not."));*/
   printf ("%s\n\n", _("The -v switch can be specified several times for increased verbosity."));
+
 /*  printf ("%s\n", _("Long options are currently unsupported."));
   printf ("%s\n", _("Options marked with * require an argument"));
 */

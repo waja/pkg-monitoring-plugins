@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
 *
-* Last Modified: $Date: 2006/06/18 19:36:48 $
+* Last Modified: $Date: 2007/01/20 06:07:48 $
 *
 * Description:
 *
@@ -27,7 +27,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: netutils.c,v 1.31 2006/06/18 19:36:48 opensides Exp $
+* $Id: netutils.c,v 1.33 2007/01/20 06:07:48 dermoth Exp $
 *
 ****************************************************************************/
 
@@ -225,7 +225,7 @@ np_net_connect (const char *host_name, int port, int *sd, int proto)
 		su.sun_family = AF_UNIX;
 		strncpy(su.sun_path, host_name, UNIX_PATH_MAX);
 		*sd = socket(PF_UNIX, SOCK_STREAM, 0);
-		if(sd < 0){
+		if(*sd < 0){
 			die(STATE_UNKNOWN, _("Socket creation failed"));
 		}
 		result = connect(*sd, (struct sockaddr *)&su, sizeof(su));
@@ -324,14 +324,12 @@ int
 is_addr (const char *address)
 {
 #ifdef USE_IPV6
-	if (is_inet_addr (address) && address_family != AF_INET6)
+	if (address_family == AF_INET && is_inet_addr (address))
+		return TRUE;
+	else if (address_family == AF_INET6 && is_inet6_addr (address)) 
+		return TRUE;
 #else
 	if (is_inet_addr (address))
-#endif
-		return (TRUE);
-
-#ifdef USE_IPV6
-	if (is_inet6_addr (address) && address_family != AF_INET)
 		return (TRUE);
 #endif
 

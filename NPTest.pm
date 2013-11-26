@@ -21,7 +21,7 @@ use Data::Dumper;
 use Test;
 
 use vars qw($VERSION);
-$VERSION = do { my @r = (q$Revision: 1.13 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r }; # must be all one line, for MakeMaker
+$VERSION = do { my @r = (q$Revision: 1.14 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r }; # must be all one line, for MakeMaker
 
 =head1 NAME
 
@@ -57,10 +57,10 @@ If a parameter needs to be entered and the test is run without a tty
 attached (such as a cronjob), the parameter will be assigned as if it 
 was "none". Tests can check for the parameter and skip if not set.
 
-Responses are stored in an external, file-based
-cache so subsequent test runs will use these values. The user is able
-to change the values by amending the values in the file /var/tmp/NPTest.pm,
-or by setting the appropriate environment variable before running the test.
+Responses are stored in an external, file-based cache so subsequent test
+runs will use these values. The user is able to change the values by
+amending the values in the file /var/tmp/NPTest.cache, or by setting
+the appropriate environment variable before running the test.
 
 The option exists to store parameters in a scoped means, allowing a
 test harness to a localise a parameter should the need arise. This

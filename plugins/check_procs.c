@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/22 22:03:31 $
+* Last Modified: $Date: 2007/03/06 17:29:15 $
 *
 * Description:
 *
@@ -31,12 +31,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_procs.c,v 1.54 2006/10/22 22:03:31 opensides Exp $
+* $Id: check_procs.c,v 1.58 2007/03/06 17:29:15 tonvoon Exp $
 * 
 ******************************************************************************/
 
 const char *progname = "check_procs";
-const char *revision = "$Revision: 1.54 $";
+const char *program_name = "check_procs";  /* Required for coreutils libs */
+const char *revision = "$Revision: 1.58 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -193,13 +194,13 @@ main (int argc, char **argv)
 			strip (procargs);
 
 			/* Some ps return full pathname for command. This removes path */
-			procprog = base_name(procprog);
+			strcpy(procprog, base_name(procprog));
 
 			/* we need to convert the elapsed time to seconds */
 			procseconds = convert_to_seconds(procetime);
 
 			if (verbose >= 3)
-				printf ("%d %d %d %d %d %d %.2f %s %s %s %s\n", 
+				printf ("proc#=%d uid=%d vsz=%d rss=%d pid=%d ppid=%d pcpu=%.2f stat=%s etime=%s prog=%s args=%s\n", 
 					procs, procuid, procvsz, procrss,
 					procpid, procppid, procpcpu, procstat, 
 					procetime, procprog, procargs);
@@ -358,7 +359,7 @@ process_arguments (int argc, char **argv)
 
 		switch (c) {
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		case 'h':									/* help */
 			print_help ();
 			exit (STATE_OK);

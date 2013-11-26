@@ -3,9 +3,9 @@
 * Nagios check_mrtgtraf plugin
 *
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
+* Copyright (c) 1999-2007 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/03/02 01:38:04 $
 *
 * Description:
 *
@@ -31,7 +31,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  
- $Id: check_mrtgtraf.c,v 1.25 2006/10/19 00:25:16 opensides Exp $
+ $Id: check_mrtgtraf.c,v 1.28 2007/03/02 01:38:04 egalstad Exp $
 
 ******************************************************************************/
 
@@ -39,8 +39,8 @@
 #include "utils.h"
 
 const char *progname = "check_mrtgtraf";
-const char *revision = "$Revision: 1.25 $";
-const char *copyright = "1999-2006";
+const char *revision = "$Revision: 1.28 $";
+const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 int process_arguments (int, char **);
@@ -60,7 +60,7 @@ unsigned long outgoing_critical_threshold = 0L;
 int
 main (int argc, char **argv)
 {
-	int result = STATE_UNKNOWN;
+	int result = STATE_OK;
 	FILE *fp;
 	int line;
 	char input_buffer[MAX_INPUT_BUFFER];
@@ -277,7 +277,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 
@@ -360,7 +360,7 @@ print_help (void)
 
 	printf ("%s\n", _("Notes:"));
   printf (" %s\n", _("- MRTG stands for Multi Router Traffic Grapher. It can be downloaded from"));
-  printf (" %s\n", _("  http://ee-staff.ethz.ch/~oetiker/webtools/mrtg/mrtg.html"));
+  printf (" %s\n", "  http://ee-staff.ethz.ch/~oetiker/webtools/mrtg/mrtg.html");
   printf (" %s\n", _("- While MRTG can monitor things other than traffic rates, this"));
   printf (" %s\n", _("  plugin probably won't work with much else without modification."));
   printf (" %s\n", _("- The calculated i/o rates are a little off from what MRTG actually"));

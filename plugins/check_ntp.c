@@ -6,7 +6,7 @@
 * Copyright (c) 2006 sean finney <seanius@seanius.net>
 * Copyright (c) 2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/04/10 07:17:18 $
 *
 * Description:
 *
@@ -32,12 +32,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_ntp.c,v 1.11 2006/10/19 00:25:16 opensides Exp $
+ $Id: check_ntp.c,v 1.25 2007/04/10 07:17:18 dermoth Exp $
  
 *****************************************************************************/
 
 const char *progname = "check_ntp";
-const char *revision = "$Revision: 1.11 $";
+const char *revision = "$Revision: 1.25 $";
 const char *copyright = "2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -47,7 +47,6 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 static char *server_address=NULL;
 static int verbose=0;
-static int zero_offset_bad=0;
 static double owarn=60;
 static double ocrit=120;
 static short do_jitter=0;
@@ -139,8 +138,8 @@ typedef struct {
 #define OP_SET(x,y)   do{ x |= (y&OP_MASK); }while(0)
 #define OP_READSTAT 0x01
 #define OP_READVAR  0x02
-/* In peer status bytes, bytes 6,7,8 determine clock selection status */
-#define PEER_SEL(x) (x&0x07)
+/* In peer status bytes, bits 6,7,8 determine clock selection status */
+#define PEER_SEL(x) ((ntohs(x)>>8)&0x07)
 #define PEER_INCLUDED 0x04
 #define PEER_SYNCSOURCE 0x06
 
@@ -191,7 +190,7 @@ typedef struct {
 	do{ if(!t.tv_usec && !t.tv_sec) n=0x0UL; \
 		else { \
 			L32(n)=htonl(t.tv_sec + EPOCHDIFF); \
-			R32(n)=htonl((4294.967296*t.tv_usec)+.5); \
+			R32(n)=htonl((uint64_t)((4294.967296*t.tv_usec)+.5)); \
 		} \
 	} while(0)
 
@@ -287,7 +286,7 @@ void setup_request(ntp_message *p){
 	VN_SET(p->flags, 4);
 	MODE_SET(p->flags, MODE_CLIENT);
 	p->poll=4;
-	p->precision=0xfa;
+	p->precision=(int8_t)0xfa;
 	L16(p->rtdelay)=htons(1);
 	L16(p->rtdisp)=htons(1);
 
@@ -476,7 +475,10 @@ double offset_request(const char *host, int *status){
 	}
 
 	/* cleanup */
-	for(j=0; j<num_hosts; j++){ close(socklist[j]); }
+	/* FIXME: Not closing the socket to avoid re-use of the local port
+	 * which can cause old NTP packets to be read instead of NTP control
+	 * pactets in jitter_request(). THERE MUST BE ANOTHER WAY...
+	 * for(j=0; j<num_hosts; j++){ close(socklist[j]); } */
 	free(socklist);
 	free(ufds);
 	free(servers);
@@ -502,11 +504,13 @@ setup_control_request(ntp_control_message *p, uint8_t opcode, uint16_t seq){
 double jitter_request(const char *host, int *status){
 	int conn=-1, i, npeers=0, num_candidates=0, syncsource_found=0;
 	int run=0, min_peer_sel=PEER_INCLUDED, num_selected=0, num_valid=0;
-	int peer_offset=0;
+	int peers_size=0, peer_offset=0;
 	ntp_assoc_status_pair *peers=NULL;
 	ntp_control_message req;
+	const char *getvar = "jitter";
 	double rval = 0.0, jitter = -1.0;
 	char *startofvalue=NULL, *nptr=NULL;
+	void *tmp;
 
 	/* Long-winded explanation:
 	 * Getting the jitter requires a number of steps:
@@ -539,9 +543,12 @@ double jitter_request(const char *host, int *status){
 		/* Each peer identifier is 4 bytes in the data section, which
 	 	 * we represent as a ntp_assoc_status_pair datatype.
 	 	 */
-		npeers+=(ntohs(req.count)/sizeof(ntp_assoc_status_pair));
-		peers=(ntp_assoc_status_pair*)realloc(peers, sizeof(ntp_assoc_status_pair)*npeers);
-		memcpy((void*)peers+peer_offset, (void*)req.data, sizeof(ntp_assoc_status_pair)*npeers);
+		peers_size+=ntohs(req.count);
+		if((tmp=realloc(peers, peers_size)) == NULL)
+			free(peers), die(STATE_UNKNOWN, "can not (re)allocate 'peers' buffer\n");
+		peers=tmp;
+		memcpy((void*)((ptrdiff_t)peers+peer_offset), (void*)req.data, ntohs(req.count));
+		npeers=peers_size/sizeof(ntp_assoc_status_pair);
 		peer_offset+=ntohs(req.count);
 	} while(req.op&REM_MORE);
 
@@ -559,7 +566,10 @@ double jitter_request(const char *host, int *status){
 	}
 	if(verbose) printf("%d candiate peers available\n", num_candidates);
 	if(verbose && syncsource_found) printf("synchronization source found\n");
-	if(! syncsource_found) *status = STATE_WARNING;
+	if(! syncsource_found){
+		*status = STATE_WARNING;
+		if(verbose) printf("warning: no synchronization source found\n");
+	}
 
 
 	for (run=0; run<AVG_NUM; run++){
@@ -575,8 +585,10 @@ double jitter_request(const char *host, int *status){
 				 * thus reducing net traffic, guaranteeing us only a single
 				 * datagram in reply, and making intepretation much simpler
 				 */
-				strncpy(req.data, "jitter", 6);
-				req.count = htons(6);
+				/* Older servers doesn't know what jitter is, so if we get an
+				 * error on the first pass we redo it with "dispersion" */
+				strncpy(req.data, getvar, MAX_CM_SIZE-1);
+				req.count = htons(strlen(getvar));
 				DBG(printf("sending READVAR request...\n"));
 				write(conn, &req, SIZEOF_NTPCM(req));
 				DBG(print_ntp_control_message(&req));
@@ -586,12 +598,21 @@ double jitter_request(const char *host, int *status){
 				read(conn, &req, SIZEOF_NTPCM(req));
 				DBG(print_ntp_control_message(&req));
 
+				if(req.op&REM_ERROR && strstr(getvar, "jitter")) {
+					if(verbose) printf("The 'jitter' command failed (old ntp server?)\nRestarting with 'dispersion'...\n");
+					getvar = "dispersion";
+					num_selected--;
+					i--;
+					continue;
+				}
+
 				/* get to the float value */
 				if(verbose) {
-					printf("parsing jitter from peer %.2x: ", peers[i].assoc);
+					printf("parsing jitter from peer %.2x: ", ntohs(peers[i].assoc));
 				}
-				startofvalue = strchr(req.data, '=') + 1;
+				startofvalue = strchr(req.data, '=');
 				if(startofvalue != NULL) {
+					startofvalue++;
 					jitter = strtod(startofvalue, &nptr);
 				}
 				if(startofvalue == NULL || startofvalue==nptr){
@@ -609,10 +630,10 @@ double jitter_request(const char *host, int *status){
 		}
 	}
 
-	rval /= num_valid;
+	rval = num_valid ? rval / num_valid : -1.0;
 
 	close(conn);
-	free(peers);
+	if(peers!=NULL) free(peers);
 	/* If we return -1.0, it means no synchronization source was found */
 	return rval;
 }
@@ -628,7 +649,6 @@ int process_arguments(int argc, char **argv){
 		{"use-ipv6", no_argument, 0, '6'},
 		{"warning", required_argument, 0, 'w'},
 		{"critical", required_argument, 0, 'c'},
-		{"zero-offset", no_argument, 0, 'O'},
 		{"jwarn", required_argument, 0, 'j'},
 		{"jcrit", required_argument, 0, 'k'},
 		{"timeout", required_argument, 0, 't'},
@@ -641,7 +661,7 @@ int process_arguments(int argc, char **argv){
 		usage ("\n");
 
 	while (1) {
-		c = getopt_long (argc, argv, "Vhv46w:c:Oj:k:t:H:", longopts, &option);
+		c = getopt_long (argc, argv, "Vhv46w:c:j:k:t:H:", longopts, &option);
 		if (c == -1 || c == EOF || c == 1)
 			break;
 
@@ -679,9 +699,6 @@ int process_arguments(int argc, char **argv){
 		case 't':
 			socket_timeout=atoi(optarg);
 			break;
-		case 'O':
-			zero_offset_bad=1;
-			break;
 		case '4':
 			address_family = AF_INET;
 			break;
@@ -694,7 +711,7 @@ int process_arguments(int argc, char **argv){
 			break;
 		case '?':
 			/* print short usage statement if args not parsable */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 			break;
 		}
 	}
@@ -714,9 +731,26 @@ int process_arguments(int argc, char **argv){
 	return 0;
 }
 
+char *perfd_offset (double offset)
+{
+	return fperfdata ("offset", offset, "s",
+		TRUE, owarn,
+		TRUE, ocrit,
+		FALSE, 0, FALSE, 0);
+}
+
+char *perfd_jitter (double jitter)
+{
+	return fperfdata ("jitter", jitter, "s",
+		do_jitter, jwarn,
+		do_jitter, jcrit,
+		TRUE, 0, FALSE, 0);
+}
+
 int main(int argc, char *argv[]){
 	int result, offset_result, jitter_result;
 	double offset=0, jitter=0;
+	char *result_line, *perfdata_line;
 
 	result=offset_result=jitter_result=STATE_UNKNOWN;
 
@@ -760,28 +794,32 @@ int main(int argc, char *argv[]){
 
 	switch (result) {
 		case STATE_CRITICAL :
-			printf("NTP CRITICAL: ");
+			asprintf(&result_line, "NTP CRITICAL:");
 			break;
 		case STATE_WARNING :
-			printf("NTP WARNING: ");
+			asprintf(&result_line, "NTP WARNING:");
 			break;
 		case STATE_OK :
-			printf("NTP OK: ");
+			asprintf(&result_line, "NTP OK:");
 			break;
 		default :
-			printf("NTP UNKNOWN: ");
+			asprintf(&result_line, "NTP UNKNOWN:");
 			break;
 	}
 	if(offset_result==STATE_CRITICAL){
-		printf("Offset unknown|offset=unknown");
+		asprintf(&result_line, "%s %s", result_line, _("Offset unknown"));
 	} else {
 		if(offset_result==STATE_WARNING){
-			printf("Unable to fully sample sync server. ");
+			asprintf(&result_line, "%s %s", result_line, _("Unable to fully sample sync server"));
 		}
-		printf("Offset %.10g secs|offset=%.10g", offset, offset);
+		asprintf(&result_line, "%s Offset %.10g secs", result_line, offset);
+		asprintf(&perfdata_line, "%s", perfd_offset(offset));
 	}
-	if (do_jitter) printf(" jitter=%f", jitter);
-	printf("\n");
+	if (do_jitter) {
+		asprintf(&result_line, "%s, jitter=%f", result_line, jitter);
+		asprintf(&perfdata_line, "%s %s", perfdata_line,  perfd_jitter(jitter));
+	}
+	printf("%s|%s\n", result_line, perfdata_line);
 
 	if(server_address!=NULL) free(server_address);
 	return result;
@@ -802,7 +840,14 @@ void print_help(void){
 	print_usage();
 	printf (_(UT_HELP_VRSN));
 	printf (_(UT_HOST_PORT), 'p', "123");
-	printf (_(UT_WARN_CRIT));
+	printf (" %s\n", "-w, --warning=DOUBLE");
+	printf ("    %s\n", _("Offset to result in warning status (seconds)"));
+	printf (" %s\n", "-c, --critical=DOUBLE");
+	printf ("    %s\n", _("Offset to result in critical status (seconds)"));
+	printf (" %s\n", "-j, --warning=DOUBLE");
+	printf ("    %s\n", _("Warning value for jitter"));
+	printf (" %s\n", "-k, --critical=DOUBLE");
+	printf ("    %s\n", _("Critical value for jitter"));
 	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
 	printf (_(UT_VERBOSE));
 	printf (_(UT_SUPPORT));
@@ -812,5 +857,5 @@ void
 print_usage(void)
 {
   printf (_("Usage:"));
-  printf("%s -H <host> [-O] [-w <warn>] [-c <crit>] [-j <warn>] [-k <crit>] [-v verbose]\n", progname);
+  printf("%s -H <host> [-w <warn>] [-c <crit>] [-j <warn>] [-k <crit>] [-v verbose]\n", progname);
 }

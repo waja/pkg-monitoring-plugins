@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/03/12 10:51:05 $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_ping.c,v 1.52 2006/10/19 00:25:16 opensides Exp $
+ $Id: check_ping.c,v 1.60 2007/03/12 10:51:05 tonvoon Exp $
  
 ******************************************************************************/
 
 const char *progname = "check_ping";
-const char *revision = "$Revision: 1.52 $";
+const char *revision = "$Revision: 1.60 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -103,13 +103,18 @@ main (int argc, char **argv)
 		usage4 (_("Cannot catch SIGALRM"));
 	}
 
-	/* handle timeouts gracefully */
+	/* If ./configure finds ping has timeout values, set plugin alarm slightly
+	 * higher so that we can use response from command line ping */
+#ifdef PING_PACKETS_FIRST && PING_HAS_TIMEOUT
+	alarm (timeout_interval + 1);
+#else
 	alarm (timeout_interval);
+#endif
 
 	for (i = 0 ; i < n_addresses ; i++) {
 		
 #ifdef PING6_COMMAND
-		if (is_inet6_addr(addresses[i]) && address_family != AF_INET)
+		if (address_family != AF_INET && is_inet6_addr(addresses[i]))
 			rawcmd = strdup(PING6_COMMAND);
 		else
 			rawcmd = strdup(PING_COMMAND);
@@ -211,7 +216,7 @@ process_arguments (int argc, char **argv)
 
 		switch (c) {
 		case '?':	/* usage */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		case 'h':	/* help */
 			print_help ();
 			exit (STATE_OK);
@@ -503,10 +508,22 @@ run_ping (const char *cmd, const char *addr)
 int
 error_scan (char buf[MAX_INPUT_BUFFER], const char *addr)
 {
-	if (strstr (buf, "Network is unreachable"))
-		die (STATE_CRITICAL, _("CRITICAL - Network unreachable (%s)"), addr);
+	if (strstr (buf, "Network is unreachable") ||
+		strstr (buf, "Destination Net Unreachable")
+		)
+		die (STATE_CRITICAL, _("CRITICAL - Network Unreachable (%s)"), addr);
 	else if (strstr (buf, "Destination Host Unreachable"))
 		die (STATE_CRITICAL, _("CRITICAL - Host Unreachable (%s)"), addr);
+	else if (strstr (buf, "Destination Port Unreachable"))
+		die (STATE_CRITICAL, _("CRITICAL - Bogus ICMP: Port Unreachable (%s)"), addr);
+	else if (strstr (buf, "Destination Protocol Unreachable"))
+		die (STATE_CRITICAL, _("CRITICAL - Bogus ICMP: Protocol Unreachable (%s)"), addr);
+	else if (strstr (buf, "Destination Net Prohibited"))
+		die (STATE_CRITICAL, _("CRITICAL - Network Prohibited (%s)"), addr);
+	else if (strstr (buf, "Destination Host Prohibited"))
+		die (STATE_CRITICAL, _("CRITICAL - Host Prohibited (%s)"), addr);
+	else if (strstr (buf, "Packet filtered"))
+		die (STATE_CRITICAL, _("CRITICAL - Packet Filtered (%s)"), addr);
 	else if (strstr (buf, "unknown host" ))
 		die (STATE_CRITICAL, _("CRITICAL - Host not found (%s)"), addr);
 	else if (strstr (buf, "Time to live exceeded"))
@@ -551,14 +568,14 @@ print_help (void)
   printf (" %s\n", "-c, --critical=THRESHOLD");
   printf ("    %s\n", _("critical threshold pair"));
   printf (" %s\n", "-p, --packets=INTEGER");
-  printf ("    %s\n", _("number of ICMP ECHO packets to send"));
-  printf (_("(Default: %d)"), DEFAULT_MAX_PACKETS);
+  printf ("    %s ", _("number of ICMP ECHO packets to send"));
+  printf (_("(Default: %d)\n"), DEFAULT_MAX_PACKETS);
   printf (" %s\n", "-L, --link");
   printf ("    %s\n", _("show HTML in the plugin output (obsoleted by urlize)"));
 
 	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
 
-	printf ("%s\n", _("THRESHOLD is <rta>,<pl>%% where <rta> is the round trip average travel"));
+	printf ("%s\n", _("THRESHOLD is <rta>,<pl>% where <rta> is the round trip average travel"));
   printf ("%s\n", _("time (ms) which triggers a WARNING or CRITICAL state, and <pl> is the"));
   printf ("%s\n", _("percentage of packet loss to trigger an alarm state."));
 
@@ -579,5 +596,5 @@ print_usage (void)
 {
   printf (_("Usage:"));
 	printf ("%s -H <host_address> -w <wrta>,<wpl>%% -c <crta>,<cpl>%%\n", progname);
-  printf (" [-p packets] [-t timeout] [-L] [-4|-6]\n");
+  printf (" [-p packets] [-t timeout] [-4|-6]\n");
 }

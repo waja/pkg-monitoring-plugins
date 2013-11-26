@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
 *
-* Last Modified: $Date: 2005/10/31 20:03:19 $
+* Last Modified: $Date: 2007/01/24 22:47:25 $
 *
 * Description:
 *
@@ -28,18 +28,18 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: netutils.h,v 1.16 2005/10/31 20:03:19 seanius Exp $
+* $Id: netutils.h,v 1.18 2007/01/24 22:47:25 tonvoon Exp $
 *
 ******************************************************************************/
 
 #ifndef _NETUTILS_H_
 #define _NETUTILS_H_
 
-#include "config.h"
 #include "common.h"
 #include "utils.h"
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "getaddrinfo.h"
 
 #ifdef HAVE_SYS_UN_H
 # include <sys/un.h>

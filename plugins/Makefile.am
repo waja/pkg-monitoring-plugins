@@ -2,12 +2,12 @@
 
 VPATH = $(top_srcdir) $(top_srcdir)/lib $(top_srcdir)/plugins $(top_srcdir)/plugins/t 
 
-INCLUDES = -I.. -I$(top_srcdir)/lib -I$(top_srcdir)/intl @LDAPINCLUDE@ @PGINCLUDE@ @SSLINCLUDE@
+INCLUDES = -I.. -I$(top_srcdir)/lib -I$(top_srcdir)/gl -I$(top_srcdir)/intl @LDAPINCLUDE@ @PGINCLUDE@ @SSLINCLUDE@
 
 datadir = @datadir@
 localedir = $(datadir)/locale
 DEFS = -DLOCALEDIR=\"$(localedir)\" @DEFS@
-LIBS = @LIBINTL@ @LIBS@ @SSLLIBS@ 
+LIBS = @LIBINTL@ @LIBS@
 MATHLIBS = @MATHLIBS@
 
 # This is not portable. Run ". tools/devmode" to get development compile flags
@@ -28,12 +28,11 @@ EXTRA_PROGRAMS = check_mysql check_radius check_pgsql check_snmp check_hpjd \
 	check_procs check_mysql_query check_apt
 
 EXTRA_DIST = t utils.c netutils.c sslutils.c popen.c utils.h netutils.h \
-	popen.h common.h getaddrinfo.c getaddrinfo.h \
-	gethostbyname.c gethostbyname.h runcmd.c runcmd.h
+	popen.h common.h runcmd.c runcmd.h
 
 PLUGINHDRS = common.h
 
-BASEOBJS = utils.o ../lib/libnagiosplug.a ../lib/libcoreutils.a
+BASEOBJS = utils.o ../lib/libnagiosplug.a ../gl/libgnu.a
 NETOBJS = netutils.o $(BASEOBJS) $(EXTRA_NETOBJS)
 SSLOBJS = sslutils.o
 NETLIBS = $(NETOBJS) $(SOCKETLIBS)
@@ -55,7 +54,7 @@ check_dns_LDADD = $(NETLIBS) runcmd.o
 check_dummy_LDADD = $(BASEOBJS)
 check_fping_LDADD = $(NETLIBS) popen.o
 check_game_LDADD = $(BASEOBJS) runcmd.o
-check_http_LDADD = $(SSLOBJS) $(NETLIBS)
+check_http_LDADD = $(SSLOBJS) $(NETLIBS) $(SSLLIBS)
 check_hpjd_LDADD = $(NETLIBS) popen.o
 check_ldap_LDADD = $(NETLIBS) $(LDAPLIBS)
 check_load_LDADD = $(BASEOBJS) popen.o
@@ -78,10 +77,10 @@ check_procs_LDADD = $(BASEOBJS) popen.o
 check_radius_LDADD = $(NETLIBS) $(RADIUSLIBS)
 check_real_LDADD = $(NETLIBS)
 check_snmp_LDADD = $(BASEOBJS) popen.o
-check_smtp_LDADD = $(SSLOBJS) $(NETLIBS) 
+check_smtp_LDADD = $(SSLOBJS) $(NETLIBS) $(SSLLIBS)
 check_ssh_LDADD = $(NETLIBS)
 check_swap_LDADD = $(MATHLIBS) $(BASEOBJS) popen.o
-check_tcp_LDADD = $(SSLOBJS) $(NETLIBS)
+check_tcp_LDADD = $(SSLOBJS) $(NETLIBS) $(SSLLIBS)
 check_time_LDADD = $(NETLIBS)
 check_ups_LDADD = $(NETLIBS)
 check_users_LDADD = $(BASEOBJS) popen.o

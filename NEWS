@@ -1,2 +1,73 @@
-New in 1.2.9:
-* Added support for multiplatform builds
+This file documents the major additions and syntax changes between releases.
+
+1.4.8 11th April 2007
+	Respects --without-world-permissions for setuid plugins
+	check_disk extra options for regex matching of filesystems and grouping of filesystems
+	for collective thresholds
+	Better configure test for mysqlclient availability
+	Various check_ntp fixes
+
+1.4.7 29th March 2007
+	check_procs uses /usr/ucb/ps if available - fixes pst3 problems on Solaris
+	Fixed MKINSTALLDIRS problem in po/
+	./configure now detects if possible to compile check_mysql
+	Fixed broken HELO in check_smtp
+	check_icmp now allows to set a minimum number of hosts required for successs (-m)
+	check_icmp fix for *BSD when running for long time
+	check_ping times out 1 second quicker if host is unreachable
+	Root plugins installed with world executable
+	check_sybase from contrib now maintained in NagiosExchange
+	--with-nagios-user/group reinstated ./configure option
+	New --without-world-permissions ./configure option
+
+1.4.6 5th February 2007
+	Reduced number of DNS lookups in check_ping and netutils.c for IPv6 configurations
+	Fixed compile problems with *BSD re: alloca.h
+	Fixed Solaris problems with check_swap (tested on Solaris 9)
+	Fixed check_swap for HP/UX where swapinfo command was incorrect
+	Fixed check_disk inode threshold checks, regressed at r1.4.4.
+	Fixed crit/warn for check_disk perf data
+	Fixed buffer overflow in check_procs
+	Fixed error handling for UNIX sockets in netutils.c
+	New -q and -o options for check_by_ssh which are handed over to ssh(1) as is
+	Synced with latest GNUlib
+	Fixed check_jabber always returns warning
+
+1.4.5
+	Fixed bug in perl's is_hostname routine
+
+1.4.4
+	New C based check_ntp. The perl version is now deprecated.
+	New check_apt plugin
+	Notice: plugins in contrib/ will start to be removed from this distribution.
+	  Please check at http://www.nagiosexchange.org for contributed plugins
+	Major bug fixes to check_disk where values were incorrectly calculated and alerted on.
+	check_udp2 removed. check_udp is now linked to check_tcp.c
+	check_mailq now errors if the sub-program run returns non-zero return code. This would appear
+	  as if mailqs were okay when the nagios user could not query the mail-queues
+	Compile problems with check_snmp fixed
+
+1.4.3
+	Setuid plugins (check_dhcp, check_icmp) separated into plugins-root/. Run make install as root to install
+	SSL plugins work with gnutls as well as OpenSSL
+	check_mysql_query added to run arbitrary SQL commands, with threshold checking
+	libtool now required for development systems
+	Notice: check_udp (compiled from check_udp.c) will be deprecated in the next release. 
+	  check_udp2 should be used instead and will be renamed to check_udp
+
+1.4.2
+	Fix for Redhat ES4 for check_dns and check_dig
+
+1.4
+	IPv6 support in check_ping, check_by_ssh, check_http, check_ldap, check_smtp, check_tcp
+	Internationalisation support
+	Performance data added to most plugins
+	check_disk now using GNU coreutils code
+	New plugins - check_dhcp, check_icmp
+	contrib/check_citrix has been replaced by contrib/check_ica* (requires packet_utils.pm in libexec)
+	check_http --min changed to --pagesize, added max so min:max in check
+	check_vsz and check_rss deprecated - functionality moved into check_procs
+	check_swap % thresholds changed to measure amount free, instead of amount used
+	check_disk syntax changes for -p, -m/-M, defaults to MB instead of kB
+	check_procs -C expects no path for the command name
+
