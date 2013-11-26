@@ -2,12 +2,18 @@
 #
 # check_nagios tests
 #
-# $Id: check_nagios.t 1382 2006-04-19 09:33:44Z tonvoon $
+# $Id: check_nagios.t 1953 2008-03-17 23:08:21Z tonvoon $
 #
 
 use strict;
-use Test::More tests => 13;
+use Test::More;
 use NPTest;
+
+if (`uname -s` eq "SunOS\n") {
+        plan skip_all => "Ignoring tests on solaris because of pst3";
+} else {
+        plan tests => 13;
+}
 
 my $successOutput = '/^NAGIOS OK: /';
 my $warningOutput = '/^NAGIOS WARNING: /';

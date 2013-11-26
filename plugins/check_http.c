@@ -1,54 +1,51 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_http plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-12-11 05:57:35 +0000 (Tue, 11 Dec 2007) $
-*
+* Copyright (c) 1999-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_http plugin
-*
-*  This plugin tests the HTTP service on the specified host. It can test
-*  normal (http) and secure (https) servers, follow redirects, search for
-*  strings and regular expressions, check connection times, and report on
-*  certificate expiration times.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin tests the HTTP service on the specified host. It can test
+* normal (http) and secure (https) servers, follow redirects, search for
+* strings and regular expressions, check connection times, and report on
+* certificate expiration times.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_http.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
- $Id: check_http.c 1861 2007-12-11 05:57:35Z dermoth $
- 
-******************************************************************************/
 /* splint -I. -I../../plugins -I../../lib/ -I/usr/kerberos/include/ ../../plugins/check_http.c */
 
 const char *progname = "check_http";
-const char *revision = "$Revision: 1861 $";
-const char *copyright = "1999-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "1999-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
-
-#include <ctype.h>
 
 #include "common.h"
 #include "netutils.h"
 #include "utils.h"
 #include "base64.h"
+#include <ctype.h>
 
 #define INPUT_DELIMITER ";"
 
@@ -150,6 +147,9 @@ main (int argc, char **argv)
   asprintf (&user_agent, "User-Agent: check_http/%s (nagios-plugins %s)",
             clean_revstring (revision), VERSION);
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
   if (process_arguments (argc, argv) == ERROR)
     usage4 (_("Could not parse arguments"));
 
@@ -174,6 +174,7 @@ int
 process_arguments (int argc, char **argv)
 {
   int c = 1;
+  char *p;
 
   enum {
     INVERT_REGEX = CHAR_MAX + 1
@@ -317,8 +318,12 @@ process_arguments (int argc, char **argv)
     /* Note: H, I, and u must be malloc'd or will fail on redirects */
     case 'H': /* Host Name (virtual host) */
       host_name = strdup (optarg);
-      if (strstr (optarg, ":"))
-        sscanf (optarg, "%*[^:]:%d", &server_port);
+      if (host_name[0] == '[') {
+        if ((p = strstr (host_name, "]:")) != NULL) /* [IPv6]:port */
+          server_port = atoi (p + 2);
+      } else if ((p = strchr (host_name, ':')) != NULL
+                 && strchr (++p, ':') == NULL) /* IPv4:port or host:port */
+          server_port = atoi (p);
       break;
     case 'I': /* Server IP-address */
       server_address = strdup (optarg);
@@ -748,7 +753,7 @@ check_http (void)
 
   /* optionally send the host header info */
   if (host_name)
-    asprintf (&buf, "%sHost: %s\r\n", buf, host_name);
+    asprintf (&buf, "%sHost: %s:%d\r\n", buf, host_name, server_port);
 
   /* optionally send any other header tag */
   if (http_opt_headers_count) {
@@ -761,7 +766,7 @@ check_http (void)
 
   /* optionally send the authentication info */
   if (strlen(user_auth)) {
-    auth = base64 (user_auth, strlen (user_auth));
+    base64_encode_alloc (user_auth, strlen (user_auth), &auth);
     asprintf (&buf, "%sAuthorization: Basic %s\r\n", buf, auth);
   }
 
@@ -772,7 +777,7 @@ check_http (void)
     } else {
       asprintf (&buf, "%sContent-Type: application/x-www-form-urlencoded\r\n", buf);
     }
-    
+
     asprintf (&buf, "%sContent-Length: %i\r\n\r\n", buf, (int)strlen (http_post_data));
     asprintf (&buf, "%s%s%s", buf, http_post_data, CRLF);
   }
@@ -934,7 +939,7 @@ check_http (void)
     } /* end if (http_status >= 300) */
 
   } /* end else (server_expect_yn)  */
-    
+
         if (maximum_age >= 0) {
           check_document_dates (header);
         }
@@ -1046,7 +1051,7 @@ redir (char *pos, char *status_line)
   addr = malloc (MAX_IPV4_HOSTLENGTH + 1);
   if (addr == NULL)
     die (STATE_UNKNOWN, _("HTTP UNKNOWN - Could not allocate addr\n"));
-  
+
   url = malloc (strcspn (pos, "\r\n"));
   if (url == NULL)
     die (STATE_UNKNOWN, _("HTTP UNKNOWN - Could not allocate url\n"));
@@ -1230,6 +1235,7 @@ print_help (void)
   printf ("\n");
 
   printf (_(UT_HELP_VRSN));
+  printf (_(UT_EXTRA_OPTS));
 
   printf (" %s\n", "-H, --hostname=ADDRESS");
   printf ("    %s\n", _("Host name argument for servers using host headers (virtual host)"));
@@ -1297,19 +1303,24 @@ print_help (void)
 
   printf (_(UT_VERBOSE));
 
-  printf (_("Notes:"));
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
   printf (" %s\n", _("This plugin will attempt to open an HTTP connection with the host."));
   printf (" %s\n", _("Successful connects return STATE_OK, refusals and timeouts return STATE_CRITICAL"));
   printf (" %s\n", _("other errors return STATE_UNKNOWN.  Successful connects, but incorrect reponse"));
   printf (" %s\n", _("messages from the host result in STATE_WARNING return values.  If you are"));
   printf (" %s\n", _("checking a virtual server that uses 'host headers' you must supply the FQDN"));
   printf (" %s\n", _("(fully qualified domain name) as the [host_name] argument."));
+  printf ("\n");
+  printf (_(UT_EXTRA_OPTS_NOTES));
 
 #ifdef HAVE_SSL
+  printf ("\n");
   printf (" %s\n", _("This plugin can also check whether an SSL enabled web server is able to"));
   printf (" %s\n", _("serve content (optionally within a specified time) or whether the X509 "));
   printf (" %s\n", _("certificate is still valid for the specified number of days."));
-  printf (_("Examples:"));
+  printf ("\n");
+  printf ("%s\n", _("Examples:"));
   printf (" %s\n\n", "CHECK CONTENT: check_http -w 5 -c 10 --ssl -H www.verisign.com");
   printf (" %s\n", _("When the 'www.verisign.com' server returns its content within 5 seconds,"));
   printf (" %s\n", _("a STATE_OK will be returned. When the server returns its content but exceeds"));
@@ -1320,7 +1331,7 @@ print_help (void)
   printf (" %s\n", _("When the certificate of 'www.verisign.com' is valid for more than 14 days,"));
   printf (" %s\n", _("a STATE_OK is returned. When the certificate is still valid, but for less than"));
   printf (" %s\n", _("14 days, a STATE_WARNING is returned. A STATE_CRITICAL will be returned when"));
-  printf (" %s\n\n", _("the certificate is expired."));
+  printf (" %s\n", _("the certificate is expired."));
 #endif
 
   printf (_(UT_SUPPORT));

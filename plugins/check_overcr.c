@@ -1,43 +1,40 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_overcr plugin
-*
+* 
 * License: GPL
-* Copyright (c) 2000-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-02-06 21:03:21 +0000 (Tue, 06 Feb 2007) $
-*
+* Copyright (c) 2000-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_overcr plugin
-*
-*  This plugin attempts to contact the Over-CR collector daemon running on the
-*  remote UNIX server in order to gather the requested system information.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin attempts to contact the Over-CR collector daemon running on the
+* remote UNIX server in order to gather the requested system information.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: check_overcr.c 1611 2007-02-06 21:03:21Z opensides $
- 
-******************************************************************************/
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_overcr.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_overcr";
-const char *revision = "$Revision: 1611 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -101,6 +98,9 @@ main (int argc, char **argv)
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
@@ -428,6 +428,7 @@ print_help (void)
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
 	printf (_(UT_HOST_PORT), 'p', myport);
 
@@ -448,16 +449,21 @@ print_help (void)
 	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
 
   printf (_(UT_VERBOSE));
+
+  printf ("\n");
+  printf ("%s\n", _("This plugin requires that Eric Molitors' Over-CR collector daemon be"));
+  printf ("%s\n", _("running on the remote server."));
+  printf ("%s\n", _("Over-CR can be downloaded from http://www.molitor.org/overcr"));
+  printf ("%s\n", _("This plugin was tested with version 0.99.53 of the Over-CR collector"));
+
   printf ("\n");
   printf ("%s\n", _("Notes:"));
-  
-  printf ("%s\n", _("For the available options, the critical threshold value should always be"));
-  printf ("%s\n\n", _("higher than the warning threshold value, EXCEPT with the uptime variable"));
-
-  printf ("%s\n", _("This plugin requres that Eric Molitors' Over-CR collector daemon be"));
-  printf ("%s\n", _("running on the remote server."));
-  printf ("%s\n", " Over-CR can be downloaded from http://www.molitor.org/overcr");
-  printf ("%s\n", _("This plugin was tested with version 0.99.53 of the Over-CR collector"));
+  printf (" %s\n", _("For the available options, the critical threshold value should always be"));
+  printf (" %s\n", _("higher than the warning threshold value, EXCEPT with the uptime variable"));
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
 
   printf (_(UT_SUPPORT));
 }

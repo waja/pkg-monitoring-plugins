@@ -2,7 +2,7 @@
 #
 # Internet Mail Access Protocol (IMAP) Server Tests via check_imap
 #
-# $Id: check_imap.t 1279 2005-11-09 16:40:12Z tonvoon $
+# $Id: check_imap.t 1901 2008-01-08 11:57:24Z tonvoon $
 #
 
 use strict;

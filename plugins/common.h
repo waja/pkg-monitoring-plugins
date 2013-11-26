@@ -1,47 +1,40 @@
-/******************************************************************************
- *
- * Nagios plugins common include file
- *
- * License: GPL
- * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
- *
- * Last Modified: 11-05-1999
- *
- * Description:
- *
- * This file contains common include files and defines used in many of
- * the plugins.
- *
- * License Information:
- *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- *
- * $Id: common.h 1700 2007-04-25 22:10:13Z tonvoon $
- *
- *****************************************************************************/
+/*****************************************************************************
+* 
+* Nagios plugins common include file
+* 
+* License: GPL
+* Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
+* Copyright (c) 2003-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-03-11 00:10:23 +0000 (Tue, 11 Mar 2008) $
+* 
+* Description:
+* 
+* This file contains common include files and defines used in many of
+* the plugins.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: common.h 1938 2008-03-11 00:10:23Z tonvoon $
+* 
+*****************************************************************************/
 
 #ifndef _COMMON_H_
 #define _COMMON_H_
 
 #include "config.h"
-/* This needs to be removed for Solaris servers, where 64 bit files, but 32 bit architecture
-   This needs to be done early on because subsequent system includes use _FILE_OFFSET_BITS
-   Cannot remove from config.h because is included by regex.c from lib/ */
-#if __sun__ && !defined(_LP64) && _FILE_OFFSET_BITS == 64
-#undef _FILE_OFFSET_BITS
-#endif
 
 #ifdef HAVE_FEATURES_H
 #include <features.h>
@@ -118,9 +111,6 @@
 /* GNU Libraries */
 #include <getopt.h>
 #include "dirname.h"
-#include "vasprintf.h"
-#include "snprintf.h"
-#include "vsnprintf.h"
 
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
@@ -184,11 +174,6 @@ enum {
 	FALSE,
 	TRUE
 };
-#endif
-
-/* Solaris does not have floorf, but floor works. Should probably be in configure */
-#if defined(__sun) || defined(__sun__)
-static inline float floorf (float x) { return floor(x); }
 #endif
 
 enum {

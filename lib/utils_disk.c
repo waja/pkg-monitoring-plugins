@@ -1,32 +1,31 @@
-/****************************************************************************
-* Utils for check_disk
-*
+/*****************************************************************************
+* 
+* Library for check_disk
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-09-22 18:48:33 +0100 (Sat, 22 Sep 2007) $
-*
+* Copyright (c) 1999-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-01-30 09:46:21 +0000 (Wed, 30 Jan 2008) $
+* 
 * Description:
-*
+* 
 * This file contains utilities for check_disk. These are tested by libtap
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: utils_disk.c 1787 2007-09-22 17:48:33Z psychotrahe $
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: utils_disk.c 1915 2008-01-30 09:46:21Z dermoth $
 * 
 *****************************************************************************/
 

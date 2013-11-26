@@ -1,15 +1,15 @@
 /*	pst3.c
- *
- *  Third version to get process arg info; this time by using
- *  a combination of reading the /proc/<pid>/psinfo structures
- *  and reading the complete arg vector from kernel memory structures.
- *
- *  Developed and tested under Solaris 5.8 (both 32 and 64 bit modes).
- *
- *  NOTE:  This program must be setuid-root (or run by root) to work!
- *
- *	Written: 2005-04-28	R.W.Ingraham
- */
+*
+*  Third version to get process arg info; this time by using
+*  a combination of reading the /proc/<pid>/psinfo structures
+*  and reading the complete arg vector from kernel memory structures.
+*
+*  Developed and tested under Solaris 5.8 (both 32 and 64 bit modes).
+*
+*  NOTE:  This program must be setuid-root (or run by root) to work!
+*
+*	Written: 2005-04-28	R.W.Ingraham
+*/
 
 
 #define _KMEMUSER	1
@@ -99,7 +99,7 @@ int main (int argc, char **argv)
 	if ((pDir = opendir(PROC_DIR)) != NULL)
 	{
 		/* Display column headings */
-		printf("S   UID  PPID    VSZ    RSS %%CPU COMMAND ARGS\n");
+		printf("S   UID   PID  PPID    VSZ    RSS %%CPU COMMAND ARGS\n");
 
 		/* Zip through all of the process entries */
 		while ((pDent = readdir(pDir)) != NULL)
@@ -187,9 +187,10 @@ static int HandlePsInfo (char *szPath, psinfo_t *pPsInfo)
 			thisProg = myArgv[0];
  
 		/* Display the ps columns (except for argv) */
-		printf("%c %5d %5d %6lu %6lu %4.1f %s ",
+		printf("%c %5d %5d %5d %6lu %6lu %4.1f %s ",
 			pPsInfo->pr_lwp.pr_sname,
 			(int)(pPsInfo->pr_euid),
+			(int)(pPsInfo->pr_pid),
 			(int)(pPsInfo->pr_ppid),
 			(unsigned long)(pPsInfo->pr_size),
 			(unsigned long)(pPsInfo->pr_rssize),

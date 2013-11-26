@@ -1,43 +1,41 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_apt plugin
-*
+* 
 * License: GPL
-* Copyright (c) 1999-2006 nagios-plugins team
-*
-* Original author: sean finney
-*
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
-*
+* Copyright (c) 2006-2008 Nagios Plugins Development Team
+* 
+* Original author: Sean Finney
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_apt plugin
 * 
-* check for available updates in apt package management systems
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* Check for available updates in apt package management systems
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-* $Id: check_apt.c 1590 2007-01-28 21:46:41Z hweiss $
 * 
-******************************************************************************/
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_apt.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_apt";
-const char *revision = "$Revision: 1590 $";
-const char *copyright = "2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2006-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -89,6 +87,9 @@ static int exec_warning = 0;     /* if a cmd exited non-zero */
 
 int main (int argc, char **argv) {
 	int result=STATE_UNKNOWN, packages_available=0, sec_count=0;
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts(&argc, argv, progname);
 
 	if (process_arguments(argc, argv) == ERROR)
 		usage_va(_("Could not parse arguments"));
@@ -404,9 +405,9 @@ void
 print_help (void)
 {
   print_revision(progname, revision);
-  
+
   printf(_(COPYRIGHT), copyright, email);
-  
+
   printf("%s\n", _("This plugin checks for software updates on systems that use"));
   printf("%s\n", _("package management systems based on the apt-get(8) command"));
   printf("%s\n", _("found in Debian GNU/Linux"));
@@ -414,11 +415,12 @@ print_help (void)
   printf ("\n\n");
 
   print_usage();
-  
+
   printf(_(UT_HELP_VRSN));
-  
+  printf(_(UT_EXTRA_OPTS));
+
   printf(_(UT_TIMEOUT), timeout_interval);
-  
+
   printf (" %s\n", "-U, --upgrade=OPTS");
   printf ("    %s\n", _("[Default] Perform an upgrade.  If an optional OPTS argument is provided,"));
   printf ("    %s\n", _("apt-get will be run with these command line options instead of the"));
@@ -447,17 +449,25 @@ print_help (void)
   printf ("    %s\n", _("upgrades for Debian and Ubuntu:"));
   printf ("    \t\%s\n", SECURITY_RE);
   printf ("    %s\n", _("Note that the package must first match the include list before its"));
-  printf ("    %s\n\n\n", _("information is compared against the critical list."));
-  
+  printf ("    %s\n\n", _("information is compared against the critical list."));
+
   printf ("%s\n\n", _("The following options require root privileges and should be used with care:"));
   printf (" %s\n", "-u, --update=OPTS");
   printf ("    %s\n", _("First perform an 'apt-get update'.  An optional OPTS parameter overrides"));
   printf ("    %s\n", _("the default options.  Note: you may also need to adjust the global"));
   printf ("    %s\n", _("timeout (with -t) to prevent the plugin from timing out if apt-get"));
   printf ("    %s\n", _("upgrade is expected to take longer than the default timeout."));
+
+#ifdef NP_EXTRA_OPTS
+  printf("\n");
+  printf("%s\n", _("Notes:"));
+  printf(_(UT_EXTRA_OPTS_NOTES));
+#endif
+
+  printf(_(UT_SUPPORT));
 }
 
-  
+
 /* simple usage heading */
 void
 print_usage(void)

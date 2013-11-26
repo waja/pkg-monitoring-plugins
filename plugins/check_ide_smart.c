@@ -1,46 +1,44 @@
-/******************************************************************************
-* Nagios check_ide_smart plugin
-*
-* License: GPL
-*
-*  ide-smart 1.3 - IDE S.M.A.R.T. checking tool
-*  Copyright (C)  1998-1999 Ragnar Hojland Espinosa <ragnar@lightside.dhis.org>
-*                 1998      Gadi Oxman <gadio@netvision.net.il>
+/*****************************************************************************
 * 
+* Nagios check_ide_smart plugin
+* ide-smart 1.3 - IDE S.M.A.R.T. checking tool
+* 
+* License: GPL
+* Copyright (C) 1998-1999 Ragnar Hojland Espinosa <ragnar@lightside.dhis.org>
+*               1998      Gadi Oxman <gadio@netvision.net.il>
 * Copyright (c) 2000 Robert Dale <rdale@digital-mission.com>
-* Copyright (c) 2000-2006 nagios-plugins team
-*
-* Last Modified: $Date: 2007-06-13 10:43:28 +0100 (Wed, 13 Jun 2007) $
-*
+* Copyright (c) 2000-2007 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_ide_smart plugin
-*
-*  This plugin checks a local hard drive with the (Linux specific) SMART interface
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin checks a local hard drive with the (Linux specific) SMART
+* interface
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
- *
- * $Id: check_ide_smart.c 1739 2007-06-13 09:43:28Z psychotrahe $
- */
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_ide_smart.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
+*****************************************************************************/
 
 const char *progname = "check_ide_smart";
-const char *revision = "$Revision: 1739 $";
-const char *copyright = "2000-2006";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "1998-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 	
 #include "common.h"
@@ -163,6 +161,9 @@ main (int argc, char *argv[])
 	thresholds_t thresholds;
 	values_t values;
 	int fd;
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	static struct option longopts[] = { 
 		{"device", required_argument, 0, 'd'}, 
@@ -486,13 +487,14 @@ print_help (void)
 	printf (COPYRIGHT, copyright, email);
 
 	printf (_("This plugin checks a local hard drive with the (Linux specific) SMART interface [http://smartlinux.sourceforge.net/smart/index.php]."));
- 
+
   printf ("\n\n");
-  
+
   print_usage ();
 
   printf (_(UT_HELP_VRSN));
-	
+  printf (_(UT_EXTRA_OPTS));
+
   printf (" %s\n", "-d, --device=DEVICE");
   printf ("    %s\n", _("Select device DEVICE"));
   printf ("    %s\n", _("Note: if the device is selected with this option, _no_ other options are accepted"));
@@ -505,7 +507,14 @@ print_help (void)
   printf (" %s\n", "-0, --auto-off");
   printf ("    %s\n", _("Turn off automatic offline tests"));
   printf (" %s\n", "-n, --nagios");
-  printf ("    %s\n\n", _("Output suitable for Nagios"));
+  printf ("    %s\n", _("Output suitable for Nagios"));
+
+#ifdef NP_EXTRA_OPTS
+  printf ("\n");
+  printf ("%s\n", _("Notes:"));
+  printf (_(UT_EXTRA_OPTS_NOTES));
+#endif
+
   printf (_(UT_SUPPORT));
 }
 

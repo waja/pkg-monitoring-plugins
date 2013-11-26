@@ -35,40 +35,45 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
+@USE_PARSE_INI_TRUE@am__append_1 = parse_ini.c extra_opts.c
 subdir = lib
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
-	$(top_srcdir)/gl/m4/absolute-header.m4 \
 	$(top_srcdir)/gl/m4/alloca.m4 \
 	$(top_srcdir)/gl/m4/arpa_inet_h.m4 \
-	$(top_srcdir)/gl/m4/c-strtod.m4 $(top_srcdir)/gl/m4/cloexec.m4 \
-	$(top_srcdir)/gl/m4/codeset.m4 $(top_srcdir)/gl/m4/dirname.m4 \
-	$(top_srcdir)/gl/m4/dos.m4 \
+	$(top_srcdir)/gl/m4/base64.m4 $(top_srcdir)/gl/m4/c-strtod.m4 \
+	$(top_srcdir)/gl/m4/cloexec.m4 $(top_srcdir)/gl/m4/codeset.m4 \
+	$(top_srcdir)/gl/m4/dirname.m4 $(top_srcdir)/gl/m4/dos.m4 \
 	$(top_srcdir)/gl/m4/double-slash-root.m4 \
 	$(top_srcdir)/gl/m4/eoverflow.m4 $(top_srcdir)/gl/m4/error.m4 \
 	$(top_srcdir)/gl/m4/exitfail.m4 \
 	$(top_srcdir)/gl/m4/extensions.m4 \
 	$(top_srcdir)/gl/m4/fcntl-safer.m4 \
+	$(top_srcdir)/gl/m4/float_h.m4 $(top_srcdir)/gl/m4/floorf.m4 \
 	$(top_srcdir)/gl/m4/fstypename.m4 \
 	$(top_srcdir)/gl/m4/fsusage.m4 \
 	$(top_srcdir)/gl/m4/getaddrinfo.m4 \
 	$(top_srcdir)/gl/m4/gethostname.m4 \
 	$(top_srcdir)/gl/m4/getloadavg.m4 \
 	$(top_srcdir)/gl/m4/getopt.m4 $(top_srcdir)/gl/m4/gettext.m4 \
+	$(top_srcdir)/gl/m4/glibc21.m4 \
 	$(top_srcdir)/gl/m4/gnulib-common.m4 \
 	$(top_srcdir)/gl/m4/gnulib-comp.m4 \
-	$(top_srcdir)/gl/m4/iconv.m4 $(top_srcdir)/gl/m4/inet_ntop.m4 \
-	$(top_srcdir)/gl/m4/inline.m4 $(top_srcdir)/gl/m4/intmax_t.m4 \
+	$(top_srcdir)/gl/m4/iconv.m4 \
+	$(top_srcdir)/gl/m4/include_next.m4 \
+	$(top_srcdir)/gl/m4/inet_ntop.m4 $(top_srcdir)/gl/m4/inline.m4 \
+	$(top_srcdir)/gl/m4/intlmacosx.m4 \
+	$(top_srcdir)/gl/m4/intmax_t.m4 \
 	$(top_srcdir)/gl/m4/inttypes_h.m4 \
 	$(top_srcdir)/gl/m4/lib-ld.m4 $(top_srcdir)/gl/m4/lib-link.m4 \
-	$(top_srcdir)/gl/m4/lib-prefix.m4 $(top_srcdir)/gl/m4/lock.m4 \
-	$(top_srcdir)/gl/m4/longdouble.m4 \
+	$(top_srcdir)/gl/m4/lib-prefix.m4 \
+	$(top_srcdir)/gl/m4/localcharset.m4 \
 	$(top_srcdir)/gl/m4/longlong.m4 \
 	$(top_srcdir)/gl/m4/ls-mntd-fs.m4 \
-	$(top_srcdir)/gl/m4/mbchar.m4 $(top_srcdir)/gl/m4/mbiter.m4 \
-	$(top_srcdir)/gl/m4/mbrtowc.m4 $(top_srcdir)/gl/m4/memchr.m4 \
-	$(top_srcdir)/gl/m4/minmax.m4 $(top_srcdir)/gl/m4/mountlist.m4 \
+	$(top_srcdir)/gl/m4/malloc.m4 $(top_srcdir)/gl/m4/math_h.m4 \
+	$(top_srcdir)/gl/m4/mbstate_t.m4 \
+	$(top_srcdir)/gl/m4/mountlist.m4 \
 	$(top_srcdir)/gl/m4/netinet_in_h.m4 $(top_srcdir)/gl/m4/nls.m4 \
 	$(top_srcdir)/gl/m4/onceonly_2_57.m4 $(top_srcdir)/gl/m4/po.m4 \
 	$(top_srcdir)/gl/m4/progtest.m4 $(top_srcdir)/gl/m4/regex.m4 \
@@ -78,21 +83,21 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
 	$(top_srcdir)/gl/m4/snprintf.m4 $(top_srcdir)/gl/m4/socklen.m4 \
 	$(top_srcdir)/gl/m4/sockpfaf.m4 $(top_srcdir)/gl/m4/ssize_t.m4 \
 	$(top_srcdir)/gl/m4/stdbool.m4 $(top_srcdir)/gl/m4/stdint.m4 \
-	$(top_srcdir)/gl/m4/stdint_h.m4 $(top_srcdir)/gl/m4/strcase.m4 \
-	$(top_srcdir)/gl/m4/strdup.m4 $(top_srcdir)/gl/m4/strndup.m4 \
+	$(top_srcdir)/gl/m4/stdint_h.m4 $(top_srcdir)/gl/m4/stdio_h.m4 \
+	$(top_srcdir)/gl/m4/stdlib_h.m4 $(top_srcdir)/gl/m4/strdup.m4 \
+	$(top_srcdir)/gl/m4/strerror.m4 \
+	$(top_srcdir)/gl/m4/string_h.m4 $(top_srcdir)/gl/m4/strndup.m4 \
 	$(top_srcdir)/gl/m4/strnlen.m4 \
 	$(top_srcdir)/gl/m4/sys_socket_h.m4 \
-	$(top_srcdir)/gl/m4/ulonglong.m4 \
 	$(top_srcdir)/gl/m4/unistd-safer.m4 \
 	$(top_srcdir)/gl/m4/unistd_h.m4 \
 	$(top_srcdir)/gl/m4/vasnprintf.m4 \
 	$(top_srcdir)/gl/m4/vasprintf.m4 \
 	$(top_srcdir)/gl/m4/vsnprintf.m4 $(top_srcdir)/gl/m4/wchar.m4 \
 	$(top_srcdir)/gl/m4/wchar_t.m4 $(top_srcdir)/gl/m4/wctype.m4 \
-	$(top_srcdir)/gl/m4/wcwidth.m4 $(top_srcdir)/gl/m4/wint_t.m4 \
-	$(top_srcdir)/gl/m4/xalloc.m4 $(top_srcdir)/gl/m4/xsize.m4 \
-	$(top_srcdir)/gl/m4/xstrndup.m4 $(top_srcdir)/acinclude.m4 \
-	$(top_srcdir)/configure.in
+	$(top_srcdir)/gl/m4/wint_t.m4 $(top_srcdir)/gl/m4/xalloc.m4 \
+	$(top_srcdir)/gl/m4/xsize.m4 $(top_srcdir)/gl/m4/xstrndup.m4 \
+	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
@@ -102,8 +107,12 @@ LIBRARIES = $(noinst_LIBRARIES)
 ARFLAGS = cru
 libnagiosplug_a_AR = $(AR) $(ARFLAGS)
 libnagiosplug_a_LIBADD =
+am__libnagiosplug_a_SOURCES_DIST = utils_base.c utils_disk.c \
+	utils_tcp.c utils_cmd.c parse_ini.c extra_opts.c
+@USE_PARSE_INI_TRUE@am__objects_1 = parse_ini.$(OBJEXT) \
+@USE_PARSE_INI_TRUE@	extra_opts.$(OBJEXT)
 am_libnagiosplug_a_OBJECTS = utils_base.$(OBJEXT) utils_disk.$(OBJEXT) \
-	utils_tcp.$(OBJEXT) utils_cmd.$(OBJEXT) base64.$(OBJEXT)
+	utils_tcp.$(OBJEXT) utils_cmd.$(OBJEXT) $(am__objects_1)
 libnagiosplug_a_OBJECTS = $(am_libnagiosplug_a_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/build-aux/depcomp
@@ -117,7 +126,7 @@ CCLD = $(CC)
 LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 SOURCES = $(libnagiosplug_a_SOURCES)
-DIST_SOURCES = $(libnagiosplug_a_SOURCES)
+DIST_SOURCES = $(am__libnagiosplug_a_SOURCES_DIST)
 RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
 	html-recursive info-recursive install-data-recursive \
 	install-exec-recursive install-info-recursive \
@@ -129,10 +138,6 @@ CTAGS = ctags
 DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 INSTALL = @INSTALL@
-ABSOLUTE_STDINT_H = @ABSOLUTE_STDINT_H@
-ABSOLUTE_UNISTD_H = @ABSOLUTE_UNISTD_H@
-ABSOLUTE_WCHAR_H = @ABSOLUTE_WCHAR_H@
-ABSOLUTE_WCTYPE_H = @ABSOLUTE_WCTYPE_H@
 ACLOCAL = @ACLOCAL@
 ALLOCA = @ALLOCA@
 ALLOCA_H = @ALLOCA_H@
@@ -177,27 +182,177 @@ EXTRA_NETOBJS = @EXTRA_NETOBJS@
 EXTRA_TEST = @EXTRA_TEST@
 F77 = @F77@
 FFLAGS = @FFLAGS@
+FLOAT_H = @FLOAT_H@
+FLOORF_LIBM = @FLOORF_LIBM@
 GETLOADAVG_LIBS = @GETLOADAVG_LIBS@
 GETOPT_H = @GETOPT_H@
+GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
+GLIBC21 = @GLIBC21@
 GL_COND_LIBTOOL_FALSE = @GL_COND_LIBTOOL_FALSE@
 GL_COND_LIBTOOL_TRUE = @GL_COND_LIBTOOL_TRUE@
 GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
+GNULIB_CALLOC_POSIX = @GNULIB_CALLOC_POSIX@
+GNULIB_CEILF = @GNULIB_CEILF@
+GNULIB_CEILL = @GNULIB_CEILL@
+GNULIB_CHOWN = @GNULIB_CHOWN@
+GNULIB_DUP2 = @GNULIB_DUP2@
+GNULIB_FCHDIR = @GNULIB_FCHDIR@
+GNULIB_FFLUSH = @GNULIB_FFLUSH@
+GNULIB_FLOORF = @GNULIB_FLOORF@
+GNULIB_FLOORL = @GNULIB_FLOORL@
+GNULIB_FOPEN = @GNULIB_FOPEN@
+GNULIB_FPRINTF_POSIX = @GNULIB_FPRINTF_POSIX@
+GNULIB_FREOPEN = @GNULIB_FREOPEN@
+GNULIB_FREXP = @GNULIB_FREXP@
+GNULIB_FREXPL = @GNULIB_FREXPL@
+GNULIB_FSEEK = @GNULIB_FSEEK@
+GNULIB_FSEEKO = @GNULIB_FSEEKO@
+GNULIB_FTELL = @GNULIB_FTELL@
+GNULIB_FTELLO = @GNULIB_FTELLO@
+GNULIB_FTRUNCATE = @GNULIB_FTRUNCATE@
+GNULIB_GETCWD = @GNULIB_GETCWD@
+GNULIB_GETDELIM = @GNULIB_GETDELIM@
+GNULIB_GETLINE = @GNULIB_GETLINE@
+GNULIB_GETLOGIN_R = @GNULIB_GETLOGIN_R@
+GNULIB_GETPAGESIZE = @GNULIB_GETPAGESIZE@
+GNULIB_GETSUBOPT = @GNULIB_GETSUBOPT@
+GNULIB_ISFINITE = @GNULIB_ISFINITE@
+GNULIB_LCHOWN = @GNULIB_LCHOWN@
+GNULIB_LDEXPL = @GNULIB_LDEXPL@
+GNULIB_LSEEK = @GNULIB_LSEEK@
+GNULIB_MALLOC_POSIX = @GNULIB_MALLOC_POSIX@
+GNULIB_MATHL = @GNULIB_MATHL@
+GNULIB_MBSCASECMP = @GNULIB_MBSCASECMP@
+GNULIB_MBSCASESTR = @GNULIB_MBSCASESTR@
+GNULIB_MBSCHR = @GNULIB_MBSCHR@
+GNULIB_MBSCSPN = @GNULIB_MBSCSPN@
+GNULIB_MBSLEN = @GNULIB_MBSLEN@
+GNULIB_MBSNCASECMP = @GNULIB_MBSNCASECMP@
+GNULIB_MBSNLEN = @GNULIB_MBSNLEN@
+GNULIB_MBSPBRK = @GNULIB_MBSPBRK@
+GNULIB_MBSPCASECMP = @GNULIB_MBSPCASECMP@
+GNULIB_MBSRCHR = @GNULIB_MBSRCHR@
+GNULIB_MBSSEP = @GNULIB_MBSSEP@
+GNULIB_MBSSPN = @GNULIB_MBSSPN@
+GNULIB_MBSSTR = @GNULIB_MBSSTR@
+GNULIB_MBSTOK_R = @GNULIB_MBSTOK_R@
+GNULIB_MEMMEM = @GNULIB_MEMMEM@
+GNULIB_MEMPCPY = @GNULIB_MEMPCPY@
+GNULIB_MEMRCHR = @GNULIB_MEMRCHR@
+GNULIB_MKDTEMP = @GNULIB_MKDTEMP@
+GNULIB_MKSTEMP = @GNULIB_MKSTEMP@
+GNULIB_PRINTF_POSIX = @GNULIB_PRINTF_POSIX@
+GNULIB_PUTENV = @GNULIB_PUTENV@
+GNULIB_READLINK = @GNULIB_READLINK@
+GNULIB_REALLOC_POSIX = @GNULIB_REALLOC_POSIX@
+GNULIB_ROUND = @GNULIB_ROUND@
+GNULIB_ROUNDF = @GNULIB_ROUNDF@
+GNULIB_ROUNDL = @GNULIB_ROUNDL@
+GNULIB_SETENV = @GNULIB_SETENV@
+GNULIB_SIGNBIT = @GNULIB_SIGNBIT@
+GNULIB_SLEEP = @GNULIB_SLEEP@
+GNULIB_SNPRINTF = @GNULIB_SNPRINTF@
+GNULIB_SPRINTF_POSIX = @GNULIB_SPRINTF_POSIX@
+GNULIB_STPCPY = @GNULIB_STPCPY@
+GNULIB_STPNCPY = @GNULIB_STPNCPY@
+GNULIB_STRCASESTR = @GNULIB_STRCASESTR@
+GNULIB_STRCHRNUL = @GNULIB_STRCHRNUL@
+GNULIB_STRDUP = @GNULIB_STRDUP@
+GNULIB_STRERROR = @GNULIB_STRERROR@
+GNULIB_STRNDUP = @GNULIB_STRNDUP@
+GNULIB_STRNLEN = @GNULIB_STRNLEN@
+GNULIB_STRPBRK = @GNULIB_STRPBRK@
+GNULIB_STRSEP = @GNULIB_STRSEP@
+GNULIB_STRSIGNAL = @GNULIB_STRSIGNAL@
+GNULIB_STRSTR = @GNULIB_STRSTR@
+GNULIB_STRTOK_R = @GNULIB_STRTOK_R@
+GNULIB_TRUNC = @GNULIB_TRUNC@
+GNULIB_TRUNCF = @GNULIB_TRUNCF@
+GNULIB_TRUNCL = @GNULIB_TRUNCL@
+GNULIB_UNSETENV = @GNULIB_UNSETENV@
+GNULIB_VASPRINTF = @GNULIB_VASPRINTF@
+GNULIB_VFPRINTF_POSIX = @GNULIB_VFPRINTF_POSIX@
+GNULIB_VPRINTF_POSIX = @GNULIB_VPRINTF_POSIX@
+GNULIB_VSNPRINTF = @GNULIB_VSNPRINTF@
+GNULIB_VSPRINTF_POSIX = @GNULIB_VSPRINTF_POSIX@
+GNULIB_WCWIDTH = @GNULIB_WCWIDTH@
 GREP = @GREP@
+HAVE_CALLOC_POSIX = @HAVE_CALLOC_POSIX@
+HAVE_DECL_ACOSL = @HAVE_DECL_ACOSL@
+HAVE_DECL_ASINL = @HAVE_DECL_ASINL@
+HAVE_DECL_ATANL = @HAVE_DECL_ATANL@
+HAVE_DECL_COSL = @HAVE_DECL_COSL@
+HAVE_DECL_EXPL = @HAVE_DECL_EXPL@
+HAVE_DECL_FREXPL = @HAVE_DECL_FREXPL@
+HAVE_DECL_GETDELIM = @HAVE_DECL_GETDELIM@
+HAVE_DECL_GETLINE = @HAVE_DECL_GETLINE@
+HAVE_DECL_GETLOGIN_R = @HAVE_DECL_GETLOGIN_R@
+HAVE_DECL_LDEXPL = @HAVE_DECL_LDEXPL@
+HAVE_DECL_LOGL = @HAVE_DECL_LOGL@
+HAVE_DECL_MEMMEM = @HAVE_DECL_MEMMEM@
+HAVE_DECL_MEMRCHR = @HAVE_DECL_MEMRCHR@
+HAVE_DECL_SINL = @HAVE_DECL_SINL@
+HAVE_DECL_SNPRINTF = @HAVE_DECL_SNPRINTF@
+HAVE_DECL_SQRTL = @HAVE_DECL_SQRTL@
+HAVE_DECL_STRDUP = @HAVE_DECL_STRDUP@
+HAVE_DECL_STRERROR = @HAVE_DECL_STRERROR@
+HAVE_DECL_STRNDUP = @HAVE_DECL_STRNDUP@
+HAVE_DECL_STRNLEN = @HAVE_DECL_STRNLEN@
+HAVE_DECL_STRSIGNAL = @HAVE_DECL_STRSIGNAL@
+HAVE_DECL_STRTOK_R = @HAVE_DECL_STRTOK_R@
+HAVE_DECL_TANL = @HAVE_DECL_TANL@
+HAVE_DECL_TRUNC = @HAVE_DECL_TRUNC@
+HAVE_DECL_TRUNCF = @HAVE_DECL_TRUNCF@
+HAVE_DECL_TRUNCL = @HAVE_DECL_TRUNCL@
+HAVE_DECL_VSNPRINTF = @HAVE_DECL_VSNPRINTF@
+HAVE_DECL_WCWIDTH = @HAVE_DECL_WCWIDTH@
+HAVE_DUP2 = @HAVE_DUP2@
+HAVE_FSEEKO = @HAVE_FSEEKO@
+HAVE_FTELLO = @HAVE_FTELLO@
+HAVE_FTRUNCATE = @HAVE_FTRUNCATE@
+HAVE_GETPAGESIZE = @HAVE_GETPAGESIZE@
+HAVE_GETSUBOPT = @HAVE_GETSUBOPT@
 HAVE_INTTYPES_H = @HAVE_INTTYPES_H@
+HAVE_ISWCNTRL = @HAVE_ISWCNTRL@
 HAVE_LONG_LONG_INT = @HAVE_LONG_LONG_INT@
+HAVE_MALLOC_POSIX = @HAVE_MALLOC_POSIX@
+HAVE_MEMPCPY = @HAVE_MEMPCPY@
+HAVE_MKDTEMP = @HAVE_MKDTEMP@
+HAVE_NETINET_IN_H = @HAVE_NETINET_IN_H@
+HAVE_OS_H = @HAVE_OS_H@
+HAVE_READLINK = @HAVE_READLINK@
+HAVE_REALLOC_POSIX = @HAVE_REALLOC_POSIX@
+HAVE_SETENV = @HAVE_SETENV@
 HAVE_SIGNED_SIG_ATOMIC_T = @HAVE_SIGNED_SIG_ATOMIC_T@
 HAVE_SIGNED_WCHAR_T = @HAVE_SIGNED_WCHAR_T@
 HAVE_SIGNED_WINT_T = @HAVE_SIGNED_WINT_T@
+HAVE_SLEEP = @HAVE_SLEEP@
 HAVE_STDINT_H = @HAVE_STDINT_H@
+HAVE_STPCPY = @HAVE_STPCPY@
+HAVE_STPNCPY = @HAVE_STPNCPY@
+HAVE_STRCASESTR = @HAVE_STRCASESTR@
+HAVE_STRCHRNUL = @HAVE_STRCHRNUL@
+HAVE_STRNDUP = @HAVE_STRNDUP@
+HAVE_STRPBRK = @HAVE_STRPBRK@
+HAVE_STRSEP = @HAVE_STRSEP@
 HAVE_SYS_BITYPES_H = @HAVE_SYS_BITYPES_H@
 HAVE_SYS_INTTYPES_H = @HAVE_SYS_INTTYPES_H@
+HAVE_SYS_PARAM_H = @HAVE_SYS_PARAM_H@
+HAVE_SYS_SOCKET_H = @HAVE_SYS_SOCKET_H@
 HAVE_SYS_TYPES_H = @HAVE_SYS_TYPES_H@
+HAVE_UNISTD_H = @HAVE_UNISTD_H@
+HAVE_UNSETENV = @HAVE_UNSETENV@
 HAVE_UNSIGNED_LONG_LONG_INT = @HAVE_UNSIGNED_LONG_LONG_INT@
+HAVE_VASPRINTF = @HAVE_VASPRINTF@
+HAVE_WCHAR_H = @HAVE_WCHAR_H@
 HAVE_WCTYPE_H = @HAVE_WCTYPE_H@
+HAVE_WINSOCK2_H = @HAVE_WINSOCK2_H@
 HAVE_WINT_T = @HAVE_WINT_T@
+HAVE_WS2TCPIP_H = @HAVE_WS2TCPIP_H@
 HAVE__BOOL = @HAVE__BOOL@
 HOSTNAME = @HOSTNAME@
+INCLUDE_NEXT = @INCLUDE_NEXT@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -218,6 +373,7 @@ LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
+LOCALCHARSET_TESTS_ENVIRONMENT = @LOCALCHARSET_TESTS_ENVIRONMENT@
 LTLIBICONV = @LTLIBICONV@
 LTLIBINTL = @LTLIBINTL@
 LTLIBOBJS = @LTLIBOBJS@
@@ -231,6 +387,17 @@ MYSQLINCLUDE = @MYSQLINCLUDE@
 MYSQLLIBS = @MYSQLLIBS@
 NEED_SETGID = @NEED_SETGID@
 NETINET_IN_H = @NETINET_IN_H@
+NEXT_FLOAT_H = @NEXT_FLOAT_H@
+NEXT_MATH_H = @NEXT_MATH_H@
+NEXT_NETINET_IN_H = @NEXT_NETINET_IN_H@
+NEXT_STDINT_H = @NEXT_STDINT_H@
+NEXT_STDIO_H = @NEXT_STDIO_H@
+NEXT_STDLIB_H = @NEXT_STDLIB_H@
+NEXT_STRING_H = @NEXT_STRING_H@
+NEXT_SYS_SOCKET_H = @NEXT_SYS_SOCKET_H@
+NEXT_UNISTD_H = @NEXT_UNISTD_H@
+NEXT_WCHAR_H = @NEXT_WCHAR_H@
+NEXT_WCTYPE_H = @NEXT_WCTYPE_H@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
@@ -269,11 +436,56 @@ PKG_ARCH = @PKG_ARCH@
 PLUGIN_TEST = @PLUGIN_TEST@
 POSUB = @POSUB@
 POW_LIB = @POW_LIB@
+PST3CFLAGS = @PST3CFLAGS@
 PTRDIFF_T_SUFFIX = @PTRDIFF_T_SUFFIX@
 PYTHON = @PYTHON@
 RADIUSLIBS = @RADIUSLIBS@
 RANLIB = @RANLIB@
 RELEASE = @RELEASE@
+REPLACE_CEILF = @REPLACE_CEILF@
+REPLACE_CEILL = @REPLACE_CEILL@
+REPLACE_CHOWN = @REPLACE_CHOWN@
+REPLACE_FCHDIR = @REPLACE_FCHDIR@
+REPLACE_FFLUSH = @REPLACE_FFLUSH@
+REPLACE_FLOORF = @REPLACE_FLOORF@
+REPLACE_FLOORL = @REPLACE_FLOORL@
+REPLACE_FOPEN = @REPLACE_FOPEN@
+REPLACE_FPRINTF = @REPLACE_FPRINTF@
+REPLACE_FREOPEN = @REPLACE_FREOPEN@
+REPLACE_FREXP = @REPLACE_FREXP@
+REPLACE_FREXPL = @REPLACE_FREXPL@
+REPLACE_FSEEK = @REPLACE_FSEEK@
+REPLACE_FSEEKO = @REPLACE_FSEEKO@
+REPLACE_FTELL = @REPLACE_FTELL@
+REPLACE_FTELLO = @REPLACE_FTELLO@
+REPLACE_GETCWD = @REPLACE_GETCWD@
+REPLACE_GETLINE = @REPLACE_GETLINE@
+REPLACE_GETPAGESIZE = @REPLACE_GETPAGESIZE@
+REPLACE_ISFINITE = @REPLACE_ISFINITE@
+REPLACE_LCHOWN = @REPLACE_LCHOWN@
+REPLACE_LDEXPL = @REPLACE_LDEXPL@
+REPLACE_LSEEK = @REPLACE_LSEEK@
+REPLACE_MEMMEM = @REPLACE_MEMMEM@
+REPLACE_MKSTEMP = @REPLACE_MKSTEMP@
+REPLACE_PRINTF = @REPLACE_PRINTF@
+REPLACE_PUTENV = @REPLACE_PUTENV@
+REPLACE_ROUND = @REPLACE_ROUND@
+REPLACE_ROUNDF = @REPLACE_ROUNDF@
+REPLACE_ROUNDL = @REPLACE_ROUNDL@
+REPLACE_SIGNBIT = @REPLACE_SIGNBIT@
+REPLACE_SIGNBIT_USING_GCC = @REPLACE_SIGNBIT_USING_GCC@
+REPLACE_SNPRINTF = @REPLACE_SNPRINTF@
+REPLACE_SPRINTF = @REPLACE_SPRINTF@
+REPLACE_STRCASESTR = @REPLACE_STRCASESTR@
+REPLACE_STRERROR = @REPLACE_STRERROR@
+REPLACE_STRSIGNAL = @REPLACE_STRSIGNAL@
+REPLACE_STRSTR = @REPLACE_STRSTR@
+REPLACE_VASPRINTF = @REPLACE_VASPRINTF@
+REPLACE_VFPRINTF = @REPLACE_VFPRINTF@
+REPLACE_VPRINTF = @REPLACE_VPRINTF@
+REPLACE_VSNPRINTF = @REPLACE_VSNPRINTF@
+REPLACE_VSPRINTF = @REPLACE_VSPRINTF@
+REPLACE_WCWIDTH = @REPLACE_WCWIDTH@
 REV_DATESTAMP = @REV_DATESTAMP@
 REV_TIMESTAMP = @REV_TIMESTAMP@
 SCRIPT_TEST = @SCRIPT_TEST@
@@ -290,9 +502,11 @@ STDINT_H = @STDINT_H@
 STRIP = @STRIP@
 SUPPORT = @SUPPORT@
 SYS_SOCKET_H = @SYS_SOCKET_H@
-UNISTD_H = @UNISTD_H@
 USE_NLS = @USE_NLS@
+USE_PARSE_INI_FALSE = @USE_PARSE_INI_FALSE@
+USE_PARSE_INI_TRUE = @USE_PARSE_INI_TRUE@
 VERSION = @VERSION@
+VOID_UNSETENV = @VOID_UNSETENV@
 WARRANTY = @WARRANTY@
 WCHAR_H = @WCHAR_H@
 WCHAR_T_SUFFIX = @WCHAR_T_SUFFIX@
@@ -300,6 +514,7 @@ WCTYPE_H = @WCTYPE_H@
 WINT_T_SUFFIX = @WINT_T_SUFFIX@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
+XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
 ac_ct_CC = @ac_ct_CC@
 ac_ct_CXX = @ac_ct_CXX@
 ac_ct_F77 = @ac_ct_F77@
@@ -326,6 +541,8 @@ dvidir = @dvidir@
 exec_prefix = @exec_prefix@
 gl_LIBOBJS = @gl_LIBOBJS@
 gl_LTLIBOBJS = @gl_LTLIBOBJS@
+gltests_LIBOBJS = @gltests_LIBOBJS@
+gltests_LTLIBOBJS = @gltests_LTLIBOBJS@
 host = @host@
 host_alias = @host_alias@
 host_cpu = @host_cpu@
@@ -354,8 +571,9 @@ target_alias = @target_alias@
 with_trusted_path = @with_trusted_path@
 SUBDIRS = tests
 noinst_LIBRARIES = libnagiosplug.a
-libnagiosplug_a_SOURCES = utils_base.c utils_disk.c utils_tcp.c utils_cmd.c base64.c
-EXTRA_DIST = utils_base.h utils_disk.h utils_tcp.h utils_cmd.h base64.h
+libnagiosplug_a_SOURCES = utils_base.c utils_disk.c utils_tcp.c \
+	utils_cmd.c $(am__append_1)
+EXTRA_DIST = utils_base.h utils_disk.h utils_tcp.h utils_cmd.h parse_ini.h extra_opts.h
 INCLUDES = -I$(srcdir) -I$(top_srcdir)/gl -I$(top_srcdir)/intl -I$(top_srcdir)/plugins
 all: all-recursive
 
@@ -404,7 +622,8 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/base64.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/extra_opts.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parse_ini.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils_base.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils_cmd.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils_disk.Po@am__quote@

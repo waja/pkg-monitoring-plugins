@@ -2,7 +2,7 @@
 #
 # Domain Name Server (DNS) Tests via check_dns
 #
-# $Id: check_dns.t 1361 2006-03-29 08:13:29Z tonvoon $
+# $Id: check_dns.t 1902 2008-01-08 16:05:36Z tonvoon $
 #
 
 use strict;
@@ -18,19 +18,19 @@ my $successOutput = '/DNS OK: [\.0-9]+ seconds? response time/';
 my $hostname_valid = getTestParameter( 
 			"NP_HOSTNAME_VALID",
 			"A valid (known to DNS) hostname",
-			"apple.com"
+			"nagios.com"
 			);
 
 my $hostname_valid_ip = getTestParameter(
 			"NP_HOSTNAME_VALID_IP",
 			"The IP address of the valid hostname $hostname_valid",
-			"17.254.3.183"
+			"66.118.156.50",
 			);
 
 my $hostname_valid_reverse = getTestParameter(
 			"NP_HOSTNAME_VALID_REVERSE",
 			"The hostname of $hostname_valid_ip",
-			$hostname_valid."."
+			"66-118-156-50.static.sagonet.net.",
 			);
 
 my $hostname_invalid = getTestParameter( 

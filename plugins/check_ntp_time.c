@@ -1,48 +1,45 @@
-/******************************************************************************
-*
+/*****************************************************************************
+* 
 * Nagios check_ntp_time plugin
-*
+* 
 * License: GPL
-* Copyright (c) 2006 sean finney <seanius@seanius.net>
-* Copyright (c) 2007 nagios-plugins team
-*
-* Last Modified: $Date: 2007-12-11 05:57:35 +0000 (Tue, 11 Dec 2007) $
-*
+* Copyright (c) 2006 Sean Finney <seanius@seanius.net>
+* Copyright (c) 2006-2008 Nagios Plugins Development Team
+* 
+* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
+* 
 * Description:
-*
+* 
 * This file contains the check_ntp_time plugin
-*
-*  This plugin checks the clock offset between the local host and a
-*  remote NTP server. It is independent of any commandline programs or
-*  external libraries.
-*
-*  If you'd rather want to monitor an NTP server, please use
-*  check_ntp_peer.
-*
-*
-* License Information:
-*
-* This program is free software; you can redistribute it and/or modify
+* 
+* This plugin checks the clock offset between the local host and a
+* remote NTP server. It is independent of any commandline programs or
+* external libraries.
+* 
+* If you'd rather want to monitor an NTP server, please use
+* check_ntp_peer.
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 2 of the License, or
+* the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-*
+* 
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-*
+* 
 * You should have received a copy of the GNU General Public License
-* along with this program; if not, write to the Free Software
-* Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-
- $Id: check_ntp_time.c 1861 2007-12-11 05:57:35Z dermoth $
- 
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: check_ntp_time.c 1991 2008-05-07 10:02:42Z dermoth $
+* 
 *****************************************************************************/
 
 const char *progname = "check_ntp_time";
-const char *revision = "$Revision: 1861 $";
-const char *copyright = "2007";
+const char *revision = "$Revision: 1991 $";
+const char *copyright = "2006-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -247,50 +244,52 @@ void setup_request(ntp_message *p){
  * this is done by filtering servers based on stratum, dispersion, and
  * finally round-trip delay. */
 int best_offset_server(const ntp_server_results *slist, int nservers){
-	int i=0, j=0, cserver=0, candidates[5], csize=0;
+	int i=0, cserver=0, best_server=-1;
 
 	/* for each server */
 	for(cserver=0; cserver<nservers; cserver++){
-		/* sort out servers with error flags */
-		if ( LI(slist[cserver].flags) != LI_NOWARNING ){
-			if (verbose) printf("discarding peer id %d: flags=%d\n", cserver, LI(slist[cserver].flags));
-			break;
+		/* We don't want any servers that fails these tests */
+		/* Sort out servers that didn't respond or responede with a 0 stratum;
+		 * stratum 0 is for reference clocks so no NTP server should ever report
+		 * a stratum 0 */
+		if ( slist[cserver].stratum == 0){
+			if (verbose) printf("discarding peer %d: stratum=%d\n", cserver, slist[cserver].stratum);
+			continue;
+		}
+		/* Sort out servers with error flags */
+		if ( LI(slist[cserver].flags) == LI_ALARM ){
+			if (verbose) printf("discarding peer %d: flags=%d\n", cserver, LI(slist[cserver].flags));
+			continue;
 		}
 
-		/* compare it to each of the servers already in the candidate list */
-		for(i=0; i<csize; i++){
-			/* does it have an equal or better stratum? */
-			if(slist[cserver].stratum <= slist[i].stratum){
-				/* does it have an equal or better dispersion? */
-				if(slist[cserver].rtdisp <= slist[i].rtdisp){
-					/* does it have a better rtdelay? */
-					if(slist[cserver].rtdelay < slist[i].rtdelay){
-						break;
-					}
+		/* If we don't have a server yet, use the first one */
+		if (best_server == -1) {
+			best_server = cserver;
+			DBG(printf("using peer %d as our first candidate\n", best_server));
+			continue;
+		}
+
+		/* compare the server to the best one we've seen so far */
+		/* does it have an equal or better stratum? */
+		DBG(printf("comparing peer %d with peer %d\n", cserver, best_server));
+		if(slist[cserver].stratum <= slist[best_server].stratum){
+			DBG(printf("stratum for peer %d <= peer %d\n", cserver, best_server));
+			/* does it have an equal or better dispersion? */
+			if(slist[cserver].rtdisp <= slist[best_server].rtdisp){
+				DBG(printf("dispersion for peer %d <= peer %d\n", cserver, best_server));
+				/* does it have a better rtdelay? */
+				if(slist[cserver].rtdelay < slist[best_server].rtdelay){
+					DBG(printf("rtdelay for peer %d < peer %d\n", cserver, best_server));
+					best_server = cserver;
+					DBG(printf("peer %d is now our best candidate\n", best_server));
 				}
 			}
 		}
-
-		/* if we haven't reached the current list's end, move everyone
-		 * over one to the right, and insert the new candidate */
-		if(i<csize){
-			for(j=5; j>i; j--){
-				candidates[j]=candidates[j-1];
-			}
-		}
-		/* regardless, if they should be on the list... */
-		if(i<5) {
-			candidates[i]=cserver;
-			if(csize<5) csize++;
-		/* otherwise discard the server */
-		} else {
-			DBG(printf("discarding peer id %d\n", cserver));
-		}
 	}
 
-	if(csize>0) {
-		DBG(printf("best server selected: peer %d\n", candidates[0]));
-		return candidates[0];
+	if(best_server >= 0) {
+		DBG(printf("best server selected: peer %d\n", best_server));
+		return best_server;
 	} else {
 		DBG(printf("no peers meeting synchronization criteria :(\n"));
 		return -1;
@@ -337,6 +336,7 @@ double offset_request(const char *host, int *status){
 	servers=(ntp_server_results*)malloc(sizeof(ntp_server_results)*num_hosts);
 	if(servers==NULL) die(STATE_UNKNOWN, "can not allocate server array");
 	memset(servers, 0, sizeof(ntp_server_results)*num_hosts);
+	DBG(printf("Found %d peers to check\n", num_hosts));
 
 	/* setup each socket for writing, and the corresponding struct pollfd */
 	ai_tmp=ai;
@@ -540,6 +540,9 @@ int main(int argc, char *argv[]){
 
 	result = offset_result = STATE_OK;
 
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
+
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
@@ -597,6 +600,7 @@ void print_help(void){
 
 	print_usage();
 	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 	printf (_(UT_HOST_PORT), 'p', "123");
 	printf (" %s\n", "-q, --quiet");
 	printf ("    %s\n", _("Returns UNKNOWN instead of CRITICAL if offset cannot be found"));
@@ -608,16 +612,20 @@ void print_help(void){
 	printf (_(UT_VERBOSE));
 
 	printf("\n");
-	printf("%s\n", _("Notes:"));
-	printf(" %s\n", _("This plugin checks the clock offset between the local host and a"));
-	printf(" %s\n", _("remote NTP server. It is independent of any commandline programs or"));
-	printf(" %s\n\n", _("external libraries."));
-	printf(" %s\n", _("If you'd rather want to monitor an NTP server, please use"));
-	printf(" %s\n\n", _("check_ntp_peer."));
+	printf("%s\n", _("This plugin checks the clock offset between the local host and a"));
+	printf("%s\n", _("remote NTP server. It is independent of any commandline programs or"));
+	printf("%s\n", _("external libraries."));
 
-	printf(" %s\n", _("See:"));
-	printf(" %s\n", ("http://nagiosplug.sourceforge.net/developer-guidelines.html#THRESHOLDFORMAT"));
-	printf(" %s\n", _("for THRESHOLD format and examples."));
+	printf("\n");
+	printf("%s\n", _("Notes:"));
+	printf(" %s\n", _("If you'd rather want to monitor an NTP server, please use"));
+	printf(" %s\n", _("check_ntp_peer."));
+	printf("\n");
+	printf(_(UT_THRESHOLDS_NOTES));
+#ifdef NP_EXTRA_OPTS
+	printf("\n");
+	printf(_(UT_EXTRA_OPTS_NOTES));
+#endif
 
 	printf("\n");
 	printf("%s\n", _("Examples:"));
@@ -630,7 +638,6 @@ void
 print_usage(void)
 {
 	printf (_("Usage:"));
-	printf(" %s -H <host> [-w <warn>] [-c <crit>] [-W <warn>] [-C <crit>]\n", progname);
-	printf("       [-j <warn>] [-k <crit>] [-v verbose]\n");
+	printf(" %s -H <host> [-w <warn>] [-c <crit>] [-v verbose]\n", progname);
 }
 

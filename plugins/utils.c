@@ -1,16 +1,30 @@
 /*****************************************************************************
- *
- * utils.c
- *
- * Library of useful functions for plugins
- *
- * Copyright (c) 2000 Karl DeBisschop (karl@debisschop.net)
- * Copyright (c) 2006 Nagios Plugin Development Team
- * License: GPL
- *
- * $Revision: 1829 $
- * $Date: 2007-11-23 04:18:16 +0000 (Fri, 23 Nov 2007) $
- ****************************************************************************/
+* 
+* Library of useful functions for plugins
+* 
+* License: GPL
+* Copyright (c) 2000 Karl DeBisschop (karl@debisschop.net)
+* Copyright (c) 2002-2007 Nagios Plugin Development Team
+* 
+* Last Modified: $Date: 2008-01-31 11:27:22 +0000 (Thu, 31 Jan 2008) $
+* 
+* 
+* This program is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 3 of the License, or
+* (at your option) any later version.
+* 
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+* 
+* You should have received a copy of the GNU General Public License
+* along with this program.  If not, see <http://www.gnu.org/licenses/>.
+* 
+* $Id: utils.c 1918 2008-01-31 11:27:22Z dermoth $
+* 
+*****************************************************************************/
 
 #define LOCAL_TIMEOUT_ALARM_HANDLER
 
