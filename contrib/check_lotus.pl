@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 
-# $Id: check_lotus.pl,v 1.1 2005/01/25 09:04:26 stanleyhopcroft Exp $
+# $Id: check_lotus.pl 1096 2005-01-25 09:04:26Z stanleyhopcroft $
 
-# $Log: check_lotus.pl,v $
+# $Log$
 # Revision 1.1  2005/01/25 09:04:26  stanleyhopcroft
 # New plugin to check responsiveness of Louts Notes (v5 at least) servers
 #
@@ -219,7 +219,7 @@ sub print_usage () {
 }
 
 sub print_help () {
-	print_revision($PROGNAME,'$Revision: 1.1 $ ');
+	print_revision($PROGNAME,'$Revision: 1096 $ ');
 	print "Copyright (c) 2004 Ed Rolison/S Hopcroft
 
 Perl Check Lotus Notes plugin for Nagios.
@@ -250,7 +250,7 @@ Returns OK if the named server responds with its name.
 }
 
 sub version () {
-	print_revision($PROGNAME,'$Revision: 1.1 $ ');
+	print_revision($PROGNAME,'$Revision: 1096 $ ');
 	exit $ERRORS{'OK'};
 }
 

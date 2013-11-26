@@ -2,7 +2,7 @@
 #
 # FPing Tests via check_fping
 #
-# $Id: check_fping.t,v 1.2 2005/07/25 01:47:14 illumino Exp $
+# $Id: check_fping.t 1207 2005-07-25 01:47:15Z illumino $
 #
 
 use strict;

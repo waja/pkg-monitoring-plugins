@@ -22,7 +22,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
-# $Id: check_mailq.pl,v 1.7 2006/07/05 13:45:57 tonvoon Exp $
+# $Id: check_mailq.pl 1443 2006-07-05 13:45:57Z tonvoon $
 #
 ############################################################################
 
@@ -522,7 +522,7 @@ sub process_arguments(){
 		 );
 
 	if ($opt_V) {
-		print_revision($PROGNAME,'$Revision: 1.7 $ ');
+		print_revision($PROGNAME,'$Revision: 1443 $ ');
 		exit $ERRORS{'OK'};
 	}
 
@@ -580,7 +580,7 @@ sub print_usage () {
 }
 
 sub print_help () {
-	print_revision($PROGNAME,'$Revision: 1.7 $');
+	print_revision($PROGNAME,'$Revision: 1443 $');
 	print "Copyright (c) 2002 Subhendu Ghosh/Carlos Canau/Benjamin Schmid\n";
 	print "\n";
 	print_usage();

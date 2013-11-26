@@ -2,7 +2,7 @@
 #
 # Wrapper for running the test harnesses
 #
-# $Id: test.pl.in,v 1.3 2005/07/25 01:47:14 illumino Exp $
+# $Id: test.pl.in 1207 2005-07-25 01:47:15Z illumino $
 #
 
 use strict;

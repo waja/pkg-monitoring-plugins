@@ -2,7 +2,7 @@
 #
 # System Time Tests via check_time
 #
-# $Id: check_time.t,v 1.3 2005/11/03 15:04:16 tonvoon Exp $
+# $Id: check_time.t 1270 2005-11-03 15:04:16Z tonvoon $
 #
 
 use strict;

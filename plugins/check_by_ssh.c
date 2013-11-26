@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/01/28 21:46:40 $
+* Last Modified: $Date: 2007-09-23 13:26:03 +0100 (Sun, 23 Sep 2007) $
 *
 * Description:
 *
@@ -27,12 +27,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_by_ssh.c,v 1.41 2007/01/28 21:46:40 hweiss Exp $
+* $Id: check_by_ssh.c 1792 2007-09-23 12:26:03Z psychotrahe $
 * 
 ******************************************************************************/
  
 const char *progname = "check_by_ssh";
-const char *revision = "$Revision: 1.41 $";
+const char *revision = "$Revision: 1792 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -46,9 +46,10 @@ int validate_arguments (void);
 void print_help (void);
 void print_usage (void);
 
-int commands = 0;
-int services = 0;
-int skip = 0;
+unsigned int commands = 0;
+unsigned int services = 0;
+int skip_stdout = 0;
+int skip_stderr = 0;
 char *remotecmd = NULL;
 char *comm = NULL;
 char *hostname = NULL;
@@ -92,17 +93,28 @@ main (int argc, char **argv)
 		printf ("%s\n", comm);
 
 	result = np_runcmd(comm, &chld_out, &chld_err, 0);
-	/* UNKNOWN if output found on stderr */
-	if(chld_err.buflen) {
-		printf(_("Remote command execution failed: %s\n"),
-			   chld_err.buflen ? chld_err.buf : _("Unknown error"));
+
+	if (skip_stdout == -1) /* --skip-stdout specified without argument */
+		skip_stdout = chld_out.lines;
+	if (skip_stderr == -1) /* --skip-stderr specified without argument */
+		skip_stderr = chld_err.lines;
+
+	/* UNKNOWN if (non-skipped) output found on stderr */
+	if(chld_err.lines > skip_stderr) {
+		printf (_("Remote command execution failed: %s\n"),
+		        chld_err.line[skip_stderr]);
 		return STATE_UNKNOWN;
 	}
 
 	/* this is simple if we're not supposed to be passive.
 	 * Wrap up quickly and keep the tricks below */
 	if(!passive) {
-		printf ("%s\n", skip < chld_out.lines ? chld_out.line[skip] : chld_out.buf);
+		if (chld_out.lines > skip_stdout)
+			for (i = skip_stdout; i < chld_out.lines; i++)
+				puts (chld_out.line[i]);
+		else
+			printf (_("%s - check_by_ssh: Remote command '%s' returned status %d\n"),
+			        state_text(result), remotecmd, result);
 		return result; 	/* return error status from remote command */
 	}
 
@@ -119,7 +131,7 @@ main (int argc, char **argv)
 
 	local_time = time (NULL);
 	commands = 0;
-	for(i = skip; chld_out.line[i]; i++) {
+	for(i = skip_stdout; i < chld_out.lines; i++) {
 		status_text = strstr (chld_out.line[i], "STATUS CODE: ");
 		if (status_text == NULL) {
 			printf ("%s", chld_out.line[i]);
@@ -161,7 +173,9 @@ process_arguments (int argc, char **argv)
 		{"user", required_argument, 0, 'u'},
 		{"logname", required_argument, 0, 'l'},
 		{"command", required_argument, 0, 'C'},
-		{"skip", required_argument, 0, 'S'},
+		{"skip", optional_argument, 0, 'S'}, /* backwards compatibility */
+		{"skip-stdout", optional_argument, 0, 'S'},
+		{"skip-stderr", optional_argument, 0, 'E'},
 		{"proto1", no_argument, 0, '1'},
 		{"proto2", no_argument, 0, '2'},
 		{"use-ipv4", no_argument, 0, '4'},
@@ -179,7 +193,7 @@ process_arguments (int argc, char **argv)
 			strcpy (argv[c], "-t");
 
 	while (1) {
-		c = getopt_long (argc, argv, "Vvh1246fqt:H:O:p:i:u:l:C:S:n:s:o:", longopts,
+		c = getopt_long (argc, argv, "Vvh1246fqt:H:O:p:i:u:l:C:S::E::n:s:o:", longopts,
 		                 &option);
 
 		if (c == -1 || c == EOF)
@@ -249,11 +263,21 @@ process_arguments (int argc, char **argv)
 				asprintf (&remotecmd, "%s;echo STATUS CODE: $?;", remotecmd);
 			asprintf (&remotecmd, "%s%s", remotecmd, optarg);
 			break;
-		case 'S':									/* Skip n lines in the output to ignore system banner */
-			if (!is_integer (optarg))
-				usage_va(_("skip lines must be an integer"));
+		case 'S':									/* skip n (or all) lines on stdout */
+			if (optarg == NULL)
+				skip_stdout = -1; /* skip all output on stdout */
+			else if (!is_integer (optarg))
+				usage_va(_("skip-stdout argument must be an integer"));
 			else
-				skip = atoi (optarg);
+				skip_stdout = atoi (optarg);
+			break;
+		case 'E':									/* skip n (or all) lines on stderr */
+			if (optarg == NULL)
+				skip_stderr = -1; /* skip all output on stderr */
+			else if (!is_integer (optarg))
+				usage_va(_("skip-stderr argument must be an integer"));
+			else
+				skip_stderr = atoi (optarg);
 			break;
 		case 'o':									/* Extra options for the ssh command */
 			asprintf (&comm, "%s -%c '%s'", comm, c, optarg);
@@ -333,13 +357,15 @@ print_help (void)
 	printf (_(UT_IPv46));
 
   printf (" %s\n", "-1, --proto1");
-  printf ("    %s\n", _("tell ssh to use Protocol 1"));
+  printf ("    %s\n", _("tell ssh to use Protocol 1 [optional]"));
   printf (" %s\n", "-2, --proto2");
-  printf ("    %s\n", _("tell ssh to use Protocol 2"));
-  printf (" %s\n", "-S, --skiplines=n");
-  printf ("    %s\n", _("Ignore first n lines on STDERR (to suppress a logon banner)"));
+  printf ("    %s\n", _("tell ssh to use Protocol 2 [optional]"));
+  printf (" %s\n", "-S, --skip-stdout[=n]");
+  printf ("    %s\n", _("Ignore all or (if specified) first n lines on STDOUT [optional]"));
+  printf (" %s\n", "-E, --skip-stderr[=n]");
+  printf ("    %s\n", _("Ignore all or (if specified) first n lines on STDERR [optional]"));
   printf (" %s\n", "-f");
-  printf ("    %s\n", _("tells ssh to fork rather than create a tty"));
+  printf ("    %s\n", _("tells ssh to fork rather than create a tty [optional]"));
   printf (" %s\n","-C, --command='COMMAND STRING'");
   printf ("    %s\n", _("command to execute on the remote machine"));
   printf (" %s\n","-l, --logname=USERNAME");
@@ -374,6 +400,7 @@ print_help (void)
   printf (" %s\n", "[1080933700] PROCESS_SERVICE_CHECK_RESULT;flint;c1;0; up 2 days");
   printf (" %s\n", "[1080933700] PROCESS_SERVICE_CHECK_RESULT;flint;c2;0; up 2 days");
   printf (" %s\n", "[1080933700] PROCESS_SERVICE_CHECK_RESULT;flint;c3;0; up 2 days");
+	printf (_(UT_VERBOSE));
 	printf (_(UT_SUPPORT));
 }
 
@@ -383,6 +410,9 @@ void
 print_usage (void)
 {
 	printf (_("Usage:"));
-  printf(" %s [-fq46] [-t timeout] [-i identity] [-l user] -H <host> -C <command>",progname);
-  printf(" [-n name] [-s servicelist] [-O outputfile] [-p port] [-o ssh-option]\n");
+	printf (" %s -H <host> -C <command> [-fqv] [-1|-2] [-4|-6]\n"
+	        "       [-S [lines]] [-E [lines]] [-t timeout] [-i identity]\n"
+	        "       [-l user] [-n name] [-s servicelist] [-O outputfile]\n"
+	        "       [-p port] [-o ssh-option]\n",
+	        progname);
 }

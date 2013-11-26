@@ -46,6 +46,8 @@ check_radius:
 	- Requires the radiusclient library available from
 	  ftp://ftp.cityline.net/pub/radiusclient/
 		RPM (rpmfind): radiusclient 0.3.2, radiusclient-devel-0.3.2
+	- Alternatively radiusclient-ng can be used:
+	  http://developer.berlios.de/projects/radiusclient-ng/
 
 check_snmp:
 	- Requires the NET-SNMP package available from
@@ -66,6 +68,9 @@ check_nt:
 check_ups:
 	- Requires Network UPS Tools (>= 1.4) to run on the server to monitor
 	  http://www.networkupstools.org/
+
+check_ide_smart:
+	- Uses the Linux specific SMART interface [http://smartlinux.sourceforge.net/smart/index.php]. 
 
 OS Specific Issues
 ------------------

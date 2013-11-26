@@ -8,7 +8,7 @@
 
 #==========================================================================
 #
-# Version: = '$Id: utils.py,v 1.1.1.1 2002/02/28 06:42:54 egalstad Exp $'
+# Version: = '$Id: utils.py 2 2002-02-28 06:42:51Z egalstad $'
 #
 # (C) Rob W.W. Hooft, Nonius BV, 1998
 #

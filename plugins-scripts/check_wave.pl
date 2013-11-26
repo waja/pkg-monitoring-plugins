@@ -1,6 +1,6 @@
 #!/usr/bin/perl -wT
 #
-# $Id: check_wave.pl,v 1.4 2002/10/28 13:05:08 kdebisschop Exp $
+# $Id: check_wave.pl 162 2002-10-28 13:05:08Z kdebisschop $
 
 
 use strict;
@@ -30,7 +30,7 @@ GetOptions
 	 "H=s" => \$opt_H, "hostname=s" => \$opt_H);
 
 if ($opt_V) {
-	print_revision($PROGNAME,'$Revision: 1.4 $'); #'
+	print_revision($PROGNAME,'$Revision: 162 $'); #'
 	exit $ERRORS{'OK'};
 }
 
@@ -112,7 +112,7 @@ sub print_usage () {
 }
 
 sub print_help () {
-	print_revision($PROGNAME,'$Revision: 1.4 $');
+	print_revision($PROGNAME,'$Revision: 162 $');
 	print "Copyright (c) 2000 Jeffery Blank/Karl DeBisschop\n";
 	print "\n";
 	print_usage();

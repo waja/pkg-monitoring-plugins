@@ -6,7 +6,7 @@
 * Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/02/07 14:06:11 $
+* Last Modified: $Date: 2007-02-07 14:06:11 +0000 (Wed, 07 Feb 2007) $
 *
 * Description:
 *
@@ -28,12 +28,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_swap.c,v 1.59 2007/02/07 14:06:11 hweiss Exp $
+* $Id: check_swap.c 1613 2007-02-07 14:06:11Z hweiss $
 *
 *****************************************************************************/
 
 const char *progname = "check_swap";
-const char *revision = "$Revision: 1.59 $";
+const char *revision = "$Revision: 1613 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 

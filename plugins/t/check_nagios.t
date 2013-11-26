@@ -2,7 +2,7 @@
 #
 # check_nagios tests
 #
-# $Id: check_nagios.t,v 1.2 2006/04/19 09:33:44 tonvoon Exp $
+# $Id: check_nagios.t 1382 2006-04-19 09:33:44Z tonvoon $
 #
 
 use strict;

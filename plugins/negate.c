@@ -3,9 +3,9 @@
 * Nagios negate plugin
 *
 * License: GPL
-* Copyright (c) 2002-2006 nagios-plugins team
+* Copyright (c) 2002-2007 nagios-plugins team
 *
-* Last Modified: $Date: 2007/01/28 21:46:41 $
+* Last Modified: $Date: 2007-09-23 13:29:36 +0100 (Sun, 23 Sep 2007) $
 *
 * Description:
 *
@@ -29,7 +29,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: negate.c,v 1.27 2007/01/28 21:46:41 hweiss Exp $
+* $Id: negate.c 1793 2007-09-23 12:29:36Z psychotrahe $
 
 @@-<article>
 
@@ -69,37 +69,44 @@
 ******************************************************************************/
 
 const char *progname = "negate";
-const char *revision = "$Revision: 1.27 $";
-const char *copyright = "2002-2006";
+const char *revision = "$Revision: 1793 $";
+const char *copyright = "2002-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #define DEFAULT_TIMEOUT 9
 
 #include "common.h"
 #include "utils.h"
-#include "popen.h"
+#include "utils_cmd.h"
 
-char *command_line;
+/* char *command_line; */
 
-int process_arguments (int, char **);
-int validate_arguments (void);
+static const char **process_arguments (int, char **);
+int validate_arguments (char **);
 void print_help (void);
 void print_usage (void);
 
-
+static int state[4] = {
+	STATE_OK,
+	STATE_WARNING,
+	STATE_CRITICAL,
+	STATE_UNKNOWN,
+};
 
 int
 main (int argc, char **argv)
 {
 	int found = 0, result = STATE_UNKNOWN;
 	char *buf;
+	char **command_line;
+	output chld_out, chld_err;
+	int i;
 
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
-	if (process_arguments (argc, argv) == ERROR)
-		usage4 (_("Could not parse arguments"));
+	command_line = (char **) process_arguments (argc, argv);
 
 	/* Set signal handling and alarm */
 	if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR)
@@ -107,43 +114,32 @@ main (int argc, char **argv)
 
 	(void) alarm ((unsigned) timeout_interval);
 
-	child_process = spopen (command_line);
-	if (child_process == NULL)
-		die (STATE_UNKNOWN, _("Could not open pipe: %s\n"), command_line);
-
-	child_stderr = fdopen (child_stderr_array[fileno (child_process)], "r");
-	
-	if (child_stderr == NULL) {
-		printf (_("Could not open stderr for %s\n"), command_line);
+	/* catch when the command is quoted */
+	if(command_line[1] == NULL) {
+		result = cmd_run (command_line[0], &chld_out, &chld_err, 0);
+	} else {
+		result = cmd_run_array (command_line, &chld_out, &chld_err, 0);
+	}
+	if (chld_err.lines > 0) {
+		printf ("Error output from command:\n");
+		for (i = 0; i < chld_err.lines; i++) {
+			printf ("%s\n", chld_err.line[i]);
+		}
+		exit (STATE_WARNING);
 	}
 
-	buf = malloc(MAX_INPUT_BUFFER);
-	while (fgets (buf, MAX_INPUT_BUFFER - 1, child_process)) {
-		found++;
-		printf ("%s", buf);
+	if (chld_out.lines == 0)
+		die (STATE_UNKNOWN, _("No data returned from command\n"));
+
+	for (i = 0; i < chld_out.lines; i++) {
+		printf ("%s\n", chld_out.line[i]);
 	}
 
-	if (!found)
-		die (STATE_UNKNOWN,
-		     _("%s problem - No data received from host\nCMD: %s\n"),\
-		     argv[0], command_line);
-
-	/* close the pipe */
-	result = spclose (child_process);
-
-	/* WARNING if output found on stderr */
-	if (fgets (buf, MAX_INPUT_BUFFER - 1, child_stderr))
-		result = max_state (result, STATE_WARNING);
-
-	/* close stderr */
-	(void) fclose (child_stderr);
-
-	if (result == STATE_OK)
-		exit (STATE_CRITICAL);
-	else if (result == STATE_CRITICAL)
-		exit (EXIT_SUCCESS);
-	else
+	if (result >= 0 && result <= 4) {
+		exit (state[result]);
+	} else {
 		exit (result);
+	}
 }
 
 /******************************************************************************
@@ -167,22 +163,26 @@ is a only a 'timeout' option.</para>
 
 
 /* process command-line arguments */
-int
+static const char **
 process_arguments (int argc, char **argv)
 {
 	int c;
+	int permute = TRUE;
 
 	int option = 0;
 	static struct option longopts[] = {
 		{"help", no_argument, 0, 'h'},
 		{"version", no_argument, 0, 'V'},
 		{"timeout", required_argument, 0, 't'},
+		{"ok", required_argument, 0, 'o'},
+		{"warning", required_argument, 0, 'w'},
+		{"critical", required_argument, 0, 'c'},
+		{"unknown", required_argument, 0, 'u'},
 		{0, 0, 0, 0}
 	};
 
 	while (1) {
-		c = getopt_long (argc, argv, "+hVt:",
-		                 longopts, &option);
+		c = getopt_long (argc, argv, "+hVt:o:w:c:u:", longopts, &option);
 
 		if (c == -1 || c == EOF)
 			break;
@@ -204,15 +204,38 @@ process_arguments (int argc, char **argv)
 			else
 				timeout_interval = atoi (optarg);
 			break;
+		case 'o':     /* replacement for OK */
+			if ((state[STATE_OK] = translate_state(optarg)) == ERROR)
+				usage4 (_("Ok must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer (0-4)."));
+			permute = FALSE;
+			break;
+
+		case 'w':     /* replacement for WARNING */
+			if ((state[STATE_WARNING] = translate_state(optarg)) == ERROR)
+				usage4 (_("Warning must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer (0-3)."));
+			permute = FALSE;
+			break;
+		case 'c':     /* replacement for CRITICAL */
+			if ((state[STATE_CRITICAL] = translate_state(optarg)) == ERROR)
+				usage4 (_("Critical must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer (0-3)."));
+			permute = FALSE;
+			break;
+		case 'u':     /* replacement for UNKNOWN */
+			if ((state[STATE_UNKNOWN] = translate_state(optarg)) == ERROR)
+				usage4 (_("Unknown must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer (0-3)."));
+			permute = FALSE;
+			break;
 		}
 	}
 
-	asprintf (&command_line, "%s", argv[optind]);
-	for (c = optind+1; c < argc; c++) {
-		asprintf (&command_line, "%s %s", command_line, argv[c]);
+	validate_arguments (&argv[optind]);
+
+	if (permute) { /* No [owcu] switch specified, default to this */
+		state[STATE_OK] = STATE_CRITICAL;
+		state[STATE_CRITICAL] = STATE_OK;
 	}
 
-	return validate_arguments ();
+	return (const char **) &argv[optind];
 }
 
 
@@ -230,11 +253,13 @@ process_arguments (int argc, char **argv)
 
 
 int
-validate_arguments ()
+validate_arguments (char **command_line)
 {
-	if (command_line == NULL)
-		return ERROR;
-	return STATE_OK;
+	if (command_line[0] == NULL)
+		usage4 (_("Could not parse arguments"));
+
+	if (strncmp(command_line[0],"/",1) != 0 && strncmp(command_line[0],"./",2) != 0)
+		usage4 (_("Require path to command"));
 }
 
 /******************************************************************************
@@ -245,7 +270,23 @@ validate_arguments ()
 -@@
 ******************************************************************************/
 
-
+int
+translate_state (char *state_text)
+{
+	char *temp_ptr;
+	for (temp_ptr = state_text; *temp_ptr; temp_ptr++) {
+		*temp_ptr = toupper(*temp_ptr);
+	}
+	if (!strcmp(state_text,"OK") || !strcmp(state_text,"0"))
+		return STATE_OK;
+	if (!strcmp(state_text,"WARNING") || !strcmp(state_text,"1"))
+		return STATE_WARNING;
+	if (!strcmp(state_text,"CRITICAL") || !strcmp(state_text,"2"))
+		return STATE_CRITICAL;
+	if (!strcmp(state_text,"UNKNOWN") || !strcmp(state_text,"3"))
+		return STATE_UNKNOWN;
+	return ERROR;
+}
 
 void
 print_help (void)
@@ -254,30 +295,39 @@ print_help (void)
 
 	printf (COPYRIGHT, copyright, email);
 
-	printf ("%s\n", _("Negates the status of a plugin (returns OK for CRITICAL, and vice-versa)."));
+	printf ("%s\n", _("Negates the status of a plugin (returns OK for CRITICAL and vice-versa)."));
+	printf ("%s\n", _("Additional switches can be used to control which state becomes what."));
 
-  printf ("\n\n");
+	printf ("\n\n");
 
 	print_usage ();
 
 	printf (_(UT_HELP_VRSN));
 
 	printf (_(UT_TIMEOUT), DEFAULT_TIMEOUT);
+	printf ("    %s\n", _("Keep timeout lower than the plugin timeout to retain CRITICAL status."));
 
-	printf ("    %s\n", _("[keep timeout than the plugin timeout to retain CRITICAL status]"));
-  printf ("\n");
-  printf ("%s\n", _("Examples:"));
-	printf (" %s\n", "negate \"/usr/local/nagios/libexec/check_ping -H host\"");
-  printf ("    %s\n", _("Run check_ping and invert result. Must use full path to plugin"));
-  printf (" %s\n", "negate \"/usr/local/nagios/libexec/check_procs -a 'vi negate.c'\"");
-  printf ("    %s\n", _("Use single quotes if you need to retain spaces"));
-  printf (_(UT_VERBOSE));
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
+	printf(" -o,--ok=STATUS\n");
+	printf(" -w,--warning=STATUS\n");
+	printf(" -c,--critical=STATUS\n");
+	printf(" -u,--unknown=STATUS\n");
+	printf(_("    STATUS can be 'OK', 'WARNING', 'CRITICAL' or 'UNKNOWN' without single\n"));
+	printf(_("    quotes. Numeric values are accepted. If nothing is specified, permutes\n"));
+	printf(_("    OK and CRITICAL.\n"));
+
+	printf ("\n");
+	printf ("%s\n", _("Examples:"));
+	printf (" %s\n", "negate /usr/local/nagios/libexec/check_ping -H host");
+	printf ("    %s\n", _("Run check_ping and invert result. Must use full path to plugin"));
+	printf (" %s\n", "negate -w OK -c UNKNOWN /usr/local/nagios/libexec/check_procs -a 'vi negate.c'");
+	printf ("    %s\n", _("This will return OK instead of WARNING and UNKNOWN instead of CRITICAL"));
+	printf ("\n");
+	printf ("%s\n", _("Notes:"));
 	printf ("%s\n", _("This plugin is a wrapper to take the output of another plugin and invert it."));
-  printf ("%s\n", _("If the wrapped plugin returns STATE_OK, the wrapper will return STATE_CRITICAL."));
-  printf ("%s\n", _("If the wrapped plugin returns STATE_CRITICAL, the wrapper will return STATE_OK."));
-  printf ("%s\n", _("Otherwise, the output state of the wrapped plugin is unchanged."));
+	printf ("%s\n", _("The full path of the plugin must be provided."));
+	printf ("%s\n", _("If the wrapped plugin returns STATE_OK, the wrapper will return STATE_CRITICAL."));
+	printf ("%s\n", _("If the wrapped plugin returns STATE_CRITICAL, the wrapper will return STATE_OK."));
+	printf ("%s\n", _("Otherwise, the output state of the wrapped plugin is unchanged."));
 
 	printf (_(UT_SUPPORT));
 }
@@ -287,6 +337,6 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
-	printf ("%s [-t timeout] <definition of wrapped plugin>\n",progname);
+	printf (_("Usage:"));
+	printf ("%s [-t timeout] [-owcu STATE] <definition of wrapped plugin>\n", progname);
 }

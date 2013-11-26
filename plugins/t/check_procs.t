@@ -2,7 +2,7 @@
 #
 # Process Tests via check_procs
 #
-# $Id: check_procs.t,v 1.5 2005/11/03 15:13:13 tonvoon Exp $
+# $Id: check_procs.t 1271 2005-11-03 15:13:13Z tonvoon $
 #
 
 use strict;

@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2007 nagios-plugins team
 *
-* Last Modified: $Date: 2007/03/02 01:38:04 $
+* Last Modified: $Date: 2007-03-02 01:38:04 +0000 (Fri, 02 Mar 2007) $
 *
 * Description:
 *
@@ -31,7 +31,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  
- $Id: check_mrtgtraf.c,v 1.28 2007/03/02 01:38:04 egalstad Exp $
+ $Id: check_mrtgtraf.c 1624 2007-03-02 01:38:04Z egalstad $
 
 ******************************************************************************/
 
@@ -39,7 +39,7 @@
 #include "utils.h"
 
 const char *progname = "check_mrtgtraf";
-const char *revision = "$Revision: 1.28 $";
+const char *revision = "$Revision: 1624 $";
 const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 

@@ -7,7 +7,7 @@
 *
 * Original author: sean finney
 *
-* Last Modified: $Date: 2007/01/28 21:46:40 $
+* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_apt.c,v 1.10 2007/01/28 21:46:40 hweiss Exp $
+* $Id: check_apt.c 1590 2007-01-28 21:46:41Z hweiss $
 * 
 ******************************************************************************/
 
 const char *progname = "check_apt";
-const char *revision = "$Revision: 1.10 $";
+const char *revision = "$Revision: 1590 $";
 const char *copyright = "2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 

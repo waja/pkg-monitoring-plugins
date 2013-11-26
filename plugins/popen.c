@@ -5,7 +5,7 @@
  * License: GPL
  * Copyright (c) 2005 nagios-plugins team
  *
- * Last Modified: $Date: 2006/06/18 19:36:48 $
+ * Last Modified: $Date: 2007-06-12 08:13:02 +0100 (Tue, 12 Jun 2007) $
  *
  * Description:
  *
@@ -40,7 +40,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA. 
  *
- * $Id: popen.c,v 1.15 2006/06/18 19:36:48 opensides Exp $
+ * $Id: popen.c 1737 2007-06-12 07:13:02Z psychotrahe $
  *
  ******************************************************************************/
 
@@ -104,7 +104,7 @@ spopen (const char *cmdstring)
 	char *env[2];
 	char *cmd = NULL;
 	char **argv = NULL;
-	char *str;
+	char *str, *tmp;
 	int argc;
 
 	int i = 0, pfd[2], pfderr[2];
@@ -166,7 +166,15 @@ spopen (const char *cmdstring)
 			cmd = 1 + strstr (str, "'");
 			str[strcspn (str, "'")] = 0;
 		}
-		else {
+		else if (strcspn(str,"'") < strcspn (str, " \t\r\n")) {
+										/* handle --option='foo bar' strings */
+			tmp = str + strcspn(str, "'") + 1; 
+			if (!strstr (tmp, "'"))
+				return NULL;						/* balanced? */
+			tmp += strcspn(tmp,"'") + 1;
+			*tmp = 0;
+			cmd = tmp + 1;
+		} else {
 			if (strpbrk (str, " \t\r\n")) {
 				cmd = 1 + strpbrk (str, " \t\r\n");
 				str[strcspn (str, " \t\r\n")] = 0;

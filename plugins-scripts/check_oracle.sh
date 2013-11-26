@@ -8,7 +8,7 @@
 
 PROGNAME=`basename $0`
 PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
-REVISION=`echo '$Revision: 1.15 $' | sed -e 's/[^0-9.]//g'`
+REVISION=`echo '$Revision: 1749 $' | sed -e 's/[^0-9.]//g'`
 
 . $PROGPATH/utils.sh
 
@@ -89,11 +89,11 @@ case "$cmd" in
     exit $STATE_OK
     ;;
 --version)
-		print_revision $PLUGIN $REVISION
+		print_revision $PROGNAME $REVISION
     exit $STATE_OK
     ;;
 -V)
-		print_revision $PLUGIN $REVISION
+		print_revision $PROGNAME $REVISION
     exit $STATE_OK
     ;;
 esac
@@ -118,9 +118,11 @@ fi
 # Last resort
 [ -z "$ORACLE_HOME" -a -d $PROGPATH/oracle ] && ORACLE_HOME=$PROGPATH/oracle
 
-if [ -z "$ORACLE_HOME" -o ! -d "$ORACLE_HOME" ] ; then
-	echo "Cannot determine ORACLE_HOME for sid $2"
-	exit $STATE_UNKNOWN
+if [ "$cmd" != "--db" ]; then
+	if [ -z "$ORACLE_HOME" -o ! -d "$ORACLE_HOME" ] ; then
+		echo "Cannot determine ORACLE_HOME for sid $2"
+		exit $STATE_UNKNOWN
+	fi
 fi
 PATH=$PATH:$ORACLE_HOME/bin
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$ORACLE_HOME/lib

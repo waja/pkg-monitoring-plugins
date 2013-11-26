@@ -8,8 +8,8 @@
  * Copyright (c) 2006 Nagios Plugin Development Team
  * License: GPL
  *
- * $Revision: 1.4 $
- * $Date: 2007/01/27 17:49:08 $
+ * $Revision: 1768 $
+ * $Date: 2007-07-29 13:42:05 +0100 (Sun, 29 Jul 2007) $
  ****************************************************************************/
 
 #include <stdarg.h>
@@ -227,4 +227,19 @@ char *np_escaped_string (const char *string) {
 	}
 	data[j] = '\0';
 	return data;
+}
+
+int np_check_if_root(void) { return (geteuid() == 0); }
+
+int np_warn_if_not_root(void) {
+	int status = np_check_if_root();
+	if(!status) {
+		printf(_("Warning: "));
+		printf(_("This plugin must be either run as root or setuid root.\n"));
+		printf(_("To run as root, you can use a tool like sudo.\n"));
+		printf(_("To set the setuid permissions, use the command:\n"));
+		/* XXX could we use something like progname? */
+		printf("\tchmod u+s yourpluginfile\n");
+	}
+	return status;
 }

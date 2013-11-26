@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/01/28 21:46:40 $
+* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_ssh.c,v 1.32 2007/01/28 21:46:40 hweiss Exp $
+* $Id: check_ssh.c 1590 2007-01-28 21:46:41Z hweiss $
 * 
 ******************************************************************************/
 
 const char *progname = "check_ssh";
-const char *revision = "$Revision: 1.32 $";
+const char *revision = "$Revision: 1590 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -221,7 +221,7 @@ ssh_connect (char *haddr, int hport, char *remote_version)
 	char *ssh_server = NULL;
 	char rev_no[20];
 
-	sscanf ("$Revision: 1.32 $", "$Revision: %[0123456789.]", rev_no);
+	sscanf ("$Revision: 1590 $", "$Revision: %[0123456789.]", rev_no);
 
 	result = my_tcp_connect (haddr, hport, &sd);
 

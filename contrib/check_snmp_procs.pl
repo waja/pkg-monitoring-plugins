@@ -35,7 +35,7 @@
 #use strict;
 use Getopt::Long;
 use Net::SNMP qw (oid_lex_sort oid_base_match SNMP_VERSION_1);
-use lib utils.pm;
+use lib "/usr/local/nagios/libexec";
 use utils qw(%ERRORS &print_revision &support &usage);
 
 my $PROGNAME="check_snmp_procs";
@@ -109,7 +109,7 @@ if (GetOptions(
 }
 
 if ($opt_version) {
-	print_revision($PROGNAME, "\$Revision: 1.1 $REVISION \$");
+	print_revision($PROGNAME, "\$Revision: 1771 $REVISION \$");
 	exit $ERRORS{'OK'};
 }
 
@@ -529,7 +529,7 @@ sub print_usage {
 
 #
 sub print_help {
-	print_revision($PROGNAME, "\$Revision: 1.1 $REVISION \$");
+	print_revision($PROGNAME, "\$Revision: 1771 $REVISION \$");
 	print "Copyright (c) 2003 David Alden
 
 Check if processes are running on a host via snmp

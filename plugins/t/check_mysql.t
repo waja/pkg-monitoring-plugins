@@ -2,7 +2,7 @@
 #
 # MySQL Database Server Tests via check_mysql
 #
-# $Id: check_mysql.t,v 1.8 2006/03/17 14:07:34 tonvoon Exp $
+# $Id: check_mysql.t 1327 2006-03-17 14:07:34Z tonvoon $
 #
 #
 # These are the database permissions required for this test:

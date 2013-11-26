@@ -2,7 +2,7 @@
 #
 # HP JetDirect Test via check_hpjd
 #
-# $Id: check_hpjd.t,v 1.3 2006/03/24 16:13:40 tonvoon Exp $
+# $Id: check_hpjd.t 1354 2006-03-24 16:13:40Z tonvoon $
 #
 
 use strict;

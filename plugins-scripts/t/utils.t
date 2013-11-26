@@ -2,7 +2,7 @@
 #
 # utils.pm tests
 #
-# $Id: utils.t,v 1.3 2006/12/12 12:59:06 tonvoon Exp $
+# $Id: utils.t 1549 2006-12-12 12:59:06Z tonvoon $
 #
 # Run with perl t/utils.t
 

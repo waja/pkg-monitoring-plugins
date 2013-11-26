@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/03/06 17:29:15 $
+* Last Modified: $Date: 2007-07-15 16:21:51 +0100 (Sun, 15 Jul 2007) $
 *
 * Description:
 *
@@ -31,13 +31,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_procs.c,v 1.58 2007/03/06 17:29:15 tonvoon Exp $
+* $Id: check_procs.c 1758 2007-07-15 15:21:51Z psychotrahe $
 * 
 ******************************************************************************/
 
 const char *progname = "check_procs";
 const char *program_name = "check_procs";  /* Required for coreutils libs */
-const char *revision = "$Revision: 1.58 $";
+const char *revision = "$Revision: 1758 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -185,7 +185,7 @@ main (int argc, char **argv)
 		cols = sscanf (input_line, PS_FORMAT, PS_VARLIST);
 
 		/* Zombie processes do not give a procprog command */
-		if ( cols == (expected_cols - 1) && strstr(procstat, zombie) ) {
+		if ( cols < expected_cols && strstr(procstat, zombie) ) {
 			cols = expected_cols;
 		}
 		if ( cols >= expected_cols ) {

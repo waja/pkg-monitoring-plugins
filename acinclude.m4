@@ -8,7 +8,7 @@ dnl e.g. 6 arguments (linux)
 dnl e.g. 5 arguments (solaris)
 dnl e.g. 3 arguments (osf/1)
 dnl
-dnl @version $Id: acinclude.m4,v 1.5 2004/02/18 14:56:34 kdebisschop Exp $
+dnl @version $Id: acinclude.m4 805 2004-02-18 14:56:39Z kdebisschop $
 dnl @author Brian Stafford <brian@stafford.uklinux.net>
 dnl
 dnl based on version by Caolan McNamara <caolan@skynet.ie>

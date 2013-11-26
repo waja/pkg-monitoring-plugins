@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
 *
-* Last Modified: $Date: 2007/01/20 06:07:48 $
+* Last Modified: $Date: 2007-09-24 01:30:14 +0100 (Mon, 24 Sep 2007) $
 *
 * Description:
 *
@@ -27,7 +27,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: netutils.c,v 1.33 2007/01/20 06:07:48 dermoth Exp $
+* $Id: netutils.c 1794 2007-09-24 00:30:14Z hweiss $
 *
 ****************************************************************************/
 
@@ -39,7 +39,11 @@
 unsigned int socket_timeout = DEFAULT_SOCKET_TIMEOUT; 
 int econn_refuse_state = STATE_CRITICAL;
 int was_refused = FALSE;
+#if USE_IPV6
 int address_family = AF_UNSPEC;
+#else
+int address_family = AF_INET;
+#endif
 
 /* handles socket timeouts */
 void

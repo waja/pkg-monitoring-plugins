@@ -15,10 +15,10 @@
 #
 # initial version: 3 May 2000 by Truongchinh Nguyen and Karl DeBisschop
 # Modified May 2002 Subhendu Ghosh - support for ePN and patches
-# current status: $Revision: 1.8 $
+# current status: $Revision: 677 $
 #
 # Copyright Notice: GPL
-# $Id: check_rpc.pl,v 1.8 2003/08/10 12:11:49 kdebisschop Exp $
+# $Id: check_rpc.pl 677 2003-08-10 12:11:49Z kdebisschop $
 #
 
 use strict;
@@ -68,7 +68,7 @@ if ($opt_h) { print_help(); exit $ERRORS{'OK'}; }
 
 # -V means display version number
 if ($opt_V) { 
-	print_revision($PROGNAME,'$Revision: 1.8 $ '); 
+	print_revision($PROGNAME,'$Revision: 677 $ '); 
 	exit $ERRORS{'OK'}; 
 }
 
@@ -336,7 +336,7 @@ sub get_rpcinfo {
 
 
 sub print_help() {
-	print_revision($PROGNAME,'$Revision: 1.8 $ ');
+	print_revision($PROGNAME,'$Revision: 677 $ ');
 	print "Copyright (c) 2002 Karl DeBisschop/Truongchinh Nguyen/Subhendu Ghosh\n";
 	print "\n";
 	print "Check if a rpc service is registered and running using\n";

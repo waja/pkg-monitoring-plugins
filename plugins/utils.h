@@ -18,7 +18,7 @@ suite of plugins. */
 
 /* Standardize version information, termination */
 
-/* $Id: utils.h,v 1.33 2007/01/28 21:46:41 hweiss Exp $ */
+/* $Id: utils.h 1590 2007-01-28 21:46:41Z hweiss $ */
 
 void support (void);
 char *clean_revstring (const char *);

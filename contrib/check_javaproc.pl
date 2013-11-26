@@ -170,7 +170,7 @@ Perl Check java processes plugin for Nagios
 }
 
 sub revision() {
-	print_revision($PROGNAME,'$Revision: 1.1 $ ');
+	print_revision($PROGNAME,'$Revision: 211 $ ');
 }
 
 sub version () {

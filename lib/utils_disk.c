@@ -4,7 +4,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/04/01 11:17:16 $
+* Last Modified: $Date: 2007-09-22 18:48:33 +0100 (Sat, 22 Sep 2007) $
 *
 * Description:
 *
@@ -26,7 +26,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: utils_disk.c,v 1.6 2007/04/01 11:17:16 psychotrahe Exp $
+* $Id: utils_disk.c 1787 2007-09-22 17:48:33Z psychotrahe $
 * 
 *****************************************************************************/
 
@@ -74,6 +74,26 @@ np_add_parameter(struct parameter_list **list, const char *name)
   return new_path;
 }
 
+/* Delete a given parameter from list and return pointer to next element*/
+struct parameter_list *
+np_del_parameter(struct parameter_list *item, struct parameter_list *prev)
+{
+	struct parameter_list *next;
+   	if (item->name_next)
+  		next = item->name_next;
+	else
+	  	next = NULL;
+
+	
+	free(item);
+	if (prev)
+	  prev->name_next = next;
+
+	return next;
+
+}
+
+  
 /* returns a pointer to the struct found in the list */
 struct parameter_list *
 np_find_parameter(struct parameter_list *list, const char *name)
@@ -161,8 +181,9 @@ np_regex_match_mount_entry (struct mount_entry* me, regex_t* re)
 {
   if (regexec(re, me->me_devname, (size_t) 0, NULL, 0) == 0 ||
       regexec(re, me->me_mountdir, (size_t) 0, NULL, 0) == 0 ) {
-    return true;
+    return TRUE;
   } else {
-    return false;
+    return FALSE;
   }
 }
+

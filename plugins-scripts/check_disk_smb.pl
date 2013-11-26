@@ -16,7 +16,7 @@
 #  drives is a pain in the butt
 # 2-May-2002 - SGhosh fix for embedded perl
 #
-# $Id: check_disk_smb.pl,v 1.13 2005/10/13 10:14:33 seanius Exp $
+# $Id: check_disk_smb.pl 1247 2005-10-13 10:14:33Z seanius $
 #
 
 require 5.004;
@@ -52,7 +52,7 @@ GetOptions
 	 "H=s" => \$opt_H, "hostname=s" => \$opt_H);
 
 if ($opt_V) {
-	print_revision($PROGNAME,'$Revision: 1.13 $'); #'
+	print_revision($PROGNAME,'$Revision: 1247 $'); #'
 	exit $ERRORS{'OK'};
 }
 
@@ -243,7 +243,7 @@ sub print_usage () {
 }
 
 sub print_help () {
-	print_revision($PROGNAME,'$Revision: 1.13 $');
+	print_revision($PROGNAME,'$Revision: 1247 $');
 	print "Copyright (c) 2000 Michael Anthon/Karl DeBisschop
 
 Perl Check SMB Disk plugin for Nagios

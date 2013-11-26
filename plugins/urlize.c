@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/01/28 21:46:41 $
+* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
 *
 * Description:
 *
@@ -32,12 +32,12 @@
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 
- $Id: urlize.c,v 1.22 2007/01/28 21:46:41 hweiss Exp $
+ $Id: urlize.c 1590 2007-01-28 21:46:41Z hweiss $
  
 ******************************************************************************/
 
 const char *progname = "urlize";
-const char *revision = "$Revision: 1.22 $";
+const char *revision = "$Revision: 1590 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 

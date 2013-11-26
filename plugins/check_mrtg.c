@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/02/06 21:03:21 $
+* Last Modified: $Date: 2007-02-06 21:03:21 +0000 (Tue, 06 Feb 2007) $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_mrtg.c,v 1.30 2007/02/06 21:03:21 opensides Exp $
+ $Id: check_mrtg.c 1611 2007-02-06 21:03:21Z opensides $
  
 ******************************************************************************/
 
 const char *progname = "check_mrtg";
-const char *revision =  "$Revision: 1.30 $";
+const char *revision =  "$Revision: 1611 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 

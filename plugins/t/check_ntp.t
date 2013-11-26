@@ -2,7 +2,7 @@
 #
 # Testing NTP
 #
-# $Id: check_ntp.t,v 1.2 2006/08/14 08:42:23 tonvoon Exp $
+# $Id: check_ntp.t 1468 2006-08-14 08:42:23Z tonvoon $
 #
 
 use strict;
