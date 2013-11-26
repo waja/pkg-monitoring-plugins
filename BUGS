@@ -1,0 +1,19 @@
+This file lists known bugs in this specific release. It lists the major bugs from the Nagios
+Plugins page on Sourceforge at http://sourceforge.net/tracker/?group_id=29880&atid=397597.
+
+For the 1.4.4 release:
+
+1578214 - check_proc crashes on Itanium2
+1573700 - check_swap on HP-UX incorrect
+1573638 - check_swap SEGVs on Sol 10
+1475899 - check_tcp segfaults with multiple -s or -e args
+1447642 - check_ping segfault on Sol 10
+1344584 - check_snmp counter64 values not handled correctly
+1291987 - urlize useragent does not work
+1225470 - check_swap perf data incorrect
+1218438 - check_radius linking to wrong header
+1108499 - check_ping with -U on Debian fails
+1094326 - check_ide_smart usage errors
+1090549 - check_dhcp ignores DHCP replies
+ 990948 - check_disk_smb doesn't allow spaces in share names
+
