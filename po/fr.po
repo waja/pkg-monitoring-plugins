@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: nagiosplug-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-09-03 14:30+0200\n"
+"POT-Creation-Date: 2013-09-10 13:48+0200\n"
 "PO-Revision-Date: 2010-04-21 23:38-0400\n"
 "Last-Translator: Thomas Guyot-Sionnest <dermoth@aei.ca>\n"
 "Language-Team: Nagios Plugin Development Mailing List <nagiosplug-"
@@ -68,14 +68,14 @@ msgstr "%s: Erreur d'analyse du résultat\n"
 #: plugins/check_http.c:278 plugins/check_ldap.c:293 plugins/check_pgsql.c:311
 #: plugins/check_procs.c:429 plugins/check_radius.c:308
 #: plugins/check_real.c:356 plugins/check_smtp.c:581 plugins/check_snmp.c:726
-#: plugins/check_ssh.c:138 plugins/check_tcp.c:490 plugins/check_time.c:302
+#: plugins/check_ssh.c:138 plugins/check_tcp.c:487 plugins/check_time.c:302
 #: plugins/check_ups.c:556 plugins/negate.c:161
 msgid "Timeout interval must be a positive integer"
 msgstr "Le délai d'attente doit être un entier positif"
 
 #: plugins/check_by_ssh.c:230 plugins/check_pgsql.c:341
 #: plugins/check_radius.c:272 plugins/check_real.c:327
-#: plugins/check_smtp.c:506 plugins/check_tcp.c:496 plugins/check_time.c:296
+#: plugins/check_smtp.c:506 plugins/check_tcp.c:493 plugins/check_time.c:296
 #: plugins/check_ups.c:518
 msgid "Port must be a positive integer"
 msgstr "Le numéro du port doit être un entier positif"
@@ -247,10 +247,10 @@ msgstr "Exemples:"
 #: plugins/check_ping.c:603 plugins/check_procs.c:773
 #: plugins/check_radius.c:385 plugins/check_real.c:451
 #: plugins/check_smtp.c:843 plugins/check_snmp.c:1197 plugins/check_ssh.c:309
-#: plugins/check_swap.c:558 plugins/check_tcp.c:669 plugins/check_time.c:371
+#: plugins/check_swap.c:558 plugins/check_tcp.c:666 plugins/check_time.c:371
 #: plugins/check_ups.c:660 plugins/check_users.c:240
 #: plugins/check_ide_smart.c:634 plugins/negate.c:292 plugins/urlize.c:197
-#: plugins-root/check_dhcp.c:1417 plugins-root/check_icmp.c:1347
+#: plugins-root/check_dhcp.c:1417 plugins-root/check_icmp.c:1354
 msgid "Usage:"
 msgstr "Utilisation:"
 
@@ -302,7 +302,7 @@ msgstr "virgules"
 #: plugins/check_ntp_time.c:626 plugins/check_nwstat.c:1670
 #: plugins/check_overcr.c:456 plugins/check_snmp.c:1168
 #: plugins/check_swap.c:547 plugins/check_ups.c:642 plugins/negate.c:274
-#: plugins-root/check_icmp.c:1322
+#: plugins-root/check_icmp.c:1329
 msgid "Notes:"
 msgstr "Notes:"
 
@@ -1188,8 +1188,8 @@ msgid "file does not exist or is not readable"
 msgstr ""
 
 #: plugins/check_http.c:310 plugins/check_http.c:315 plugins/check_http.c:321
-#: plugins/check_smtp.c:600 plugins/check_tcp.c:561 plugins/check_tcp.c:565
-#: plugins/check_tcp.c:571
+#: plugins/check_smtp.c:600 plugins/check_tcp.c:558 plugins/check_tcp.c:562
+#: plugins/check_tcp.c:568
 msgid "Invalid certificate expiration period"
 msgstr "Période d'expiration du certificat invalide"
 
@@ -1199,7 +1199,7 @@ msgid ""
 "(SSLv3)"
 msgstr ""
 
-#: plugins/check_http.c:354 plugins/check_tcp.c:584
+#: plugins/check_http.c:354 plugins/check_tcp.c:581
 msgid "Invalid option - SSL is not available"
 msgstr "Option invalide - SSL n'est pas disponible"
 
@@ -1223,7 +1223,7 @@ msgstr "Impossible de compiler l'expression rationnelle: %s"
 
 #: plugins/check_http.c:464 plugins/check_ntp.c:722
 #: plugins/check_ntp_peer.c:513 plugins/check_ntp_time.c:512
-#: plugins/check_smtp.c:621 plugins/check_ssh.c:149 plugins/check_tcp.c:462
+#: plugins/check_smtp.c:621 plugins/check_ssh.c:149 plugins/check_tcp.c:459
 msgid "IPv6 support not available"
 msgstr "Support IPv6 non disponible"
 
@@ -4320,7 +4320,7 @@ msgstr "Réponses REAL invalide reçue de l'hôte"
 msgid "Invalid REAL response received from host on port %d\n"
 msgstr "Réponses REAL invalide reçue de l'hôte sur le port %d\n"
 
-#: plugins/check_real.c:184 plugins/check_tcp.c:290
+#: plugins/check_real.c:184 plugins/check_tcp.c:287
 #, c-format
 msgid "No data received from host\n"
 msgstr "Pas de données reçues de l'hôte\n"
@@ -4560,7 +4560,7 @@ msgstr ""
 msgid "FQDN used for HELO"
 msgstr ""
 
-#: plugins/check_smtp.c:809 plugins/check_tcp.c:650
+#: plugins/check_smtp.c:809 plugins/check_tcp.c:647
 msgid "Minimum number of days a certificate has to be valid."
 msgstr "Nombre de jours minimum pour que le certificat soit valide."
 
@@ -5036,35 +5036,35 @@ msgstr ""
 "Avec la surveillance UDP, une chaîne d'envoi et un chaîne de réponse doit "
 "être spécifiée."
 
-#: plugins/check_tcp.c:417
+#: plugins/check_tcp.c:414
 msgid "No arguments found"
 msgstr "Pas de paramètres"
 
-#: plugins/check_tcp.c:519
+#: plugins/check_tcp.c:516
 msgid "Maxbytes must be a positive integer"
 msgstr "Maxbytes doit être un entier positif"
 
-#: plugins/check_tcp.c:537
+#: plugins/check_tcp.c:534
 msgid "Refuse must be one of ok, warn, crit"
 msgstr "Refuse doit être parmis ok, warn, crit"
 
-#: plugins/check_tcp.c:547
+#: plugins/check_tcp.c:544
 msgid "Mismatch must be one of ok, warn, crit"
 msgstr "Mismatch doit être parmis ok, warn, crit"
 
-#: plugins/check_tcp.c:553
+#: plugins/check_tcp.c:550
 msgid "Delay must be a positive integer"
 msgstr "Delay doit être un entier positif"
 
-#: plugins/check_tcp.c:598
+#: plugins/check_tcp.c:595
 msgid "You must provide a server address"
 msgstr "Vous devez fournir une adresse serveur"
 
-#: plugins/check_tcp.c:600
+#: plugins/check_tcp.c:597
 msgid "Invalid hostname, address or socket"
 msgstr "Adresse/Nom/Socket invalide"
 
-#: plugins/check_tcp.c:614
+#: plugins/check_tcp.c:611
 #, c-format
 msgid ""
 "This plugin tests %s connections with the specified host (or unix socket).\n"
@@ -5073,7 +5073,7 @@ msgstr ""
 "Ce plugin teste %s connections avec l'hôte spécifié (ou socket unix).\n"
 "\n"
 
-#: plugins/check_tcp.c:627
+#: plugins/check_tcp.c:624
 msgid ""
 "Can use \\n, \\r, \\t or \\ in send or quit string. Must come before send or "
 "quit option"
@@ -5081,59 +5081,59 @@ msgstr ""
 "Permet d'utiliser \\n, \\r, \\t ou \\ dans la chaîne de caractères send ou "
 "quit. Doit être placé avant ces dernières."
 
-#: plugins/check_tcp.c:628
+#: plugins/check_tcp.c:625
 msgid "Default: nothing added to send, \\r\\n added to end of quit"
 msgstr ""
 "Par défaut: Rien n'est ajouté à send, \\r\\n est ajouté à la fin de quit"
 
-#: plugins/check_tcp.c:630
+#: plugins/check_tcp.c:627
 msgid "String to send to the server"
 msgstr "Chaîne de caractères à envoyer au serveur"
 
-#: plugins/check_tcp.c:632
+#: plugins/check_tcp.c:629
 msgid "String to expect in server response"
 msgstr "Chaîne de caractères à attendre en réponse"
 
-#: plugins/check_tcp.c:632
+#: plugins/check_tcp.c:629
 msgid "(may be repeated)"
 msgstr "(peut être utilisé plusieurs fois)"
 
-#: plugins/check_tcp.c:634
+#: plugins/check_tcp.c:631
 msgid "All expect strings need to occur in server response. Default is any"
 msgstr ""
 "Toutes les chaînes attendus (expect) doivent être repérés dans la réponse. "
 "Par défaut, n'importe laquelle suffit."
 
-#: plugins/check_tcp.c:636
+#: plugins/check_tcp.c:633
 msgid "String to send server to initiate a clean close of the connection"
 msgstr "Chaîne de caractères à envoyer pour fermer gracieusement la connection"
 
-#: plugins/check_tcp.c:638
+#: plugins/check_tcp.c:635
 msgid "Accept TCP refusals with states ok, warn, crit (default: crit)"
 msgstr ""
 
-#: plugins/check_tcp.c:640
+#: plugins/check_tcp.c:637
 msgid ""
 "Accept expected string mismatches with states ok, warn, crit (default: warn)"
 msgstr ""
 
-#: plugins/check_tcp.c:642
+#: plugins/check_tcp.c:639
 msgid "Hide output from TCP socket"
 msgstr "Cacher la réponse provenant du socket TCP"
 
-#: plugins/check_tcp.c:644
+#: plugins/check_tcp.c:641
 msgid "Close connection once more than this number of bytes are received"
 msgstr ""
 
-#: plugins/check_tcp.c:646
+#: plugins/check_tcp.c:643
 msgid "Seconds to wait between sending string and polling for response"
 msgstr ""
 
-#: plugins/check_tcp.c:651
+#: plugins/check_tcp.c:648
 msgid "1st is #days for warning, 2nd is critical (if not specified - 0)."
 msgstr ""
 
-#: plugins/check_tcp.c:653
+#: plugins/check_tcp.c:650
 msgid "Use SSL for the connection."
 msgstr ""
 
@@ -6270,82 +6270,82 @@ msgstr ""
 msgid "Unicast testing: mimic a DHCP relay, requires -s"
 msgstr ""
 
-#: plugins-root/check_icmp.c:1288
+#: plugins-root/check_icmp.c:1295
 msgid "specify a target"
 msgstr ""
 
-#: plugins-root/check_icmp.c:1290
+#: plugins-root/check_icmp.c:1297
 msgid "warning threshold (currently "
 msgstr "Valeurs pour le seuil d'avertissement (actuellement "
 
-#: plugins-root/check_icmp.c:1293
+#: plugins-root/check_icmp.c:1300
 msgid "critical threshold (currently "
 msgstr "Valeurs pour le seuil critique (actuellement "
 
-#: plugins-root/check_icmp.c:1296
+#: plugins-root/check_icmp.c:1303
 msgid "specify a source IP address or device name"
 msgstr "spécifiez une adresse ou un nom d'hôte"
 
-#: plugins-root/check_icmp.c:1298
+#: plugins-root/check_icmp.c:1305
 msgid "number of packets to send (currently "
 msgstr "nombre de paquets à envoyer (actuellement "
 
-#: plugins-root/check_icmp.c:1301
+#: plugins-root/check_icmp.c:1308
 msgid "max packet interval (currently "
 msgstr ""
 
-#: plugins-root/check_icmp.c:1304
+#: plugins-root/check_icmp.c:1311
 msgid "max target interval (currently "
 msgstr ""
 
-#: plugins-root/check_icmp.c:1307
+#: plugins-root/check_icmp.c:1314
 msgid "number of alive hosts required for success"
 msgstr "nombre d'hôtes vivants requis pour réussite"
 
-#: plugins-root/check_icmp.c:1310
+#: plugins-root/check_icmp.c:1317
 msgid "TTL on outgoing packets (currently "
 msgstr ""
 
-#: plugins-root/check_icmp.c:1313
+#: plugins-root/check_icmp.c:1320
 msgid "timeout value (seconds, currently  "
 msgstr ""
 
-#: plugins-root/check_icmp.c:1316
+#: plugins-root/check_icmp.c:1323
 msgid "Number of icmp data bytes to send"
 msgstr "Nombre de paquets ICMP à envoyer"
 
-#: plugins-root/check_icmp.c:1317
+#: plugins-root/check_icmp.c:1324
 msgid "Packet size will be data bytes + icmp header (currently"
 msgstr ""
 
-#: plugins-root/check_icmp.c:1319
+#: plugins-root/check_icmp.c:1326
 msgid "verbose"
 msgstr ""
 
-#: plugins-root/check_icmp.c:1323
+#: plugins-root/check_icmp.c:1330
 msgid "The -H switch is optional. Naming a host (or several) to check is not."
 msgstr ""
 
-#: plugins-root/check_icmp.c:1325
+#: plugins-root/check_icmp.c:1332
 msgid ""
 "Threshold format for -w and -c is 200.25,60% for 200.25 msec RTA and 60%"
 msgstr ""
 
-#: plugins-root/check_icmp.c:1326
+#: plugins-root/check_icmp.c:1333
 msgid "packet loss.  The default values should work well for most users."
 msgstr ""
 
-#: plugins-root/check_icmp.c:1327
+#: plugins-root/check_icmp.c:1334
 msgid ""
 "You can specify different RTA factors using the standardized abbreviations"
 msgstr ""
 
-#: plugins-root/check_icmp.c:1328
+#: plugins-root/check_icmp.c:1335
 msgid ""
 "us (microseconds), ms (milliseconds, default) or just plain s for seconds."
 msgstr ""
 
-#: plugins-root/check_icmp.c:1334
+#: plugins-root/check_icmp.c:1341
 msgid "The -v switch can be specified several times for increased verbosity."
 msgstr ""
 
