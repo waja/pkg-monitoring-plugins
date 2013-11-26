@@ -8,7 +8,7 @@
 *               2004 Arnaud Quette <arnaud.quette@mgeups.com>
 * Copyright (c) 2002-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007-05-09 10:16:33 +0100 (Wed, 09 May 2007) $
+* Last Modified: $Date: 2007-10-25 21:43:04 +0100 (Thu, 25 Oct 2007) $
 *
 * Description:
 *
@@ -33,12 +33,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-*  $Id: check_ups.c 1709 2007-05-09 09:16:33Z psychotrahe $
+*  $Id: check_ups.c 1810 2007-10-25 20:43:04Z tonvoon $
 *
 ******************************************************************************/
 
 const char *progname = "check_ups";
-const char *revision = "$Revision: 1709 $";
+const char *revision = "$Revision: 1810 $";
 const char *copyright = "2002-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -598,7 +598,7 @@ print_help (void)
 
 	print_revision (progname, revision);
 
-	printf ("Copyright (c) 2000 Tom Shields");
+	printf ("Copyright (c) 2000 Tom Shields\n");
 	printf ("Copyright (c) 2004 Alain Richard <alain.richard@equation.fr>\n");
 	printf ("Copyright (c) 2004 Arnaud Quette <arnaud.quette@mgeups.com>\n");
 	printf (COPYRIGHT, copyright, email);

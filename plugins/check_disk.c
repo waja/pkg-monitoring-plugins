@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007-09-23 13:29:36 +0100 (Sun, 23 Sep 2007) $
+* Last Modified: $Date: 2007-12-08 16:34:05 +0000 (Sat, 08 Dec 2007) $
 *
 * Description:
 *
@@ -27,13 +27,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_disk.c 1793 2007-09-23 12:29:36Z psychotrahe $
+* $Id: check_disk.c 1848 2007-12-08 16:34:05Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_disk";
 const char *program_name = "check_disk";  /* Required for coreutils libs */
-const char *revision = "$Revision: 1793 $";
+const char *revision = "$Revision: 1848 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -307,9 +307,16 @@ main (int argc, char **argv)
 
     if (fsp.fsu_blocks && strcmp ("none", me->me_mountdir)) {
       total = fsp.fsu_blocks;
-      available = fsp.fsu_bavail;
+      /* 2007-12-08 - Workaround for Gnulib reporting insanely high available
+       * space on BSD (the actual value should be negative but fsp.fsu_bavail
+       * is unsigned) */
+      available = fsp.fsu_bavail > fsp.fsu_bfree ? 0 : fsp.fsu_bavail;
       available_to_root = fsp.fsu_bfree;
       used = total - available_to_root;
+
+      if (verbose >= 3)
+        printf ("For %s, total=%llu, available=%llu, available_to_root=%llu, used=%llu, fsp.fsu_files=%llu, fsp.fsu_ffree=%llu\n",
+        me->me_mountdir, total, available, available_to_root, used, fsp.fsu_files, fsp.fsu_ffree);
 
       dused_pct = calculate_percent( used, used + available );	/* used + available can never be > uintmax */
      

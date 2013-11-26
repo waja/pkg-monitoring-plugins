@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2002-2007 nagios-plugins team
 *
-* Last Modified: $Date: 2007-09-23 13:29:36 +0100 (Sun, 23 Sep 2007) $
+* Last Modified: $Date: 2007-12-10 07:52:00 +0000 (Mon, 10 Dec 2007) $
 *
 * Description:
 *
@@ -29,7 +29,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: negate.c 1793 2007-09-23 12:29:36Z psychotrahe $
+* $Id: negate.c 1859 2007-12-10 07:52:00Z dermoth $
 
 @@-<article>
 
@@ -69,7 +69,7 @@
 ******************************************************************************/
 
 const char *progname = "negate";
-const char *revision = "$Revision: 1793 $";
+const char *revision = "$Revision: 1859 $";
 const char *copyright = "2002-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -206,7 +206,7 @@ process_arguments (int argc, char **argv)
 			break;
 		case 'o':     /* replacement for OK */
 			if ((state[STATE_OK] = translate_state(optarg)) == ERROR)
-				usage4 (_("Ok must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer (0-4)."));
+				usage4 (_("Ok must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer (0-3)."));
 			permute = FALSE;
 			break;
 
@@ -305,7 +305,7 @@ print_help (void)
 	printf (_(UT_HELP_VRSN));
 
 	printf (_(UT_TIMEOUT), DEFAULT_TIMEOUT);
-	printf ("    %s\n", _("Keep timeout lower than the plugin timeout to retain CRITICAL status."));
+	printf ("    %s\n", _("Keep timeout longer than the plugin timeout to retain CRITICAL status."));
 
 	printf(" -o,--ok=STATUS\n");
 	printf(" -w,--warning=STATUS\n");
@@ -325,8 +325,8 @@ print_help (void)
 	printf ("%s\n", _("Notes:"));
 	printf ("%s\n", _("This plugin is a wrapper to take the output of another plugin and invert it."));
 	printf ("%s\n", _("The full path of the plugin must be provided."));
-	printf ("%s\n", _("If the wrapped plugin returns STATE_OK, the wrapper will return STATE_CRITICAL."));
-	printf ("%s\n", _("If the wrapped plugin returns STATE_CRITICAL, the wrapper will return STATE_OK."));
+	printf ("%s\n", _("If the wrapped plugin returns OK, the wrapper will return CRITICAL."));
+	printf ("%s\n", _("If the wrapped plugin returns CRITICAL, the wrapper will return OK."));
 	printf ("%s\n", _("Otherwise, the output state of the wrapped plugin is unchanged."));
 
 	printf (_(UT_SUPPORT));

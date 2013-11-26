@@ -8,8 +8,8 @@
  * Copyright (c) 2006 Nagios Plugin Development Team
  * License: GPL
  *
- * $Revision: 1752 $
- * $Date: 2007-07-07 13:02:45 +0100 (Sat, 07 Jul 2007) $
+ * $Revision: 1829 $
+ * $Date: 2007-11-23 04:18:16 +0000 (Fri, 23 Nov 2007) $
  ****************************************************************************/
 
 #define LOCAL_TIMEOUT_ALARM_HANDLER
@@ -49,6 +49,33 @@ max_state (int a, int b)
 		return STATE_UNKNOWN;
 	else if (a == STATE_DEPENDENT || b == STATE_DEPENDENT)
 		return STATE_DEPENDENT;
+	else
+		return max (a, b);
+}
+
+/* **************************************************************************
+ * max_state_alt(STATE_x, STATE_y)
+ * compares STATE_x to  STATE_y and returns result based on the following
+ * STATE_OK < STATE_DEPENDENT < STATE_UNKNOWN < STATE_WARNING < STATE_CRITICAL
+ *
+ * The main difference between max_state_alt and max_state it that it doesn't
+ * allow setting a default to UNKNOWN. It will instead prioritixe any valid
+ * non-OK state.
+ ****************************************************************************/
+
+int
+max_state_alt (int a, int b)
+{
+	if (a == STATE_CRITICAL || b == STATE_CRITICAL)
+		return STATE_CRITICAL;
+	else if (a == STATE_WARNING || b == STATE_WARNING)
+		return STATE_WARNING;
+	else if (a == STATE_UNKNOWN || b == STATE_UNKNOWN)
+		return STATE_UNKNOWN;
+	else if (a == STATE_DEPENDENT || b == STATE_DEPENDENT)
+		return STATE_DEPENDENT;
+	else if (a == STATE_OK || b == STATE_OK)
+		return STATE_OK;
 	else
 		return max (a, b);
 }

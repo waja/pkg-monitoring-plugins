@@ -14,7 +14,7 @@ use Sys::Hostname;
 use Cwd;
 use Time::Local;
 
-my $Version = '$Revision: 1767 $';
+my $Version = '$Revision: 1866 $';
 
 my $myhost = hostname;
 chomp($myhost);
@@ -266,8 +266,8 @@ sub make {
 
 sub maketest {
         # Tests
-        print LOG "LANG=C make test 2>&1\n";
-        open( MAKE, "LANG=C make test && make install DESTDIR=$TmpDir/tinderbox_build.$$ && make install-strip DESTDIR=$TmpDir/tinderbox_build2.$$ 2>&1 |");
+        print LOG "LANG=C make test-debug 2>&1\n";
+        open( MAKE, "LANG=C make test-debug && make install DESTDIR=$TmpDir/tinderbox_build.$$ && make install-strip DESTDIR=$TmpDir/tinderbox_build2.$$ 2>&1 |");
 	while ( <MAKE> ) {
 		print $_;
 		print LOG $_;

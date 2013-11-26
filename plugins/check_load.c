@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007-04-25 23:10:13 +0100 (Wed, 25 Apr 2007) $
+* Last Modified: $Date: 2007-12-10 00:19:27 +0000 (Mon, 10 Dec 2007) $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  
- $Id: check_load.c 1700 2007-04-25 22:10:13Z tonvoon $
+ $Id: check_load.c 1851 2007-12-10 00:19:27Z psychotrahe $
 
 ******************************************************************************/
 
 const char *progname = "check_load";
-const char *revision = "$Revision: 1700 $";
+const char *revision = "$Revision: 1851 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -77,6 +77,7 @@ static void
 get_threshold(char *arg, double *th)
 {
 	size_t i, n;
+	int valid = 0;
 	char *str = arg, *p;
 
 	n = strlen(arg);
@@ -84,12 +85,13 @@ get_threshold(char *arg, double *th)
 		th[i] = strtod(str, &p);
 		if(p == str) break;
 
+		valid = 1;
 		str = p + 1;
 		if(n <= (size_t)(str - arg)) break;
 	}
 
 	/* empty argument or non-floatish, so warn about it and die */
-	if(!i) usage (_("Warning threshold must be float or float triplet!\n"));
+	if(!i && !valid) usage (_("Warning threshold must be float or float triplet!\n"));
 
 	if(i != 2) {
 		/* one or more numbers were given, so fill array with last

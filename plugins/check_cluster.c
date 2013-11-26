@@ -5,7 +5,7 @@
  * Copyright (c) 2000-2004 Ethan Galstad (nagios@nagios.org)
  * Copyright (c) 2007 nagios-plugins team
  * License: GPL
- * Last Modified: $Date: 2007-06-20 10:01:07 +0100 (Wed, 20 Jun 2007) $
+ * Last Modified: $Date: 2007-12-11 05:57:35 +0000 (Tue, 11 Dec 2007) $
  *
  * License Information:
  *
@@ -23,12 +23,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * $Id: check_cluster.c 1745 2007-06-20 09:01:07Z psychotrahe $
+ * $Id: check_cluster.c 1861 2007-12-11 05:57:35Z dermoth $
  * 
 ******************************************************************************/
 
 const char *progname = "check_cluster";
-const char *revision = "$Revision: 1745 $";
+const char *revision = "$Revision: 1861 $";
 const char *copyright = "2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -70,6 +70,10 @@ int main(int argc, char **argv){
 	int data_val;
 	int return_code=STATE_OK;
 	thresholds *thresholds = NULL;
+
+	setlocale (LC_ALL, "");
+	bindtextdomain (PACKAGE, LOCALEDIR);
+	textdomain (PACKAGE);
 
 	if(process_arguments(argc,argv)==ERROR)
 		usage(_("Could not parse arguments"));
@@ -178,14 +182,10 @@ int process_arguments(int argc, char **argv){
 			break;
 
 		case 'w': /* warning threshold */
-			if (strspn (optarg, "0123456789:,") < strlen (optarg))
-				usage2 (_("Invalid warning threshold: %s\n"), optarg);
 			warn_threshold = strdup(optarg);
 			break;
 
 		case 'c': /* warning threshold */
-			if (strspn (optarg, "0123456789:,") < strlen (optarg))
-				usage2 (_("Invalid critical threshold: %s\n"), optarg);
 			crit_threshold = strdup(optarg);
 			break;
 
@@ -248,7 +248,7 @@ print_help(void)
 	printf ("    %s\n", _("non-OK state in order to return a WARNING status level"));
 	printf (" %s\n", "-c, --critical=THRESHOLD");
 	printf ("    %s\n", _("Specifies the range of hosts or services in cluster that must be in a"));
-	printf ("    %s\n", _(" non-OK state in order to return a CRITICAL status level"));
+	printf ("    %s\n", _("non-OK state in order to return a CRITICAL status level"));
 	printf (" %s\n", "-d, --data=LIST");
 	printf ("    %s\n", _("The status codes of the hosts or services in the cluster, separated by"));
 	printf ("    %s\n", _("commas"));

@@ -6,7 +6,7 @@
 * Copyright (c) 2001-2004 Ethan Galstad (nagios@nagios.org)
 * Copyright (c) 2001-2006 Nagios Plugin Development Team
 *
-* Last Modified: $Date: 2007-07-26 18:32:37 +0100 (Thu, 26 Jul 2007) $
+* Last Modified: $Date: 2007-10-25 21:43:04 +0100 (Thu, 25 Oct 2007) $
 *
 * Description:
 *
@@ -31,7 +31,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_dhcp.c 1766 2007-07-26 17:32:37Z hweiss $
+* $Id: check_dhcp.c 1810 2007-10-25 20:43:04Z tonvoon $
 *
 * ------------------------------------------------------------------------
 * Unicast mode was originally implemented by Heiti of Boras Kommun with
@@ -42,7 +42,7 @@
 *****************************************************************************/
 
 const char *progname = "check_dhcp";
-const char *revision = "$Revision: 1766 $";
+const char *revision = "$Revision: 1810 $";
 const char *copyright = "2001-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -269,9 +269,6 @@ int main(int argc, char **argv){
 	int dhcp_socket;
 	int result = STATE_UNKNOWN;
 
-	/* this plugin almost certainly needs root permissions. */
-	np_warn_if_not_root();
-	
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
@@ -280,6 +277,9 @@ int main(int argc, char **argv){
 		usage4 (_("Could not parse arguments"));
 		}
 
+	/* this plugin almost certainly needs root permissions. */
+	np_warn_if_not_root();
+	
 	/* create socket for DHCP communications */
 	dhcp_socket=create_dhcp_socket();
 

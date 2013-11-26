@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_REVISION ($Revision: 1801 $)
+AC_REVISION ($Revision: 1873 $)
 AC_PREREQ(2.59)
-AC_INIT(nagios-plugins,1.4.10)
+AC_INIT(nagios-plugins,1.4.11)
 AC_CONFIG_SRCDIR(NPTest.pm)
 AC_CONFIG_FILES(gl/Makefile)
 AC_CONFIG_AUX_DIR(build-aux)
@@ -155,7 +155,7 @@ AC_SUBST(MATHLIBS)
 
 dnl Check for libtap, to run perl-like tests
 AC_CHECK_LIB(tap, plan_tests, 
-	EXTRA_TEST="test_utils test_disk test_tcp test_cmd"
+	EXTRA_TEST="test_utils test_disk test_tcp test_cmd test_base64"
 	AC_SUBST(EXTRA_TEST)
 	)
 

@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007-01-28 21:46:41 +0000 (Sun, 28 Jan 2007) $
+* Last Modified: $Date: 2007-11-09 13:08:43 +0000 (Fri, 09 Nov 2007) $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_ssh.c 1590 2007-01-28 21:46:41Z hweiss $
+* $Id: check_ssh.c 1813 2007-11-09 13:08:43Z dermoth $
 * 
 ******************************************************************************/
 
 const char *progname = "check_ssh";
-const char *revision = "$Revision: 1590 $";
+const char *revision = "$Revision: 1813 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -221,7 +221,7 @@ ssh_connect (char *haddr, int hport, char *remote_version)
 	char *ssh_server = NULL;
 	char rev_no[20];
 
-	sscanf ("$Revision: 1590 $", "$Revision: %[0123456789.]", rev_no);
+	sscanf ("$Revision: 1813 $", "$Revision: %[0123456789.]", rev_no);
 
 	result = my_tcp_connect (haddr, hport, &sd);
 
@@ -233,6 +233,7 @@ ssh_connect (char *haddr, int hport, char *remote_version)
 	recv (sd, output, BUFF_SZ, 0);
 	if (strncmp (output, "SSH", 3)) {
 		printf (_("Server answer: %s"), output);
+		close(sd);
 		exit (STATE_CRITICAL);
 	}
 	else {
@@ -252,6 +253,7 @@ ssh_connect (char *haddr, int hport, char *remote_version)
 			printf
 				(_("SSH WARNING - %s (protocol %s) version mismatch, expected '%s'\n"),
 				 ssh_server, ssh_proto, remote_version);
+			close(sd);
 			exit (STATE_WARNING);
 		}
 		

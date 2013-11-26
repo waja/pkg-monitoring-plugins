@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007-07-21 17:29:01 +0100 (Sat, 21 Jul 2007) $
+* Last Modified: $Date: 2007-12-11 05:57:35 +0000 (Tue, 11 Dec 2007) $
 *
 * Description:
 *
@@ -33,13 +33,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_http.c 1759 2007-07-21 16:29:01Z hweiss $
+ $Id: check_http.c 1861 2007-12-11 05:57:35Z dermoth $
  
 ******************************************************************************/
 /* splint -I. -I../../plugins -I../../lib/ -I/usr/kerberos/include/ ../../plugins/check_http.c */
 
 const char *progname = "check_http";
-const char *revision = "$Revision: 1759 $";
+const char *revision = "$Revision: 1861 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -48,6 +48,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include "common.h"
 #include "netutils.h"
 #include "utils.h"
+#include "base64.h"
 
 #define INPUT_DELIMITER ";"
 
@@ -125,7 +126,6 @@ char *http_content_type;
 char buffer[MAX_INPUT_BUFFER];
 
 int process_arguments (int, char **);
-static char *base64 (const char *bin, size_t len);
 int check_http (void);
 void redir (char *pos, char *status_line);
 int server_type_check(const char *type);
@@ -140,6 +140,10 @@ main (int argc, char **argv)
 {
   int result = STATE_UNKNOWN;
 
+	setlocale (LC_ALL, "");
+	bindtextdomain (PACKAGE, LOCALEDIR);
+	textdomain (PACKAGE);
+
   /* Set default URL. Must be malloced for subsequent realloc if --onredirect=follow */
   server_url = strdup(HTTP_URL);
   server_url_length = strlen(server_url);
@@ -151,7 +155,7 @@ main (int argc, char **argv)
 
   if (display_html == TRUE)
     printf ("<A HREF=\"%s://%s:%d%s\" target=\"_blank\">", 
-      use_ssl ? "https" : "http", server_address,
+      use_ssl ? "https" : "http", host_name ? host_name : server_address,
       server_port, server_url);
 
   /* initialize alarm signal handling, set socket timeout, start timer */
@@ -451,49 +455,6 @@ process_arguments (int argc, char **argv)
     http_method = strdup ("GET");
 
   return TRUE;
-}
-
-
-
-/* written by lauri alanko */
-static char *
-base64 (const char *bin, size_t len)
-{
-
-  char *buf = (char *) malloc ((len + 2) / 3 * 4 + 1);
-  size_t i = 0, j = 0;
-
-  char BASE64_END = '=';
-  char base64_table[64];
-  strncpy (base64_table, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 64);
-
-  while (j < len - 2) {
-    buf[i++] = base64_table[bin[j] >> 2];
-    buf[i++] = base64_table[((bin[j] & 3) << 4) | (bin[j + 1] >> 4)];
-    buf[i++] = base64_table[((bin[j + 1] & 15) << 2) | (bin[j + 2] >> 6)];
-    buf[i++] = base64_table[bin[j + 2] & 63];
-    j += 3;
-  }
-
-  switch (len - j) {
-  case 1:
-    buf[i++] = base64_table[bin[j] >> 2];
-    buf[i++] = base64_table[(bin[j] & 3) << 4];
-    buf[i++] = BASE64_END;
-    buf[i++] = BASE64_END;
-    break;
-  case 2:
-    buf[i++] = base64_table[bin[j] >> 2];
-    buf[i++] = base64_table[((bin[j] & 3) << 4) | (bin[j + 1] >> 4)];
-    buf[i++] = base64_table[(bin[j + 1] & 15) << 2];
-    buf[i++] = BASE64_END;
-    break;
-  case 0:
-    break;
-  }
-
-  buf[i] = '\0';
-  return buf;
 }
 
 
@@ -982,14 +943,14 @@ check_http (void)
   microsec = deltime (tv);
   elapsed_time = (double)microsec / 1.0e6;
   asprintf (&msg,
-            _("HTTP WARNING: %s - %.3f second response time %s|%s %s\n"),
+            _(" - %s - %.3f second response time %s|%s %s\n"),
             status_line, elapsed_time, 
             (display_html ? "</A>" : ""),
             perfd_time (elapsed_time), perfd_size (pagesize));
   if (check_critical_time == TRUE && elapsed_time > critical_time)
-    die (STATE_CRITICAL, "%s", msg);
+    die (STATE_CRITICAL, "HTTP %s: %s", _("CRITICAL"), msg);
   if (check_warning_time == TRUE && elapsed_time > warning_time)
-    die (STATE_WARNING, "%s", msg);
+    die (STATE_WARNING, "HTTP %s: %s", _("WARNING"), msg);
 
   /* Page and Header content checks go here */
   /* these checks should be last */
@@ -1062,7 +1023,6 @@ check_http (void)
 
 
 /* per RFC 2396 */
-#define HDR_LOCATION "%*[Ll]%*[Oo]%*[Cc]%*[Aa]%*[Tt]%*[Ii]%*[Oo]%*[Nn]: "
 #define URI_HTTP "%5[HTPShtps]"
 #define URI_HOST "%255[-.abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789]"
 #define URI_PORT "%6d" /* MAX_PORT's width is 5 chars, 6 to detect overflow */
@@ -1092,7 +1052,7 @@ redir (char *pos, char *status_line)
     die (STATE_UNKNOWN, _("HTTP UNKNOWN - Could not allocate url\n"));
 
   while (pos) {
-    sscanf (pos, "%[Ll]%*[Oo]%*[Cc]%*[Aa]%*[Tt]%*[Ii]%*[Oo]%*[Nn]:%n", xx, &i);
+    sscanf (pos, "%1[Ll]%*1[Oo]%*1[Cc]%*1[Aa]%*1[Tt]%*1[Ii]%*1[Oo]%*1[Nn]:%n", xx, &i);
     if (i == 0) {
       pos += (size_t) strcspn (pos, "\r\n");
       pos += (size_t) strspn (pos, "\r\n");
@@ -1155,7 +1115,7 @@ redir (char *pos, char *status_line)
       }
       i = server_port;
       strcpy (type, server_type);
-      strcpy (addr, server_address);
+      strcpy (addr, host_name ? host_name : server_address);
     }           
 
     else {
@@ -1204,8 +1164,8 @@ redir (char *pos, char *status_line)
          display_html ? "</A>" : "");
 
   if (verbose)
-    printf (_("Redirection to %s://%s:%d%s\n"), server_type, server_address,
-            server_port, server_url);
+    printf (_("Redirection to %s://%s:%d%s\n"), server_type,
+            host_name ? host_name : server_address, server_port, server_url);
 
   check_http ();
 }
