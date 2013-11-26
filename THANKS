@@ -2,8 +2,8 @@ This software is brought to you by the Nagios Plugins Development Team. However,
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-dag rob?le
 fabiodds
+dag rob?le
 Randy O'Meara
 Oskar Ahner
 Lance Albertson
@@ -40,6 +40,7 @@ Richard Brodie
 Matthew Brown
 Dick van den Burg
 Jason Burnett
+Grant Byers
 Carlos Canau
 Jim Carroll
 Ian Cass
@@ -48,8 +49,8 @@ Alex Chaffee
 Eric Chen
 Alwyn Cherrington
 Ben Clewett
-Charlie Cook
 Garry Cook
+Charlie Cook
 Ollie Cook
 Jason Crawford
 David Croft
@@ -89,8 +90,8 @@ Felix Frank
 Rick Frey
 Matt Garrett
 Robby Giffin
-Florian Gleixner
 Flo Gleixner
+Florian Gleixner
 Aravind Gottipati
 Kev Green
 Steve Greenland
