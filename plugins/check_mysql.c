@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999 Didi Rieder (adrieder@sbox.tu-graz.ac.at)
 * Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
-* Copyright (c) 1999-2009 Nagios Plugins Development Team
+* Copyright (c) 1999-2011 Nagios Plugins Development Team
 * 
 * Description:
 * 
@@ -31,7 +31,7 @@
 *****************************************************************************/
 
 const char *progname = "check_mysql";
-const char *copyright = "1999-2007";
+const char *copyright = "1999-2011";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #define SLAVERESULTSIZE 70
@@ -49,9 +49,43 @@ char *db_host = NULL;
 char *db_socket = NULL;
 char *db_pass = NULL;
 char *db = NULL;
+char *ca_cert = NULL;
+char *ca_dir = NULL;
+char *cert = NULL;
+char *key = NULL;
+char *ciphers = NULL;
+bool ssl = false;
+char *opt_file = NULL;
+char *opt_group = NULL;
 unsigned int db_port = MYSQL_PORT;
 int check_slave = 0, warn_sec = 0, crit_sec = 0;
 int verbose = 0;
+
+static double warning_time = 0;
+static double critical_time = 0;
+
+#define LENGTH_METRIC_UNIT 6
+static const char *metric_unit[LENGTH_METRIC_UNIT] = {
+	"Open_files",
+	"Open_tables",
+	"Qcache_free_memory",
+	"Qcache_queries_in_cache",
+	"Threads_connected",
+	"Threads_running"
+};
+
+#define LENGTH_METRIC_COUNTER 9
+static const char *metric_counter[LENGTH_METRIC_COUNTER] = {
+	"Connections",
+	"Qcache_hits",
+	"Qcache_inserts",
+	"Qcache_lowmem_prunes",
+	"Qcache_not_cached",
+	"Queries",
+	"Questions",
+	"Table_locks_waited",
+	"Uptime"
+};
 
 thresholds *my_threshold = NULL;
 
@@ -73,6 +107,9 @@ main (int argc, char **argv)
 	char *result = NULL;
 	char *error = NULL;
 	char slaveresult[SLAVERESULTSIZE];
+	char* perf;
+
+        perf = strdup ("");
 
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
@@ -86,9 +123,17 @@ main (int argc, char **argv)
 
 	/* initialize mysql  */
 	mysql_init (&mysql);
+	
+	if (opt_file != NULL)
+		mysql_options(&mysql,MYSQL_READ_DEFAULT_FILE,opt_file);
 
-	mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"client");
+	if (opt_group != NULL)
+		mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,opt_group);
+	else
+		mysql_options(&mysql,MYSQL_READ_DEFAULT_GROUP,"client");
 
+	if (ssl)
+		mysql_ssl_set(&mysql,key,cert,ca_cert,ca_dir,ciphers);
 	/* establish a connection to the server and error checking */
 	if (!mysql_real_connect(&mysql,db_host,db_user,db_pass,db,db_port,db_socket,0)) {
 		if (mysql_errno (&mysql) == CR_UNKNOWN_HOST)
@@ -116,6 +161,37 @@ main (int argc, char **argv)
 			die (STATE_CRITICAL, "%s\n", mysql_error (&mysql));
 		else if (mysql_errno (&mysql) == CR_UNKNOWN_ERROR)
 			die (STATE_CRITICAL, "%s\n", mysql_error (&mysql));
+	}
+
+	/* try to fetch some perf data */
+	if (mysql_query (&mysql, "show global status") == 0) {
+		if ( (res = mysql_store_result (&mysql)) == NULL) {
+			error = strdup(mysql_error(&mysql));
+			mysql_close (&mysql);
+			die (STATE_CRITICAL, _("status store_result error: %s\n"), error);
+		}
+
+		while ( (row = mysql_fetch_row (res)) != NULL) {
+			int i;
+
+			for(i = 0; i < LENGTH_METRIC_UNIT; i++) {
+				if (strcmp(row[0], metric_unit[i]) == 0) {
+					xasprintf(&perf, "%s%s ", perf, perfdata(metric_unit[i],
+						atol(row[1]), "", FALSE, 0, FALSE, 0, FALSE, 0, FALSE, 0));
+					continue;
+				}
+			}
+			for(i = 0; i < LENGTH_METRIC_COUNTER; i++) {
+				if (strcmp(row[0], metric_counter[i]) == 0) {
+					xasprintf(&perf, "%s%s ", perf, perfdata(metric_counter[i],
+						atol(row[1]), "c", FALSE, 0, FALSE, 0, FALSE, 0, FALSE, 0));
+					continue;
+				}
+			}
+		}
+		/* remove trailing space */
+                if (strlen(perf) > 0)
+                    perf[strlen(perf) - 1] = '\0';
 	}
 
 	if(check_slave) {
@@ -157,7 +233,7 @@ main (int argc, char **argv)
 			}
 
 		} else {
-			/* mysql 4.x.x */
+			/* mysql 4.x.x and mysql 5.x.x */
 			int slave_io_field = -1 , slave_sql_field = -1, seconds_behind_field = -1, i, num_fields;
 			MYSQL_FIELD* fields;
 
@@ -178,13 +254,17 @@ main (int argc, char **argv)
 				}
 			}
 
+			/* Check if slave status is available */
 			if ((slave_io_field < 0) || (slave_sql_field < 0) || (num_fields == 0)) {
 				mysql_free_result (res);
 				mysql_close (&mysql);
 				die (STATE_CRITICAL, "Slave status unavailable\n");
 			}
 
+			/* Save slave status in slaveresult */
 			snprintf (slaveresult, SLAVERESULTSIZE, "Slave IO: %s Slave SQL: %s Seconds Behind Master: %s", row[slave_io_field], row[slave_sql_field], seconds_behind_field!=-1?row[seconds_behind_field]:"Unknown");
+
+			/* Raise critical error if SQL THREAD or IO THREAD are stopped */
 			if (strcmp (row[slave_io_field], "Yes") != 0 || strcmp (row[slave_sql_field], "Yes") != 0) {
 				mysql_free_result (res);
 				mysql_close (&mysql);
@@ -199,17 +279,24 @@ main (int argc, char **argv)
 				}
 			}
 
+			/* Check Seconds Behind against threshold */
 			if ((seconds_behind_field != -1) && (strcmp (row[seconds_behind_field], "NULL") != 0)) {
 				double value = atof(row[seconds_behind_field]);
 				int status;
 
 				status = get_status(value, my_threshold);
 
+				xasprintf (&perf, "%s %s", perf, fperfdata ("seconds behind master", value, "s",
+        	                        TRUE, (double) warning_time,
+                	                TRUE, (double) critical_time,
+                        	        FALSE, 0,
+                                	FALSE, 0));
+
 				if (status == STATE_WARNING) {
-					printf("SLOW_SLAVE %s: %s\n", _("WARNING"), slaveresult);
+					printf("SLOW_SLAVE %s: %s|%s\n", _("WARNING"), slaveresult, perf);
 					exit(STATE_WARNING);
 				} else if (status == STATE_CRITICAL) {
-					printf("SLOW_SLAVE %s: %s\n", _("CRITICAL"), slaveresult);
+					printf("SLOW_SLAVE %s: %s|%s\n", _("CRITICAL"), slaveresult, perf);
 					exit(STATE_CRITICAL);
 				}
 			}
@@ -224,9 +311,9 @@ main (int argc, char **argv)
 
 	/* print out the result of stats */
 	if (check_slave) {
-		printf ("%s %s\n", result, slaveresult);
+		printf ("%s %s|%s\n", result, slaveresult, perf);
 	} else {
-		printf ("%s\n", result);
+		printf ("%s|%s\n", result, perf);
 	}
 
 	return STATE_OK;
@@ -248,6 +335,8 @@ process_arguments (int argc, char **argv)
 		{"database", required_argument, 0, 'd'},
 		{"username", required_argument, 0, 'u'},
 		{"password", required_argument, 0, 'p'},
+		{"file", required_argument, 0, 'f'},
+		{"group", required_argument, 0, 'g'},
 		{"port", required_argument, 0, 'P'},
 		{"critical", required_argument, 0, 'c'},
 		{"warning", required_argument, 0, 'w'},
@@ -255,6 +344,12 @@ process_arguments (int argc, char **argv)
 		{"verbose", no_argument, 0, 'v'},
 		{"version", no_argument, 0, 'V'},
 		{"help", no_argument, 0, 'h'},
+		{"ssl", no_argument, 0, 'l'},
+		{"ca-cert", optional_argument, 0, 'C'},
+		{"key", required_argument,0,'k'},
+		{"cert", required_argument,0,'a'},
+		{"ca-dir", required_argument, 0, 'D'},
+		{"ciphers", required_argument, 0, 'L'},
 		{0, 0, 0, 0}
 	};
 
@@ -262,7 +357,7 @@ process_arguments (int argc, char **argv)
 		return ERROR;
 
 	while (1) {
-		c = getopt_long (argc, argv, "hvVSP:p:u:d:H:s:c:w:", longopts, &option);
+		c = getopt_long (argc, argv, "hlvVSP:p:u:d:H:s:c:w:a:k:C:D:L:f:g:", longopts, &option);
 
 		if (c == -1 || c == EOF)
 			break;
@@ -282,6 +377,24 @@ process_arguments (int argc, char **argv)
 		case 'd':									/* database */
 			db = optarg;
 			break;
+		case 'l':
+			ssl = true;
+			break;
+		case 'C':
+			ca_cert = optarg;
+			break;
+		case 'a':
+			cert = optarg;
+			break;
+		case 'k':
+			key = optarg;
+			break;
+		case 'D':
+			ca_dir = optarg;
+			break;
+		case 'L':
+			ciphers = optarg;
+			break;
 		case 'u':									/* username */
 			db_user = optarg;
 			break;
@@ -294,6 +407,12 @@ process_arguments (int argc, char **argv)
 				optarg++;
 			}
 			break;
+		case 'f':									/* client options file */
+			opt_file = optarg;
+			break;
+		case 'g':									/* client options group */
+			opt_group = optarg;
+			break;
 		case 'P':									/* critical time threshold */
 			db_port = atoi (optarg);
 			break;
@@ -302,9 +421,11 @@ process_arguments (int argc, char **argv)
 			break;
 		case 'w':
 			warning = optarg;
+			warning_time = strtod (warning, NULL);
 			break;
 		case 'c':
 			critical = optarg;
+			critical_time = strtod (critical, NULL);
 			break;
 		case 'V':									/* version */
 			print_revision (progname, NP_VERSION);
@@ -355,6 +476,12 @@ validate_arguments (void)
 	if (db_user == NULL)
 		db_user = strdup("");
 
+	if (opt_file == NULL)
+		opt_file = strdup("");
+
+	if (opt_group == NULL)
+		opt_group = strdup("");
+
 	if (db_host == NULL)
 		db_host = strdup("");
 
@@ -369,7 +496,7 @@ void
 print_help (void)
 {
 	char *myport;
-	asprintf (&myport, "%d", MYSQL_PORT);
+	xasprintf (&myport, "%d", MYSQL_PORT);
 
 	print_revision (progname, NP_VERSION);
 
@@ -390,6 +517,10 @@ print_help (void)
 
   printf (" %s\n", "-d, --database=STRING");
   printf ("    %s\n", _("Check database with indicated name"));
+  printf (" %s\n", "-f, --file=STRING");
+  printf ("    %s\n", _("Read from the specified client options file"));
+  printf (" %s\n", "-g, --group=STRING");
+  printf ("    %s\n", _("Use a client options group"));
   printf (" %s\n", "-u, --username=STRING");
   printf ("    %s\n", _("Connect using the indicated username"));
   printf (" %s\n", "-p, --password=STRING");
@@ -404,6 +535,19 @@ print_help (void)
   printf (" %s\n", "-c, --critical");
   printf ("    %s\n", _("Exit with CRITICAL status if slave server is more then INTEGER seconds"));
   printf ("    %s\n", _("behind master"));
+  printf (" %s\n", "-l, --ssl");
+  printf ("    %s\n", _("Use ssl encryptation"));
+  printf (" %s\n", "-C, --ca-cert=STRING");
+  printf ("    %s\n", _("Path to CA signing the cert"));
+  printf (" %s\n", "-a, --cert=STRING");
+  printf ("    %s\n", _("Path to SSL certificate"));
+  printf (" %s\n", "-k, --key=STRING");
+  printf ("    %s\n", _("Path to private SSL key"));
+  printf (" %s\n", "-D, --ca-dir=STRING");
+  printf ("    %s\n", _("Path to CA directory"));
+  printf (" %s\n", "-L, --ciphers=STRING");
+  printf ("    %s\n", _("List of valid SSL ciphers"));
+
 
   printf ("\n");
   printf (" %s\n", _("There are no required arguments. By default, the local database is checked"));
@@ -424,5 +568,6 @@ print_usage (void)
 {
 	printf ("%s\n", _("Usage:"));
   printf (" %s [-d database] [-H host] [-P port] [-s socket]\n",progname);
-  printf ("       [-u user] [-p password] [-S]\n");
+  printf ("       [-u user] [-p password] [-S] [-l] [-a cert] [-k key]\n");
+  printf ("       [-C ca-cert] [-D ca-dir] [-L ciphers] [-f optfile] [-g group]\n");
 }

@@ -57,12 +57,13 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #define WARN_STRING 16
 #define WARN_REGEX 32
 
-#define MAX_OIDS 8
+#define OID_COUNT_STEP 8
 
 /* Longopts only arguments */
 #define L_CALCULATE_RATE CHAR_MAX+1
 #define L_RATE_MULTIPLIER CHAR_MAX+2
 #define L_INVERT_SEARCH CHAR_MAX+3
+#define L_OFFSET CHAR_MAX+4
 
 /* Gobble to string - stop incrementing c when c[0] match one of the
  * characters in s */
@@ -111,6 +112,7 @@ char *privproto = NULL;
 char *authpasswd = NULL;
 char *privpasswd = NULL;
 char **oids = NULL;
+size_t oids_size = NULL;
 char *label;
 char *units;
 char *port;
@@ -120,29 +122,55 @@ int  invert_search=0;
 char **labels = NULL;
 char **unitv = NULL;
 size_t nlabels = 0;
-size_t labels_size = 8;
+size_t labels_size = OID_COUNT_STEP;
 size_t nunits = 0;
-size_t unitv_size = 8;
+size_t unitv_size = OID_COUNT_STEP;
 int numoids = 0;
 int numauthpriv = 0;
 int verbose = 0;
 int usesnmpgetnext = FALSE;
 char *warning_thresholds = NULL;
 char *critical_thresholds = NULL;
-thresholds *thlds[MAX_OIDS];
-double response_value[MAX_OIDS];
+thresholds **thlds;
+size_t thlds_size = OID_COUNT_STEP;
+double *response_value;
+size_t response_size = OID_COUNT_STEP;
 int retries = 0;
-int eval_method[MAX_OIDS];
+int *eval_method;
+size_t eval_size = OID_COUNT_STEP;
 char *delimiter;
 char *output_delim;
 char *miblist = NULL;
 int needmibs = FALSE;
 int calculate_rate = 0;
+double offset = 0.0;
 int rate_multiplier = 1;
 state_data *previous_state;
-double previous_value[MAX_OIDS];
+double *previous_value;
+size_t previous_size = OID_COUNT_STEP;
 int perf_labels = 1;
 
+
+static char *fix_snmp_range(char *th)
+{
+	double left, right;
+	char *colon, *ret;
+
+	if ((colon = strchr(th, ':')) == NULL || *(colon + 1) == '\0')
+		return th;
+
+	left = strtod(th, NULL);
+	right = strtod(colon + 1, NULL);
+	if (right >= left)
+		return th;
+
+	if ((ret = malloc(strlen(th) + 2)) == NULL)
+		die(STATE_UNKNOWN, _("Cannot malloc"));
+	*colon = '\0';
+	sprintf(ret, "@%s:%s", colon + 1, th);
+	free(th);
+	return ret;
+}
 
 int
 main (int argc, char **argv)
@@ -181,10 +209,13 @@ main (int argc, char **argv)
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
 
-	labels = malloc (labels_size);
-	unitv = malloc (unitv_size);
-	for (i = 0; i < MAX_OIDS; i++)
-		eval_method[i] = CHECK_UNDEF;
+	labels = malloc (labels_size * sizeof(*labels));
+	unitv = malloc (unitv_size * sizeof(*unitv));
+	thlds = malloc (thlds_size * sizeof(*thlds));
+	response_value = malloc (response_size * sizeof(*response_value));
+	previous_value = malloc (previous_size * sizeof(*previous_value));
+	eval_method = calloc (eval_size, sizeof(*eval_method));
+	oids = calloc(oids_size, sizeof (char *));
 
 	label = strdup ("SNMP");
 	units = strdup ("");
@@ -202,13 +233,14 @@ main (int argc, char **argv)
 
 	np_set_args(argc, argv);
 
+	time(&current_time);
+
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
 
 	if(calculate_rate) {
 		if (!strcmp(label, "SNMP"))
 			label = strdup("SNMP RATE");
-		time(&current_time);
 		i=0;
 		previous_state = np_state_read();
 		if(previous_state!=NULL) {
@@ -217,6 +249,10 @@ main (int argc, char **argv)
 			while((ap = strsep(&previous_string, ":")) != NULL) {
 				if(verbose>2)
 					printf("State for %d=%s\n", i, ap);
+				while (i >= previous_size) {
+					previous_size += OID_COUNT_STEP;
+					previous_value = realloc(previous_value, previous_size * sizeof(*previous_value));
+				}
 				previous_value[i++]=strtod(ap,NULL);
 			}
 		}
@@ -228,6 +264,15 @@ main (int argc, char **argv)
 	for (i=0; i<numoids; i++) {
 		char *w = th_warn ? strndup(th_warn, strcspn(th_warn, ",")) : NULL;
 		char *c = th_crit ? strndup(th_crit, strcspn(th_crit, ",")) : NULL;
+		/* translate "2:1" to "@1:2" for backwards compatibility */
+		w = w ? fix_snmp_range(w) : NULL;
+		c = c ? fix_snmp_range(c) : NULL;
+
+		while (i >= thlds_size) {
+			thlds_size += OID_COUNT_STEP;
+			thlds = realloc(thlds, thlds_size * sizeof(*thlds));
+		}
+
 		/* Skip empty thresholds, while avoiding segfault */
 		set_thresholds(&thlds[i],
 		               w ? strpbrk(w, NP_THRESHOLDS_CHARS) : NULL,
@@ -251,35 +296,36 @@ main (int argc, char **argv)
 		snmpcmd = strdup (PATH_TO_SNMPGET);
 	}
 
-	/* 9 arguments to pass before authpriv options + 1 for host and numoids. Add one for terminating NULL */
-	command_line = calloc (9 + numauthpriv + 1 + numoids + 1, sizeof (char *));
+	/* 10 arguments to pass before authpriv options + 1 for host and numoids. Add one for terminating NULL */
+	command_line = calloc (10 + numauthpriv + 1 + numoids + 1, sizeof (char *));
 	command_line[0] = snmpcmd;
-	command_line[1] = strdup ("-t");
-	asprintf (&command_line[2], "%d", timeout_interval);
-	command_line[3] = strdup ("-r");
-	asprintf (&command_line[4], "%d", retries);
-	command_line[5] = strdup ("-m");
-	command_line[6] = strdup (miblist);
-	command_line[7] = "-v";
-	command_line[8] = strdup (proto);
+	command_line[1] = strdup ("-Le");
+	command_line[2] = strdup ("-t");
+	xasprintf (&command_line[3], "%d", timeout_interval);
+	command_line[4] = strdup ("-r");
+	xasprintf (&command_line[5], "%d", retries);
+	command_line[6] = strdup ("-m");
+	command_line[7] = strdup (miblist);
+	command_line[8] = "-v";
+	command_line[9] = strdup (proto);
 
 	for (i = 0; i < numauthpriv; i++) {
-		command_line[9 + i] = authpriv[i];
+		command_line[10 + i] = authpriv[i];
 	}
 
-	asprintf (&command_line[9 + numauthpriv], "%s:%s", server_address, port);
+	xasprintf (&command_line[10 + numauthpriv], "%s:%s", server_address, port);
 
 	/* This is just for display purposes, so it can remain a string */
-	asprintf(&cl_hidden_auth, "%s -t %d -r %d -m %s -v %s %s %s:%s",
+	xasprintf(&cl_hidden_auth, "%s -Le -t %d -r %d -m %s -v %s %s %s:%s",
 		snmpcmd, timeout_interval, retries, strlen(miblist) ? miblist : "''", proto, "[authpriv]",
 		server_address, port);
 
 	for (i = 0; i < numoids; i++) {
-		command_line[9 + numauthpriv + 1 + i] = oids[i];
-		asprintf(&cl_hidden_auth, "%s %s", cl_hidden_auth, oids[i]);	
+		command_line[10 + numauthpriv + 1 + i] = oids[i];
+		xasprintf(&cl_hidden_auth, "%s %s", cl_hidden_auth, oids[i]);	
 	}
 
-	command_line[9 + numauthpriv + 1 + numoids] = NULL;
+	command_line[10 + numauthpriv + 1 + numoids] = NULL;
 
 	if (verbose)
 		printf ("%s\n", cl_hidden_auth);
@@ -371,14 +417,14 @@ main (int argc, char **argv)
 			if (dq_count) { /* unfinished line */
 				/* copy show verbatim first */
 				if (!mult_resp) mult_resp = strdup("");
-				asprintf (&mult_resp, "%s%s:\n%s\n", mult_resp, oids[i], show);
+				xasprintf (&mult_resp, "%s%s:\n%s\n", mult_resp, oids[i], show);
 				/* then strip out unmatched double-quote from single-line output */
 				if (show[0] == '"') show++;
 
 				/* Keep reading until we match end of double-quoted string */
 				for (line++; line < chld_out.lines; line++) {
 					ptr = chld_out.line[line];
-					asprintf (&mult_resp, "%s%s\n", mult_resp, ptr);
+					xasprintf (&mult_resp, "%s%s\n", mult_resp, ptr);
 
 					COUNT_SEQ(ptr, bk_count, dq_count)
 					while (dq_count && ptr[0] != '\n' && ptr[0] != '\0') {
@@ -396,7 +442,7 @@ main (int argc, char **argv)
 			show = strstr (response, "Timeticks: ");
 		}
 		else
-			show = response;
+			show = response + 3;
 
 		iresult = STATE_DEPENDENT;
 
@@ -405,8 +451,12 @@ main (int argc, char **argv)
 		if (thlds[i]->warning || thlds[i]->critical || calculate_rate) {
 			ptr = strpbrk (show, "0123456789");
 			if (ptr == NULL)
-				die (STATE_UNKNOWN,_("No valid data returned"));
-			response_value[i] = strtod (ptr, NULL);
+				die (STATE_UNKNOWN,_("No valid data returned (%s)\n"), show);
+			while (i >= response_size) {
+				response_size += OID_COUNT_STEP;
+				response_value = realloc(response_value, response_size * sizeof(*response_value));
+			}
+			response_value[i] = strtod (ptr, NULL) + offset;
 
 			if(calculate_rate) {
 				if (previous_state!=NULL) {
@@ -424,16 +474,16 @@ main (int argc, char **argv)
 					/* Convert to per second, then use multiplier */
 					temp_double = temp_double/duration*rate_multiplier;
 					iresult = get_status(temp_double, thlds[i]);
-					asprintf (&show, conv, temp_double);
+					xasprintf (&show, conv, temp_double);
 				}
 			} else {
 				iresult = get_status(response_value[i], thlds[i]);
-				asprintf (&show, conv, response_value[i]);
+				xasprintf (&show, conv, response_value[i]);
 			}
 		}
 
 		/* Process this block for string matching */
-		else if (eval_method[i] & CRIT_STRING) {
+		else if (eval_size > i && eval_method[i] & CRIT_STRING) {
 			if (strcmp (show, string_value))
 				iresult = (invert_search==0) ? STATE_CRITICAL : STATE_OK;
 			else
@@ -441,7 +491,7 @@ main (int argc, char **argv)
 		}
 
 		/* Process this block for regex matching */
-		else if (eval_method[i] & CRIT_REGEX) {
+		else if (eval_size > i && eval_method[i] & CRIT_REGEX) {
 			excode = regexec (&preg, response, 10, pmatch, eflags);
 			if (excode == 0) {
 				iresult = (invert_search==0) ? STATE_OK : STATE_CRITICAL;
@@ -459,9 +509,9 @@ main (int argc, char **argv)
 		/* Process this block for existence-nonexistence checks */
 		/* TV: Should this be outside of this else block? */
 		else {
-			if (eval_method[i] & CRIT_PRESENT)
+			if (eval_size > i && eval_method[i] & CRIT_PRESENT)
 				iresult = STATE_CRITICAL;
-			else if (eval_method[i] & WARN_PRESENT)
+			else if (eval_size > i && eval_method[i] & WARN_PRESENT)
 				iresult = STATE_WARNING;
 			else if (response && iresult == STATE_DEPENDENT)
 				iresult = STATE_OK;
@@ -472,16 +522,16 @@ main (int argc, char **argv)
 
 		/* Prepend a label for this OID if there is one */
 		if (nlabels >= (size_t)1 && (size_t)i < nlabels && labels[i] != NULL)
-			asprintf (&outbuff, "%s%s%s %s%s%s", outbuff,
+			xasprintf (&outbuff, "%s%s%s %s%s%s", outbuff,
 				(i == 0) ? " " : output_delim,
 				labels[i], mark (iresult), show, mark (iresult));
 		else
-			asprintf (&outbuff, "%s%s%s%s%s", outbuff, (i == 0) ? " " : output_delim,
+			xasprintf (&outbuff, "%s%s%s%s%s", outbuff, (i == 0) ? " " : output_delim,
 				mark (iresult), show, mark (iresult));
 
 		/* Append a unit string for this OID if there is one */
 		if (nunits > (size_t)0 && (size_t)i < nunits && unitv[i] != NULL)
-			asprintf (&outbuff, "%s %s", outbuff, unitv[i]);
+			xasprintf (&outbuff, "%s %s", outbuff, unitv[i]);
 
 		/* Write perfdata with whatever can be parsed by strtod, if possible */
 		ptr = NULL;
@@ -523,7 +573,7 @@ main (int argc, char **argv)
 		
 		current_length=0;
 		for(i=0; i<total_oids; i++) {
-			asprintf(&temp_string,"%.0f",response_value[i]);
+			xasprintf(&temp_string,"%.0f",response_value[i]);
 			if(temp_string==NULL)
 				die(STATE_UNKNOWN,_("Cannot asprintf()"));
 			response_length = strlen(temp_string);
@@ -595,6 +645,7 @@ process_arguments (int argc, char **argv)
 		{"next", no_argument, 0, 'n'},
 		{"rate", no_argument, 0, L_CALCULATE_RATE},
 		{"rate-multiplier", required_argument, 0, L_RATE_MULTIPLIER},
+		{"offset", required_argument, 0, L_OFFSET},
 		{"invert-search", no_argument, 0, L_INVERT_SEARCH},
 		{"perf-oids", no_argument, 0, 'O'},
 		{0, 0, 0, 0}
@@ -700,23 +751,36 @@ process_arguments (int argc, char **argv)
 					 */
 					needmibs = TRUE;
 			}
-			if (!oids) oids = calloc(MAX_OIDS, sizeof (char *));
-			for (ptr = strtok(optarg, ", "); ptr != NULL && j < MAX_OIDS; ptr = strtok(NULL, ", "), j++) {
+			for (ptr = strtok(optarg, ", "); ptr != NULL; ptr = strtok(NULL, ", "), j++) {
+				while (j >= oids_size) {
+					oids_size += OID_COUNT_STEP;
+					oids = realloc(oids, oids_size * sizeof (*oids));
+				}
 				oids[j] = strdup(ptr);
 			}
 			numoids = j;
 			if (c == 'E' || c == 'e') {
 				jj++;
 				ii++;
+				while (j+1 >= eval_size) {
+					eval_size += OID_COUNT_STEP;
+					eval_method = realloc(eval_method, eval_size * sizeof(*eval_method));
+					memset(eval_method + eval_size - OID_COUNT_STEP, 0, 8);
+				}
+				if (c == 'E')
+					eval_method[j+1] |= WARN_PRESENT;
+				else if (c == 'e')
+					eval_method[j+1] |= CRIT_PRESENT;
 			}
-			if (c == 'E')
-				eval_method[j+1] |= WARN_PRESENT;
-			else if (c == 'e')
-				eval_method[j+1] |= CRIT_PRESENT;
 			break;
 		case 's':									/* string or substring */
 			strncpy (string_value, optarg, sizeof (string_value) - 1);
 			string_value[sizeof (string_value) - 1] = 0;
+			while (jj >= eval_size) {
+				eval_size += OID_COUNT_STEP;
+				eval_method = realloc(eval_method, eval_size * sizeof(*eval_method));
+				memset(eval_method + eval_size - OID_COUNT_STEP, 0, 8);
+			}
 			eval_method[jj++] = CRIT_STRING;
 			ii++;
 			break;
@@ -732,6 +796,11 @@ process_arguments (int argc, char **argv)
 				printf (_("Could Not Compile Regular Expression"));
 				return ERROR;
 			}
+			while (jj >= eval_size) {
+				eval_size += OID_COUNT_STEP;
+				eval_method = realloc(eval_method, eval_size * sizeof(*eval_method));
+				memset(eval_method + eval_size - OID_COUNT_STEP, 0, 8);
+			}
 			eval_method[jj++] = CRIT_REGEX;
 			ii++;
 			break;
@@ -745,9 +814,9 @@ process_arguments (int argc, char **argv)
 			break;
 		case 'l':									/* label */
 			nlabels++;
-			if (nlabels >= labels_size) {
+			if (nlabels > labels_size) {
 				labels_size += 8;
-				labels = realloc (labels, labels_size);
+				labels = realloc (labels, labels_size * sizeof(*labels));
 				if (labels == NULL)
 					die (STATE_UNKNOWN, _("Could not reallocate labels[%d]"), (int)nlabels);
 			}
@@ -757,13 +826,13 @@ process_arguments (int argc, char **argv)
 			if (ptr[0] == '\'')
 				labels[nlabels - 1] = ptr + 1;
 			while (ptr && (ptr = nextarg (ptr))) {
-				if (nlabels >= labels_size) {
+				nlabels++;
+				if (nlabels > labels_size) {
 					labels_size += 8;
-					labels = realloc (labels, labels_size);
+					labels = realloc (labels, labels_size * sizeof(*labels));
 					if (labels == NULL)
 						die (STATE_UNKNOWN, _("Could not reallocate labels\n"));
 				}
-				nlabels++;
 				ptr = thisarg (ptr);
 				if (ptr[0] == '\'')
 					labels[nlabels - 1] = ptr + 1;
@@ -774,9 +843,9 @@ process_arguments (int argc, char **argv)
 		case 'u':									/* units */
 			units = optarg;
 			nunits++;
-			if (nunits >= unitv_size) {
+			if (nunits > unitv_size) {
 				unitv_size += 8;
-				unitv = realloc (unitv, unitv_size);
+				unitv = realloc (unitv, unitv_size * sizeof(*unitv));
 				if (unitv == NULL)
 					die (STATE_UNKNOWN, _("Could not reallocate units [%d]\n"), (int)nunits);
 			}
@@ -786,9 +855,9 @@ process_arguments (int argc, char **argv)
 			if (ptr[0] == '\'')
 				unitv[nunits - 1] = ptr + 1;
 			while (ptr && (ptr = nextarg (ptr))) {
-				if (nunits >= unitv_size) {
+				if (nunits > unitv_size) {
 					unitv_size += 8;
-					unitv = realloc (unitv, unitv_size);
+					unitv = realloc (unitv, unitv_size * sizeof(*unitv));
 					if (units == NULL)
 						die (STATE_UNKNOWN, _("Could not realloc() units\n"));
 				}
@@ -808,6 +877,9 @@ process_arguments (int argc, char **argv)
 		case L_RATE_MULTIPLIER:
 			if(!is_integer(optarg)||((rate_multiplier=atoi(optarg))<=0))
 				usage2(_("Rate multiplier must be a positive integer"),optarg);
+			break;
+		case L_OFFSET:
+                        offset=strtod(optarg,NULL);
 			break;
 		case L_INVERT_SEARCH:
 			invert_search=1;
@@ -869,7 +941,7 @@ validate_arguments ()
 		die(STATE_UNKNOWN, _("No OIDs specified\n"));
 
 	if (proto == NULL)
-		asprintf(&proto, DEFAULT_PROTOCOL);
+		xasprintf(&proto, DEFAULT_PROTOCOL);
 
 	if ((strcmp(proto,"1") == 0) || (strcmp(proto, "2c")==0)) {	/* snmpv1 or snmpv2c */
 		numauthpriv = 2;
@@ -879,7 +951,7 @@ validate_arguments ()
 	}
 	else if ( strcmp (proto, "3") == 0 ) {		/* snmpv3 args */
 		if (seclevel == NULL)
-			asprintf(&seclevel, "noAuthNoPriv");
+			xasprintf(&seclevel, "noAuthNoPriv");
 
 		if (strcmp(seclevel, "noAuthNoPriv") == 0) {
 			numauthpriv = 2;
@@ -892,7 +964,7 @@ validate_arguments ()
 			}
 
 			if (authproto == NULL )
-				asprintf(&authproto, DEFAULT_AUTH_PROTOCOL);
+				xasprintf(&authproto, DEFAULT_AUTH_PROTOCOL);
 
 			if (secname == NULL)
 				die(STATE_UNKNOWN, _("Required parameter: %s\n"), "secname");
@@ -913,7 +985,7 @@ validate_arguments ()
 				authpriv[7] = strdup (authpasswd);
 			} else if ( strcmp(seclevel, "authPriv") == 0 ) {
 				if (privproto == NULL )
-					asprintf(&privproto, DEFAULT_PRIV_PROTOCOL);
+					xasprintf(&privproto, DEFAULT_PRIV_PROTOCOL);
 
 				if (privpasswd == NULL)
 					die(STATE_UNKNOWN, _("Required parameter: %s\n"), "privpasswd");
@@ -1057,6 +1129,8 @@ print_help (void)
 	printf ("    %s\n", _("Enable rate calculation. See 'Rate Calculation' below"));
 	printf (" %s\n", "--rate-multiplier");
 	printf ("    %s\n", _("Converts rate per second. For example, set to 60 to convert to per minute"));
+	printf (" %s\n", "--offset=OFFSET");
+	printf ("    %s\n", _("Add/substract the specified OFFSET to numeric sensor data"));
 
 	/* Tests Against Strings */
 	printf (" %s\n", "-s, --string=STRING");
@@ -1093,7 +1167,7 @@ print_help (void)
 	printf ("\n");
 	printf ("%s\n", _("Notes:"));
 	printf (" %s\n", _("- Multiple OIDs (and labels) may be indicated by a comma or space-delimited  "));
-	printf ("   %s %i %s\n", _("list (lists with internal spaces must be quoted). Maximum:"), MAX_OIDS, _("OIDs."));
+	printf ("   %s\n", _("list (lists with internal spaces must be quoted)."));
 
 	printf(" -%s", UT_THRESHOLDS_NOTES);
 

@@ -91,8 +91,11 @@ static int stat_remote_fs = 0;
 
 /* Linked list of filesystem types to omit.
    If the list is empty, don't exclude any types.  */
-
 static struct name_list *fs_exclude_list;
+
+/* Linked list of filesystem types to check.
+   If the list is empty, include all types.  */
+static struct name_list *fs_include_list;
 
 static struct name_list *dp_exclude_list;
 
@@ -135,6 +138,7 @@ int verbose = 0;
 int erronly = FALSE;
 int display_mntp = FALSE;
 int exact_match = FALSE;
+int freespace_ignore_reserved = FALSE;
 char *warn_freespace_units = NULL;
 char *crit_freespace_units = NULL;
 char *warn_freespace_percent = NULL;
@@ -255,6 +259,9 @@ main (int argc, char **argv)
                (np_find_name (dp_exclude_list, me->me_devname) ||
                 np_find_name (dp_exclude_list, me->me_mountdir))) {
         continue;
+      /* Skip not included fstypes */
+      } else if (fs_include_list && !np_find_name (fs_include_list, me->me_type)) {
+        continue;
       }
 
       stat_path(path);
@@ -320,7 +327,7 @@ main (int argc, char **argv)
       }
 
       /* Nb: *_high_tide are unset when == UINT_MAX */
-      asprintf (&perf, "%s %s", perf,
+      xasprintf (&perf, "%s %s", perf,
                 perfdata ((!strcmp(me->me_mountdir, "none") || display_mntp) ? me->me_devname : me->me_mountdir,
                           path->dused_units, units,
                           (warning_high_tide != UINT_MAX ? TRUE : FALSE), warning_high_tide,
@@ -331,20 +338,20 @@ main (int argc, char **argv)
       if (disk_result==STATE_OK && erronly && !verbose)
         continue;
 
-      asprintf (&output, "%s %s %.0f %s (%.0f%%",
+      xasprintf (&output, "%s %s %.0f %s (%.0f%%",
                 output,
                 (!strcmp(me->me_mountdir, "none") || display_mntp) ? me->me_devname : me->me_mountdir,
                 path->dfree_units,
                 units,
                 path->dfree_pct);
       if (path->dused_inodes_percent < 0) {
-        asprintf(&output, "%s inode=-);", output);
+        xasprintf(&output, "%s inode=-);", output);
       } else {
-        asprintf(&output, "%s inode=%.0f%%);", output, path->dfree_inodes_percent );
+        xasprintf(&output, "%s inode=%.0f%%);", output, path->dfree_inodes_percent );
       }
 
       /* TODO: Need to do a similar debug line
-      asprintf (&details, _("%s\n\
+      xasprintf (&details, _("%s\n\
 %.0f of %.0f %s (%.0f%% inode=%.0f%%) free on %s (type %s mounted on %s) warn:%lu crit:%lu warn%%:%.0f%% crit%%:%.0f%%"),
                 details, dfree_units, dtotal_units, units, dfree_pct, inode_space_pct,
                 me->me_devname, me->me_type, me->me_mountdir,
@@ -356,7 +363,7 @@ main (int argc, char **argv)
   }
 
   if (verbose >= 2)
-    asprintf (&output, "%s%s", output, details);
+    xasprintf (&output, "%s%s", output, details);
 
 
   printf ("DISK %s%s%s|%s\n", state_text (result), (erronly && result==STATE_OK) ? "" : preamble, output, perf);
@@ -419,11 +426,13 @@ process_arguments (int argc, char **argv)
     {"partition", required_argument, 0, 'p'},
     {"exclude_device", required_argument, 0, 'x'},
     {"exclude-type", required_argument, 0, 'X'},
+    {"include-type", required_argument, 0, 'N'},
     {"group", required_argument, 0, 'g'},
     {"eregi-path", required_argument, 0, 'R'},
     {"eregi-partition", required_argument, 0, 'R'},
     {"ereg-path", required_argument, 0, 'r'},
     {"ereg-partition", required_argument, 0, 'r'},
+    {"freespace-ignore-reserved", no_argument, 0, 'f'},
     {"ignore-ereg-path", required_argument, 0, 'i'},
     {"ignore-ereg-partition", required_argument, 0, 'i'},
     {"ignore-eregi-path", required_argument, 0, 'I'},
@@ -452,7 +461,7 @@ process_arguments (int argc, char **argv)
       strcpy (argv[c], "-t");
 
   while (1) {
-    c = getopt_long (argc, argv, "+?VqhveCt:c:w:K:W:u:p:x:X:mklLg:R:r:i:I:MEA", longopts, &option);
+    c = getopt_long (argc, argv, "+?VqhvefCt:c:w:K:W:u:p:x:X:N:mklLg:R:r:i:I:MEA", longopts, &option);
 
     if (c == -1 || c == EOF)
       break;
@@ -473,13 +482,13 @@ process_arguments (int argc, char **argv)
         if (*optarg == '@') {
           warn_freespace_percent = optarg;
         } else {
-          asprintf(&warn_freespace_percent, "@%s", optarg);
+          xasprintf(&warn_freespace_percent, "@%s", optarg);
         }
       } else {
         if (*optarg == '@') {
           warn_freespace_units = optarg;
         } else {
-          asprintf(&warn_freespace_units, "@%s", optarg);
+          xasprintf(&warn_freespace_units, "@%s", optarg);
         }
       }
       break;
@@ -494,13 +503,13 @@ process_arguments (int argc, char **argv)
         if (*optarg == '@') {
           crit_freespace_percent = optarg;
         } else {
-          asprintf(&crit_freespace_percent, "@%s", optarg);
+          xasprintf(&crit_freespace_percent, "@%s", optarg);
         }
       } else {
         if (*optarg == '@') {
           crit_freespace_units = optarg;
         } else {
-          asprintf(&crit_freespace_units, "@%s", optarg);
+          xasprintf(&crit_freespace_units, "@%s", optarg);
         }
       }
       break;
@@ -509,14 +518,14 @@ process_arguments (int argc, char **argv)
       if (*optarg == '@') {
         warn_freeinodes_percent = optarg;
       } else {
-        asprintf(&warn_freeinodes_percent, "@%s", optarg);
+        xasprintf(&warn_freeinodes_percent, "@%s", optarg);
       }
       break;
     case 'K':			/* critical inode threshold */
       if (*optarg == '@') {
         crit_freeinodes_percent = optarg;
       } else {
-        asprintf(&crit_freeinodes_percent, "@%s", optarg);
+        xasprintf(&crit_freeinodes_percent, "@%s", optarg);
       }
       break;
     case 'u':
@@ -591,6 +600,9 @@ process_arguments (int argc, char **argv)
     case 'X':                 /* exclude file system type */
       np_add_name(&fs_exclude_list, optarg);
       break;
+    case 'N':                 /* include file system type */
+      np_add_name(&fs_include_list, optarg);
+      break;
     case 'v':                 /* verbose */
       verbose++;
       break;
@@ -605,6 +617,9 @@ process_arguments (int argc, char **argv)
       if (path_selected)
         die (STATE_UNKNOWN, "DISK %s: %s", _("UNKNOWN"), _("Must set -E before selecting paths\n"));
       exact_match = TRUE;
+      break;
+    case 'f':
+      freespace_ignore_reserved = TRUE;
       break;
     case 'g':
       if (path_selected)
@@ -856,7 +871,7 @@ print_help (void)
   printf (" %s\n", "-c, --critical=INTEGER");
   printf ("    %s\n", _("Exit with CRITICAL status if less than INTEGER units of disk are free"));
   printf (" %s\n", "-c, --critical=PERCENT%");
-  printf ("    %s\n", _("Exit with CRITCAL status if less than PERCENT of disk space is free"));
+  printf ("    %s\n", _("Exit with CRITICAL status if less than PERCENT of disk space is free"));
   printf (" %s\n", "-W, --iwarning=PERCENT%");
   printf ("    %s\n", _("Exit with WARNING status if less than PERCENT of inode space is free"));
   printf (" %s\n", "-K, --icritical=PERCENT%");
@@ -871,6 +886,8 @@ print_help (void)
   printf ("    %s\n", _("For paths or partitions specified with -p, only check for exact paths"));
   printf (" %s\n", "-e, --errors-only");
   printf ("    %s\n", _("Display only devices/mountpoints with errors"));
+  printf (" %s\n", "-f, --freespace-ignore-reserved");
+  printf ("    %s\n", _("Don't account root-reserved blocks into freespace in perfdata"));
   printf (" %s\n", "-g, --group=NAME");
   printf ("    %s\n", _("Group paths. Thresholds apply to (free-)space of all partitions together"));
   printf (" %s\n", "-k, --kilobytes");
@@ -900,6 +917,8 @@ print_help (void)
   printf (UT_VERBOSE);
   printf (" %s\n", "-X, --exclude-type=TYPE");
   printf ("    %s\n", _("Ignore all filesystems of indicated type (may be repeated)"));
+  printf (" %s\n", "-N, --include-type=TYPE");
+  printf ("    %s\n", _("Check only filesystems of indicated type (may be repeated)"));
 
   printf ("\n");
   printf ("%s\n", _("Examples:"));
@@ -921,8 +940,8 @@ print_usage (void)
 {
   printf ("%s\n", _("Usage:"));
   printf (" %s -w limit -c limit [-W limit] [-K limit] {-p path | -x device}\n", progname);
-  printf ("[-C] [-E] [-e] [-g group ] [-k] [-l] [-M] [-m] [-R path ] [-r path ]\n");
-  printf ("[-t timeout] [-u unit] [-v] [-X type]\n");
+  printf ("[-C] [-E] [-e] [-f] [-g group ] [-k] [-l] [-M] [-m] [-R path ] [-r path ]\n");
+  printf ("[-t timeout] [-u unit] [-v] [-X type] [-N type]\n");
 }
 
 void
@@ -994,13 +1013,19 @@ get_stats (struct parameter_list *p, struct fs_usage *fsp) {
 
 void
 get_path_stats (struct parameter_list *p, struct fs_usage *fsp) {
-  p->total = fsp->fsu_blocks;
   /* 2007-12-08 - Workaround for Gnulib reporting insanely high available
   * space on BSD (the actual value should be negative but fsp->fsu_bavail
   * is unsigned) */
   p->available = fsp->fsu_bavail > fsp->fsu_bfree ? 0 : fsp->fsu_bavail;
   p->available_to_root = fsp->fsu_bfree;
-  p->used = p->total - p->available_to_root;
+  p->used = fsp->fsu_blocks - fsp->fsu_bfree;
+  if (freespace_ignore_reserved) {
+    /* option activated : we substract the root-reserved space from the total */
+    p->total = fsp->fsu_blocks - p->available_to_root + p->available;
+  } else {
+    /* default behaviour : take all the blocks into account */
+    p->total = fsp->fsu_blocks;
+  }
   
   p->dused_units = p->used*fsp->fsu_blocksize/mult;
   p->dfree_units = p->available*fsp->fsu_blocksize/mult;

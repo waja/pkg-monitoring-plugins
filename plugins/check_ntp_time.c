@@ -344,7 +344,11 @@ double offset_request(const char *host, int *status){
 			die(STATE_UNKNOWN, "can not create new socket");
 		}
 		if(connect(socklist[i], ai_tmp->ai_addr, ai_tmp->ai_addrlen)){
-			die(STATE_UNKNOWN, "can't create socket connection");
+			/* don't die here, because it is enough if there is one server
+			   answering in time. This also would break for dual ipv4/6 stacked
+			   ntp servers when the client only supports on of them.
+			 */
+			DBG(printf("can't create socket connection on peer %i: %s\n", i, strerror(errno)));
 		} else {
 			ufds[i].fd=socklist[i];
 			ufds[i].events=POLLIN;
@@ -564,24 +568,24 @@ int main(int argc, char *argv[]){
 
 	switch (result) {
 		case STATE_CRITICAL :
-			asprintf(&result_line, _("NTP CRITICAL:"));
+			xasprintf(&result_line, _("NTP CRITICAL:"));
 			break;
 		case STATE_WARNING :
-			asprintf(&result_line, _("NTP WARNING:"));
+			xasprintf(&result_line, _("NTP WARNING:"));
 			break;
 		case STATE_OK :
-			asprintf(&result_line, _("NTP OK:"));
+			xasprintf(&result_line, _("NTP OK:"));
 			break;
 		default :
-			asprintf(&result_line, _("NTP UNKNOWN:"));
+			xasprintf(&result_line, _("NTP UNKNOWN:"));
 			break;
 	}
 	if(offset_result == STATE_UNKNOWN){
-		asprintf(&result_line, "%s %s", result_line, _("Offset unknown"));
-		asprintf(&perfdata_line, "");
+		xasprintf(&result_line, "%s %s", result_line, _("Offset unknown"));
+		xasprintf(&perfdata_line, "");
 	} else {
-		asprintf(&result_line, "%s %s %.10g secs", result_line, _("Offset"), offset);
-		asprintf(&perfdata_line, "%s", perfd_offset(offset));
+		xasprintf(&result_line, "%s %s %.10g secs", result_line, _("Offset"), offset);
+		xasprintf(&perfdata_line, "%s", perfd_offset(offset));
 	}
 	printf("%s|%s\n", result_line, perfdata_line);
 
@@ -602,6 +606,7 @@ void print_help(void){
 	print_usage();
 	printf (UT_HELP_VRSN);
 	printf (UT_EXTRA_OPTS);
+	printf (UT_IPv46);
 	printf (UT_HOST_PORT, 'p', "123");
 	printf (" %s\n", "-q, --quiet");
 	printf ("    %s\n", _("Returns UNKNOWN instead of CRITICAL if offset cannot be found"));
@@ -635,6 +640,6 @@ void
 print_usage(void)
 {
 	printf ("%s\n", _("Usage:"));
-	printf(" %s -H <host> [-w <warn>] [-c <crit>] [-v verbose]\n", progname);
+	printf(" %s -H <host> [-4|-6] [-w <warn>] [-c <crit>] [-v verbose]\n", progname);
 }
 

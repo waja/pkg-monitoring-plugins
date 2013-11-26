@@ -1,40 +1,40 @@
 /*****************************************************************************
-* 
+*
 * Nagios check_http plugin
-* 
+*
 * License: GPL
-* Copyright (c) 1999-2008 Nagios Plugins Development Team
-* 
+* Copyright (c) 1999-2013 Nagios Plugins Development Team
+*
 * Description:
-* 
+*
 * This file contains the check_http plugin
-* 
+*
 * This plugin tests the HTTP service on the specified host. It can test
 * normal (http) and secure (https) servers, follow redirects, search for
 * strings and regular expressions, check connection times, and report on
 * certificate expiration times.
-* 
-* 
+*
+*
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
-* 
+*
 * This program is distributed in the hope that it will be useful,
 * but WITHOUT ANY WARRANTY; without even the implied warranty of
 * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 * GNU General Public License for more details.
-* 
+*
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-* 
-* 
+*
+*
 *****************************************************************************/
 
 /* splint -I. -I../../plugins -I../../lib/ -I/usr/kerberos/include/ ../../plugins/check_http.c */
 
 const char *progname = "check_http";
-const char *copyright = "1999-2011";
+const char *copyright = "1999-2013";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -43,7 +43,6 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include "base64.h"
 #include <ctype.h>
 
-#define INPUT_DELIMITER ";"
 #define STICKY_NONE 0
 #define STICKY_HOST 1
 #define STICKY_PORT 2
@@ -85,6 +84,7 @@ int errcode;
 int invert_regex = 0;
 
 struct timeval tv;
+struct timeval tv_temp;
 
 #define HTTP_URL "/"
 #define CRLF "\r\n"
@@ -100,7 +100,9 @@ char *user_agent;
 int server_url_length;
 int server_expect_yn = 0;
 char server_expect[MAX_INPUT_BUFFER] = HTTP_EXPECT;
+char header_expect[MAX_INPUT_BUFFER] = "";
 char string_expect[MAX_INPUT_BUFFER] = "";
+char output_header_search[30] = "";
 char output_string_search[30] = "";
 char *warning_thresholds = NULL;
 char *critical_thresholds = NULL;
@@ -115,6 +117,7 @@ int followsticky = STICKY_NONE;
 int use_ssl = FALSE;
 int use_sni = FALSE;
 int verbose = FALSE;
+int show_extended_perfdata = FALSE;
 int sd;
 int min_page_len = 0;
 int max_page_len = 0;
@@ -124,6 +127,8 @@ char *http_method;
 char *http_post_data;
 char *http_content_type;
 char buffer[MAX_INPUT_BUFFER];
+char *client_cert = NULL;
+char *client_privkey = NULL;
 
 int process_arguments (int, char **);
 int check_http (void);
@@ -131,6 +136,11 @@ void redir (char *pos, char *status_line);
 int server_type_check(const char *type);
 int server_port_check(int ssl_flag);
 char *perfd_time (double microsec);
+char *perfd_time_connect (double microsec);
+char *perfd_time_ssl (double microsec);
+char *perfd_time_firstbyte (double microsec);
+char *perfd_time_headers (double microsec);
+char *perfd_time_transfer (double microsec);
 char *perfd_size (int page_len);
 void print_help (void);
 void print_usage (void);
@@ -147,7 +157,7 @@ main (int argc, char **argv)
   /* Set default URL. Must be malloced for subsequent realloc if --onredirect=follow */
   server_url = strdup(HTTP_URL);
   server_url_length = strlen(server_url);
-  asprintf (&user_agent, "User-Agent: check_http/v%s (nagios-plugins %s)",
+  xasprintf (&user_agent, "User-Agent: check_http/v%s (nagios-plugins %s)",
             NP_VERSION, VERSION);
 
   /* Parse extra opts if any */
@@ -170,7 +180,14 @@ main (int argc, char **argv)
   return result;
 }
 
-
+/* check whether a file exists */
+void
+test_file (char *path)
+{
+  if (access(path, R_OK) == 0)
+    return;
+  usage2 (_("file does not exist or is not readable"), path);
+}
 
 /* process command-line arguments */
 int
@@ -199,6 +216,7 @@ process_arguments (int argc, char **argv)
     {"port", required_argument, 0, 'p'},
     {"authorization", required_argument, 0, 'a'},
     {"proxy_authorization", required_argument, 0, 'b'},
+    {"header-string", required_argument, 0, 'd'},
     {"string", required_argument, 0, 's'},
     {"expect", required_argument, 0, 'e'},
     {"regex", required_argument, 0, 'r'},
@@ -207,6 +225,8 @@ process_arguments (int argc, char **argv)
     {"linespan", no_argument, 0, 'l'},
     {"onredirect", required_argument, 0, 'f'},
     {"certificate", required_argument, 0, 'C'},
+    {"client-cert", required_argument, 0, 'J'},
+    {"private-key", required_argument, 0, 'K'},
     {"useragent", required_argument, 0, 'A'},
     {"header", required_argument, 0, 'k'},
     {"no-body", no_argument, 0, 'N'},
@@ -216,6 +236,7 @@ process_arguments (int argc, char **argv)
     {"invert-regex", no_argument, NULL, INVERT_REGEX},
     {"use-ipv4", no_argument, 0, '4'},
     {"use-ipv6", no_argument, 0, '6'},
+    {"extended-perfdata", no_argument, 0, 'E'},
     {0, 0, 0, 0}
   };
 
@@ -236,7 +257,7 @@ process_arguments (int argc, char **argv)
   }
 
   while (1) {
-    c = getopt_long (argc, argv, "Vvh46t:c:w:A:k:H:P:j:T:I:a:b:e:p:s:R:r:u:f:C:nlLS::m:M:N", longopts, &option);
+    c = getopt_long (argc, argv, "Vvh46t:c:w:A:k:H:P:j:T:I:a:b:d:e:p:s:R:r:u:f:C:J:K:nlLS::m:M:N:E", longopts, &option);
     if (c == -1 || c == EOF)
       break;
 
@@ -265,7 +286,7 @@ process_arguments (int argc, char **argv)
       warning_thresholds = optarg;
       break;
     case 'A': /* User Agent String */
-      asprintf (&user_agent, "User-Agent: %s", optarg);
+      xasprintf (&user_agent, "User-Agent: %s", optarg);
       break;
     case 'k': /* Additional headers */
       if (http_opt_headers_count == 0)
@@ -273,7 +294,7 @@ process_arguments (int argc, char **argv)
       else
         http_opt_headers = realloc (http_opt_headers, sizeof (char *) * (++http_opt_headers_count));
       http_opt_headers[http_opt_headers_count - 1] = optarg;
-      /* asprintf (&http_opt_headers, "%s", optarg); */
+      /* xasprintf (&http_opt_headers, "%s", optarg); */
       break;
     case 'L': /* show html link */
       display_html = TRUE;
@@ -284,29 +305,40 @@ process_arguments (int argc, char **argv)
     case 'C': /* Check SSL cert validity */
 #ifdef HAVE_SSL
       if ((temp=strchr(optarg,','))!=NULL) {
-	*temp='\0';
-	if (!is_intnonneg (temp))
-	  usage2 (_("Invalid certificate expiration period"), optarg);
-	days_till_exp_warn = atoi(optarg);
-	*temp=',';
-	temp++;
-	if (!is_intnonneg (temp))
-	  usage2 (_("Invalid certificate expiration period"), temp);
-	days_till_exp_crit = atoi (temp);
+        *temp='\0';
+        if (!is_intnonneg (optarg))
+          usage2 (_("Invalid certificate expiration period"), optarg);
+        days_till_exp_warn = atoi(optarg);
+        *temp=',';
+        temp++;
+        if (!is_intnonneg (temp))
+          usage2 (_("Invalid certificate expiration period"), temp);
+        days_till_exp_crit = atoi (temp);
       }
       else {
-	days_till_exp_crit=0;
+        days_till_exp_crit=0;
         if (!is_intnonneg (optarg))
           usage2 (_("Invalid certificate expiration period"), optarg);
         days_till_exp_warn = atoi (optarg);
       }
       check_cert = TRUE;
-      /* Fall through to -S option */
+      goto enable_ssl;
+#endif
+    case 'J': /* use client certificate */
+#ifdef HAVE_SSL
+      test_file(optarg);
+      client_cert = optarg;
+      goto enable_ssl;
+#endif
+    case 'K': /* use client private key */
+#ifdef HAVE_SSL
+      test_file(optarg);
+      client_privkey = optarg;
+      goto enable_ssl;
 #endif
     case 'S': /* use SSL */
-#ifndef HAVE_SSL
-      usage4 (_("Invalid option - SSL is not available"));
-#endif
+#ifdef HAVE_SSL
+    enable_ssl:
       use_ssl = TRUE;
       if (optarg == NULL || c != 'S')
         ssl_version = 0;
@@ -317,6 +349,10 @@ process_arguments (int argc, char **argv)
       }
       if (specify_port == FALSE)
         server_port = HTTPS_PORT;
+#else
+      /* -C -J and -K fall through to here without SSL */
+      usage4 (_("Invalid option - SSL is not available"));
+#endif
       break;
     case SNI_OPTION:
       use_sni = TRUE;
@@ -384,6 +420,10 @@ process_arguments (int argc, char **argv)
         free(http_method);
       http_method = strdup (optarg);
       break;
+    case 'd': /* string or substring */
+      strncpy (header_expect, optarg, MAX_INPUT_BUFFER - 1);
+      header_expect[MAX_INPUT_BUFFER - 1] = 0;
+      break;
     case 's': /* string or substring */
       strncpy (string_expect, optarg, MAX_INPUT_BUFFER - 1);
       string_expect[MAX_INPUT_BUFFER - 1] = 0;
@@ -394,7 +434,7 @@ process_arguments (int argc, char **argv)
       server_expect_yn = 1;
       break;
     case 'T': /* Content-type */
-      asprintf (&http_content_type, "%s", optarg);
+      xasprintf (&http_content_type, "%s", optarg);
       break;
     case 'l': /* linespan */
       cflags &= ~REG_NEWLINE;
@@ -470,6 +510,9 @@ process_arguments (int argc, char **argv)
                     }
                   }
                   break;
+    case 'E': /* show extended perfdata */
+      show_extended_perfdata = TRUE;
+      break;
     }
   }
 
@@ -495,6 +538,9 @@ process_arguments (int argc, char **argv)
 
   if (http_method == NULL)
     http_method = strdup ("GET");
+
+  if (client_cert && !client_privkey) 
+    usage4 (_("If you use a client certificate you must also specify a private key file"));
 
   return TRUE;
 }
@@ -690,31 +736,31 @@ check_document_dates (const char *headers, char **msg)
 
   /* Done parsing the body.  Now check the dates we (hopefully) parsed.  */
   if (!server_date || !*server_date) {
-    asprintf (msg, _("%sServer date unknown, "), *msg);
+    xasprintf (msg, _("%sServer date unknown, "), *msg);
     date_result = max_state_alt(STATE_UNKNOWN, date_result);
   } else if (!document_date || !*document_date) {
-    asprintf (msg, _("%sDocument modification date unknown, "), *msg);
+    xasprintf (msg, _("%sDocument modification date unknown, "), *msg);
     date_result = max_state_alt(STATE_CRITICAL, date_result);
   } else {
     time_t srv_data = parse_time_string (server_date);
     time_t doc_data = parse_time_string (document_date);
 
     if (srv_data <= 0) {
-      asprintf (msg, _("%sServer date \"%100s\" unparsable, "), *msg, server_date);
+      xasprintf (msg, _("%sServer date \"%100s\" unparsable, "), *msg, server_date);
       date_result = max_state_alt(STATE_CRITICAL, date_result);
     } else if (doc_data <= 0) {
-      asprintf (msg, _("%sDocument date \"%100s\" unparsable, "), *msg, document_date);
+      xasprintf (msg, _("%sDocument date \"%100s\" unparsable, "), *msg, document_date);
       date_result = max_state_alt(STATE_CRITICAL, date_result);
     } else if (doc_data > srv_data + 30) {
-      asprintf (msg, _("%sDocument is %d seconds in the future, "), *msg, (int)doc_data - (int)srv_data);
+      xasprintf (msg, _("%sDocument is %d seconds in the future, "), *msg, (int)doc_data - (int)srv_data);
       date_result = max_state_alt(STATE_CRITICAL, date_result);
     } else if (doc_data < srv_data - maximum_age) {
       int n = (srv_data - doc_data);
       if (n > (60 * 60 * 24 * 2)) {
-        asprintf (msg, _("%sLast modified %.1f days ago, "), *msg, ((float) n) / (60 * 60 * 24));
+        xasprintf (msg, _("%sLast modified %.1f days ago, "), *msg, ((float) n) / (60 * 60 * 24));
         date_result = max_state_alt(STATE_CRITICAL, date_result);
       } else {
-        asprintf (msg, _("%sLast modified %d:%02d:%02d ago, "), *msg, n / (60 * 60), (n / 60) % 60, n % 60);
+        xasprintf (msg, _("%sLast modified %d:%02d:%02d ago, "), *msg, n / (60 * 60), (n / 60) % 60, n % 60);
         date_result = max_state_alt(STATE_CRITICAL, date_result);
       }
     }
@@ -811,17 +857,33 @@ check_http (void)
   char *pos;
   long microsec;
   double elapsed_time;
+  long microsec_connect;
+  double elapsed_time_connect;
+  long microsec_ssl;
+  double elapsed_time_ssl;
+  long microsec_firstbyte;
+  double elapsed_time_firstbyte;
+  long microsec_headers;
+  double elapsed_time_headers;
+  long microsec_transfer;
+  double elapsed_time_transfer;
   int page_len = 0;
   int result = STATE_OK;
 
   /* try to connect to the host at the given port number */
+  gettimeofday (&tv_temp, NULL);
   if (my_tcp_connect (server_address, server_port, &sd) != STATE_OK)
     die (STATE_CRITICAL, _("HTTP CRITICAL - Unable to open TCP socket\n"));
+  microsec_connect = deltime (tv_temp);
 #ifdef HAVE_SSL
+  elapsed_time_connect = (double)microsec_connect / 1.0e6;
   if (use_ssl == TRUE) {
-    result = np_net_ssl_init_with_hostname_and_version(sd, (use_sni ? host_name : NULL), ssl_version);
+    gettimeofday (&tv_temp, NULL);
+    result = np_net_ssl_init_with_hostname_version_and_cert(sd, (use_sni ? host_name : NULL), ssl_version, client_cert, client_privkey);
     if (result != STATE_OK)
       return result;
+    microsec_ssl = deltime (tv_temp);
+    elapsed_time_ssl = (double)microsec_ssl / 1.0e6;
     if (check_cert == TRUE) {
       result = np_net_ssl_check_cert(days_till_exp_warn, days_till_exp_crit);
       np_net_ssl_cleanup();
@@ -831,10 +893,10 @@ check_http (void)
   }
 #endif /* HAVE_SSL */
 
-  asprintf (&buf, "%s %s %s\r\n%s\r\n", http_method, server_url, host_name ? "HTTP/1.1" : "HTTP/1.0", user_agent);
+  xasprintf (&buf, "%s %s %s\r\n%s\r\n", http_method, server_url, host_name ? "HTTP/1.1" : "HTTP/1.0", user_agent);
 
   /* tell HTTP/1.1 servers not to keep the connection alive */
-  asprintf (&buf, "%sConnection: close\r\n", buf);
+  xasprintf (&buf, "%sConnection: close\r\n", buf);
 
   /* optionally send the host header info */
   if (host_name) {
@@ -845,16 +907,15 @@ check_http (void)
      */
     if ((use_ssl == FALSE && server_port == HTTP_PORT) ||
         (use_ssl == TRUE && server_port == HTTPS_PORT))
-      asprintf (&buf, "%sHost: %s\r\n", buf, host_name);
+      xasprintf (&buf, "%sHost: %s\r\n", buf, host_name);
     else
-      asprintf (&buf, "%sHost: %s:%d\r\n", buf, host_name, server_port);
+      xasprintf (&buf, "%sHost: %s:%d\r\n", buf, host_name, server_port);
   }
 
   /* optionally send any other header tag */
   if (http_opt_headers_count) {
     for (i = 0; i < http_opt_headers_count ; i++) {
-      for ((pos = strtok(http_opt_headers[i], INPUT_DELIMITER)); pos; (pos = strtok(NULL, INPUT_DELIMITER)))
-        asprintf (&buf, "%s%s\r\n", buf, pos);
+      xasprintf (&buf, "%s%s\r\n", buf, http_opt_headers[i]);
     }
     /* This cannot be free'd here because a redirection will then try to access this and segfault */
     /* Covered in a testcase in tests/check_http.t */
@@ -864,39 +925,47 @@ check_http (void)
   /* optionally send the authentication info */
   if (strlen(user_auth)) {
     base64_encode_alloc (user_auth, strlen (user_auth), &auth);
-    asprintf (&buf, "%sAuthorization: Basic %s\r\n", buf, auth);
+    xasprintf (&buf, "%sAuthorization: Basic %s\r\n", buf, auth);
   }
 
   /* optionally send the proxy authentication info */
   if (strlen(proxy_auth)) {
     base64_encode_alloc (proxy_auth, strlen (proxy_auth), &auth);
-    asprintf (&buf, "%sProxy-Authorization: Basic %s\r\n", buf, auth);
+    xasprintf (&buf, "%sProxy-Authorization: Basic %s\r\n", buf, auth);
   }
 
   /* either send http POST data (any data, not only POST)*/
   if (http_post_data) {
     if (http_content_type) {
-      asprintf (&buf, "%sContent-Type: %s\r\n", buf, http_content_type);
+      xasprintf (&buf, "%sContent-Type: %s\r\n", buf, http_content_type);
     } else {
-      asprintf (&buf, "%sContent-Type: application/x-www-form-urlencoded\r\n", buf);
+      xasprintf (&buf, "%sContent-Type: application/x-www-form-urlencoded\r\n", buf);
     }
 
-    asprintf (&buf, "%sContent-Length: %i\r\n\r\n", buf, (int)strlen (http_post_data));
-    asprintf (&buf, "%s%s%s", buf, http_post_data, CRLF);
+    xasprintf (&buf, "%sContent-Length: %i\r\n\r\n", buf, (int)strlen (http_post_data));
+    xasprintf (&buf, "%s%s%s", buf, http_post_data, CRLF);
   }
   else {
     /* or just a newline so the server knows we're done with the request */
-    asprintf (&buf, "%s%s", buf, CRLF);
+    xasprintf (&buf, "%s%s", buf, CRLF);
   }
 
   if (verbose) printf ("%s\n", buf);
+  gettimeofday (&tv_temp, NULL);
   my_send (buf, strlen (buf));
+  microsec_headers = deltime (tv_temp);
+  elapsed_time_headers = (double)microsec_headers / 1.0e6;
 
   /* fetch the page */
   full_page = strdup("");
+  gettimeofday (&tv_temp, NULL);
   while ((i = my_recv (buffer, MAX_INPUT_BUFFER-1)) > 0) {
+    if ((i >= 1) && (elapsed_time_firstbyte <= 0.000001)) {
+      microsec_firstbyte = deltime (tv_temp);
+      elapsed_time_firstbyte = (double)microsec_firstbyte / 1.0e6;
+    }
     buffer[i] = '\0';
-    asprintf (&full_page_new, "%s%s", full_page, buffer);
+    xasprintf (&full_page_new, "%s%s", full_page, buffer);
     free (full_page);
     full_page = full_page_new;
     pagesize += i;
@@ -906,6 +975,8 @@ check_http (void)
                   break;
                 }
   }
+  microsec_transfer = deltime (tv_temp);
+  elapsed_time_transfer = (double)microsec_transfer / 1.0e6;
 
   if (i < 0 && errno != ECONNRESET) {
 #ifdef HAVE_SSL
@@ -981,11 +1052,11 @@ check_http (void)
   /* make sure the status line matches the response we are looking for */
   if (!expected_statuscode (status_line, server_expect)) {
     if (server_port == HTTP_PORT)
-      asprintf (&msg,
+      xasprintf (&msg,
                 _("Invalid HTTP response received from host: %s\n"),
                 status_line);
     else
-      asprintf (&msg,
+      xasprintf (&msg,
                 _("Invalid HTTP response received from host on port %d: %s\n"),
                 server_port, status_line);
     die (STATE_CRITICAL, "HTTP CRITICAL - %s", msg);
@@ -994,7 +1065,7 @@ check_http (void)
   /* Bypass normal status line check if server_expect was set by user and not default */
   /* NOTE: After this if/else block msg *MUST* be an asprintf-allocated string */
   if ( server_expect_yn  )  {
-    asprintf (&msg,
+    xasprintf (&msg,
               _("Status line output matched \"%s\" - "), server_expect);
     if (verbose)
       printf ("%s\n",msg);
@@ -1017,12 +1088,12 @@ check_http (void)
     }
     /* server errors result in a critical state */
     else if (http_status >= 500) {
-      asprintf (&msg, _("%s - "), status_line);
+      xasprintf (&msg, _("%s - "), status_line);
       result = STATE_CRITICAL;
     }
     /* client errors result in a warning state */
     else if (http_status >= 400) {
-      asprintf (&msg, _("%s - "), status_line);
+      xasprintf (&msg, _("%s - "), status_line);
       result = max_state_alt(STATE_WARNING, result);
     }
     /* check redirected page if specified */
@@ -1032,11 +1103,11 @@ check_http (void)
         redir (header, status_line);
       else
         result = max_state_alt(onredirect, result);
-      asprintf (&msg, _("%s - "), status_line);
+      xasprintf (&msg, _("%s - "), status_line);
     } /* end if (http_status >= 300) */
     else {
       /* Print OK status anyway */
-      asprintf (&msg, _("%s - "), status_line);
+      xasprintf (&msg, _("%s - "), status_line);
     }
 
   } /* end else (server_expect_yn)  */
@@ -1049,6 +1120,17 @@ check_http (void)
   }
 
   /* Page and Header content checks go here */
+  if (strlen (header_expect)) {
+    if (!strstr (header, header_expect)) {
+      strncpy(&output_header_search[0],header_expect,sizeof(output_header_search));
+      if(output_header_search[sizeof(output_header_search)-1]!='\0') {
+        bcopy("...",&output_header_search[sizeof(output_header_search)-4],4);
+      }
+      xasprintf (&msg, _("%sheader '%s' not found on '%s://%s:%d%s', "), msg, output_header_search, use_ssl ? "https" : "http", host_name ? host_name : server_address, server_port, server_url);
+      result = STATE_CRITICAL;
+    }
+  }
+
 
   if (strlen (string_expect)) {
     if (!strstr (page, string_expect)) {
@@ -1056,7 +1138,7 @@ check_http (void)
       if(output_string_search[sizeof(output_string_search)-1]!='\0') {
         bcopy("...",&output_string_search[sizeof(output_string_search)-4],4);
       }
-      asprintf (&msg, _("%sstring '%s' not found on '%s://%s:%d%s', "), msg, output_string_search, use_ssl ? "https" : "http", host_name ? host_name : server_address, server_port, server_url);
+      xasprintf (&msg, _("%sstring '%s' not found on '%s://%s:%d%s', "), msg, output_string_search, use_ssl ? "https" : "http", host_name ? host_name : server_address, server_port, server_url);
       result = STATE_CRITICAL;
     }
   }
@@ -1069,15 +1151,15 @@ check_http (void)
     }
     else if ((errcode == REG_NOMATCH && invert_regex == 0) || (errcode == 0 && invert_regex == 1)) {
       if (invert_regex == 0)
-        asprintf (&msg, _("%spattern not found, "), msg);
+        xasprintf (&msg, _("%spattern not found, "), msg);
       else
-        asprintf (&msg, _("%spattern found, "), msg);
+        xasprintf (&msg, _("%spattern found, "), msg);
       result = STATE_CRITICAL;
     }
     else {
       /* FIXME: Shouldn't that be UNKNOWN? */
       regerror (errcode, &preg, errbuf, MAX_INPUT_BUFFER);
-      asprintf (&msg, _("%sExecute Error: %s, "), msg, errbuf);
+      xasprintf (&msg, _("%sExecute Error: %s, "), msg, errbuf);
       result = STATE_CRITICAL;
     }
   }
@@ -1093,10 +1175,10 @@ check_http (void)
    */
   page_len = pagesize;
   if ((max_page_len > 0) && (page_len > max_page_len)) {
-    asprintf (&msg, _("%spage size %d too large, "), msg, page_len);
+    xasprintf (&msg, _("%spage size %d too large, "), msg, page_len);
     result = max_state_alt(STATE_WARNING, result);
   } else if ((min_page_len > 0) && (page_len < min_page_len)) {
-    asprintf (&msg, _("%spage size %d too small, "), msg, page_len);
+    xasprintf (&msg, _("%spage size %d too small, "), msg, page_len);
     result = max_state_alt(STATE_WARNING, result);
   }
 
@@ -1107,11 +1189,25 @@ check_http (void)
     msg[strlen(msg)-3] = '\0';
 
   /* check elapsed time */
-  asprintf (&msg,
-            _("%s - %d bytes in %.3f second response time %s|%s %s"),
-            msg, page_len, elapsed_time,
-            (display_html ? "</A>" : ""),
-            perfd_time (elapsed_time), perfd_size (page_len));
+  if (show_extended_perfdata)
+    xasprintf (&msg,
+           _("%s - %d bytes in %.3f second response time %s|%s %s %s %s %s %s %s"),
+           msg, page_len, elapsed_time,
+           (display_html ? "</A>" : ""),
+           perfd_time (elapsed_time),
+           perfd_size (page_len),
+           perfd_time_connect (elapsed_time_connect),
+           use_ssl == TRUE ? perfd_time_ssl (elapsed_time_ssl) : "",
+           perfd_time_headers (elapsed_time_headers),
+           perfd_time_firstbyte (elapsed_time_firstbyte),
+           perfd_time_transfer (elapsed_time_transfer));
+  else
+    xasprintf (&msg,
+           _("%s - %d bytes in %.3f second response time %s|%s %s"),
+           msg, page_len, elapsed_time,
+           (display_html ? "</A>" : ""),
+           perfd_time (elapsed_time),
+           perfd_size (page_len));
 
   result = max_state_alt(get_status(elapsed_time, thlds), result);
 
@@ -1214,7 +1310,7 @@ redir (char *pos, char *status_line)
       if ((url[0] != '/')) {
         if ((x = strrchr(server_url, '/')))
           *x = '\0';
-        asprintf (&url, "%s/%s", server_url, url);
+        xasprintf (&url, "%s/%s", server_url, url);
       }
       i = server_port;
       strcpy (type, server_type);
@@ -1300,7 +1396,30 @@ char *perfd_time (double elapsed_time)
                    TRUE, 0, FALSE, 0);
 }
 
+char *perfd_time_connect (double elapsed_time_connect)
+{
+  return fperfdata ("time_connect", elapsed_time_connect, "s", FALSE, 0, FALSE, 0, FALSE, 0, FALSE, 0);
+}
 
+char *perfd_time_ssl (double elapsed_time_ssl)
+{
+  return fperfdata ("time_ssl", elapsed_time_ssl, "s", FALSE, 0, FALSE, 0, FALSE, 0, FALSE, 0);
+}
+
+char *perfd_time_headers (double elapsed_time_headers)
+{
+  return fperfdata ("time_headers", elapsed_time_headers, "s", FALSE, 0, FALSE, 0, FALSE, 0, FALSE, 0);
+}
+
+char *perfd_time_firstbyte (double elapsed_time_firstbyte)
+{
+  return fperfdata ("time_firstbyte", elapsed_time_firstbyte, "s", FALSE, 0, FALSE, 0, FALSE, 0, FALSE, 0);
+}
+
+char *perfd_time_transfer (double elapsed_time_transfer)
+{
+  return fperfdata ("time_transfer", elapsed_time_transfer, "s", FALSE, 0, FALSE, 0, FALSE, 0, FALSE, 0);
+}
 
 char *perfd_size (int page_len)
 {
@@ -1351,9 +1470,15 @@ print_help (void)
   printf ("    %s\n", _("auto-negotiation (1 = TLSv1, 2 = SSLv2, 3 = SSLv3)."));
   printf (" %s\n", "--sni");
   printf ("    %s\n", _("Enable SSL/TLS hostname extension support (SNI)"));
-  printf (" %s\n", "-C, --certificate=INTEGER");
+  printf (" %s\n", "-C, --certificate=INTEGER[,INTEGER]");
   printf ("    %s\n", _("Minimum number of days a certificate has to be valid. Port defaults to 443"));
-  printf ("    %s\n", _("(when this option is used the URL is not checked.)\n"));
+  printf ("    %s\n", _("(when this option is used the URL is not checked.)"));
+  printf (" %s\n", "-J, --client-cert=FILE");
+  printf ("   %s\n", _("Name of file that contains the client certificate (PEM format)"));
+  printf ("   %s\n", _("to be used in establishing the SSL session"));
+  printf (" %s\n", "-K, --private-key=FILE");
+  printf ("   %s\n", _("Name of file containing the private key (PEM format)"));
+  printf ("   %s\n", _("matching the client certificate"));
 #endif
 
   printf (" %s\n", "-e, --expect=STRING");
@@ -1361,6 +1486,8 @@ print_help (void)
   printf ("    %s", _("the first (status) line of the server response (default: "));
   printf ("%s)\n", HTTP_EXPECT);
   printf ("    %s\n", _("If specified skips all other status line logic (ex: 3xx, 4xx, 5xx processing)"));
+  printf (" %s\n", "-d, --header-string=STRING");
+  printf ("    %s\n", _("String to expect in the response headers"));
   printf (" %s\n", "-s, --string=STRING");
   printf ("    %s\n", _("String to expect in the content"));
   printf (" %s\n", "-u, --url=PATH");
@@ -1395,6 +1522,8 @@ print_help (void)
   printf ("    %s\n", _("String to be sent in http header as \"User Agent\""));
   printf (" %s\n", "-k, --header=STRING");
   printf ("    %s\n", _("Any other tags to be sent in http header. Use multiple times for additional headers"));
+  printf (" %s\n", "-E, --extended-perfdata");
+  printf ("    %s\n", _("Print additional performance data"));
   printf (" %s\n", "-L, --link");
   printf ("    %s\n", _("Wrap output in HTML link (obsoleted by urlize)"));
   printf (" %s\n", "-f, --onredirect=<ok|warning|critical|follow|sticky|stickyport>");
@@ -1433,14 +1562,14 @@ print_help (void)
   printf (" %s\n", _("When the 'www.verisign.com' server returns its content within 5 seconds,"));
   printf (" %s\n", _("a STATE_OK will be returned. When the server returns its content but exceeds"));
   printf (" %s\n", _("the 5-second threshold, a STATE_WARNING will be returned. When an error occurs,"));
-  printf (" %s\n\n", _("a STATE_CRITICAL will be returned."));
-
+  printf (" %s\n", _("a STATE_CRITICAL will be returned."));
+  printf ("\n");
   printf (" %s\n\n", "CHECK CERTIFICATE: check_http -H www.verisign.com -C 14");
   printf (" %s\n", _("When the certificate of 'www.verisign.com' is valid for more than 14 days,"));
   printf (" %s\n", _("a STATE_OK is returned. When the certificate is still valid, but for less than"));
   printf (" %s\n", _("14 days, a STATE_WARNING is returned. A STATE_CRITICAL will be returned when"));
   printf (" %s\n", _("the certificate is expired."));
-
+  printf ("\n");
   printf (" %s\n\n", "CHECK CERTIFICATE: check_http -H www.verisign.com -C 30,14");
   printf (" %s\n", _("When the certificate of 'www.verisign.com' is valid for more than 30 days,"));
   printf (" %s\n", _("a STATE_OK is returned. When the certificate is still valid, but for less than"));
@@ -1460,9 +1589,10 @@ print_usage (void)
 {
   printf ("%s\n", _("Usage:"));
   printf (" %s -H <vhost> | -I <IP-address> [-u <uri>] [-p <port>]\n",progname);
-  printf ("       [-w <warn time>] [-c <critical time>] [-t <timeout>] [-L] [-a auth]\n");
+  printf ("       [-J <client certificate file>] [-K <private key>]\n");
+  printf ("       [-w <warn time>] [-c <critical time>] [-t <timeout>] [-L] [-E] [-a auth]\n");
   printf ("       [-b proxy_auth] [-f <ok|warning|critcal|follow|sticky|stickyport>]\n");
-  printf ("       [-e <expect>] [-s string] [-l] [-r <regex> | -R <case-insensitive regex>]\n");
+  printf ("       [-e <expect>] [-d string] [-s string] [-l] [-r <regex> | -R <case-insensitive regex>]\n");
   printf ("       [-P string] [-m <min_pg_size>:<max_pg_size>] [-4|-6] [-N] [-M <age>]\n");
   printf ("       [-A string] [-k string] [-S <version>] [--sni] [-C <warn_age>[,<crit_age>]]\n");
   printf ("       [-T <content-type>] [-j method]\n");

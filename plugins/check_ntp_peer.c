@@ -241,15 +241,19 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 		DBG(printf("sending READSTAT request"));
 		write(conn, &req, SIZEOF_NTPCM(req));
 		DBG(print_ntp_control_message(&req));
-		/* Attempt to read the largest size packet possible */
-		req.count=htons(MAX_CM_SIZE);
-		DBG(printf("recieving READSTAT response"))
-		if(read(conn, &req, SIZEOF_NTPCM(req)) == -1)
-			die(STATE_CRITICAL, "NTP CRITICAL: No response from NTP server\n");
-		DBG(print_ntp_control_message(&req));
-		/* discard obviously invalid packets */
-		if (ntohs(req.count) > MAX_CM_SIZE)
-			die(STATE_CRITICAL, "NTP CRITICAL: Invalid packet received from NTP server\n");
+
+		do {
+			/* Attempt to read the largest size packet possible */
+			req.count=htons(MAX_CM_SIZE);
+			DBG(printf("recieving READSTAT response"))
+			if(read(conn, &req, SIZEOF_NTPCM(req)) == -1)
+				die(STATE_CRITICAL, "NTP CRITICAL: No response from NTP server\n");
+			DBG(print_ntp_control_message(&req));
+			/* discard obviously invalid packets */
+			if (ntohs(req.count) > MAX_CM_SIZE)
+				die(STATE_CRITICAL, "NTP CRITICAL: Invalid packet received from NTP server\n");
+		} while (!(req.op&OP_READSTAT && ntohs(req.seq) == 1));
+
 		if (LI(req.flags) == LI_ALARM) li_alarm = 1;
 		/* Each peer identifier is 4 bytes in the data section, which
 	 	 * we represent as a ntp_assoc_status_pair datatype.
@@ -295,7 +299,7 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 		/* If there's no sync.peer, query all candidates and use the best one */
 		if (PEER_SEL(peers[i].status) >= min_peer_sel){
 			if(verbose) printf("Getting offset, jitter and stratum for peer %.2x\n", ntohs(peers[i].assoc));
-			asprintf(&data, "");
+			xasprintf(&data, "");
 			do{
 				setup_control_request(&req, OP_READVAR, 2);
 				req.assoc = peers[i].assoc;
@@ -312,13 +316,15 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 				write(conn, &req, SIZEOF_NTPCM(req));
 				DBG(print_ntp_control_message(&req));
 
-				req.count = htons(MAX_CM_SIZE);
-				DBG(printf("receiving READVAR response...\n"));
-				read(conn, &req, SIZEOF_NTPCM(req));
-				DBG(print_ntp_control_message(&req));
+				do {
+					req.count = htons(MAX_CM_SIZE);
+					DBG(printf("receiving READVAR response...\n"));
+					read(conn, &req, SIZEOF_NTPCM(req));
+					DBG(print_ntp_control_message(&req));
+				} while (!(req.op&OP_READVAR && ntohs(req.seq) == 2));
 
 				if(!(req.op&REM_ERROR))
-					asprintf(&data, "%s%s", data, req.data);
+					xasprintf(&data, "%s%s", data, req.data);
 			} while(req.op&REM_MORE);
 
 			if(req.op&REM_ERROR) {
@@ -603,41 +609,41 @@ int main(int argc, char *argv[]){
 
 	switch (result) {
 		case STATE_CRITICAL :
-			asprintf(&result_line, _("NTP CRITICAL:"));
+			xasprintf(&result_line, _("NTP CRITICAL:"));
 			break;
 		case STATE_WARNING :
-			asprintf(&result_line, _("NTP WARNING:"));
+			xasprintf(&result_line, _("NTP WARNING:"));
 			break;
 		case STATE_OK :
-			asprintf(&result_line, _("NTP OK:"));
+			xasprintf(&result_line, _("NTP OK:"));
 			break;
 		default :
-			asprintf(&result_line, _("NTP UNKNOWN:"));
+			xasprintf(&result_line, _("NTP UNKNOWN:"));
 			break;
 	}
 	if(!syncsource_found)
-		asprintf(&result_line, "%s %s,", result_line, _("Server not synchronized"));
+		xasprintf(&result_line, "%s %s,", result_line, _("Server not synchronized"));
 	else if(li_alarm)
-		asprintf(&result_line, "%s %s,", result_line, _("Server has the LI_ALARM bit set"));
+		xasprintf(&result_line, "%s %s,", result_line, _("Server has the LI_ALARM bit set"));
 
 	if(offset_result == STATE_UNKNOWN){
-		asprintf(&result_line, "%s %s", result_line, _("Offset unknown"));
-		asprintf(&perfdata_line, "");
+		xasprintf(&result_line, "%s %s", result_line, _("Offset unknown"));
+		xasprintf(&perfdata_line, "");
 	} else {
-		asprintf(&result_line, "%s %s %.10g secs", result_line, _("Offset"), offset);
-		asprintf(&perfdata_line, "%s", perfd_offset(offset));
+		xasprintf(&result_line, "%s %s %.10g secs", result_line, _("Offset"), offset);
+		xasprintf(&perfdata_line, "%s", perfd_offset(offset));
 	}
 	if (do_jitter) {
-		asprintf(&result_line, "%s, jitter=%f", result_line, jitter);
-		asprintf(&perfdata_line, "%s %s", perfdata_line, perfd_jitter(jitter));
+		xasprintf(&result_line, "%s, jitter=%f", result_line, jitter);
+		xasprintf(&perfdata_line, "%s %s", perfdata_line, perfd_jitter(jitter));
 	}
 	if (do_stratum) {
-		asprintf(&result_line, "%s, stratum=%i", result_line, stratum);
-		asprintf(&perfdata_line, "%s %s", perfdata_line, perfd_stratum(stratum));
+		xasprintf(&result_line, "%s, stratum=%i", result_line, stratum);
+		xasprintf(&perfdata_line, "%s %s", perfdata_line, perfd_stratum(stratum));
 	}
 	if (do_truechimers) {
-		asprintf(&result_line, "%s, truechimers=%i", result_line, num_truechimers);
-		asprintf(&perfdata_line, "%s %s", perfdata_line, perfd_truechimers(num_truechimers));
+		xasprintf(&result_line, "%s, truechimers=%i", result_line, num_truechimers);
+		xasprintf(&perfdata_line, "%s %s", perfdata_line, perfd_truechimers(num_truechimers));
 	}
 	printf("%s|%s\n", result_line, perfdata_line);
 
@@ -660,6 +666,7 @@ void print_help(void){
 	print_usage();
 	printf (UT_HELP_VRSN);
 	printf (UT_EXTRA_OPTS);
+	printf (UT_IPv46);
 	printf (UT_HOST_PORT, 'p', "123");
 	printf (" %s\n", "-q, --quiet");
 	printf ("    %s\n", _("Returns UNKNOWN instead of CRITICAL or WARNING if server isn't synchronized"));
@@ -668,9 +675,9 @@ void print_help(void){
 	printf (" %s\n", "-c, --critical=THRESHOLD");
 	printf ("    %s\n", _("Offset to result in critical status (seconds)"));
 	printf (" %s\n", "-W, --swarn=THRESHOLD");
-	printf ("    %s\n", _("Warning threshold for stratum"));
+	printf ("    %s\n", _("Warning threshold for stratum of server's synchronization peer"));
 	printf (" %s\n", "-C, --scrit=THRESHOLD");
-	printf ("    %s\n", _("Critical threshold for stratum"));
+	printf ("    %s\n", _("Critical threshold for stratum of server's synchronization peer"));
 	printf (" %s\n", "-j, --jwarn=THRESHOLD");
 	printf ("    %s\n", _("Warning threshold for jitter"));
 	printf (" %s\n", "-k, --jcrit=THRESHOLD");
@@ -704,7 +711,7 @@ void print_help(void){
 	printf("  %s\n", ("./check_ntp_peer -H ntpserv -w 0.5 -c 1 -j -1:100 -k -1:200"));
 	printf("\n");
 	printf(" %s\n", _("Only check the number of usable time sources (\"truechimers\"):"));
-	printf("  %s\n", ("./check_ntp_peer -H ntpserv -m :5 -n :3"));
+	printf("  %s\n", ("./check_ntp_peer -H ntpserv -m @5 -n @3"));
 	printf("\n");
 	printf(" %s\n", _("Check only stratum:"));
 	printf("  %s\n", ("./check_ntp_peer -H ntpserv -W 4 -C 6"));
@@ -716,6 +723,6 @@ void
 print_usage(void)
 {
 	printf ("%s\n", _("Usage:"));
-	printf(" %s -H <host> [-w <warn>] [-c <crit>] [-W <warn>] [-C <crit>]\n", progname);
+	printf(" %s -H <host> [-4|-6] [-w <warn>] [-c <crit>] [-W <warn>] [-C <crit>]\n", progname);
 	printf("       [-j <warn>] [-k <crit>] [-v verbose]\n");
 }
