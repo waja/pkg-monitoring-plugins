@@ -158,9 +158,6 @@ main (int argc, char *argv[])
 	values_t values;
 	int fd;
 
-	/* Parse extra opts if any */
-	argv=np_extra_opts (&argc, argv, progname);
-
 	static struct option longopts[] = { 
 		{"device", required_argument, 0, 'd'}, 
 		{"immediate", no_argument, 0, 'i'}, 
@@ -172,6 +169,9 @@ main (int argc, char *argv[])
 		{"version", no_argument, 0, 'V'},
 		{0, 0, 0, 0}
 	};
+
+	/* Parse extra opts if any */
+	argv=np_extra_opts (&argc, argv, progname);
 
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
@@ -489,8 +489,8 @@ print_help (void)
 
   print_usage ();
 
-  printf (_(UT_HELP_VRSN));
-  printf (_(UT_EXTRA_OPTS));
+  printf (UT_HELP_VRSN);
+  printf (UT_EXTRA_OPTS);
 
   printf (" %s\n", "-d, --device=DEVICE");
   printf ("    %s\n", _("Select device DEVICE"));
@@ -506,13 +506,7 @@ print_help (void)
   printf (" %s\n", "-n, --nagios");
   printf ("    %s\n", _("Output suitable for Nagios"));
 
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-  printf (_(UT_SUPPORT));
+  printf (UT_SUPPORT);
 }
 
  /* todo : add to the long nanual as example
@@ -530,7 +524,7 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf ("%s [-d <device>] [-i <immediate>] [-q quiet] [-1 <auto-on>]",progname);
   printf (" [-O <auto-off>] [-n <nagios>]\n");
 }

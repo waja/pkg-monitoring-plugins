@@ -528,8 +528,8 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
 	printf (" %s\n", "-w, --warning=INTEGER");
   printf ("    %s\n", _("Exit with WARNING status if less than INTEGER bytes of swap space are free"));
@@ -541,18 +541,13 @@ print_help (void)
   printf ("    %s\n", _("Exit with CRITCAL status if less than PERCENT of swap space is free"));
   printf (" %s\n", "-a, --allswaps");
   printf ("    %s\n", _("Conduct comparisons for all swap partitions, one by one"));
-	printf (_(UT_VERBOSE));
+	printf (UT_VERBOSE);
 
 	printf ("\n");
   printf ("%s\n", _("Notes:"));
   printf (" %s\n", _("On AIX, if -a is specified, uses lsps -a, otherwise uses lsps -s."));
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
 
-
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
@@ -560,7 +555,7 @@ print_help (void)
 void
 print_usage (void)
 {
-	printf (_("Usage:"));
+	printf ("%s\n", _("Usage:"));
   printf ("%s [-av] -w <percent_free>%% -c <percent_free>%%\n",progname);
   printf ("%s [-av] -w <bytes_free> -c <bytes_free>\n", progname);
 }

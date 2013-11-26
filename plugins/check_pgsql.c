@@ -429,12 +429,12 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
-	printf (_(UT_HOST_PORT), 'P', myport);
+	printf (UT_HOST_PORT, 'P', myport);
 
-	printf (_(UT_IPv46));
+	printf (UT_IPv46);
 
 	printf (" %s\n", "-d, --database=STRING");
 	printf ("    %s", _("Database to check "));
@@ -444,11 +444,11 @@ print_help (void)
 	printf (" %s\n", "-p, --password = STRING");
 	printf ("    %s\n", _("Password (BIG SECURITY ISSUE)"));
 
-	printf (_(UT_WARN_CRIT));
+	printf (UT_WARN_CRIT);
 
-	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
-	printf (_(UT_VERBOSE));
+	printf (UT_VERBOSE);
 
 	printf ("\n");
 	printf (" %s\n", _("All parameters are optional."));
@@ -466,13 +466,7 @@ print_help (void)
 	printf (" %s\n", _("able to connect to the database without a password. The plugin can also send"));
 	printf (" %s\n", _("a password, but no effort is made to obsure or encrypt the password."));
 
-#ifdef NP_EXTRA_OPTS
-	printf ("\n");
-	printf ("%s\n", _("Notes:"));
-	printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
@@ -480,7 +474,7 @@ print_help (void)
 void
 print_usage (void)
 {
-	printf (_("Usage:"));
+	printf ("%s\n", _("Usage:"));
 	printf ("%s [-H <host>] [-P <port>] [-c <critical time>] [-w <warning time>]\n", progname);
 	printf (" [-t <timeout>] [-d <database>] [-l <logname>] [-p <password>]\n");
 }

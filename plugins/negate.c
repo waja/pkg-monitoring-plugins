@@ -164,7 +164,7 @@ process_arguments (int argc, char **argv)
 			break;
 		case 'T':     /* Result to return on timeouts */
 			if ((timeout_state = translate_state(optarg)) == ERROR)
-				usage4 (_("timeout result must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer (0-3)."));
+				usage4 (_("Timeout result must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer (0-3)."));
 			break;
 		case 'o':     /* replacement for OK */
 			if ((state[STATE_OK] = translate_state(optarg)) == ERROR)
@@ -247,9 +247,9 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
+	printf (UT_HELP_VRSN);
 
-	printf (_(UT_TIMEOUT), timeout_interval);
+	printf (UT_TIMEOUT, timeout_interval);
 	printf ("    %s\n", _("Keep timeout longer than the plugin timeout to retain CRITICAL status."));
 	printf (" -T, --timeout-result=STATUS\n");
 	printf ("    %s\n", _("Custom result on Negate timeouts; see below for STATUS definition\n"));
@@ -281,7 +281,7 @@ print_help (void)
 	printf (" %s\n", _("Using timeout-result, it is possible to override the timeout behaviour or a"));
 	printf (" %s\n", _("plugin by setting the negate timeout a bit lower."));
 
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
@@ -289,6 +289,6 @@ print_help (void)
 void
 print_usage (void)
 {
-	printf (_("Usage:"));
+	printf ("%s\n", _("Usage:"));
 	printf ("%s [-t timeout] [-Towcu STATE] [-s] <definition of wrapped plugin>\n", progname);
 }

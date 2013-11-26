@@ -289,12 +289,12 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 	printf (" -q, --query=STRING\n");
 	printf ("    %s\n", _("SQL query to run. Only first column in first row will be read"));
-	printf (_(UT_WARN_CRIT_RANGE));
-	printf (_(UT_HOST_PORT), 'P', myport);
+	printf (UT_WARN_CRIT_RANGE);
+	printf (UT_HOST_PORT, 'P', myport);
 	printf (" %s\n", "-s, --socket=STRING");
 	printf ("    %s\n", _("Use the specified socket (has no effect if -H is used)"));
 	printf (" -d, --database=STRING\n");
@@ -310,23 +310,19 @@ print_help (void)
 	printf (" %s\n", _("A query is required. The result from the query should be numeric."));
 	printf (" %s\n", _("For extra security, create a user with minimal access."));
 
-#ifdef NP_EXTRA_OPTS
 	printf ("\n");
 	printf ("%s\n", _("Notes:"));
-	printf (_(UT_EXTRA_OPTS_NOTES));
-	printf ("\n");
 	printf (" %s\n", _("You must specify -p with an empty string to force an empty password,"));
 	printf (" %s\n", _("overriding any my.cnf settings."));
-#endif
 
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf (" %s -q SQL_query [-w warn] [-c crit] [-H host] [-P port] [-s socket]\n",progname);
   printf ("       [-d database] [-u user] [-p password]\n");
 }

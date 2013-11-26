@@ -36,6 +36,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include "utils.h"
 
 #include <lber.h>
+#define LDAP_DEPRECATED 1
 #include <ldap.h>
 
 enum {
@@ -373,7 +374,7 @@ validate_arguments ()
 	if (ld_host==NULL || strlen(ld_host)==0)
 		usage4 (_("Please specify the host name\n"));
 
-	if (ld_base==NULL || strlen(ld_base)==0)
+	if (ld_base==NULL)
 		usage4 (_("Please specify the LDAP base\n"));
 
 	return OK;
@@ -395,12 +396,12 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
-	printf (_(UT_HOST_PORT), 'p', myport);
+	printf (UT_HOST_PORT, 'p', myport);
 
-	printf (_(UT_IPv46));
+	printf (UT_IPv46);
 
 	printf (" %s\n", "-a [--attr]");
   printf ("    %s\n", _("ldap attribute to search (default: \"(objectclass=*)\""));
@@ -423,11 +424,11 @@ print_help (void)
   printf ("    (%s %d)\n", _("default protocol version:"), DEFAULT_PROTOCOL);
 #endif
 
-	printf (_(UT_WARN_CRIT));
+	printf (UT_WARN_CRIT);
 
-	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
-	printf (_(UT_VERBOSE));
+	printf (UT_VERBOSE);
 
 	printf ("\n");
 	printf ("%s\n", _("Notes:"));
@@ -436,12 +437,8 @@ print_help (void)
 	printf (" %s\n", _("'SSL on connect' will be used no matter how the plugin was called."));
 	printf (" %s\n", _("This detection is deprecated, please use 'check_ldap' with the '--starttls' or '--ssl' flags"));
 	printf (" %s\n", _("to define the behaviour explicitly instead."));
-#ifdef NP_EXTRA_OPTS
-	printf ("\n");
-	printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
 
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 /* todo
@@ -452,7 +449,7 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
 	printf (" %s -H <host> -b <base_dn> [-p <port>] [-a <attr>] [-D <binddn>]",progname);
   printf ("\n       [-P <password>] [-w <warn_time>] [-c <crit_time>] [-t timeout]%s\n",
 #ifdef HAVE_LDAP_SET_OPTION

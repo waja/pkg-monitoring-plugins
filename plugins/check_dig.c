@@ -319,11 +319,11 @@ print_help (void)
 
   print_usage ();
 
-  printf (_(UT_HELP_VRSN));
+  printf (UT_HELP_VRSN);
 
-  printf (_(UT_EXTRA_OPTS));
+  printf (UT_EXTRA_OPTS);
 
-  printf (_(UT_HOST_PORT), 'p', myport);
+  printf (UT_HOST_PORT, 'p', myport);
 
   printf (" %s\n","-l, --query_address=STRING");
   printf ("    %s\n",_("Machine name to lookup"));
@@ -334,22 +334,16 @@ print_help (void)
   printf ("    %s\n",_("was in -l"));
   printf (" %s\n","-A, --dig-arguments=STRING");
   printf ("    %s\n",_("Pass STRING as argument(s) to dig"));
-  printf (_(UT_WARN_CRIT));
-  printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
-  printf (_(UT_VERBOSE));
+  printf (UT_WARN_CRIT);
+  printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+  printf (UT_VERBOSE);
 
   printf ("\n");
   printf ("%s\n", _("Examples:"));
   printf (" %s\n", "check_dig -H DNSSERVER -l www.example.com -A \"+tcp\"");
   printf (" %s\n", "This will send a tcp query to DNSSERVER for www.example.com");
 
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-  printf (_(UT_SUPPORT));
+  printf (UT_SUPPORT);
 }
 
 
@@ -357,7 +351,7 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf ("%s -l <query_address> [-H <host>] [-p <server port>]\n", progname);
   printf (" [-T <query type>] [-w <warning interval>] [-c <critical interval>]\n");
   printf (" [-t <timeout>] [-a <expected answer address>] [-v]\n");

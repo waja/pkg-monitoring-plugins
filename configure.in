@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT(nagios-plugins,1.4.14)
+AC_INIT(nagios-plugins,1.4.15)
 AC_CONFIG_SRCDIR(NPTest.pm)
 AC_CONFIG_FILES(gl/Makefile)
 AC_CONFIG_AUX_DIR(build-aux)
@@ -99,7 +99,15 @@ AC_SUBST(REV_DATESTAMP)
 AC_SUBST(REV_TIMESTAMP)
 
 dnl Check if version file is present
-AM_CONDITIONAL([RELEASE_PRESENT], [test -f release])
+AM_CONDITIONAL([RELEASE_PRESENT], [test -f $srcdir/release])
+
+# Also read in the version from it
+if test -f $srcdir/release; then
+	NP_RELEASE="$(<release)"
+else
+	NP_RELEASE="$PACKAGE_VERSION"
+fi
+AC_SUBST(NP_RELEASE)
 
 dnl Checks for programs.
 AC_PATH_PROG(PYTHON,python)
@@ -577,13 +585,72 @@ elif test "$ac_cv_uname_s" = "SunOS"; then
         ac_cv_ps_cols=9
         AC_MSG_RESULT([using nagios-plugins internal ps command (pst3) for solaris])
 	if test `isainfo -b` = 64 ; then
-		PST3CFLAGS="-m64"
-		AC_SUBST(PST3CFLAGS)
-		AC_MSG_NOTICE([using 64bit pst3])	
+		pst3_use_64bit=1
+		AC_MSG_NOTICE([using 64bit pst3])
 	else
 		AC_MSG_NOTICE([using 32bit pst3])
 	fi
         EXTRAS_ROOT="$EXTRAS_ROOT pst3"
+
+	if test "$pst3_use_64bit" = 1; then
+		dnl Test if we can actually compile code in 64bit
+		old_cflags=$CFLAGS
+		CFLAGS="$CFLAGS -m64"
+		pst3_64bit_working=0
+		AC_RUN_IFELSE(
+			[AC_LANG_PROGRAM([], [
+return sizeof(void*) == 8 ? 0 : 1;
+			])
+		],[
+			PST3CFLAGS="-m64"
+			AC_SUBST(PST3CFLAGS)
+			pst3_64bit_working=1
+			AC_MSG_NOTICE([using -m64 for 64bit code])
+		],[
+			pst3_64bit_working=0
+			AC_MSG_NOTICE([compiler do not like -m64])
+		])
+		CFLAGS=$old_cflags
+		if test "$pst3_64bit_working" = 0; then
+			old_cflags=$CFLAGS
+			CFLAGS="$CFLAGS -xarch=v9"
+			AC_RUN_IFELSE(
+				[AC_LANG_PROGRAM([], [
+return sizeof(void*) == 8 ? 0 : 1;
+				])
+			],[
+				PST3CFLAGS="-xarch=v9"
+				AC_SUBST(PST3CFLAGS)
+				pst3_64bit_working=1
+				AC_MSG_NOTICE([using -xarch=v9 for 64bit code])
+			],[
+				pst3_64bit_working=0
+				AC_MSG_NOTICE([compiler do not like -xarch=v9])
+			])
+			CFLAGS=$old_cflags
+		fi
+		if test "$pst3_64bit_working" = 0; then
+			old_cflags=$CFLAGS
+			CFLAGS="$CFLAGS -xarch=amd64"
+			AC_RUN_IFELSE(
+				[AC_LANG_PROGRAM([], [
+return sizeof(void*) == 8 ? 0 : 1;
+				])
+			],[
+				PST3CFLAGS="-xarch=amd64"
+				AC_SUBST(PST3CFLAGS)
+				pst3_64bit_working=1
+				AC_MSG_NOTICE([using -xarch=amd64 for 64bit code])
+			],[
+				pst3_64bit_working=0
+				AC_MSG_NOTICE([compiler do not like -xarch=amd64])
+			])
+			CFLAGS=$old_cflags
+		fi
+		if test "$pst3_64bit_working" = 0; then
+			AC_MSG_ERROR([I don't know how to build a 64-bit object!])
+		fi
+	fi
 
 dnl Removing this for the moment - Ton
 dnl Using /usr/ucb/ps on Solaris systems, to avoid truncation
@@ -869,24 +936,31 @@ ac_cv_ping_has_timeout=no
 if test -n "$with_ping_command"
 then
 	AC_MSG_RESULT([(command-line) $with_ping_command])
-	if test -n "$ac_cv_ping_packets_first"
+	if echo "$with_ping_command" | grep '%d.*%d.*%s' >/dev/null
 	then
 		ac_cv_ping_packets_first=yes
 		ac_cv_ping_has_timeout=yes
+	elif echo "$with_ping_command" | grep '%d.*%s.*%d' >/dev/null || \
+	     echo "$with_ping_command" | grep '%s.*%d.*%d' >/dev/null
+	then
+		ac_cv_ping_has_timeout=yes
+	elif echo "$with_ping_command" | grep '%d.*%s' >/dev/null
+	then
+		ac_cv_ping_packets_first=yes
 	fi
 
 elif [[ "z$ac_cv_uname_s" = "zUnixWare" ]] && \
 	$PATH_TO_PING -n -s 127.0.0.1 56 1 2>/dev/null | \
 	egrep -i "^round-trip|^rtt" >/dev/null
 then
-        with_ping_command="$PATH_TO_PING -n -U -c %d %s"
+	with_ping_command="$PATH_TO_PING -n -U -c %d %s"
 	ac_cv_ping_packets_first=yes
 	AC_MSG_RESULT([$with_ping_command])
 
 elif $PATH_TO_PING -n -U -w 10 -c 1 127.0.0.1 2>/dev/null | \
 	egrep -i "^round-trip|^rtt" >/dev/null
 then
-        with_ping_command="$PATH_TO_PING -n -U -w %d -c %d %s"
+	with_ping_command="$PATH_TO_PING -n -U -w %d -c %d %s"
 	ac_cv_ping_packets_first=yes
   ac_cv_ping_has_timeout=yes
 	AC_MSG_RESULT([$with_ping_command])
@@ -894,7 +968,7 @@ then
 elif $PATH_TO_PING -n -U -c 1 127.0.0.1 2>/dev/null | \
 	egrep -i "^round-trip|^rtt" >/dev/null
 then
-        with_ping_command="$PATH_TO_PING -n -U -c %d %s"
+	with_ping_command="$PATH_TO_PING -n -U -c %d %s"
 	ac_cv_ping_packets_first=yes
 	AC_MSG_RESULT([$with_ping_command])
 
@@ -973,7 +1047,15 @@ ac_cv_ping6_packets_first=no
 if test -n "$with_ping6_command"
 then
 	AC_MSG_RESULT([(command-line) $with_ping6_command])
-	if test -n "$ac_cv_ping6_packets_first"
+	if echo "$with_ping6_command" | grep '%d.*%d.*%s' >/dev/null
+	then
+		ac_cv_ping6_packets_first=yes
+	elif echo "$with_ping6_command" | grep '%d.*%s.*%d' >/dev/null || \
+	     echo "$with_ping6_command" | grep '%s.*%d.*%d' >/dev/null
+	then
+		# Just keep same logic as ping (IPv4) if we ever need ac_cv_ping6_has_timeout
+		true
+	elif echo "$with_ping6_command" | grep '%d.*%s' >/dev/null
 	then
 		ac_cv_ping6_packets_first=yes
 	fi
@@ -983,7 +1065,7 @@ elif test "x$PATH_TO_PING6" != "x"; then
 		$PATH_TO_PING6 -n -s ::1 56 1 2>/dev/null | \
 		egrep -i "^round-trip|^rtt" >/dev/null
 	then
-        	with_ping6_command="$PATH_TO_PING6 -n -U -c %d %s"
+		with_ping6_command="$PATH_TO_PING6 -n -U -c %d %s"
 		ac_cv_ping6_packets_first=yes
 		AC_MSG_RESULT([$with_ping6_command])
 
@@ -998,7 +1080,7 @@ elif test "x$PATH_TO_PING6" != "x"; then
 	elif $PATH_TO_PING6 -n -U -c 1 ::1 2>/dev/null | \
 		egrep -i "^round-trip|^rtt" >/dev/null
 	then
-        	with_ping6_command="$PATH_TO_PING6 -n -U -c %d %s"
+		with_ping6_command="$PATH_TO_PING6 -n -U -c %d %s"
 		ac_cv_ping6_packets_first=yes
 		AC_MSG_RESULT([$with_ping6_command])
 
@@ -1054,14 +1136,14 @@ elif test "x$PATH_TO_PING" != "x"; then
 		$PATH_TO_PING -A inet6 -n -s ::1 56 1 2>/dev/null | \
 		egrep -i "^round-trip|^rtt" >/dev/null
 	then
-        	with_ping6_command="$PATH_TO_PING -A inet6 -n -U -c %d %s"
+		with_ping6_command="$PATH_TO_PING -A inet6 -n -U -c %d %s"
 		ac_cv_ping6_packets_first=yes
 		AC_MSG_RESULT([$with_ping6_command])
 
 	elif $PATH_TO_PING -A inet6 -n -U -c 1 ::1 2>/dev/null | \
 		egrep -i "^round-trip|^rtt" >/dev/null
 	then
-        	with_ping6_command="$PATH_TO_PING -A inet6 -n -U -c %d %s"
+		with_ping6_command="$PATH_TO_PING -A inet6 -n -U -c %d %s"
 		ac_cv_ping6_packets_first=yes
 		AC_MSG_RESULT([$with_ping6_command])
 
@@ -1403,23 +1485,23 @@ AC_CHECK_HEADERS([sys/swap.h], [], [], [
 AC_CHECK_DECLS([swapctl],,,[
                #include <unistd.h>
                #include <sys/types.h>
-	       #include <sys/param.h>
+               #include <sys/param.h>
                #include <sys/stat.h>
                #include <sys/swap.h>
                ])
 AC_CHECK_TYPES([swaptbl_t, swapent_t],,,[
                #include <sys/types.h>
-	       #include <sys/param.h>
+               #include <sys/param.h>
                #include <sys/stat.h>
                #include <sys/swap.h>
                ])
 AC_CHECK_MEMBERS([struct swapent.se_nblks],,,[
-               #include <unistd.h>
-               #include <sys/types.h>
-	       #include <sys/param.h>
-               #include <sys/stat.h>
-               #include <sys/swap.h>
-               ])
+                 #include <unistd.h>
+                 #include <sys/types.h>
+                 #include <sys/param.h>
+                 #include <sys/stat.h>
+                 #include <sys/swap.h>
+                 ])
 
 if test "$ac_cv_have_decl_swapctl" = "yes";
 then
@@ -1535,9 +1617,7 @@ if test -n "$PATH_TO_APTGET" ; then
 fi
 
 
-if test -f plugins/check_nt.c ; then
-  EXTRAS="$EXTRAS check_nt"
-elif test -f ../plugins/check_nt.c ; then
+if test -f $srcdir/plugins/check_nt.c ; then
   EXTRAS="$EXTRAS check_nt"
 fi
 

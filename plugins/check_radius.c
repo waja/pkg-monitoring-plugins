@@ -63,12 +63,20 @@ void print_usage (void);
 #define my_rc_avpair_add(a,b,c,d) rc_avpair_add(a, b, c, d)
 #define my_rc_read_dictionary(a) rc_read_dictionary(a)
 #endif
+
+/* REJECT_RC is only defined in some version of radiusclient. It has
+ * been reported from radiusclient-ng 0.5.6 on FreeBSD 7.2-RELEASE */
+#ifndef REJECT_RC
+#define REJECT_RC BADRESP_RC
+#endif
+
 int my_rc_read_config(char *);
 
 char *server = NULL;
 char *username = NULL;
 char *password = NULL;
 char *nasid = NULL;
+char *nasipaddress = NULL;
 char *expect = NULL;
 char *config_file = NULL;
 unsigned short port = PW_AUTH_UDP_PORT;
@@ -161,19 +169,26 @@ main (int argc, char **argv)
 	memset (&data, 0, sizeof(data));
 	if (!(my_rc_avpair_add (&data.send_pairs, PW_SERVICE_TYPE, &service, 0) &&
 				my_rc_avpair_add (&data.send_pairs, PW_USER_NAME, username, 0) &&
-				my_rc_avpair_add (&data.send_pairs, PW_USER_PASSWORD, password, 0) &&
-				(nasid==NULL || my_rc_avpair_add (&data.send_pairs, PW_NAS_IDENTIFIER, nasid, 0))))
+				my_rc_avpair_add (&data.send_pairs, PW_USER_PASSWORD, password, 0)
+				))
 		die (STATE_UNKNOWN, _("Out of Memory?"));
 
-	/*
-	 * Fill in NAS-IP-Address
-	 */
+	if (nasid != NULL) {
+		if (!(my_rc_avpair_add (&data.send_pairs, PW_NAS_IDENTIFIER, nasid, 0)))
+			die (STATE_UNKNOWN, _("Invalid NAS-Identifier"));
+	}
 
-	if ((client_id = my_rc_own_ipaddress ()) == 0)
-		return (ERROR_RC);
-
-	if (my_rc_avpair_add (&(data.send_pairs), PW_NAS_IP_ADDRESS, &client_id, 0) ==
-			NULL) return (ERROR_RC);
+	if (nasipaddress != NULL) {
+		if (rc_good_ipaddr (nasipaddress))
+			die (STATE_UNKNOWN, _("Invalid NAS-IP-Address"));
+		if ((client_id = rc_get_ipaddr(nasipaddress)) == 0)
+			die (STATE_UNKNOWN, _("Invalid NAS-IP-Address"));
+	} else {
+		if ((client_id = my_rc_own_ipaddress ()) == 0)
+			die (STATE_UNKNOWN, _("Can't find local IP for NAS-IP-Address"));
+	}
+	if (my_rc_avpair_add (&(data.send_pairs), PW_NAS_IP_ADDRESS, &client_id, 0) == NULL)
+		die (STATE_UNKNOWN, _("Invalid NAS-IP-Address"));
 
 	my_rc_buildreq (&data, PW_ACCESS_REQUEST, server, port, (int)timeout_interval,
 	             retries);
@@ -187,13 +202,16 @@ main (int argc, char **argv)
 		die (STATE_CRITICAL, _("Timeout"));
 	if (result == ERROR_RC)
 		die (STATE_CRITICAL, _("Auth Error"));
-	if (result == BADRESP_RC)
+	if (result == REJECT_RC)
 		die (STATE_WARNING, _("Auth Failed"));
+	if (result == BADRESP_RC)
+		die (STATE_WARNING, _("Bad Response"));
 	if (expect && !strstr (msg, expect))
 		die (STATE_WARNING, "%s", msg);
 	if (result == OK_RC)
 		die (STATE_OK, _("Auth OK"));
-	return (0);
+	(void)snprintf(msg, sizeof(msg), _("Unexpected result code %d"), result);
+	die (STATE_UNKNOWN, msg);
 }
 
 
@@ -211,6 +229,7 @@ process_arguments (int argc, char **argv)
 		{"username", required_argument, 0, 'u'},
 		{"password", required_argument, 0, 'p'},
 		{"nas-id", required_argument, 0, 'n'},
+		{"nas-ip-address", required_argument, 0, 'N'},
 		{"filename", required_argument, 0, 'F'},
 		{"expect", required_argument, 0, 'e'},
 		{"retries", required_argument, 0, 'r'},
@@ -222,7 +241,7 @@ process_arguments (int argc, char **argv)
 	};
 
 	while (1) {
-		c = getopt_long (argc, argv, "+hVvH:P:F:u:p:n:t:r:e:", longopts,
+		c = getopt_long (argc, argv, "+hVvH:P:F:u:p:n:N:t:r:e:", longopts,
 									 &option);
 
 		if (c == -1 || c == EOF || c == 1)
@@ -266,6 +285,9 @@ process_arguments (int argc, char **argv)
 			break;
 		case 'n':									/* nas id */
 			nasid = optarg;
+			break;
+		case 'N':									/* nas ip address */
+			nasipaddress = optarg;
 			break;
 		case 'F':									/* configuration file */
 			config_file = optarg;
@@ -319,10 +341,10 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
-	printf (_(UT_HOST_PORT), 'P', myport);
+	printf (UT_HOST_PORT, 'P', myport);
 
 	printf (" %s\n", "-u, --username=STRING");
   printf ("    %s\n", _("The user to authenticate"));
@@ -330,6 +352,8 @@ print_help (void)
   printf ("    %s\n", _("Password for autentication (SECURITY RISK)"));
   printf (" %s\n", "-n, --nas-id=STRING");
   printf ("    %s\n", _("NAS identifier"));
+  printf (" %s\n", "-N, --nas-ip-address=STRING");
+  printf ("    %s\n", _("NAS IP Address"));
   printf (" %s\n", "-F, --filename=STRING");
   printf ("    %s\n", _("Configuration file"));
   printf (" %s\n", "-e, --expect=STRING");
@@ -337,7 +361,7 @@ print_help (void)
   printf (" %s\n", "-r, --retries=INTEGER");
   printf ("    %s\n", _("Number of times to retry a failed connection"));
 
-	printf (_(UT_TIMEOUT), timeout_interval);
+	printf (UT_TIMEOUT, timeout_interval);
 
   printf ("\n");
   printf ("%s\n", _("This plugin tests a RADIUS server to see if it is accepting connections."));
@@ -350,13 +374,7 @@ print_help (void)
   printf ("%s\n", _("run the plugin at regular predictable intervals. Please be sure that"));
   printf ("%s\n", _("the password used does not allow access to sensitive system resources."));
 
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
@@ -364,9 +382,10 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
-	printf ("%s -H host -F config_file -u username -p password [-n nas-id] [-P port]\n\
-                  [-t timeout] [-r retries] [-e expect]\n", progname);
+  printf ("%s\n", _("Usage:"));
+	printf ("%s -H host -F config_file -u username -p password\n\
+			[-P port] [-t timeout] [-r retries] [-e expect]\n\
+			[-n nas-id] [-N nas-ip-addr]\n", progname);
 }
 
 

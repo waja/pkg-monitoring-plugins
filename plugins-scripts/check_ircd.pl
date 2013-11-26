@@ -59,7 +59,7 @@ use utils qw($TIMEOUT %ERRORS &print_revision &support &usage);
 sub print_help ();
 sub print_usage ();
 sub connection ($$$$);
-sub bindRemote ($$$);
+sub bindRemote ($$);
 
 # -------------------------------------------------------------[ Enviroment ]--
 
@@ -141,28 +141,20 @@ Perl Check IRCD plugin for Nagios
 
 # -------------------------------------------------------------[ bindRemote ]--
 
-sub bindRemote ($$$)
+sub bindRemote ($$)
 {
-	my ($in_remotehost, $in_remoteport, $in_hostname) = @_;
+	my ($in_remotehost, $in_remoteport) = @_;
 	my $proto = getprotobyname('tcp');
 	my $sockaddr;
-	my $this;
-	my $thisaddr = gethostbyname($in_hostname);
 	my $that;
 	my ($name, $aliases,$type,$len,$thataddr) = gethostbyname($in_remotehost);
-#	($name,$aliases,$type,$len,$thisaddr) = gethostbyname($in_hostname);
 
 	if (!socket(ClientSocket,AF_INET, SOCK_STREAM, $proto)) {
 	    print "IRCD UNKNOWN: Could not start socket ($!)\n";
 	    exit $ERRORS{"UNKNOWN"};
 	}
 	$sockaddr = 'S n a4 x8';
-	$this = pack($sockaddr, AF_INET, 0, $thisaddr);
 	$that = pack($sockaddr, AF_INET, $in_remoteport, $thataddr);
-	if (!bind(ClientSocket, $this)) {
-	    print "IRCD UNKNOWN: Could not bind socket ($!)\n";
-	    exit $ERRORS{"UNKNOWN"};
-	}
 	if (!connect(ClientSocket, $that)) { 
 	    print "IRCD UNKNOWN: Could not connect socket ($!)\n";
 	    exit $ERRORS{"UNKNOWN"};
@@ -195,19 +187,19 @@ MAIN:
 
 	if ($opt_h) {print_help(); exit $ERRORS{'OK'};}
 
-	($opt_H) || ($opt_H = shift) || usage("Host name/address not specified\n");
+	($opt_H) || ($opt_H = shift @ARGV) || usage("Host name/address not specified\n");
 	my $remotehost = $1 if ($opt_H =~ /([-.A-Za-z0-9]+)/);
 	($remotehost) || usage("Invalid host: $opt_H\n");
 
-	($opt_w) || ($opt_w = shift) || ($opt_w = 50);
+	($opt_w) || ($opt_w = shift @ARGV) || ($opt_w = 50);
 	my $warn = $1 if ($opt_w =~ /^([0-9]+)$/);
 	($warn) || usage("Invalid warning threshold: $opt_w\n");
 
-	($opt_c) || ($opt_c = shift) || ($opt_c = 100);
+	($opt_c) || ($opt_c = shift @ARGV) || ($opt_c = 100);
 	my $crit = $1 if ($opt_c =~ /^([0-9]+)$/);
 	($crit) || usage("Invalid critical threshold: $opt_c\n");
 
-	($opt_p) || ($opt_p = shift) || ($opt_p = 6667);
+	($opt_p) || ($opt_p = shift @ARGV) || ($opt_p = 6667);
 	my $remoteport = $1 if ($opt_p =~ /^([0-9]+)$/);
 	($remoteport) || usage("Invalid port: $opt_p\n");
 
@@ -221,13 +213,10 @@ MAIN:
 	
 	alarm($TIMEOUT);
 
-	chomp($hostname = `/bin/hostname`);
-	$hostname = $1 if ($hostname =~ /([-.a-zA-Z0-9]+)/);
 	my ($name, $alias, $proto) = getprotobyname('tcp');
-	print "MAIN(debug): hostname = $hostname\n" if $verbose;
 
-	print "MAIN(debug): binding to remote host: $remotehost -> $remoteport -> $hostname\n" if $verbose;
-	my $ClientSocket = &bindRemote($remotehost,$remoteport,$hostname);
+	print "MAIN(debug): binding to remote host: $remotehost -> $remoteport\n" if $verbose;
+	my $ClientSocket = &bindRemote($remotehost,$remoteport);
 	
 	print ClientSocket "NICK $NICK\nUSER $USER_INFO\n";
 	

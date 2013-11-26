@@ -399,8 +399,8 @@ print_help (void)
 
   print_usage ();
 
-  printf (_(UT_HELP_VRSN));
-  printf (_(UT_EXTRA_OPTS));
+  printf (UT_HELP_VRSN);
+  printf (UT_EXTRA_OPTS);
 
   printf (" %s\n", "-H, --hostname=HOST");
   printf ("    %s\n", _("name or IP Address of host to ping (IP Address bypasses name lookup, reducing system load)"));
@@ -416,25 +416,19 @@ print_help (void)
   printf ("    %s (default: fping's default for -t)\n", _("Target timeout (ms)"),PACKET_COUNT);
   printf (" %s\n", "-i, --interval=INTEGER");
   printf ("    %s (default: fping's default for -p)\n", _("Interval (ms) between sending packets"),PACKET_COUNT);
-  printf (_(UT_VERBOSE));
+  printf (UT_VERBOSE);
   printf ("\n");
   printf (" %s\n", _("THRESHOLD is <rta>,<pl>%% where <rta> is the round trip average travel time (ms)"));
   printf (" %s\n", _("which triggers a WARNING or CRITICAL state, and <pl> is the percentage of"));
   printf (" %s\n", _("packet loss to trigger an alarm state."));
 
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-  printf (_(UT_SUPPORT));
+  printf (UT_SUPPORT);
 }
 
 
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf (" %s <host_address> -w limit -c limit [-b size] [-n number] [-T number] [-i number]\n", progname);
 }

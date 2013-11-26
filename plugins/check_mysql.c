@@ -381,10 +381,10 @@ print_help (void)
 
 	print_usage ();
 
-  printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+  printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
-  printf (_(UT_HOST_PORT), 'P', myport);
+  printf (UT_HOST_PORT, 'P', myport);
   printf (" %s\n", "-s, --socket=STRING");
   printf ("    %s\n", _("Use the specified socket (has no effect if -H is used)"));
 
@@ -410,23 +410,19 @@ print_help (void)
   printf (" %s\n", _("using the default unix socket. You can force TCP on localhost by using an"));
   printf (" %s\n", _("IP address or FQDN ('localhost' will use the socket as well)."));
 
-#ifdef NP_EXTRA_OPTS
 	printf ("\n");
 	printf ("%s\n", _("Notes:"));
-	printf (_(UT_EXTRA_OPTS_NOTES));
-	printf ("\n");
 	printf (" %s\n", _("You must specify -p with an empty string to force an empty password,"));
 	printf (" %s\n", _("overriding any my.cnf settings."));
-#endif
 
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
 void
 print_usage (void)
 {
-	printf (_("Usage:"));
+	printf ("%s\n", _("Usage:"));
   printf (" %s [-d database] [-H host] [-P port] [-s socket]\n",progname);
   printf ("       [-u user] [-p password] [-S]\n");
 }

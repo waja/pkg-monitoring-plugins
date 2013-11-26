@@ -306,7 +306,7 @@ handle_random_icmp(unsigned char *packet, struct sockaddr_in *addr)
 	struct rta_host *host = NULL;
 
 	memcpy(&p, packet, sizeof(p));
-	if(p.icmp_type == ICMP_ECHO && p.icmp_id == pid) {
+	if(p.icmp_type == ICMP_ECHO && ntohs(p.icmp_id) == pid) {
 		/* echo request from us to us (pinging localhost) */
 		return 0;
 	}
@@ -332,15 +332,15 @@ handle_random_icmp(unsigned char *packet, struct sockaddr_in *addr)
 	/* might be for us. At least it holds the original package (according
 	 * to RFC 792). If it isn't, just ignore it */
 	memcpy(&sent_icmp, packet + 28, sizeof(sent_icmp));
-	if(sent_icmp.icmp_type != ICMP_ECHO || sent_icmp.icmp_id != pid ||
-	   sent_icmp.icmp_seq >= targets)
+	if(sent_icmp.icmp_type != ICMP_ECHO || ntohs(sent_icmp.icmp_id) != pid ||
+	   ntohs(sent_icmp.icmp_seq) >= targets*packets)
 	{
 		if(debug) printf("Packet is no response to a packet we sent\n");
 		return 0;
 	}
 
 	/* it is indeed a response for us */
-	host = table[sent_icmp.icmp_seq];
+	host = table[ntohs(sent_icmp.icmp_seq)/packets];
 	if(debug) {
 		printf("Received \"%s\" from %s for ICMP ECHO sent to %s.\n",
 			   get_icmp_error_msg(p.icmp_type, p.icmp_code),
@@ -624,7 +624,7 @@ main(int argc, char **argv)
 	table = malloc(sizeof(struct rta_host **) * (argc - 1));
 	i = 0;
 	while(host) {
-		host->id = i;
+		host->id = i*packets;
 		table[i] = host;
 		host = host->next;
 		i++;
@@ -763,12 +763,8 @@ wait_for_reply(int sock, u_int t)
 		/* check the response */
 		memcpy(&icp, buf + hlen, sizeof(icp));
 
-		if(icp.icmp_id != pid) {
-			handle_random_icmp(buf + hlen, &resp_addr);
-			continue;
-		}
-
-		if(icp.icmp_type != ICMP_ECHOREPLY || icp.icmp_seq >= targets) {
+		if(ntohs(icp.icmp_id) != pid || icp.icmp_type != ICMP_ECHOREPLY ||
+		   ntohs(icp.icmp_seq) >= targets*packets) {
 			if(debug > 2) printf("not a proper ICMP_ECHOREPLY\n");
 			handle_random_icmp(buf + hlen, &resp_addr);
 			continue;
@@ -776,8 +772,11 @@ wait_for_reply(int sock, u_int t)
 
 		/* this is indeed a valid response */
 		memcpy(&data, icp.icmp_data, sizeof(data));
+		if (debug > 2)
+			printf("ICMP echo-reply of len %u, id %u, seq %u, cksum 0x%X\n",
+			       sizeof(data), ntohs(icp.icmp_id), ntohs(icp.icmp_seq), icp.icmp_cksum);
 
-		host = table[icp.icmp_seq];
+		host = table[ntohs(icp.icmp_seq)/packets];
 		gettimeofday(&now, &tz);
 		tdiff = get_timevaldiff(&data.stime, &now);
 
@@ -847,9 +846,13 @@ send_icmp_ping(int sock, struct rta_host *host)
 	packet.icp->icmp_type = ICMP_ECHO;
 	packet.icp->icmp_code = 0;
 	packet.icp->icmp_cksum = 0;
-	packet.icp->icmp_id = pid;
-	packet.icp->icmp_seq = host->id;
+	packet.icp->icmp_id = htons(pid);
+	packet.icp->icmp_seq = htons(host->id++);
 	packet.icp->icmp_cksum = icmp_checksum(packet.cksum_in, icmp_pkt_size);
+
+	if (debug > 2)
+		printf("Sending ICMP echo-request of len %u, id %u, seq %u, cksum 0x%X to host %s\n",
+		       sizeof(data), ntohs(packet.icp->icmp_id), ntohs(packet.icp->icmp_seq), packet.icp->icmp_cksum, host->name);
 
 	len = sendto(sock, packet.buf, icmp_pkt_size, 0, (struct sockaddr *)addr,
 				 sizeof(struct sockaddr));
@@ -1278,8 +1281,8 @@ print_help(void)
 
   print_usage ();
 
-  printf (_(UT_HELP_VRSN));
-  printf (_(UT_EXTRA_OPTS));
+  printf (UT_HELP_VRSN);
+  printf (UT_EXTRA_OPTS);
 
   printf (" %s\n", "-H");
   printf ("    %s\n", _("specify a target"));
@@ -1332,12 +1335,8 @@ print_help(void)
 /*  printf ("%s\n", _("Long options are currently unsupported."));
   printf ("%s\n", _("Options marked with * require an argument"));
 */
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
 
-  printf (_(UT_SUPPORT));
+  printf (UT_SUPPORT);
 }
 
 
@@ -1345,6 +1344,6 @@ print_help(void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf(" %s [options] [-H] host1 host2 hostN\n", progname);
 }
