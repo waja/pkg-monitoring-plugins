@@ -8,7 +8,7 @@ use strict;
 use Test::More;
 use NPTest;
 
-my $tests = 44;
+my $tests = 46;
 plan tests => $tests;
 my $res;
 
@@ -44,7 +44,7 @@ SKIP: {
 	like( $res->output, "/check_snmp: Invalid SNMP version - 3c/" );
 
 	SKIP: {
-		skip "no snmp host defined", 32 if ( ! $host_snmp );
+		skip "no snmp host defined", 34 if ( ! $host_snmp );
 
 		$res = NPTest->testCmd( "./check_snmp -H $host_snmp -C $snmp_community -o system.sysUpTime.0 -w 1: -c 1:");
 		cmp_ok( $res->return_code, '==', 0, "Exit OK when querying uptime" ); 
@@ -53,6 +53,10 @@ SKIP: {
 		my $value = $1;
 		cmp_ok( $value, ">", 0, "Got a time value" );
 		like($res->perf_output, "/sysUpTime.*$1/", "Got perfdata with value '$1' in it");
+
+		$res = NPTest->testCmd( "./check_snmp -H $host_snmp -C $snmp_community -o .1.3.6.1.2.1.1.3.0 -w 1: -c 1:");
+		cmp_ok( $res->return_code, '==', 0, "Test with numeric OID (no mibs loaded)" );
+		like($res->output, '/^SNMP OK - \d+/', "String contains SNMP OK");
 
 		$res = NPTest->testCmd( "./check_snmp -H $host_snmp -C $snmp_community -o system.sysDescr.0");
 		cmp_ok( $res->return_code, '==', 0, "Exit OK when querying sysDescr" ); 
@@ -95,11 +99,11 @@ SKIP: {
 		my $lower = $1 - 0.05;
 		my $higher = $1 + 0.05;
 		$res = NPTest->testCmd( "./check_snmp -H $host_snmp -C $snmp_community -o enterprises.ucdavis.laTable.laEntry.laLoad.3 -w $lower -c $higher");
-		cmp_ok( $res->return_code, '==', 1, "Exit WARNING with fractionnal arcuments");
+		cmp_ok( $res->return_code, '==', 1, "Exit WARNING with fractionnal arguments");
 
 		$res = NPTest->testCmd( "./check_snmp -H $host_snmp -C $snmp_community -o system.sysUpTime.0,host.hrSWRun.hrSWRunTable.hrSWRunEntry.hrSWRunIndex.1 -w ,:0 -c ,:2");
 		cmp_ok( $res->return_code, '==', 1, "Exit WARNING on 2nd threshold");
-		like($res->output, '/^SNMP WARNING - Timeticks:\s\(\d+\)\s.*,\s.*\s\*1\*\s.*$/', "First OID returned as string, 2nd checked for thresholds");
+		like($res->output, '/^SNMP WARNING - Timeticks:\s\(\d+\)\s+(?:\d+ days?,\s+)?\d+:\d+:\d+\.\d+\s+\*1\*\s.*$/', "First OID returned as string, 2nd checked for thresholds");
 
 		$res = NPTest->testCmd( "./check_snmp -H $host_snmp -C $snmp_community -o host.hrSWRun.hrSWRunTable.hrSWRunEntry.hrSWRunIndex.1 -w '' -c ''");
 		cmp_ok( $res->return_code, '==', 0, "Empty thresholds doesn't crash");

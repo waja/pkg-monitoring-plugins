@@ -23,7 +23,7 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
-* $Id: check_tcp.c 2153 2009-02-21 09:59:24Z dermoth $
+* $Id$
 * 
 *****************************************************************************/
 

@@ -26,7 +26,7 @@
 #
 PROGNAME=`basename $0`
 PROGPATH=`echo $0 | /bin/sed -e 's,[\\/][^\\/][^\\/]*$,,'`
-REVISION=`echo '$Revision: 2091 $' | sed -e 's/[^0-9.]//g'`
+REVISION=`echo '$Revision: 71 $' | sed -e 's/[^0-9.]//g'`
 
 
 . $PROGPATH/utils.sh

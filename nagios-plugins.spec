@@ -1,6 +1,6 @@
 Name: nagios-plugins
-Version: trunk-200906171200
-Release: snapshot
+Version: 1.4.14
+Release: 1
 Summary: Host/service/network monitoring program plugins for Nagios
 
 Group: Applications/System

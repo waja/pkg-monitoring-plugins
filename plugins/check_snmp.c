@@ -100,7 +100,7 @@ size_t nunits = 0;
 size_t unitv_size = 8;
 int numoids = 0;
 int numauthpriv = 0;
-int verbose = FALSE;
+int verbose = 0;
 int usesnmpgetnext = FALSE;
 char *warning_thresholds = NULL;
 char *critical_thresholds = NULL;
@@ -186,7 +186,7 @@ main (int argc, char **argv)
 	}else{
 		snmpcmd = strdup (PATH_TO_SNMPGET);
 	}
-	
+
 	/* 9 arguments to pass before authpriv options + 1 for host and numoids. Add one for terminating NULL */
 	command_line = calloc (9 + numauthpriv + 1 + numoids + 1, sizeof (char *));
 	command_line[0] = snmpcmd;
@@ -207,7 +207,7 @@ main (int argc, char **argv)
 
 	/* This is just for display purposes, so it can remain a string */
 	asprintf(&cl_hidden_auth, "%s -t %d -r %d -m %s -v %s %s %s:%s",
-		snmpcmd, timeout_interval, retries, miblist, proto, "[authpriv]",
+		snmpcmd, timeout_interval, retries, strlen(miblist) ? miblist : "''", proto, "[authpriv]",
 		server_address, port);
 
 	for (i = 0; i < numoids; i++) {
@@ -255,12 +255,17 @@ main (int argc, char **argv)
 		ptr = chld_out.line[i];
 		oidname = strpcpy (oidname, ptr, delimiter);
 		response = strstr (ptr, delimiter);
+		if (response == NULL)
+			break;
 
-		/* We strip out the datatype indicator for PHBs */
+		if (verbose > 2) {
+			printf("Processing line %i\n  oidname: %s\n  response: %s\n", i+1, oidname, response);
+		}
 
 		/* Clean up type array - Sol10 does not necessarily zero it out */
 		bzero(type, sizeof(type));
 
+		/* We strip out the datatype indicator for PHBs */
 		if (strstr (response, "Gauge: "))
 			show = strstr (response, "Gauge: ") + 7;
 		else if (strstr (response, "Gauge32: "))
@@ -431,7 +436,7 @@ process_arguments (int argc, char **argv)
 			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'v': /* verbose */
-			verbose = TRUE;
+			verbose++;
 			break;
 
 	/* Connection info */
@@ -644,7 +649,7 @@ validate_arguments ()
 		if ( needmibs == TRUE ) {
 			miblist = strdup (DEFAULT_MIBLIST);
 		}else{
-			miblist = "''";			/* don't read any mib files for numeric oids */
+			miblist = "";			/* don't read any mib files for numeric oids */
 		}
 	}
 
