@@ -169,7 +169,6 @@ main (int argc, char **argv)
 	char *state_string=NULL;
 	size_t response_length, current_length, string_length;
 	char *temp_string=NULL;
-	int is_numeric=0;
 	time_t current_time;
 	double temp_double;
 	time_t duration;
@@ -335,29 +334,24 @@ main (int argc, char **argv)
 		/* We strip out the datatype indicator for PHBs */
 		if (strstr (response, "Gauge: ")) {
 			show = strstr (response, "Gauge: ") + 7;
-			is_numeric++;
 		} 
 		else if (strstr (response, "Gauge32: ")) {
 			show = strstr (response, "Gauge32: ") + 9;
-			is_numeric++;
 		} 
 		else if (strstr (response, "Counter32: ")) {
 			show = strstr (response, "Counter32: ") + 11;
-			is_numeric++;
 			is_counter=1;
 			if(!calculate_rate) 
 				strcpy(type, "c");
 		}
 		else if (strstr (response, "Counter64: ")) {
 			show = strstr (response, "Counter64: ") + 11;
-			is_numeric++;
 			is_counter=1;
 			if(!calculate_rate)
 				strcpy(type, "c");
 		}
 		else if (strstr (response, "INTEGER: ")) {
 			show = strstr (response, "INTEGER: ") + 9;
-			is_numeric++;
 		}
 		else if (strstr (response, "STRING: ")) {
 			show = strstr (response, "STRING: ") + 8;
@@ -396,15 +390,17 @@ main (int argc, char **argv)
 			}
 
 		}
-		else if (strstr (response, "Timeticks: "))
+		else if (strstr (response, "Timeticks: ")) {
 			show = strstr (response, "Timeticks: ");
+		}
 		else
 			show = response;
 
 		iresult = STATE_DEPENDENT;
 
 		/* Process this block for numeric comparisons */
-		 if (is_numeric) {
+		/* Make some special values,like Timeticks numeric only if a threshold is defined */
+		if (thlds[i]->warning || thlds[i]->critical || calculate_rate) {
 			ptr = strpbrk (show, "0123456789");
 			if (ptr == NULL)
 				die (STATE_UNKNOWN,_("No valid data returned"));
@@ -744,7 +740,7 @@ process_arguments (int argc, char **argv)
 			labels[nlabels - 1] = optarg;
 			ptr = thisarg (optarg);
 			labels[nlabels - 1] = ptr;
-			if (strstr (ptr, "'") == ptr)
+			if (ptr[0] == '\'')
 				labels[nlabels - 1] = ptr + 1;
 			while (ptr && (ptr = nextarg (ptr))) {
 				if (nlabels >= labels_size) {
@@ -753,9 +749,9 @@ process_arguments (int argc, char **argv)
 					if (labels == NULL)
 						die (STATE_UNKNOWN, _("Could not reallocate labels\n"));
 				}
-				labels++;
+				nlabels++;
 				ptr = thisarg (ptr);
-				if (strstr (ptr, "'") == ptr)
+				if (ptr[0] == '\'')
 					labels[nlabels - 1] = ptr + 1;
 				else
 					labels[nlabels - 1] = ptr;
@@ -773,7 +769,7 @@ process_arguments (int argc, char **argv)
 			unitv[nunits - 1] = optarg;
 			ptr = thisarg (optarg);
 			unitv[nunits - 1] = ptr;
-			if (strstr (ptr, "'") == ptr)
+			if (ptr[0] == '\'')
 				unitv[nunits - 1] = ptr + 1;
 			while (ptr && (ptr = nextarg (ptr))) {
 				if (nunits >= unitv_size) {
@@ -784,7 +780,7 @@ process_arguments (int argc, char **argv)
 				}
 				nunits++;
 				ptr = thisarg (ptr);
-				if (strstr (ptr, "'") == ptr)
+				if (ptr[0] == '\'')
 					unitv[nunits - 1] = ptr + 1;
 				else
 					unitv[nunits - 1] = ptr;
@@ -939,7 +935,7 @@ char *
 thisarg (char *str)
 {
 	str += strspn (str, " \t\r\n");	/* trim any leading whitespace */
-	if (strstr (str, "'") == str) {	/* handle SIMPLE quoted strings */
+	if (str[0] == '\'') {	/* handle SIMPLE quoted strings */
 		if (strlen (str) == 1 || !strstr (str + 1, "'"))
 			die (STATE_UNKNOWN, _("Unbalanced quotes\n"));
 	}
@@ -955,7 +951,7 @@ thisarg (char *str)
 char *
 nextarg (char *str)
 {
-	if (strstr (str, "'") == str) {
+	if (str[0] == '\'') {
 		str[0] = 0;
 		if (strlen (str) > 1) {
 			str = strstr (str + 1, "'");
@@ -965,7 +961,7 @@ nextarg (char *str)
 			return NULL;
 		}
 	}
-	if (strstr (str, ",") == str) {
+	if (str[0] == ',') {
 		str[0] = 0;
 		if (strlen (str) > 1) {
 			return (++str);
@@ -1076,8 +1072,8 @@ print_help (void)
 
 	printf ("\n");
 	printf ("%s\n", _("Notes:"));
-	printf (" %s\n", _("- Multiple OIDs may be indicated by a comma or space-delimited list (lists with"));
-	printf ("   %s %i %s\n", _("internal spaces must be quoted). Maximum:"), MAX_OIDS, _("OIDs."));
+	printf (" %s\n", _("- Multiple OIDs (and labels) may be indicated by a comma or space-delimited  "));
+	printf ("   %s %i %s\n", _("list (lists with internal spaces must be quoted). Maximum:"), MAX_OIDS, _("OIDs."));
 
 	printf(" -%s", UT_THRESHOLDS_NOTES);
 

@@ -16,8 +16,8 @@
 %define npgrp nagios
 
 Name: nagios-plugins
-Version: 1.4.15
-Release: 1
+Version: @PACKAGE_VERSION@
+Release: @RELEASE@
 Summary: Host/service/network monitoring program plugins for Nagios
 
 Group: Applications/System

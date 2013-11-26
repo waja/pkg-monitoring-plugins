@@ -67,7 +67,7 @@ my $host = $1 if ($opt_H =~ /^([-_.A-Za-z0-9 ]+\$?)$/);
 ($host) || usage("Invalid host: $opt_H\n");
 
 ($opt_s) || ($opt_s = shift @ARGV) || usage("Share volume not specified\n");
-my $share = $1 if ($opt_s =~ /^([-_.A-Za-z0-9]+\$?)$/);
+my $share = $1 if ($opt_s =~ /^([-_.A-Za-z0-9 ]+\$?)$/);
 ($share) || usage("Invalid share: $opt_s\n");
 
 defined($opt_u) || ($opt_u = shift @ARGV) || ($opt_u = "guest");
@@ -239,7 +239,7 @@ if (/\s*(\d*) blocks of size (\d*)\. (\d*) blocks available/) {
 	$answer = "Result from smbclient not suitable\n";
 	$state = "UNKNOWN";
 	foreach (@lines) {
-		if (/(Access denied|NT_STATUS_LOGON_FAILURE)/) {
+		if (/(Access denied|NT_STATUS_LOGON_FAILURE|NT_STATUS_ACCESS_DENIED)/) {
 			$answer = "Access Denied\n";
 			$state = "CRITICAL";
 			last;
