@@ -2,16 +2,16 @@ This software is brought to you by the Nagios Plugins Development Team. However,
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-Randy O'Meara
-dag rob?le
 Diego Elio Pettenò
 fabiodds
+dag rob?le
+Randy O'Meara
 Oskar Ahner
 Lance Albertson
 David Alden
+Rodger Allen
 Paul Allen
 Patrick Allen
-Rodger Allen
 Felipe Gustavo de Almeida
 Michael Almond
 Michael Anthon
@@ -31,6 +31,7 @@ Marlo Bell
 Simon Bellwood
 Hilko Bengen
 Allan Bennett
+Booker C. Bense
 Guy Van Den Bergh
 Jimmy Bergman
 Jochen Bern
@@ -42,6 +43,7 @@ Eric Bollengier
 Aurelien Bompard
 Alex Bradley
 Richard Brodie
+Dominique Broeglin
 Matthew Brown
 Tobias Brox
 Dick van den Burg
@@ -56,9 +58,10 @@ Stephane Chazelas
 Eric Chen
 Alwyn Cherrington
 Ben Clewett
+Lionel Cons
 Garry Cook
-Ollie Cook
 Charlie Cook
+Ollie Cook
 Jason Crawford
 David Croft
 Robert Dale
@@ -71,6 +74,7 @@ Andy Doran
 Emmanuel Dreyfus
 Rainer Duffner
 Ian Duggan
+Daniël van Eeden
 Edwin Eefting
 Jason Ellison
 Andrew Elwell
@@ -87,12 +91,13 @@ Paul Farrall
 Reuben Farrelly
 Mark Favas
 Duncan Ferguson
-Paulo Afonso Graner Fessel
+Juan Carlos Fernandez
 Paulo Fessel
+Paulo Afonso Graner Fessel
 James Fidell
 Roman Fiedler
-Bernhard Fischer
 Johan Fischer
+Bernhard Fischer
 Matthias Flacke
 Martin Foster
 Felix Frank
@@ -123,17 +128,20 @@ Peter Hoogendijk
 Jason Hoos
 Richard Edward Horner
 Chester Hosey
+Marc Huffnagle
 Bob Ingraham
 Cire Iriarte
 Bryan Irvine
 Valdimir Ivaschenko
 Harald Jenny
 Mark Jewiss
+Simon Kainz
 Nikita Kalabukhov
 Frank Kannemann
 Roy Sigurd Karlsbakk
 Anders Kaseorg
 Jason Kau
+Mark Keisler
 Ryan Kelly
 Bo Kersey
 Konstantin Khomoutov
@@ -149,6 +157,7 @@ Bill Kunkel
 Brian Landers
 Pascal Larisch
 Charles-Henri Larose
+Tim Laszlo
 Gerhard Lausser
 Lynne Lawrence
 Sakari Lehtonen
@@ -156,6 +165,7 @@ William Leibzon
 Pedro Leite
 Richard Leitner
 Craig Leres
+Joerg Linge
 Jan Lipphaus
 Larry Low
 Jacob Lundqvist
@@ -178,6 +188,7 @@ Jan-Piet Mens
 Sven Meyer
 Emil Michles
 Christian Mies
+Jonathan Milby
 Russell Miller
 Janos Mohacsi
 Gerd Mueller
@@ -234,6 +245,7 @@ Sven Schaffranneck
 Christoph Schell
 Thomas Schimpke
 Benjamin Schmid
+Sebastian Schmidt
 Henning Schmiedehausen
 Christian Schneemann
 Cove Schneider
@@ -245,10 +257,12 @@ Lonny Selinger
 Nathan Shafer
 Tom Shields
 Sean Shore
+Pall Sigurdsson
 Antony Simmonds
 John Sivak
 Nik Soggia
 Robin Sonefors
+Erwan Ben Souiden
 Lars Stavholm
 Nikolay Sturm
 David Sullivan
@@ -266,6 +280,7 @@ Stéphane Urbanovski
 Matthias Urlichs
 Matteo HCE Valsasna
 Jon Vandegrift
+Gianluca Varisco
 Laurent Vaslin
 Matej Vela
 Carole Verdon
@@ -278,6 +293,7 @@ John Warburton
 Christian G Warden
 Erik Wasser
 Stuart Webster
+Steve Weinreich
 Erik Welch
 Torsten Werner
 Ben Whaley

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: nagiosplug-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-09-27 16:41+0200\n"
+"POT-Creation-Date: 2013-10-02 17:27+0200\n"
 "PO-Revision-Date: 2010-04-21 23:38-0400\n"
 "Last-Translator: Thomas Guyot-Sionnest <dermoth@aei.ca>\n"
 "Language-Team: Nagios Plugin Development Mailing List <nagiosplug-"
@@ -6232,15 +6232,15 @@ msgstr ""
 msgid ""
 "Error: DLPI stream API failed to get MAC in dl_attach_req/open(%s..): %s.\n"
 msgstr ""
-"Erreur: Impossible d'obtenir la MAC par l'API DLPI dans dl_attach_req/"
-"open(%s..): %s.\n"
+"Erreur: Impossible d'obtenir la MAC par l'API DLPI dans dl_attach_req/open"
+"(%s..): %s.\n"
 
 #: plugins-root/check_dhcp.c:1295
 #, c-format
 msgid "Error: DLPI stream API failed to get MAC in dl_bind/check_ctrl(): %s.\n"
 msgstr ""
-"Erreur: Impossible d'obtenir la MAC par l'API DLPI dans dl_bind/"
-"check_ctrl(): %s.\n"
+"Erreur: Impossible d'obtenir la MAC par l'API DLPI dans dl_bind/check_ctrl"
+"(): %s.\n"
 
 #: plugins-root/check_dhcp.c:1374
 #, c-format
