@@ -39976,7 +39976,7 @@ if test "$ac_cv_uname_s" = 'SunOS' -a \( "x$ac_cv_prog_ac_ct_AR" = "x" -o "$ac_c
 	as_fn_error $? "No ar found for Solaris - is /usr/ccs/bin in PATH?" "$LINENO" 5
 fi
 
-ac_config_files="$ac_config_files Makefile tap/Makefile lib/Makefile plugins/Makefile lib/tests/Makefile plugins-root/Makefile plugins-scripts/Makefile plugins-scripts/subst plugins-scripts/utils.pm plugins-scripts/utils.sh test.pl pkg/solaris/pkginfo po/Makefile.in"
+ac_config_files="$ac_config_files Makefile tap/Makefile lib/Makefile plugins/Makefile lib/tests/Makefile plugins-root/Makefile plugins-scripts/Makefile plugins-scripts/subst plugins-scripts/utils.pm plugins-scripts/utils.sh perlmods/Makefile test.pl pkg/solaris/pkginfo po/Makefile.in"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -41092,6 +41092,7 @@ do
     "plugins-scripts/subst") CONFIG_FILES="$CONFIG_FILES plugins-scripts/subst" ;;
     "plugins-scripts/utils.pm") CONFIG_FILES="$CONFIG_FILES plugins-scripts/utils.pm" ;;
     "plugins-scripts/utils.sh") CONFIG_FILES="$CONFIG_FILES plugins-scripts/utils.sh" ;;
+    "perlmods/Makefile") CONFIG_FILES="$CONFIG_FILES perlmods/Makefile" ;;
     "test.pl") CONFIG_FILES="$CONFIG_FILES test.pl" ;;
     "pkg/solaris/pkginfo") CONFIG_FILES="$CONFIG_FILES pkg/solaris/pkginfo" ;;
     "po/Makefile.in") CONFIG_FILES="$CONFIG_FILES po/Makefile.in" ;;
