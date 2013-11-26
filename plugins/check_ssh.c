@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 23:53:28 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_ssh.c,v 1.30 2006/10/19 23:53:28 opensides Exp $
+* $Id: check_ssh.c,v 1.32 2007/01/28 21:46:40 hweiss Exp $
 * 
 ******************************************************************************/
 
 const char *progname = "check_ssh";
-const char *revision = "$Revision: 1.30 $";
+const char *revision = "$Revision: 1.32 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -102,7 +102,8 @@ process_arguments (int argc, char **argv)
 	static struct option longopts[] = {
 		{"help", no_argument, 0, 'h'},
 		{"version", no_argument, 0, 'V'},
-		{"host", required_argument, 0, 'H'},
+		{"host", required_argument, 0, 'H'},	/* backward compatibility */
+		{"hostname", required_argument, 0, 'H'},
 		{"port", required_argument, 0, 'p'},
 		{"use-ipv4", no_argument, 0, '4'},
 		{"use-ipv6", no_argument, 0, '6'},
@@ -127,7 +128,7 @@ process_arguments (int argc, char **argv)
 
 		switch (c) {
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		case 'V':									/* version */
 			print_revision (progname, revision);
 			exit (STATE_OK);
@@ -220,7 +221,7 @@ ssh_connect (char *haddr, int hport, char *remote_version)
 	char *ssh_server = NULL;
 	char rev_no[20];
 
-	sscanf ("$Revision: 1.30 $", "$Revision: %[0123456789.]", rev_no);
+	sscanf ("$Revision: 1.32 $", "$Revision: %[0123456789.]", rev_no);
 
 	result = my_tcp_connect (haddr, hport, &sd);
 

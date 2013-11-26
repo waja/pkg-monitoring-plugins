@@ -2,7 +2,7 @@
 #
 # utils.pm tests
 #
-# $Id: utils.t,v 1.2 2006/10/27 15:37:31 tonvoon Exp $
+# $Id: utils.t,v 1.3 2006/12/12 12:59:06 tonvoon Exp $
 #
 # Run with perl t/utils.t
 
@@ -35,6 +35,8 @@ my $hostname_checks = {
 	"host.888." => 1,
 	"where.did.that.!.come.from." => 0,
 	"no.underscores_.com" => 0,
+	"a.somecompany.com" => 1,
+	"host.a.com" => 1,
 	};
 
 plan tests => ((scalar keys %$hostname_checks) + 4);

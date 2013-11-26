@@ -8,8 +8,8 @@
  * Copyright (c) 2006 Nagios Plugin Development Team
  * License: GPL
  *
- * $Revision: 1.3 $
- * $Date: 2006/10/18 12:03:10 $
+ * $Revision: 1.4 $
+ * $Date: 2007/01/27 17:49:08 $
  ****************************************************************************/
 
 #include <stdarg.h>
@@ -151,34 +151,34 @@ void print_thresholds(const char *threshold_name, thresholds *my_threshold) {
 int
 check_range(double value, range *my_range)
 {
-	int false = FALSE;
-	int true = TRUE;
+	int no = FALSE;
+	int yes = TRUE;
 	
 	if (my_range->alert_on == INSIDE) {
-		false = TRUE;
-		true = FALSE;
+		no = TRUE;
+		yes = FALSE;
 	}
 
 	if (my_range->end_infinity == FALSE && my_range->start_infinity == FALSE) {
 		if ((my_range->start <= value) && (value <= my_range->end)) {
-			return false;
+			return no;
 		} else {
-			return true;
+			return yes;
 		}
 	} else if (my_range->start_infinity == FALSE && my_range->end_infinity == TRUE) {
 		if (my_range->start <= value) {
-			return false;
+			return no;
 		} else {
-			return true;
+			return yes;
 		}
 	} else if (my_range->start_infinity == TRUE && my_range->end_infinity == FALSE) {
 		if (value <= my_range->end) {
-			return false;
+			return no;
 		} else {
-			return true;
+			return yes;
 		}
 	} else {
-		return false;
+		return no;
 	}
 }
 

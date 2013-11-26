@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 23:53:28 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *
-* $Id: check_real.c,v 1.27 2006/10/19 23:53:28 opensides Exp $
+* $Id: check_real.c,v 1.29 2007/01/28 21:46:40 hweiss Exp $
 * 
 ******************************************************************************/
 
 const char *progname = "check_real";
-const char *revision = "$Revision: 1.27 $";
+const char *revision = "$Revision: 1.29 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -302,7 +302,7 @@ process_arguments (int argc, char **argv)
 	}
 
 	while (1) {
-		c = getopt_long (argc, argv, "+hVI:H:e:u:p:w:c:t:", longopts,
+		c = getopt_long (argc, argv, "+hvVI:H:e:u:p:w:c:t:", longopts,
 									 &option);
 
 		if (c == -1 || c == EOF)
@@ -368,7 +368,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case '?':									/* usage */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 

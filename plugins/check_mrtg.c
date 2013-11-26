@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/20 07:39:35 $
+* Last Modified: $Date: 2007/02/06 21:03:21 $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_mrtg.c,v 1.28 2006/10/20 07:39:35 opensides Exp $
+ $Id: check_mrtg.c,v 1.30 2007/02/06 21:03:21 opensides Exp $
  
 ******************************************************************************/
 
 const char *progname = "check_mrtg";
-const char *revision =  "$Revision: 1.28 $";
+const char *revision =  "$Revision: 1.30 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -243,7 +243,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 
@@ -367,7 +367,7 @@ print_help (void)
   printf (" %s\n", _("  commands with different values for the <variable> argument.  Of course,"));
   printf (" %s\n", _("you can always hack the code to make this plugin work for you..."));
   printf (" %s\n", _("- MRTG stands for the Multi Router Traffic Grapher.  It can be downloaded from"));
-  printf (" %s\n", _("http://ee-staff.ethz.ch/~oetiker/webtools/mrtg/mrtg.html"));
+  printf (" %s\n", "http://ee-staff.ethz.ch/~oetiker/webtools/mrtg/mrtg.html");
 
 	printf (_(UT_SUPPORT));
 }

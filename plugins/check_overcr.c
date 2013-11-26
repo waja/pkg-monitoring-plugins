@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/02/06 21:03:21 $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_overcr.c,v 1.21 2006/10/19 00:25:16 opensides Exp $
+ $Id: check_overcr.c,v 1.23 2007/02/06 21:03:21 opensides Exp $
  
 ******************************************************************************/
 
 const char *progname = "check_overcr";
-const char *revision = "$Revision: 1.21 $";
+const char *revision = "$Revision: 1.23 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -341,7 +341,7 @@ process_arguments (int argc, char **argv)
 
 		switch (c) {
 		case '?':									/* print short usage statement if args not parsable */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		case 'h':									/* help */
 			print_help ();
 			exit (STATE_OK);
@@ -451,15 +451,15 @@ print_help (void)
   printf ("\n");
   printf ("%s\n", _("Notes:"));
   
-	printf ("%s\n", _("For the available options, the critical threshold value should always be"));
+  printf ("%s\n", _("For the available options, the critical threshold value should always be"));
   printf ("%s\n\n", _("higher than the warning threshold value, EXCEPT with the uptime variable"));
 
-	printf ("%s\n", _("This plugin requres that Eric Molitors' Over-CR collector daemon be"));
-  printf ("%s\n", _("running on the remote server. Over-CR can be downloaded from"));
-  printf ("%s\n", _("http://www.molitor.org/overcr (This plugin was tested with version 0.99.53"));
-  printf ("%s\n", _("of the Over-CR collector)"));
+  printf ("%s\n", _("This plugin requres that Eric Molitors' Over-CR collector daemon be"));
+  printf ("%s\n", _("running on the remote server."));
+  printf ("%s\n", " Over-CR can be downloaded from http://www.molitor.org/overcr");
+  printf ("%s\n", _("This plugin was tested with version 0.99.53 of the Over-CR collector"));
 
-	printf (_(UT_SUPPORT));
+  printf (_(UT_SUPPORT));
 }
 
 

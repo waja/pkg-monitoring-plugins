@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 23:53:28 $
+* Last Modified: $Date: 2007/02/14 10:11:06 $
 *
 * Description:
 *
@@ -27,13 +27,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_tcp.c,v 1.80 2006/10/19 23:53:28 opensides Exp $
+* $Id: check_tcp.c,v 1.89 2007/02/14 10:11:06 tonvoon Exp $
 * 
 *****************************************************************************/
 
 /* progname "check_tcp" changes depending on symlink called */
 char *progname;
-const char *revision = "$Revision: 1.80 $";
+const char *revision = "$Revision: 1.89 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -112,7 +112,7 @@ main (int argc, char **argv)
 
 	len = strlen(progname);
 	if(len > 6 && !memcmp(progname, "check_", 6)) {
-		SERVICE = progname + 6;
+		SERVICE = strdup(progname + 6);
 		for(i = 0; i < len - 6; i++)
 			SERVICE[i] = toupper(SERVICE[i]);
 	}
@@ -166,9 +166,9 @@ main (int argc, char **argv)
 	}
 	else if (!strncmp(SERVICE, "JABBER", 6)) {
 		SEND = "<stream:stream to=\'host\' xmlns=\'jabber:client\' xmlns:stream=\'http://etherx.jabber.org/streams\'>\n";
-		EXPECT = "<?xml version=\'1.0\'?><stream:stream xmlns:stream=\'http://etherx.jabber.org/streams\'";
+		EXPECT = "<?xml version=\'1.0\'?><stream:stream xmlns=\'jabber:client\' xmlns:stream=\'http://etherx.jabber.org/streams\'";
 		QUIT = "</stream:stream>\n";
-		flags |= FLAG_SSL | FLAG_HIDE_OUTPUT;
+		flags |= FLAG_HIDE_OUTPUT;
 		PORT = 5222;
 	}
 	else if (!strncmp (SERVICE, "NNTPS", 5)) {
@@ -342,12 +342,15 @@ main (int argc, char **argv)
 	/* this is a bit stupid, because we don't want to print the
 	 * response time (which can look ok to the user) if we didn't get
 	 * the response we were looking for. if-else */
-	printf(_("%s %s - "), SERVICE, state_text(result));
+	printf("%s %s - ", SERVICE, state_text(result));
 
 	if(match == -2 && len && !(flags & FLAG_HIDE_OUTPUT))
 		printf("Unexpected response from host/socket: %s", status);
 	else {
-		printf("%.3f second response time on ", elapsed_time);
+		if(match == -2)
+			printf("Unexpected response from host/socket on ");
+		else
+			printf("%.3f second response time on ", elapsed_time);
 		if(server_address[0] != '/')
 			printf("port %d", server_port);
 		else
@@ -358,17 +361,24 @@ main (int argc, char **argv)
 		printf (" [%s]", status);
 
 	/* perf-data doesn't apply when server doesn't talk properly,
-	 * so print all zeroes on warn and crit */
+	 * so print all zeroes on warn and crit. Use fperfdata since
+	 * localisation settings can make different outputs */
 	if(match == -2)
-		printf ("|time=%fs;0.0;0.0;0.0;0.0", elapsed_time);
+		printf ("|%s",
+				fperfdata ("time", elapsed_time, "s",
+				TRUE, 0,
+				TRUE, 0,
+				TRUE, 0,
+				TRUE, socket_timeout)
+			);
 	else
 		printf("|%s",
 				fperfdata ("time", elapsed_time, "s",
-		                   TRUE, warning_time,
-		                   TRUE, critical_time,
-		                   TRUE, 0,
-		                   TRUE, socket_timeout)
-		      );
+				TRUE, warning_time,
+				TRUE, critical_time,
+				TRUE, 0,
+				TRUE, socket_timeout)
+			);
 
 	putchar('\n');
 	return result;
@@ -398,7 +408,7 @@ process_arguments (int argc, char **argv)
 		{"expect", required_argument, 0, 'e'},
 		{"maxbytes", required_argument, 0, 'm'},
 		{"quit", required_argument, 0, 'q'},
-		{"jail", required_argument, 0, 'j'},
+		{"jail", no_argument, 0, 'j'},
 		{"delay", required_argument, 0, 'd'},
 		{"refuse", required_argument, 0, 'r'},
 		{"mismatch", required_argument, 0, 'M'},
@@ -443,7 +453,7 @@ process_arguments (int argc, char **argv)
 
 		switch (c) {
 		case '?':                 /* print short usage statement if args not parsable */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		case 'h':                 /* help */
 			print_help ();
 			exit (STATE_OK);
@@ -520,6 +530,7 @@ process_arguments (int argc, char **argv)
 				usage4 (_("Maxbytes must be a positive integer"));
 			else
 				maxbytes = strtol (optarg, NULL, 0);
+			break;
 		case 'q':
 			if (escape)
 				server_quit = np_escaped_string(optarg);
@@ -577,7 +588,7 @@ process_arguments (int argc, char **argv)
 	if (server_address == NULL)
 		usage4 (_("You must provide a server address"));
 	else if (server_address[0] != '/' && is_host (server_address) == FALSE)
-		die (STATE_CRITICAL, "%s: %s - %s\n", progname, _("Invalid hostname, address or socket"), server_address);
+		die (STATE_CRITICAL, "%s %s - %s: %s\n", SERVICE, state_text(STATE_CRITICAL), _("Invalid hostname, address or socket"), server_address);
 
 	return TRUE;
 }
@@ -603,7 +614,7 @@ print_help (void)
 	printf (_(UT_IPv46));
 
 	printf (" %s\n", "-E, --escape");
-  printf ("    %s\n", _("Can use \\n, \\r, \\t or \\ in send or quit string."));
+  printf ("    %s\n", _("Can use \\n, \\r, \\t or \\ in send or quit string. Must come before send or quit option"));
   printf ("    %s\n", _("Default: nothing added to send, \\r\\n added to end of quit"));
   printf (" %s\n", "-s, --send=STRING");
   printf ("    %s\n", _("String to send to the server"));

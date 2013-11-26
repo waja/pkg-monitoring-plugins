@@ -28,7 +28,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * $Id: common.h,v 1.24 2006/07/29 01:43:34 tonvoon Exp $
+ * $Id: common.h,v 1.28 2007/03/22 17:54:16 hweiss Exp $
  *
  *****************************************************************************/
 
@@ -36,6 +36,12 @@
 #define _COMMON_H_
 
 #include "config.h"
+/* This needs to be removed for Solaris servers, where 64 bit files, but 32 bit architecture
+   This needs to be done early on because subsequent system includes use _FILE_OFFSET_BITS
+   Cannot remove from config.h because is included by regex.c from lib/ */
+#if __sun__ && !defined(_LP64) && _FILE_OFFSET_BITS == 64
+#undef _FILE_OFFSET_BITS
+#endif
 
 #ifdef HAVE_FEATURES_H
 #include <features.h>
@@ -97,42 +103,15 @@
 #include <signal.h>
 #endif
 
+/* GNU Libraries */
 #include <getopt.h>
-#include <ctype.h>
-
-#ifdef HAVE_LWRES_NETDB_H
-#include <lwres/netdb.h>
-#else
-# if !HAVE_GETADDRINFO
-#  include "getaddrinfo.h"
-# else
-#  include <netdb.h>
-# endif
-#endif
+#include "dirname.h"
+#include "vasprintf.h"
+#include "snprintf.h"
+#include "vsnprintf.h"
 
 #ifdef HAVE_LOCALE_H
 #include <locale.h>
-#endif
-
-/* Fixes "Cannot use swapctl in the large files compilation environment" error on Solaris */
-#ifdef _FILE_OFFSET_BITS
-#undef _FILE_OFFSET_BITS
-#endif
-
-#ifdef HAVE_DECL_SWAPCTL
-# ifdef HAVE_SYS_SWAP_H
-#  include <sys/swap.h>
-# endif
-# ifdef HAVE_SYS_STAT_H
-#  include <sys/stat.h>
-# endif
-# ifdef HAVE_SYS_PARAM_H
-#  include <sys/param.h>
-# endif
-#endif
-
-#ifndef SWAP_CONVERSION
-# define SWAP_CONVERSION 1
 #endif
 
 #ifdef HAVE_SYS_POLL_H
@@ -151,22 +130,6 @@
 
 #ifndef HAVE_STRTOUL
 # define strtoul(a,b,c) (unsigned long)atol((a))
-#endif
-
-#ifndef HAVE_ASPRINTF
-int asprintf(char **strp, const char *fmt, ...);
-#endif
-
-#ifndef HAVE_VASPRINTF
-/* int vasprintf(char **strp, const char *fmt, va_list ap); */
-#endif
-
-#ifndef HAVE_SNPRINTF
-int snprintf(char *str, size_t size, const  char  *format, ...);
-#endif
-
-#ifndef HAVE_VSNPRINTF
-int vsnprintf(char *str, size_t size, const char  *format, va_list ap);
 #endif
 
 /* SSL implementations */
@@ -226,7 +189,7 @@ enum {
 
 enum {
 	DEFAULT_SOCKET_TIMEOUT = 10,	 /* timeout after 10 seconds */
-	MAX_INPUT_BUFFER = 1024,	     /* max size of most buffers we use */
+	MAX_INPUT_BUFFER = 8192,	     /* max size of most buffers we use */
 	MAX_HOST_ADDRESS_LENGTH = 256	 /* max size of a host address */
 };
 

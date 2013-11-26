@@ -7,7 +7,7 @@
 *  Copyright (c) 1999-2006 nagios-plugins team
 *  Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/03/29 17:58:28 $
 *
 * Description:
 *
@@ -32,12 +32,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_mysql.c,v 1.33 2006/10/19 00:25:16 opensides Exp $
+* $Id: check_mysql.c,v 1.35 2007/03/29 17:58:28 hweiss Exp $
 *
 ******************************************************************************/
 
 const char *progname = "check_mysql";
-const char *revision = "$Revision: 1.33 $";
+const char *revision = "$Revision: 1.35 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -308,7 +308,7 @@ process_arguments (int argc, char **argv)
 			verbose++;
 			break;
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 
@@ -318,18 +318,18 @@ process_arguments (int argc, char **argv)
 
 	while ( argc > c ) {
 
-		if (strlen(db_host) == 0)
+		if (db_host == NULL)
 			if (is_host (argv[c])) {
 				db_host = argv[c++];
 			}
 			else {
-				usage2 (_("Invalid hostname/address"), optarg);
+				usage2 (_("Invalid hostname/address"), argv[c]);
 			}
-		else if (strlen(db_user) == 0)
+		else if (db_user == NULL)
 			db_user = argv[c++];
-		else if (strlen(db_pass) == 0)
+		else if (db_pass == NULL)
 			db_pass = argv[c++];
-		else if (strlen(db) == 0)
+		else if (db == NULL)
 			db = argv[c++];
 		else if (is_intnonneg (argv[c]))
 			db_port = atoi (argv[c++]);

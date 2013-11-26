@@ -10,7 +10,7 @@
 * Copyright (c) 2000 Robert Dale <rdale@digital-mission.com>
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/02/06 21:03:21 $
 *
 * Description:
 *
@@ -35,11 +35,11 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * $Id: check_ide_smart.c,v 1.12 2006/10/19 00:25:16 opensides Exp $
+ * $Id: check_ide_smart.c,v 1.14 2007/02/06 21:03:21 opensides Exp $
  */
 
 const char *progname = "check_ide_smart";
-const char *revision = "$Revision: 1.12 $";
+const char *revision = "$Revision: 1.14 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 	
@@ -212,7 +212,7 @@ main (int argc, char *argv[])
 			print_revision (progname, revision);
 			return STATE_OK;
 		default:
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 
@@ -522,7 +522,7 @@ print_help (void)
   printf (" %s\n", "-0, --auto-off");
   printf ("    %s\n", _("Turn off automatic offline tests"));
   printf (" %s\n", "-n, --nagios");
-  printf ("    %s\n", _("Output suitable for Nagios\n"));
+  printf ("    %s\n\n", _("Output suitable for Nagios"));
   printf (_(UT_SUPPORT));
 }
 

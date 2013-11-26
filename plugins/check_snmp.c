@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/20 07:53:31 $
+* Last Modified: $Date: 2007/02/02 09:10:22 $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_snmp.c,v 1.67 2006/10/20 07:53:31 tonvoon Exp $
+* $Id: check_snmp.c,v 1.69 2007/02/02 09:10:22 dermoth Exp $
 * 
 ******************************************************************************/
 
 const char *progname = "check_snmp";
-const char *revision = "$Revision: 1.67 $";
+const char *revision = "$Revision: 1.69 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -444,7 +444,7 @@ process_arguments (int argc, char **argv)
 
 		switch (c) {
 		case '?':	/* usage */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		case 'h':	/* help */
 			print_help ();
 			exit (STATE_OK); 
@@ -527,11 +527,11 @@ process_arguments (int argc, char **argv)
 				retries = atoi(optarg);
 			break;
 		case 'o':									/* object identifier */
-			if ( strspn( optarg, "0123456789." ) != strlen( optarg ) ) {
+			if ( strspn( optarg, "0123456789.," ) != strlen( optarg ) ) {
 					/*
-					 * we have something other than digits and periods, so we
-					 * have a mib variable, rather than just an SNMP OID, so
-					 * we have to actually read the mib files
+					 * we have something other than digits, periods and comas,
+					 * so we have a mib variable, rather than just an SNMP OID,
+					 * so we have to actually read the mib files
 					 */
 					needmibs = TRUE;
 			}

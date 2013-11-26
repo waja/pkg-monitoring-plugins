@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/22 22:24:27 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -27,13 +27,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_ldap.c,v 1.33 2006/10/22 22:24:27 opensides Exp $
+ $Id: check_ldap.c,v 1.35 2007/01/28 21:46:40 hweiss Exp $
  
 ******************************************************************************/
 
 /* progname may be check_ldaps */
 char *progname = "check_ldap";
-const char *revision = "$Revision: 1.33 $";
+const char *revision = "$Revision: 1.35 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -325,7 +325,7 @@ process_arguments (int argc, char **argv)
 #endif
 			break;
 		default:
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		}
 	}
 
@@ -378,9 +378,9 @@ print_help (void)
   printf ("    %s\n", _("ldap attribute to search (default: \"(objectclass=*)\""));
   printf (" %s\n", "-b [--base]");
   printf ("    %s\n", _("ldap base (eg. ou=my unit, o=my org, c=at"));
-  printf (" %s\n," "-D [--bind]");
+  printf (" %s\n", "-D [--bind]");
   printf ("    %s\n", _("ldap bind DN (if required)"));
-  printf (" %s\n," "-P [--pass]");
+  printf (" %s\n", "-P [--pass]");
   printf ("    %s\n", _("ldap password (if required)"));
 
 #ifdef HAVE_LDAP_SET_OPTION
@@ -410,9 +410,9 @@ print_usage (void)
 {
   printf (_("Usage:"));
 	printf (" %s -H <host> -b <base_dn> [-p <port>] [-a <attr>] [-D <binddn>]",progname);
-  printf ("[-P <password>] [-w <warn_time>] [-c <crit_time>] [-t timeout]\n",
+  printf ("\n       [-P <password>] [-w <warn_time>] [-c <crit_time>] [-t timeout]%s\n",
 #ifdef HAVE_LDAP_SET_OPTION
-			" [-2|-3] [-4|-6]"
+			"\n       [-2|-3] [-4|-6]"
 #else
 			""
 #endif

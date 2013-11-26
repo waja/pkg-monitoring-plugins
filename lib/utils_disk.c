@@ -4,7 +4,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/07/13 23:58:00 $
+* Last Modified: $Date: 2007/04/01 11:17:16 $
 *
 * Description:
 *
@@ -26,7 +26,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: utils_disk.c,v 1.1 2006/07/13 23:58:00 tonvoon Exp $
+* $Id: utils_disk.c,v 1.6 2007/04/01 11:17:16 psychotrahe Exp $
 * 
 *****************************************************************************/
 
@@ -60,6 +60,8 @@ np_add_parameter(struct parameter_list **list, const char *name)
   new_path->usedspace_units = NULL;
   new_path->usedspace_percent = NULL;
   new_path->usedinodes_percent = NULL;
+  new_path->freeinodes_percent = NULL;
+  new_path->group = NULL;
 
   if (current == NULL) {
     *list = new_path;
@@ -72,39 +74,55 @@ np_add_parameter(struct parameter_list **list, const char *name)
   return new_path;
 }
 
+/* returns a pointer to the struct found in the list */
+struct parameter_list *
+np_find_parameter(struct parameter_list *list, const char *name)
+{
+  struct parameter_list *temp_list;
+  for (temp_list = list; temp_list; temp_list = temp_list->name_next) {
+    if (! strcmp(temp_list->name, name))
+        return temp_list;
+  }
+        
+  return NULL;
+}
+
 void
 np_set_best_match(struct parameter_list *desired, struct mount_entry *mount_list, int exact)
 {
   struct parameter_list *d;
   for (d = desired; d; d= d->name_next) {
-    struct mount_entry *me;
-    size_t name_len = strlen(d->name);
-    size_t best_match_len = 0;
-    struct mount_entry *best_match = NULL;
+    if (! d->best_match) {
+      struct mount_entry *me;
+      size_t name_len = strlen(d->name);
+      size_t best_match_len = 0;
+      struct mount_entry *best_match = NULL;
 
-    for (me = mount_list; me; me = me->me_next) {
-      size_t len = strlen (me->me_mountdir);
-      if ((exact == FALSE && (best_match_len <= len && len <= name_len && 
-        (len == 1 || strncmp (me->me_mountdir, d->name, len) == 0)))
-	|| (exact == TRUE && strcmp(me->me_mountdir, d->name)==0))
-      {
-        best_match = me;
-        best_match_len = len;
-      } else {
-        len = strlen (me->me_devname);
-        if ((exact == FALSE && (best_match_len <= len && len <= name_len &&
-          (len == 1 || strncmp (me->me_devname, d->name, len) == 0)))
-          || (exact == TRUE && strcmp(me->me_devname, d->name)==0))
-        {
+      /* set best match if path name exactly matches a mounted device name */
+      for (me = mount_list; me; me = me->me_next) {
+        if (strcmp(me->me_devname, d->name)==0)
           best_match = me;
-          best_match_len = len;
+      }
+
+      /* set best match by directory name if no match was found by devname */
+      if (! best_match) {
+        for (me = mount_list; me; me = me->me_next) {
+          size_t len = strlen (me->me_mountdir);
+          if ((exact == FALSE && (best_match_len <= len && len <= name_len && 
+             (len == 1 || strncmp (me->me_mountdir, d->name, len) == 0)))
+             || (exact == TRUE && strcmp(me->me_mountdir, d->name)==0))
+          {
+            best_match = me;
+            best_match_len = len;
+          }
         }
       }
-    }
-    if (best_match) {
-      d->best_match = best_match;
-    } else {
-      d->best_match = NULL;	/* Not sure why this is needed as it should be null on initialisation */
+
+      if (best_match) {
+        d->best_match = best_match;
+      } else {
+        d->best_match = NULL;	/* Not sure why this is needed as it should be null on initialisation */
+      }
     }
   }
 }
@@ -138,3 +156,13 @@ np_seen_name(struct name_list *list, const char *name)
   return FALSE;
 }
 
+int
+np_regex_match_mount_entry (struct mount_entry* me, regex_t* re) 
+{
+  if (regexec(re, me->me_devname, (size_t) 0, NULL, 0) == 0 ||
+      regexec(re, me->me_mountdir, (size_t) 0, NULL, 0) == 0 ) {
+    return true;
+  } else {
+    return false;
+  }
+}

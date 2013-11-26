@@ -6,7 +6,7 @@
 * Copyright (c) 2001-2004 Ethan Galstad (nagios@nagios.org)
 * Copyright (c) 2001-2006 Nagios Plugin Development Team
 *
-* Last Modified: $Date: 2006/10/20 06:24:10 $
+* Last Modified: $Date: 2007/01/28 21:46:41 $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_dhcp.c,v 1.6 2006/10/20 06:24:10 opensides Exp $
+* $Id: check_dhcp.c,v 1.8 2007/01/28 21:46:41 hweiss Exp $
 *
 *****************************************************************************/
 
 const char *progname = "check_dhcp";
-const char *revision = "$Revision: 1.6 $";
+const char *revision = "$Revision: 1.8 $";
 const char *copyright = "2001-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -68,6 +68,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #elif defined (__bsd__)
 
 #include <netinet/if_ether.h>
+#include <sys/param.h>
 #include <sys/sysctl.h>
 #include <net/if_dl.h>
 
@@ -1090,7 +1091,7 @@ int call_getopt(int argc, char **argv){
 			break;
 
 		case '?': /* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 			break;
 
 		default:

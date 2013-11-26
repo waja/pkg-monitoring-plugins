@@ -25,7 +25,7 @@
 # Report bugs to:  nagiosplug-help@lists.sourceforge.net
 #
 # 11.01.2000 Version 1.0
-# $Id: check_ifoperstatus.pl,v 1.6 2004/12/07 03:13:14 mattkent Exp $
+# $Id: check_ifoperstatus.pl,v 1.7 2007/03/16 12:11:46 gonzai Exp $
 #
 # Patches from Guy Van Den Bergh to warn on ifadminstatus down interfaces
 # instead of critical.
@@ -304,7 +304,7 @@ sub print_help() {
 	printf "intensive.  Use it sparingly or not at all.  -n is used to match against\n";
 	printf "a much more descriptive ifName value in the IfXTable to verify that the\n";
 	printf "snmpkey has not changed to some other network interface after a reboot.\n\n";
-	print_revision($PROGNAME, '$Revision: 1.6 $');
+	print_revision($PROGNAME, '$Revision: 1.7 $');
 	
 }
 
@@ -341,7 +341,7 @@ sub process_arguments() {
 	}
   
 	if ($opt_V) {
-		print_revision($PROGNAME,'$Revision: 1.6 $ ');
+		print_revision($PROGNAME,'$Revision: 1.7 $ ');
 		exit $ERRORS{'OK'};
 	}
 
@@ -384,15 +384,15 @@ sub process_arguments() {
 		if (defined $seclevel  && defined $secname) {
 		
 			# Must define a security level even though defualt is noAuthNoPriv
-			unless ($seclevel eq ('noAuthNoPriv' || 'authNoPriv' || 'authPriv' ) ) {
+			unless ( grep /^$seclevel$/, qw(noAuthNoPriv authNoPriv authPriv) ) {
 				usage();
 				exit $ERRORS{"UNKNOWN"};
 			}
 			
 			# Authentication wanted
-			if ($seclevel eq ('authNoPriv' || 'authPriv') ) {
+			if ( $seclevel eq 'authNoPriv' || $seclevel eq 'authPriv' ) {
 		
-				unless ($authproto eq ('MD5' || 'SHA1') ) {
+				unless ( $authproto eq 'MD5' || $authproto eq 'SHA1' ) {
 					usage();
 					exit $ERRORS{"UNKNOWN"};
 				}

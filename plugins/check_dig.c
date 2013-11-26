@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -27,7 +27,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_dig.c,v 1.45 2006/10/19 00:25:16 opensides Exp $
+* $Id: check_dig.c,v 1.46 2007/01/28 21:46:40 hweiss Exp $
 *
 *****************************************************************************/
 
@@ -38,7 +38,7 @@
  *  because on some architectures those strings are in non-writable memory */
 
 const char *progname = "check_dig";
-const char *revision = "$Revision: 1.45 $";
+const char *revision = "$Revision: 1.46 $";
 const char *copyright = "2002-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -265,8 +265,8 @@ process_arguments (int argc, char **argv)
     case 'a':
       expected_address = optarg;
       break;
-    default:                  /* usage_va */
-      usage_va(_("Unknown argument - %s"), optarg);
+    default:                  /* usage5 */
+      usage5();
     }
   }
 

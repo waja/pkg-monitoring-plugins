@@ -6,7 +6,7 @@
 * Copyright (c) 2000-2002 Yves Rubin (rubiyz@yahoo.com)
 * Copyright (c) 2003-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/24 21:48:22 $
+* Last Modified: $Date: 2007/01/28 21:46:40 $
 *
 * Description:
 *
@@ -32,12 +32,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_nt.c,v 1.45 2006/10/24 21:48:22 opensides Exp $
+* $Id: check_nt.c,v 1.46 2007/01/28 21:46:40 hweiss Exp $
 *
 *****************************************************************************/
 
 const char *progname = "check_nt";
-const char *revision = "$Revision: 1.45 $";
+const char *revision = "$Revision: 1.46 $";
 const char *copyright = "2003-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -492,7 +492,7 @@ int process_arguments(int argc, char **argv){
 		switch (c)
 			{
 			case '?': /* print short usage statement if args not parsable */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 			case 'h': /* help */
 				print_help();
 				exit(STATE_OK);

@@ -18,7 +18,7 @@ suite of plugins. */
 
 /* Standardize version information, termination */
 
-/* $Id: utils.h,v 1.32 2006/09/02 20:41:18 seanius Exp $ */
+/* $Id: utils.h,v 1.33 2007/01/28 21:46:41 hweiss Exp $ */
 
 void support (void);
 char *clean_revstring (const char *);
@@ -80,8 +80,9 @@ int max_state (int a, int b);
 void usage (const char *) __attribute__((noreturn));
 void usage2(const char *, const char *) __attribute__((noreturn));
 void usage3(const char *, int) __attribute__((noreturn));
-void usage4(const char *);
-void usage_va(const char *fmt, ...);
+void usage4(const char *) __attribute__((noreturn));
+void usage5(void) __attribute__((noreturn));
+void usage_va(const char *fmt, ...) __attribute__((noreturn));
 
 const char *state_text (int);
 

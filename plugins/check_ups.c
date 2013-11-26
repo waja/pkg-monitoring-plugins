@@ -8,7 +8,7 @@
 *               2004 Arnaud Quette <arnaud.quette@mgeups.com>
 * Copyright (c) 2002-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 23:53:28 $
+* Last Modified: $Date: 2007/01/28 21:46:41 $
 *
 * Description:
 *
@@ -33,12 +33,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-*  $Id: check_ups.c,v 1.30 2006/10/19 23:53:28 opensides Exp $
+*  $Id: check_ups.c,v 1.31 2007/01/28 21:46:41 hweiss Exp $
 *
 ******************************************************************************/
 
 const char *progname = "check_ups";
-const char *revision = "$Revision: 1.30 $";
+const char *revision = "$Revision: 1.31 $";
 const char *copyright = "2002-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -494,7 +494,7 @@ process_arguments (int argc, char **argv)
 
 		switch (c) {
 		case '?':									/* help */
-			usage2 (_("Unknown argument"), optarg);
+			usage5 ();
 		case 'H':									/* hostname */
 			if (is_host (optarg)) {
 				server_address = optarg;

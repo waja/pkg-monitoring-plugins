@@ -14,6 +14,7 @@ plugins/check_mrtgtraf.c
 plugins/check_mysql.c
 plugins/check_nagios.c
 plugins/check_nt.c
+plugins/check_ntp.c
 plugins/check_nwstat.c
 plugins/check_overcr.c
 plugins/check_pgsql.c
@@ -30,8 +31,6 @@ plugins/check_time.c
 plugins/check_ups.c
 plugins/check_users.c
 plugins/check_ide_smart.c
-plugins/getaddrinfo.c
-plugins/gethostbyname.c
 plugins/negate.c
 plugins/netutils.c
 plugins/popen.c
