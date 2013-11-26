@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: nagiosplug-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-09-10 23:13+0200\n"
+"POT-Creation-Date: 2013-09-13 00:18+0200\n"
 "PO-Revision-Date: 2010-04-21 23:38-0400\n"
 "Last-Translator: Thomas Guyot-Sionnest <dermoth@aei.ca>\n"
 "Language-Team: Nagios Plugin Development Mailing List <nagiosplug-"
@@ -32,15 +32,15 @@ msgstr ""
 #: plugins/check_nwstat.c:173 plugins/check_overcr.c:102
 #: plugins/check_pgsql.c:172 plugins/check_ping.c:95 plugins/check_procs.c:171
 #: plugins/check_radius.c:160 plugins/check_real.c:80 plugins/check_smtp.c:144
-#: plugins/check_snmp.c:239 plugins/check_ssh.c:73 plugins/check_swap.c:110
-#: plugins/check_tcp.c:212 plugins/check_time.c:78 plugins/check_ups.c:122
+#: plugins/check_snmp.c:240 plugins/check_ssh.c:73 plugins/check_swap.c:110
+#: plugins/check_tcp.c:211 plugins/check_time.c:78 plugins/check_ups.c:122
 #: plugins/check_users.c:77 plugins/negate.c:214 plugins-root/check_dhcp.c:270
 msgid "Could not parse arguments"
 msgstr "Impossible de décomposer les arguments"
 
 #: plugins/check_by_ssh.c:90 plugins/check_dig.c:82 plugins/check_dns.c:95
 #: plugins/check_nagios.c:95 plugins/check_pgsql.c:178 plugins/check_ping.c:99
-#: plugins/check_procs.c:186 plugins/negate.c:79
+#: plugins/check_procs.c:186 plugins/check_snmp.c:336 plugins/negate.c:79
 msgid "Cannot catch SIGALRM"
 msgstr "Impossible d'obtenir le signal SIGALRM"
 
@@ -67,15 +67,15 @@ msgstr "%s: Erreur d'analyse du résultat\n"
 #: plugins/check_by_ssh.c:220 plugins/check_disk.c:476
 #: plugins/check_http.c:278 plugins/check_ldap.c:293 plugins/check_pgsql.c:311
 #: plugins/check_procs.c:429 plugins/check_radius.c:308
-#: plugins/check_real.c:356 plugins/check_smtp.c:581 plugins/check_snmp.c:726
-#: plugins/check_ssh.c:138 plugins/check_tcp.c:489 plugins/check_time.c:302
+#: plugins/check_real.c:356 plugins/check_smtp.c:581 plugins/check_snmp.c:736
+#: plugins/check_ssh.c:138 plugins/check_tcp.c:491 plugins/check_time.c:302
 #: plugins/check_ups.c:556 plugins/negate.c:164
 msgid "Timeout interval must be a positive integer"
 msgstr "Le délai d'attente doit être un entier positif"
 
 #: plugins/check_by_ssh.c:230 plugins/check_pgsql.c:341
 #: plugins/check_radius.c:272 plugins/check_real.c:327
-#: plugins/check_smtp.c:506 plugins/check_tcp.c:495 plugins/check_time.c:296
+#: plugins/check_smtp.c:506 plugins/check_tcp.c:497 plugins/check_time.c:296
 #: plugins/check_ups.c:518
 msgid "Port must be a positive integer"
 msgstr "Le numéro du port doit être un entier positif"
@@ -246,8 +246,8 @@ msgstr "Exemples:"
 #: plugins/check_overcr.c:467 plugins/check_pgsql.c:578
 #: plugins/check_ping.c:603 plugins/check_procs.c:773
 #: plugins/check_radius.c:385 plugins/check_real.c:451
-#: plugins/check_smtp.c:843 plugins/check_snmp.c:1197 plugins/check_ssh.c:309
-#: plugins/check_swap.c:558 plugins/check_tcp.c:668 plugins/check_time.c:371
+#: plugins/check_smtp.c:843 plugins/check_snmp.c:1207 plugins/check_ssh.c:309
+#: plugins/check_swap.c:558 plugins/check_tcp.c:670 plugins/check_time.c:371
 #: plugins/check_ups.c:660 plugins/check_users.c:240
 #: plugins/check_ide_smart.c:640 plugins/negate.c:295 plugins/urlize.c:197
 #: plugins-root/check_dhcp.c:1417 plugins-root/check_icmp.c:1354
@@ -300,7 +300,7 @@ msgstr "virgules"
 #: plugins/check_mrtgtraf.c:361 plugins/check_mysql.c:558
 #: plugins/check_nt.c:758 plugins/check_ntp.c:865 plugins/check_ntp_peer.c:696
 #: plugins/check_ntp_time.c:626 plugins/check_nwstat.c:1670
-#: plugins/check_overcr.c:456 plugins/check_snmp.c:1168
+#: plugins/check_overcr.c:456 plugins/check_snmp.c:1178
 #: plugins/check_swap.c:547 plugins/check_ups.c:642 plugins/negate.c:277
 #: plugins-root/check_icmp.c:1329
 msgid "Notes:"
@@ -1188,8 +1188,8 @@ msgid "file does not exist or is not readable"
 msgstr ""
 
 #: plugins/check_http.c:310 plugins/check_http.c:315 plugins/check_http.c:321
-#: plugins/check_smtp.c:600 plugins/check_tcp.c:560 plugins/check_tcp.c:564
-#: plugins/check_tcp.c:570
+#: plugins/check_smtp.c:600 plugins/check_tcp.c:562 plugins/check_tcp.c:566
+#: plugins/check_tcp.c:572
 msgid "Invalid certificate expiration period"
 msgstr "Période d'expiration du certificat invalide"
 
@@ -1199,7 +1199,7 @@ msgid ""
 "(SSLv3)"
 msgstr ""
 
-#: plugins/check_http.c:354 plugins/check_tcp.c:583
+#: plugins/check_http.c:354 plugins/check_tcp.c:585
 msgid "Invalid option - SSL is not available"
 msgstr "Option invalide - SSL n'est pas disponible"
 
@@ -1223,7 +1223,7 @@ msgstr "Impossible de compiler l'expression rationnelle: %s"
 
 #: plugins/check_http.c:464 plugins/check_ntp.c:722
 #: plugins/check_ntp_peer.c:513 plugins/check_ntp_time.c:512
-#: plugins/check_smtp.c:621 plugins/check_ssh.c:149 plugins/check_tcp.c:461
+#: plugins/check_smtp.c:621 plugins/check_ssh.c:149 plugins/check_tcp.c:463
 msgid "IPv6 support not available"
 msgstr "Support IPv6 non disponible"
 
@@ -4320,7 +4320,7 @@ msgstr "Réponses REAL invalide reçue de l'hôte"
 msgid "Invalid REAL response received from host on port %d\n"
 msgstr "Réponses REAL invalide reçue de l'hôte sur le port %d\n"
 
-#: plugins/check_real.c:184 plugins/check_tcp.c:289
+#: plugins/check_real.c:184 plugins/check_tcp.c:297
 #, c-format
 msgid "No data received from host\n"
 msgstr "Pas de données reçues de l'hôte\n"
@@ -4431,7 +4431,7 @@ msgstr "envoyé %s"
 msgid "SMTP UNKNOWN - Cannot read EHLO response via TLS."
 msgstr ""
 
-#: plugins/check_smtp.c:303 plugins/check_snmp.c:796
+#: plugins/check_smtp.c:303 plugins/check_snmp.c:806
 #, c-format
 msgid "Could Not Compile Regular Expression"
 msgstr "Impossible de compiler l'expression rationnelle"
@@ -4441,7 +4441,7 @@ msgstr "Impossible de compiler l'expression rationnelle"
 msgid "SMTP %s - Invalid response '%s' to command '%s'\n"
 msgstr "SMTP %s - réponse invalide de '%s' à la commande '%s'\n"
 
-#: plugins/check_smtp.c:316 plugins/check_snmp.c:501
+#: plugins/check_smtp.c:316 plugins/check_snmp.c:511
 #, c-format
 msgid "Execute Error: %s\n"
 msgstr "Erreur d'exécution: %s\n"
@@ -4560,7 +4560,7 @@ msgstr ""
 msgid "FQDN used for HELO"
 msgstr ""
 
-#: plugins/check_smtp.c:809 plugins/check_tcp.c:649
+#: plugins/check_smtp.c:809 plugins/check_tcp.c:651
 msgid "Minimum number of days a certificate has to be valid."
 msgstr "Nombre de jours minimum pour que le certificat soit valide."
 
@@ -4596,300 +4596,300 @@ msgstr ""
 msgid "STATE_WARNING return values."
 msgstr ""
 
-#: plugins/check_snmp.c:168 plugins/check_snmp.c:572
+#: plugins/check_snmp.c:169 plugins/check_snmp.c:582
 msgid "Cannot malloc"
 msgstr ""
 
-#: plugins/check_snmp.c:346
+#: plugins/check_snmp.c:356
 #, c-format
 msgid "External command error: %s\n"
 msgstr "Erreur d'exécution de commande externe: %s\n"
 
-#: plugins/check_snmp.c:351
+#: plugins/check_snmp.c:361
 #, c-format
 msgid "External command error with no output (return code: %d)\n"
 msgstr ""
 
-#: plugins/check_snmp.c:454
+#: plugins/check_snmp.c:464
 #, fuzzy, c-format
 msgid "No valid data returned (%s)\n"
 msgstr "Pas de données valides reçues"
 
-#: plugins/check_snmp.c:465
+#: plugins/check_snmp.c:475
 msgid "Time duration between plugin calls is invalid"
 msgstr ""
 
-#: plugins/check_snmp.c:578
+#: plugins/check_snmp.c:588
 msgid "Cannot asprintf()"
 msgstr ""
 
-#: plugins/check_snmp.c:584
+#: plugins/check_snmp.c:594
 #, fuzzy
 msgid "Cannot realloc()"
 msgstr "Impossible de réallouer des unités\n"
 
-#: plugins/check_snmp.c:600
+#: plugins/check_snmp.c:610
 msgid "No previous data to calculate rate - assume okay"
 msgstr ""
 
-#: plugins/check_snmp.c:741
+#: plugins/check_snmp.c:751
 msgid "Retries interval must be a positive integer"
 msgstr "L'intervalle pour les essais doit être un entier positif"
 
-#: plugins/check_snmp.c:821
+#: plugins/check_snmp.c:831
 #, c-format
 msgid "Could not reallocate labels[%d]"
 msgstr "Impossible de réallouer des labels[%d]"
 
-#: plugins/check_snmp.c:834
+#: plugins/check_snmp.c:844
 msgid "Could not reallocate labels\n"
 msgstr "Impossible de réallouer des labels\n"
 
-#: plugins/check_snmp.c:850
+#: plugins/check_snmp.c:860
 #, c-format
 msgid "Could not reallocate units [%d]\n"
 msgstr "Impossible de réallouer des unités [%d]\n"
 
-#: plugins/check_snmp.c:862
+#: plugins/check_snmp.c:872
 msgid "Could not realloc() units\n"
 msgstr "Impossible de réallouer des unités\n"
 
-#: plugins/check_snmp.c:879
+#: plugins/check_snmp.c:889
 #, fuzzy
 msgid "Rate multiplier must be a positive integer"
 msgstr "La taille du paquet doit être un entier positif"
 
-#: plugins/check_snmp.c:937
+#: plugins/check_snmp.c:947
 msgid "No host specified\n"
 msgstr "Pas d'hôte spécifié\n"
 
-#: plugins/check_snmp.c:941
+#: plugins/check_snmp.c:951
 msgid "No OIDs specified\n"
 msgstr "Pas de compteur spécifié\n"
 
-#: plugins/check_snmp.c:963
+#: plugins/check_snmp.c:973
 msgid "Invalid seclevel"
 msgstr ""
 
-#: plugins/check_snmp.c:970 plugins/check_snmp.c:973 plugins/check_snmp.c:991
+#: plugins/check_snmp.c:980 plugins/check_snmp.c:983 plugins/check_snmp.c:1001
 #, c-format
 msgid "Required parameter: %s\n"
 msgstr ""
 
-#: plugins/check_snmp.c:1012
+#: plugins/check_snmp.c:1022
 msgid "Invalid SNMP version"
 msgstr "Version de SNMP invalide"
 
-#: plugins/check_snmp.c:1029
+#: plugins/check_snmp.c:1039
 msgid "Unbalanced quotes\n"
 msgstr "Guillemets manquants\n"
 
-#: plugins/check_snmp.c:1078
+#: plugins/check_snmp.c:1088
 msgid "Check status of remote machines and obtain system information via SNMP"
 msgstr ""
 "Vérifie l'état des machines distantes et obtient l'information système via "
 "SNMP"
 
-#: plugins/check_snmp.c:1091
+#: plugins/check_snmp.c:1101
 msgid "Use SNMP GETNEXT instead of SNMP GET"
 msgstr "Utiliser SNMP GETNEXT au lieu de SNMP GET"
 
-#: plugins/check_snmp.c:1093
+#: plugins/check_snmp.c:1103
 msgid "SNMP protocol version"
 msgstr "Version du protocole SNMP"
 
-#: plugins/check_snmp.c:1095
+#: plugins/check_snmp.c:1105
 msgid "SNMPv3 securityLevel"
 msgstr "Niveau de sécurité SNMPv3 (securityLevel)"
 
-#: plugins/check_snmp.c:1097
+#: plugins/check_snmp.c:1107
 msgid "SNMPv3 auth proto"
 msgstr "Protocole d'authentification SNMPv3"
 
-#: plugins/check_snmp.c:1099
+#: plugins/check_snmp.c:1109
 msgid "SNMPv3 priv proto (default DES)"
 msgstr ""
 
-#: plugins/check_snmp.c:1103
+#: plugins/check_snmp.c:1113
 msgid "Optional community string for SNMP communication"
 msgstr "Communauté optionnelle pour la communication SNMP"
 
-#: plugins/check_snmp.c:1104
+#: plugins/check_snmp.c:1114
 msgid "default is"
 msgstr "défaut:"
 
-#: plugins/check_snmp.c:1106
+#: plugins/check_snmp.c:1116
 msgid "SNMPv3 username"
 msgstr "Nom d'utilisateur SNMPv3"
 
-#: plugins/check_snmp.c:1108
+#: plugins/check_snmp.c:1118
 msgid "SNMPv3 authentication password"
 msgstr "Mot de passe d'authentification SNMPv3"
 
-#: plugins/check_snmp.c:1110
+#: plugins/check_snmp.c:1120
 msgid "SNMPv3 privacy password"
 msgstr "Mot de passe de confidentialité SNMPv3"
 
-#: plugins/check_snmp.c:1114
+#: plugins/check_snmp.c:1124
 msgid "Object identifier(s) or SNMP variables whose value you wish to query"
 msgstr ""
 
-#: plugins/check_snmp.c:1116
+#: plugins/check_snmp.c:1126
 msgid ""
 "List of MIBS to be loaded (default = none if using numeric OIDs or 'ALL'"
 msgstr ""
 
-#: plugins/check_snmp.c:1117
+#: plugins/check_snmp.c:1127
 msgid "for symbolic OIDs.)"
 msgstr ""
 
-#: plugins/check_snmp.c:1119
+#: plugins/check_snmp.c:1129
 msgid "Delimiter to use when parsing returned data. Default is"
 msgstr ""
 
-#: plugins/check_snmp.c:1120
+#: plugins/check_snmp.c:1130
 msgid "Any data on the right hand side of the delimiter is considered"
 msgstr ""
 
-#: plugins/check_snmp.c:1121
+#: plugins/check_snmp.c:1131
 msgid "to be the data that should be used in the evaluation."
 msgstr ""
 
-#: plugins/check_snmp.c:1125
+#: plugins/check_snmp.c:1135
 msgid "Warning threshold range(s)"
 msgstr "Valeurs pour le seuil d'avertissement"
 
-#: plugins/check_snmp.c:1127
+#: plugins/check_snmp.c:1137
 msgid "Critical threshold range(s)"
 msgstr "Valeurs pour le seuil critique"
 
-#: plugins/check_snmp.c:1129
-msgid "Enable rate calculation. See 'Rate Calculation' below"
-msgstr ""
-
-#: plugins/check_snmp.c:1131
-msgid ""
-"Converts rate per second. For example, set to 60 to convert to per minute"
-msgstr ""
-
-#: plugins/check_snmp.c:1133
-msgid "Add/substract the specified OFFSET to numeric sensor data"
-msgstr ""
-
-#: plugins/check_snmp.c:1137
-msgid "Return OK state (for that OID) if STRING is an exact match"
-msgstr ""
-
 #: plugins/check_snmp.c:1139
-msgid ""
-"Return OK state (for that OID) if extended regular expression REGEX matches"
+msgid "Enable rate calculation. See 'Rate Calculation' below"
 msgstr ""
 
 #: plugins/check_snmp.c:1141
 msgid ""
-"Return OK state (for that OID) if case-insensitive extended REGEX matches"
+"Converts rate per second. For example, set to 60 to convert to per minute"
 msgstr ""
 
 #: plugins/check_snmp.c:1143
-msgid "Invert search result (CRITICAL if found)"
+msgid "Add/substract the specified OFFSET to numeric sensor data"
 msgstr ""
 
 #: plugins/check_snmp.c:1147
-msgid "Prefix label for output from plugin"
+msgid "Return OK state (for that OID) if STRING is an exact match"
 msgstr ""
 
 #: plugins/check_snmp.c:1149
-msgid "Units label(s) for output data (e.g., 'sec.')."
+msgid ""
+"Return OK state (for that OID) if extended regular expression REGEX matches"
 msgstr ""
 
 #: plugins/check_snmp.c:1151
+msgid ""
+"Return OK state (for that OID) if case-insensitive extended REGEX matches"
+msgstr ""
+
+#: plugins/check_snmp.c:1153
+msgid "Invert search result (CRITICAL if found)"
+msgstr ""
+
+#: plugins/check_snmp.c:1157
+msgid "Prefix label for output from plugin"
+msgstr ""
+
+#: plugins/check_snmp.c:1159
+msgid "Units label(s) for output data (e.g., 'sec.')."
+msgstr ""
+
+#: plugins/check_snmp.c:1161
 msgid "Separates output on multiple OID requests"
 msgstr ""
 
-#: plugins/check_snmp.c:1155
+#: plugins/check_snmp.c:1165
 msgid "Number of retries to be used in the requests"
 msgstr "Le nombre d'essai pour les requêtes"
 
-#: plugins/check_snmp.c:1158
+#: plugins/check_snmp.c:1168
 msgid "Label performance data with OIDs instead of --label's"
 msgstr ""
 
-#: plugins/check_snmp.c:1163
+#: plugins/check_snmp.c:1173
 msgid ""
 "This plugin uses the 'snmpget' command included with the NET-SNMP package."
 msgstr ""
 
-#: plugins/check_snmp.c:1164
+#: plugins/check_snmp.c:1174
 msgid ""
 "if you don't have the package installed, you will need to download it from"
 msgstr ""
 "Si vous n'avez pas le programme installé, vous devrez le télécharger depuis"
 
-#: plugins/check_snmp.c:1165
+#: plugins/check_snmp.c:1175
 msgid "http://net-snmp.sourceforge.net before you can use this plugin."
 msgstr "http://net-snmp.sourceforge.net avant de pouvoir utiliser ce plugin."
 
-#: plugins/check_snmp.c:1169
+#: plugins/check_snmp.c:1179
 #, fuzzy
 msgid ""
 "- Multiple OIDs (and labels) may be indicated by a comma or space-delimited  "
 msgstr ""
 "- Des OIDs multiples peuvent être séparées par des virgules ou des espaces"
 
-#: plugins/check_snmp.c:1170
+#: plugins/check_snmp.c:1180
 #, fuzzy
 msgid "list (lists with internal spaces must be quoted)."
 msgstr "(Les liste avec espaces doivent être entre guillemets). Max:"
 
-#: plugins/check_snmp.c:1174
+#: plugins/check_snmp.c:1184
 msgid ""
 "- When checking multiple OIDs, separate ranges by commas like '-w "
 "1:10,1:,:20'"
 msgstr ""
 
-#: plugins/check_snmp.c:1175
+#: plugins/check_snmp.c:1185
 msgid "- Note that only one string and one regex may be checked at present"
 msgstr ""
 
-#: plugins/check_snmp.c:1176
+#: plugins/check_snmp.c:1186
 msgid ""
 "- All evaluation methods other than PR, STR, and SUBSTR expect that the value"
 msgstr ""
 
-#: plugins/check_snmp.c:1177
+#: plugins/check_snmp.c:1187
 msgid "returned from the SNMP query is an unsigned integer."
 msgstr ""
 
-#: plugins/check_snmp.c:1180
+#: plugins/check_snmp.c:1190
 msgid "Rate Calculation:"
 msgstr ""
 
-#: plugins/check_snmp.c:1181
+#: plugins/check_snmp.c:1191
 msgid "In many places, SNMP returns counters that are only meaningful when"
 msgstr ""
 
-#: plugins/check_snmp.c:1182
+#: plugins/check_snmp.c:1192
 msgid "calculating the counter difference since the last check. check_snmp"
 msgstr ""
 
-#: plugins/check_snmp.c:1183
+#: plugins/check_snmp.c:1193
 msgid "saves the last state information in a file so that the rate per second"
 msgstr ""
 
-#: plugins/check_snmp.c:1184
+#: plugins/check_snmp.c:1194
 msgid "can be calculated. Use the --rate option to save state information."
 msgstr ""
 
-#: plugins/check_snmp.c:1185
+#: plugins/check_snmp.c:1195
 msgid ""
 "On the first run, there will be no prior state - this will return with OK."
 msgstr ""
 
-#: plugins/check_snmp.c:1186
+#: plugins/check_snmp.c:1196
 msgid "The state is uniquely determined by the arguments to the plugin, so"
 msgstr ""
 
-#: plugins/check_snmp.c:1187
+#: plugins/check_snmp.c:1197
 msgid "changing the arguments will create a new state file."
 msgstr ""
 
@@ -5025,46 +5025,46 @@ msgstr ""
 "Sur AIX, si -a est spécifié, le plugin utilise lsps -a, sinon il utilise "
 "lsps -s."
 
-#: plugins/check_tcp.c:200
+#: plugins/check_tcp.c:199
 msgid "CRITICAL - Generic check_tcp called with unknown service\n"
 msgstr ""
 "CRITIQUE -check_tcp version générique utilisé avec un service inconnu\n"
 
-#: plugins/check_tcp.c:224
+#: plugins/check_tcp.c:223
 msgid "With UDP checks, a send/expect string must be specified."
 msgstr ""
 "Avec la surveillance UDP, une chaîne d'envoi et un chaîne de réponse doit "
 "être spécifiée."
 
-#: plugins/check_tcp.c:416
+#: plugins/check_tcp.c:417
 msgid "No arguments found"
 msgstr "Pas de paramètres"
 
-#: plugins/check_tcp.c:518
+#: plugins/check_tcp.c:520
 msgid "Maxbytes must be a positive integer"
 msgstr "Maxbytes doit être un entier positif"
 
-#: plugins/check_tcp.c:536
+#: plugins/check_tcp.c:538
 msgid "Refuse must be one of ok, warn, crit"
 msgstr "Refuse doit être parmis ok, warn, crit"
 
-#: plugins/check_tcp.c:546
+#: plugins/check_tcp.c:548
 msgid "Mismatch must be one of ok, warn, crit"
 msgstr "Mismatch doit être parmis ok, warn, crit"
 
-#: plugins/check_tcp.c:552
+#: plugins/check_tcp.c:554
 msgid "Delay must be a positive integer"
 msgstr "Delay doit être un entier positif"
 
-#: plugins/check_tcp.c:597
+#: plugins/check_tcp.c:599
 msgid "You must provide a server address"
 msgstr "Vous devez fournir une adresse serveur"
 
-#: plugins/check_tcp.c:599
+#: plugins/check_tcp.c:601
 msgid "Invalid hostname, address or socket"
 msgstr "Adresse/Nom/Socket invalide"
 
-#: plugins/check_tcp.c:613
+#: plugins/check_tcp.c:615
 #, c-format
 msgid ""
 "This plugin tests %s connections with the specified host (or unix socket).\n"
@@ -5073,7 +5073,7 @@ msgstr ""
 "Ce plugin teste %s connections avec l'hôte spécifié (ou socket unix).\n"
 "\n"
 
-#: plugins/check_tcp.c:626
+#: plugins/check_tcp.c:628
 msgid ""
 "Can use \\n, \\r, \\t or \\ in send or quit string. Must come before send or "
 "quit option"
@@ -5081,59 +5081,59 @@ msgstr ""
 "Permet d'utiliser \\n, \\r, \\t ou \\ dans la chaîne de caractères send ou "
 "quit. Doit être placé avant ces dernières."
 
-#: plugins/check_tcp.c:627
+#: plugins/check_tcp.c:629
 msgid "Default: nothing added to send, \\r\\n added to end of quit"
 msgstr ""
 "Par défaut: Rien n'est ajouté à send, \\r\\n est ajouté à la fin de quit"
 
-#: plugins/check_tcp.c:629
+#: plugins/check_tcp.c:631
 msgid "String to send to the server"
 msgstr "Chaîne de caractères à envoyer au serveur"
 
-#: plugins/check_tcp.c:631
+#: plugins/check_tcp.c:633
 msgid "String to expect in server response"
 msgstr "Chaîne de caractères à attendre en réponse"
 
-#: plugins/check_tcp.c:631
+#: plugins/check_tcp.c:633
 msgid "(may be repeated)"
 msgstr "(peut être utilisé plusieurs fois)"
 
-#: plugins/check_tcp.c:633
+#: plugins/check_tcp.c:635
 msgid "All expect strings need to occur in server response. Default is any"
 msgstr ""
 "Toutes les chaînes attendus (expect) doivent être repérés dans la réponse. "
 "Par défaut, n'importe laquelle suffit."
 
-#: plugins/check_tcp.c:635
+#: plugins/check_tcp.c:637
 msgid "String to send server to initiate a clean close of the connection"
 msgstr "Chaîne de caractères à envoyer pour fermer gracieusement la connection"
 
-#: plugins/check_tcp.c:637
+#: plugins/check_tcp.c:639
 msgid "Accept TCP refusals with states ok, warn, crit (default: crit)"
 msgstr ""
 
-#: plugins/check_tcp.c:639
+#: plugins/check_tcp.c:641
 msgid ""
 "Accept expected string mismatches with states ok, warn, crit (default: warn)"
 msgstr ""
 
-#: plugins/check_tcp.c:641
+#: plugins/check_tcp.c:643
 msgid "Hide output from TCP socket"
 msgstr "Cacher la réponse provenant du socket TCP"
 
-#: plugins/check_tcp.c:643
+#: plugins/check_tcp.c:645
 msgid "Close connection once more than this number of bytes are received"
 msgstr ""
 
-#: plugins/check_tcp.c:645
+#: plugins/check_tcp.c:647
 msgid "Seconds to wait between sending string and polling for response"
 msgstr ""
 
-#: plugins/check_tcp.c:650
+#: plugins/check_tcp.c:652
 msgid "1st is #days for warning, 2nd is critical (if not specified - 0)."
 msgstr ""
 
-#: plugins/check_tcp.c:652
+#: plugins/check_tcp.c:654
 msgid "Use SSL for the connection."
 msgstr ""
 
