@@ -1,7 +1,7 @@
 dnl Process this file with autoconf to produce a configure script.
-AC_REVISION ($Revision: 1.213 $)
+AC_REVISION ($Revision: 1801 $)
 AC_PREREQ(2.59)
-AC_INIT(nagios-plugins,1.4.8)
+AC_INIT(nagios-plugins,1.4.10)
 AC_CONFIG_SRCDIR(NPTest.pm)
 AC_CONFIG_FILES(gl/Makefile)
 AC_CONFIG_AUX_DIR(build-aux)
@@ -155,7 +155,7 @@ AC_SUBST(MATHLIBS)
 
 dnl Check for libtap, to run perl-like tests
 AC_CHECK_LIB(tap, plan_tests, 
-	EXTRA_TEST="test_utils test_disk"
+	EXTRA_TEST="test_utils test_disk test_tcp test_cmd"
 	AC_SUBST(EXTRA_TEST)
 	)
 
@@ -218,8 +218,15 @@ if test "$ac_cv_lib_radiusclient_rc_read_config" = "yes"; then
 	RADIUSLIBS="-lradiusclient"
   AC_SUBST(RADIUSLIBS)
 else
-  AC_MSG_WARN([Skipping radius plugin])
-  AC_MSG_WARN([install radius libs to compile this plugin (see REQUIREMENTS).])
+  AC_CHECK_LIB(radiusclient-ng,rc_read_config)
+  if test "$ac_cv_lib_radiusclient_ng_rc_read_config" = "yes"; then
+    EXTRAS="$EXTRAS check_radius"
+  	  RADIUSLIBS="-lradiusclient-ng"
+    AC_SUBST(RADIUSLIBS)
+  else
+    AC_MSG_WARN([Skipping radius plugin])
+    AC_MSG_WARN([install radius libs to compile this plugin (see REQUIREMENTS).])
+  fi
 fi
 LIBS="$_SAVEDLIBS"
 
@@ -240,13 +247,26 @@ else
 fi
 LIBS="$_SAVEDLIBS"
 
+dnl Check for headers used by check_ide_smart
+AC_CHECK_HEADER(linux/hdreg.h, FOUNDINCLUDE=yes, FOUNDINCLUDE=no)
+if test "$FOUNDINCLUDE" = "yes" ; then
+	AC_CHECK_HEADER(linux/types.h, FOUNDINCLUDE=yes, FOUNDINCLUDE=no)
+fi
+
+if test "$FOUNDINCLUDE" = "yes" ; then
+	EXTRAS="$EXTRAS check_ide_smart"
+else
+	AC_MSG_WARN([Skipping check_ide_smart plugin.]) 
+	AC_MSG_WARN([check_ide_smart is linux specific. It requires linux/hdreg.h and linux/types.h.]) 
+fi
+
 dnl Check for mysql libraries
 np_mysqlclient
 if test $with_mysql = "no" ; then
   AC_MSG_WARN([Skipping mysql plugin])
   AC_MSG_WARN([install mysql client libs to compile this plugin (see REQUIREMENTS).])
 else
-  EXTRAS="$EXTRA check_mysql check_mysql_query"
+  EXTRAS="$EXTRAS check_mysql check_mysql_query"
   MYSQLINCLUDE="$np_mysql_include"
   MYSQLLIBS="$np_mysql_libs"
   MYSQLCFLAGS="$np_mysql_cflags"
@@ -255,9 +275,15 @@ else
   AC_SUBST(MYSQLCFLAGS)
 fi
 
+AC_ARG_WITH([ipv6],
+	[AS_HELP_STRING([--with-ipv6], [support IPv6 @<:@default=check@:>@])],
+	[], [with_ipv6=check])
+
 dnl Check for AF_INET6 support - unistd.h required for Darwin
-AC_CACHE_CHECK([for IPv6 support], with_ipv6, [
-	AC_TRY_COMPILE([#ifdef HAVE_UNISTD_H
+if test "$with_ipv6" != "no"; then
+	AC_CACHE_CHECK([for IPv6 support], np_cv_sys_ipv6, [
+		AC_TRY_COMPILE(
+			[#ifdef HAVE_UNISTD_H
 			#include <unistd.h>
 			#endif
 			#include <netinet/in.h>
@@ -268,12 +294,16 @@ AC_CACHE_CHECK([for IPv6 support], with_ipv6, [
 			sin6.sin6_family = AF_INET6;
 			sin6.sin6_port = 587;
 			p = &sin6.sin6_addr;],
-			[with_ipv6=yes], 
-			[with_ipv6=no])
-	])
-
-if test x"$with_ipv6" != xno ; then
-	AC_DEFINE(USE_IPV6,1,[Enable IPv6 support])
+			[np_cv_sys_ipv6=yes],
+			[np_cv_sys_ipv6=no])
+		])
+	if test "$np_cv_sys_ipv6" = "no" -a "$with_ipv6" != "check"; then
+		AC_MSG_FAILURE([--with-ipv6 was given, but test for IPv6 support failed])
+	fi
+	if test "$np_cv_sys_ipv6" = "yes"; then
+		AC_DEFINE(USE_IPV6,1,[Enable IPv6 support])
+	fi
+	with_ipv6="$np_cv_sys_ipv6"
 fi
 
 
@@ -1054,6 +1084,14 @@ if test -n "$ac_cv_nslookup_command"; then
 	AC_DEFINE_UNQUOTED(NSLOOKUP_COMMAND,"$ac_cv_nslookup_command", [path and args for nslookup])
 fi
 
+AC_MSG_CHECKING([for number of cpus])
+AC_TRY_COMPILE([#include <unistd.h>],
+	[sysconf(_SC_NPROCESSORS_CONF) > 0;],
+	AC_DEFINE(HAVE_SYSCONF__SC_NPROCESSORS_CONF,1,[Define if sysconf returns number of cpus])
+	AC_MSG_RESULT([sysconf(_SC_NPROCESSORS_CONF)]),
+	AC_MSG_RESULT([cannot calculate])
+	)
+
 AC_PATH_PROG(PATH_TO_UPTIME,uptime)
 AC_ARG_WITH(uptime_command,
             ACX_HELP_STRING([--with-uptime-command=PATH],
@@ -1429,6 +1467,9 @@ elif test -f ../plugins/check_nt.c ; then
 fi
 
 
+dnl used in check_dhcp
+AC_CHECK_HEADERS(sys/sockio.h)
+
 case $host in
 	*bsd*)
 		AC_DEFINE(__bsd__,1,[bsd specific code in check_dhcp.c])
@@ -1450,7 +1491,7 @@ AC_SUBST(EXTRA_NETOBJS)
 AC_SUBST(DEPLIBS)
 
 AM_GNU_GETTEXT([external], [need-ngettext])
-AM_GNU_GETTEXT_VERSION(0.13.1)
+AM_GNU_GETTEXT_VERSION(0.15)
 
 dnl Check for Redhat spopen problem
 dnl Wierd problem where ECHILD is returned from a wait call in error
@@ -1479,6 +1520,16 @@ elif test "$ac_cv_enable_redhat_pthread_workaround" = "yes" ; then
 	AC_DEFINE(REDHAT_SPOPEN_ERROR, 1, [Forced workaround on redhat in spopen])
 fi
 
+dnl Perl modules
+AC_ARG_ENABLE(perl-modules,
+	AC_HELP_STRING([--enable-perl-modules], 
+		[Enables installation of Nagios::Plugin and its dependencies (default: no)]),
+	[enable_perl_modules=$enableval],
+	[enable_perl_modules=no])
+if test "$enable_perl_modules" = "yes" ; then
+  AC_SUBST(PERLMODS_DIR,perlmods)
+fi
+
 dnl External libraries - see ACKNOWLEDGEMENTS
 gl_INIT
 
@@ -1497,6 +1548,7 @@ AC_OUTPUT(
   plugins-scripts/subst 
   plugins-scripts/utils.pm 
   plugins-scripts/utils.sh 
+  perlmods/Makefile
   command.cfg 
   test.pl 
   pkg/solaris/pkginfo 
@@ -1534,6 +1586,7 @@ ACX_FEATURE([with],[mysql])
 ACX_FEATURE([with],[openssl])
 ACX_FEATURE([with],[gnutls])
 ACX_FEATURE([with],[perl])
+ACX_FEATURE([enable],[perl-modules])
 ACX_FEATURE([with],[cgiurl])
 ACX_FEATURE([with],[trusted-path])
 

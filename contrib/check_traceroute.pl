@@ -1,8 +1,8 @@
 #!/usr/bin/perl
 
-# $Id: check_traceroute.pl,v 1.1 2005/01/27 10:34:16 stanleyhopcroft Exp $
+# $Id: check_traceroute.pl 1115 2005-01-27 10:34:16Z stanleyhopcroft $
 
-# $Log: check_traceroute.pl,v $
+# $Log$
 # Revision 1.1  2005/01/27 10:34:16  stanleyhopcroft
 # Jon Meek's check_traceroute for Mon hacked by YT for Nagios. Prob pretty weak
 #
@@ -32,7 +32,7 @@ getopts('i:H:N:R:T:dhrvV');
 do { print_help ; exit $ERRORS{OK}; }
 	if $opt_h ;
 
-do { print_revision($PROGNAME, '$Revision: 1.1 $'); exit $ERRORS{OK}; }
+do { print_revision($PROGNAME, '$Revision: 1115 $'); exit $ERRORS{OK}; }
 	if $opt_V ;
 
 do { print_help; exit $ERRORS{OK}; }
@@ -176,7 +176,7 @@ sub print_usage () {
 }
 
 sub print_help () {
-	print_revision($PROGNAME, '$Revision: 1.1 $') ;
+	print_revision($PROGNAME, '$Revision: 1115 $') ;
 	print "Copyright (c) 2004 J Meek/Karl DeBisschop
 
 This plugin checks whether traceroute to the destination succeeds and if so that the route string option (-R) matches the list of routers

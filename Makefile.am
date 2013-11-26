@@ -1,12 +1,13 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = gl lib plugins plugins-scripts plugins-root po
+SUBDIRS = gl lib plugins plugins-scripts plugins-root po @PERLMODS_DIR@
 
 EXTRA_DIST = config.rpath \
 	ABOUT-NLS ACKNOWLEDGEMENTS AUTHORS BUGS CODING FAQ LEGAL NEWS \
 	REQUIREMENTS SUPPORT THANKS \
 	NPTest.pm contrib pkg nagios-plugins.spec \
 	config_test/Makefile config_test/run_tests config_test/child_test.c \
+	perlmods tools/build_perl_modules \
 	tools/tinderbox_build
 
 ACLOCAL_AMFLAGS = -I gl/m4 -I m4
@@ -23,8 +24,9 @@ install-root:
 
 test:
 	cd lib && $(MAKE) test
-	cd plugins; $(MAKE) test
-	cd plugins-scripts; $(MAKE) test
+	if test "$(PERLMODS_DIR)" != ""; then cd perlmods && $(MAKE) test; fi
+	cd plugins && $(MAKE) test
+	cd plugins-scripts && $(MAKE) test
 
 nagios-plugins.spec: nagios-plugins.spec.in
 	sed "s/%%{VERSION}/${VERSION}/;s/%%{RELEASE}/${RELEASE}/;s/^%%{requires}$$//" $? > $@

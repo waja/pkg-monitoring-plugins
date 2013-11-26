@@ -28,7 +28,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * $Id: common.h,v 1.28 2007/03/22 17:54:16 hweiss Exp $
+ * $Id: common.h 1700 2007-04-25 22:10:13Z tonvoon $
  *
  *****************************************************************************/
 
@@ -78,6 +78,18 @@
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
+#endif
+
+/* GET_NUMBER_OF_CPUS is a macro to return 
+   number of CPUs, if we can get that data.
+   Use configure.in to test for various OS ways of
+   getting that data
+   Will return -1 if cannot get data
+*/
+#ifdef HAVE_SYSCONF__SC_NPROCESSORS_CONF 
+#define GET_NUMBER_OF_CPUS() sysconf(_SC_NPROCESSORS_CONF)
+#else
+#define GET_NUMBER_OF_CPUS() -1
 #endif
 
 #ifdef TIME_WITH_SYS_TIME

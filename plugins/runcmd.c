@@ -4,7 +4,7 @@
  * License: GPL
  * Copyright (c) 2005 nagios-plugins team
  *
- * $Id: runcmd.c,v 1.4 2006/06/18 19:36:48 opensides Exp $
+ * $Id: runcmd.c 1434 2006-06-18 19:36:48Z opensides $
  *
  * Description :
  *

@@ -14,7 +14,7 @@
  along with this program; if not, write to the Free Software
  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: test_utils.c,v 1.2 2006/07/13 23:58:00 tonvoon Exp $
+ $Id: test_utils.c 1452 2006-07-13 23:58:00Z tonvoon $
  
 ******************************************************************************/
 

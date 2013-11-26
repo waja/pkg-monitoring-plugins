@@ -2,7 +2,7 @@
 #
 # Jabber Server Tests via check_jabber
 #
-# $Id: check_jabber.t,v 1.3 2007/02/01 06:53:12 dermoth Exp $
+# $Id: check_jabber.t 1604 2007-02-01 06:53:12Z dermoth $
 #
 
 use strict;

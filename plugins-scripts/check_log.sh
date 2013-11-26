@@ -71,7 +71,7 @@ TOUCH="/bin/touch"
 
 PROGNAME=`/bin/basename $0`
 PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
-REVISION=`echo '$Revision: 1.8 $' | sed -e 's/[^0-9.]//g'`
+REVISION=`echo '$Revision: 1749 $' | sed -e 's/[^0-9.]//g'`
 
 . $PROGPATH/utils.sh
 
@@ -116,11 +116,11 @@ while test -n "$1"; do
             exit $STATE_OK
             ;;
         --version)
-            print_revision $PROGNAME $VERSION
+            print_revision $PROGNAME $REVISION
             exit $STATE_OK
             ;;
         -V)
-            print_revision $PROGNAME $VERSION
+            print_revision $PROGNAME $REVISION
             exit $STATE_OK
             ;;
         --filename)

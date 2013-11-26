@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
 *
-* Last Modified: $Date: 2007/01/24 22:47:25 $
+* Last Modified: $Date: 2007-01-24 22:47:25 +0000 (Wed, 24 Jan 2007) $
 *
 * Description:
 *
@@ -28,7 +28,7 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: netutils.h,v 1.18 2007/01/24 22:47:25 tonvoon Exp $
+* $Id: netutils.h 1580 2007-01-24 22:47:25Z tonvoon $
 *
 ******************************************************************************/
 

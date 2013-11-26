@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/03/30 08:56:47 $
+* Last Modified: $Date: 2007-09-23 13:29:36 +0100 (Sun, 23 Sep 2007) $
 *
 * Description:
 *
@@ -27,13 +27,13 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_disk.c,v 1.90 2007/03/30 08:56:47 psychotrahe Exp $
+* $Id: check_disk.c 1793 2007-09-23 12:29:36Z psychotrahe $
 * 
 *****************************************************************************/
 
 const char *progname = "check_disk";
 const char *program_name = "check_disk";  /* Required for coreutils libs */
-const char *revision = "$Revision: 1.90 $";
+const char *revision = "$Revision: 1793 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -68,6 +68,9 @@ static int show_all_fs = 1;
 
 /* If nonzero, show only local filesystems.  */
 static int show_local_fs = 0;
+
+/* If nonzero, show only local filesystems but call stat() on remote ones. */
+static int stat_remote_fs = 0;
 
 /* If positive, the units to use when printing sizes;
    if negative, the human-readable base.  */
@@ -127,6 +130,7 @@ int validate_arguments (uintmax_t, uintmax_t, double, double, double, double, ch
 void print_help (void);
 void print_usage (void);
 double calculate_percent(uintmax_t, uintmax_t);
+void stat_path (struct parameter_list *p);
 
 double w_dfp = -1.0;
 double c_dfp = -1.0;
@@ -150,8 +154,9 @@ char *warn_usedinodes_percent = NULL;
 char *crit_usedinodes_percent = NULL;
 char *warn_freeinodes_percent = NULL;
 char *crit_freeinodes_percent = NULL;
-bool path_selected = false;
+int path_selected = FALSE;
 char *group = NULL;
+struct stat *stat_buf;
 
 
 int
@@ -181,6 +186,7 @@ main (int argc, char **argv)
   output = strdup ("");
   details = strdup ("");
   perf = strdup ("");
+  stat_buf = malloc(sizeof *stat_buf);
 
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -194,7 +200,7 @@ main (int argc, char **argv)
   /* If a list of paths has not been selected, find entire
      mount list and create list of paths
    */
-  if (path_selected == false) { 
+  if (path_selected == FALSE) { 
     for (me = mount_list; me; me = me->me_next) {
       if (! (path = np_find_parameter(path_select_list, me->me_mountdir))) {
         path = np_add_parameter(&path_select_list, me->me_mountdir);
@@ -208,14 +214,15 @@ main (int argc, char **argv)
 
   /* Error if no match found for specified paths */
   temp_list = path_select_list;
+
   while (temp_list) {
     if (! temp_list->best_match) {
       die (STATE_CRITICAL, _("DISK %s: %s not found\n"), _("CRITICAL"), temp_list->name);
     }
+
     temp_list = temp_list->name_next;
   }
   
-
   /* Process for every path in list */
   for (path = path_select_list; path; path=path->name_next) {
 
@@ -250,6 +257,7 @@ main (int argc, char **argv)
         for (temp_list = path_select_list; temp_list; temp_list=temp_list->name_next) {
           if (temp_list->group && ! (strcmp(temp_list->group, path->group))) {
             
+            stat_path(path);
             get_fs_usage (temp_list->best_match->me_mountdir, temp_list->best_match->me_devname, &tmpfsp);
 
             /* possibly differing blocksizes if disks are grouped. Calculating average */
@@ -263,7 +271,7 @@ main (int argc, char **argv)
             
             if (verbose > 3)
               printf("Group %s: add %llu blocks (%s) \n", path->group, tmpfsp.fsu_bavail, temp_list->name);
-             // printf("Group %s: add %u blocks (%s)\n", temp_list->name); // path->group, tmpfsp.fsu_bavail, temp_list->name);
+             /* printf("Group %s: add %u blocks (%s)\n", temp_list->name); *//* path->group, tmpfsp.fsu_bavail, temp_list->name); */
 
             np_add_name(&seen, temp_list->best_match->me_mountdir);
           }
@@ -277,6 +285,8 @@ main (int argc, char **argv)
     if (path->group == NULL) {
       /* Skip remote filesystems if we're not interested in them */
       if (me->me_remote && show_local_fs) {
+        if (stat_remote_fs)
+          stat_path(path);
         continue;
       /* Skip pseudo fs's if we haven't asked for all fs's */
       } else if (me->me_dummy && !show_all_fs) {
@@ -291,6 +301,7 @@ main (int argc, char **argv)
         continue;
       }
 
+      stat_path(path);
       get_fs_usage (me->me_mountdir, me->me_devname, &fsp);
     }
 
@@ -310,8 +321,8 @@ main (int argc, char **argv)
       dfree_inodes_percent = 100 - dused_inodes_percent;
 
       if (verbose >= 3) {
-        printf ("For %s, used_pct=%g free_pct=%g used_units=%g free_units=%g total_units=%g used_inodes_pct=%g free_inodes_pct=%g\n", 
-          me->me_mountdir, dused_pct, dfree_pct, dused_units, dfree_units, dtotal_units, dused_inodes_percent, dfree_inodes_percent);
+        printf ("For %s, used_pct=%g free_pct=%g used_units=%g free_units=%g total_units=%g used_inodes_pct=%g free_inodes_pct=%g fsp.fsu_blocksize=%llu mult=%llu\n", 
+          me->me_mountdir, dused_pct, dfree_pct, dused_units, dfree_units, dtotal_units, dused_inodes_percent, dfree_inodes_percent, fsp.fsu_blocksize, mult);
       }
 
       /* Threshold comparisons */
@@ -364,6 +375,7 @@ main (int argc, char **argv)
         critical_high_tide = abs( min( (double) critical_high_tide, (double) (1.0 - path->freespace_percent->critical->end/100)*dtotal_units ));
       }
 
+      /* Nb: *_high_tide are unset when == UINT_MAX */
       asprintf (&perf, "%s %s", perf,
                 perfdata ((!strcmp(me->me_mountdir, "none") || display_mntp) ? me->me_devname : me->me_mountdir,
                           dused_units, units,
@@ -375,18 +387,16 @@ main (int argc, char **argv)
       if (disk_result==STATE_OK && erronly && !verbose)
         continue;
 
-      if (disk_result!=STATE_OK || verbose>=0) {
-        asprintf (&output, "%s %s %.0f %s (%.0f%%",
-                  output,
-                  (!strcmp(me->me_mountdir, "none") || display_mntp) ? me->me_devname : me->me_mountdir,
-                  dfree_units,
-                  units,
-                  dfree_pct);
-        if (dused_inodes_percent < 0) {
-          asprintf(&output, "%s inode=-);", output);
-        } else {
-          asprintf(&output, "%s inode=%.0f%%);", output, dfree_inodes_percent );
-        }
+      asprintf (&output, "%s %s %.0f %s (%.0f%%",
+                output,
+                (!strcmp(me->me_mountdir, "none") || display_mntp) ? me->me_devname : me->me_mountdir,
+                dfree_units,
+                units,
+                dfree_pct);
+      if (dused_inodes_percent < 0) {
+        asprintf(&output, "%s inode=-);", output);
+      } else {
+        asprintf(&output, "%s inode=%.0f%%);", output, dfree_inodes_percent );
       }
 
       /* TODO: Need to do a similar debug line
@@ -439,16 +449,16 @@ int
 process_arguments (int argc, char **argv)
 {
   int c, err;
-  struct parameter_list *se, *se2;
-  struct parameter_list *temp_list;
+  struct parameter_list *se;
+  struct parameter_list *temp_list = NULL, *previous = NULL;
   struct parameter_list *temp_path_select_list = NULL;
-  struct mount_entry *me;
+  struct mount_entry *me, *temp_me;
   int result = OK;
-  struct stat *stat_buf;
   regex_t re;
   int cflags = REG_NOSUB | REG_EXTENDED;
+  int default_cflags = cflags;
   char errbuf[MAX_INPUT_BUFFER];
-  bool fnd = false;
+  int fnd = 0;
 
   int option = 0;
   static struct option longopts[] = {
@@ -459,6 +469,7 @@ process_arguments (int argc, char **argv)
     /* Dang, -C is taken. We might want to reshuffle this. */
     {"icritical", required_argument, 0, 'K'},
     {"local", required_argument, 0, 'l'},
+    {"stat-remote-fs", required_argument, 0, 'L'},
     {"kilobytes", required_argument, 0, 'k'},
     {"megabytes", required_argument, 0, 'm'},
     {"units", required_argument, 0, 'u'},
@@ -471,9 +482,14 @@ process_arguments (int argc, char **argv)
     {"eregi-partition", required_argument, 0, 'R'},
     {"ereg-path", required_argument, 0, 'r'},
     {"ereg-partition", required_argument, 0, 'r'},
+    {"ignore-ereg-path", required_argument, 0, 'i'},
+    {"ignore-ereg-partition", required_argument, 0, 'i'},
+    {"ignore-eregi-path", required_argument, 0, 'I'},
+    {"ignore-eregi-partition", required_argument, 0, 'I'},
     {"mountpoint", no_argument, 0, 'M'},
     {"errors-only", no_argument, 0, 'e'},
     {"exact-match", no_argument, 0, 'E'},
+    {"all", no_argument, 0, 'A'},
     {"verbose", no_argument, 0, 'v'},
     {"quiet", no_argument, 0, 'q'},
     {"clear", no_argument, 0, 'C'},
@@ -492,7 +508,7 @@ process_arguments (int argc, char **argv)
       strcpy (argv[c], "-t");
 
   while (1) {
-    c = getopt_long (argc, argv, "+?VqhveCt:c:w:K:W:u:p:x:X:mklg:R:r:ME", longopts, &option);
+    c = getopt_long (argc, argv, "+?VqhveCt:c:w:K:W:u:p:x:X:mklLg:R:r:i:I:MEA", longopts, &option);
 
     if (c == -1 || c == EOF)
       break;
@@ -595,6 +611,8 @@ process_arguments (int argc, char **argv)
         free(units);
       units = strdup ("MB");
       break;
+    case 'L':
+      stat_remote_fs = 1;
     case 'l':
       show_local_fs = 1;      
       break;
@@ -606,19 +624,15 @@ process_arguments (int argc, char **argv)
         die (STATE_UNKNOWN, "DISK %s: %s", _("UNKNOWN"), _("Must set a threshold value before using -p\n"));
       }
 
-      /* get the real mountdir of the specified path. np_find_parameter won't find an entry if -p is not
-       * exactly the same string as the mountdir */
-      se2 = np_add_parameter(&temp_path_select_list, optarg);
-      np_set_best_match(se2, mount_list, FALSE);
-
-
       /* add parameter if not found. overwrite thresholds if path has already been added  */
       if (! (se = np_find_parameter(path_select_list, optarg))) {
           se = np_add_parameter(&path_select_list, optarg);
       }
       se->group = group;
       set_all_thresholds(se);
-      path_selected = true;
+      np_set_best_match(se, mount_list, exact_match);
+      stat_path(se);
+      path_selected = TRUE;
       break;
     case 'x':                 /* exclude path or partition */
       np_add_name(&dp_exclude_list, optarg);
@@ -629,20 +643,64 @@ process_arguments (int argc, char **argv)
     case 'v':                 /* verbose */
       verbose++;
       break;
-    case 'q':                 /* verbose */
-      verbose--;
+    case 'q':                 /* TODO: this function should eventually go away (removed 2007-09-20) */
+      /* verbose--; **replaced by line below**. -q was only a broken way of implementing -e */
+      erronly = TRUE;
       break;
     case 'e':
       erronly = TRUE;
       break;
     case 'E':
+      if (path_selected)
+        die (STATE_UNKNOWN, "DISK %s: %s", _("UNKNOWN"), _("Must set -E before selecting pathes\n"));
       exact_match = TRUE;
       break;
     case 'g':
       if (path_selected)
-        die (STATE_UNKNOWN, "DISK %s: %s", _("UNKNOWN"), _("Must set group value before using -p\n"));
+        die (STATE_UNKNOWN, "DISK %s: %s", _("UNKNOWN"), _("Must set group value before selecting pathes \n"));
       group = optarg;
       break;
+    case 'I':
+      cflags |= REG_ICASE;
+    case 'i':
+      if (!path_selected)
+        die (STATE_UNKNOWN, "DISK %s: %s\n", _("UNKNOWN"), _("Pathes need to be selected before using -i/-I. Use -A to select all pathes explicitly"));
+      err = regcomp(&re, optarg, cflags);
+      if (err != 0) {
+        regerror (err, &re, errbuf, MAX_INPUT_BUFFER);
+        die (STATE_UNKNOWN, "DISK %s: %s - %s\n",_("UNKNOWN"), _("Could not compile regular expression"), errbuf);
+      }
+
+      temp_list = path_select_list;
+
+      previous = NULL;
+      while (temp_list) {
+        if (temp_list->best_match) {
+          if (np_regex_match_mount_entry(temp_list->best_match, &re)) {
+        
+              if (verbose >=3)
+   	        printf("ignoring %s matching regex\n", temp_list->name);
+
+              temp_list = np_del_parameter(temp_list, previous);
+              /* pointer to first element needs to be uüdated if first item gets deleted */
+              if (previous == NULL)
+                path_select_list = temp_list;
+          } else {
+            previous = temp_list;
+            temp_list = temp_list->name_next;
+          }
+        } else {
+          previous = temp_list;
+          temp_list = temp_list->name_next;
+        }
+      }
+
+
+      cflags = default_cflags;
+      break;
+
+    case 'A':
+      optarg = strdup(".*");
     case 'R':
       cflags |= REG_ICASE;
     case 'r':
@@ -661,9 +719,9 @@ process_arguments (int argc, char **argv)
           
       for (me = mount_list; me; me = me->me_next) {
         if (np_regex_match_mount_entry(me, &re)) {
-	  fnd = true;
+          fnd = TRUE;
           if (verbose > 3)
-	    printf("%s %s matching expression %s\n", me->me_devname, me->me_mountdir, optarg);
+            printf("%s %s matching expression %s\n", me->me_devname, me->me_mountdir, optarg);
 
           /* add parameter if not found. overwrite thresholds if path has already been added  */
           if (! (se = np_find_parameter(path_select_list, me->me_mountdir))) {
@@ -678,15 +736,18 @@ process_arguments (int argc, char **argv)
         die (STATE_UNKNOWN, "DISK %s: %s - %s\n",_("UNKNOWN"),
             _("Regular expression did not match any path or disk"), optarg);
 
-      fnd = false;
-      path_selected = true;
+      fnd = FALSE;
+      path_selected = TRUE;
+      np_set_best_match(path_select_list, mount_list, exact_match);
+      cflags = default_cflags;
+
       break;
     case 'M': /* display mountpoint */
       display_mntp = TRUE;
       break;
     case 'C':
        /* add all mount entries to path_select list if no partitions have been explicitly defined using -p */
-       if (path_selected == false) {
+       if (path_selected == FALSE) {
          struct mount_entry *me;
          struct parameter_list *path;
          for (me = mount_list; me; me = me->me_next) {
@@ -710,7 +771,7 @@ process_arguments (int argc, char **argv)
       warn_freeinodes_percent = NULL;
       crit_freeinodes_percent = NULL;
     
-      path_selected = false;
+      path_selected = FALSE;
       group = NULL;
       break;
     case 'V':                 /* version */
@@ -734,6 +795,7 @@ process_arguments (int argc, char **argv)
 
   if (argc > c && path == NULL) {
     se = np_add_parameter(&path_select_list, strdup(argv[c++]));
+    path_selected = TRUE;
     set_all_thresholds(se);
   }
 
@@ -742,32 +804,7 @@ process_arguments (int argc, char **argv)
     mult = (uintmax_t)1024 * 1024;
   }
 
-  if (path_select_list) {
-    temp_list = path_select_list;
-    stat_buf = malloc(sizeof *stat_buf);
-    while (temp_list) {
-      /* Stat each entry to check that dir exists */
-      if (stat (temp_list->name, &stat_buf[0])) {
-	printf("DISK %s - ", _("CRITICAL"));
-        die (STATE_CRITICAL, _("%s does not exist\n"), temp_list->name);
-      }
-      /* if (validate_arguments (temp_list->w_df,
-                              temp_list->c_df,
-                              temp_list->w_dfp,
-                              temp_list->c_dfp,
-                              temp_list->w_idfp,
-                              temp_list->c_idfp,
-                              temp_list->name) == ERROR)
-        result = ERROR;
-      */
-      temp_list = temp_list->name_next;
-    }
-    free(stat_buf);
-    return result;
-  } else {
-    return TRUE;
-    /* return validate_arguments (w_df, c_df, w_dfp, c_dfp, w_idfp, c_idfp, NULL); */
-  }
+  return TRUE;
 }
 
 
@@ -859,48 +896,62 @@ print_help (void)
   printf ("    %s\n", _("Exit with WARNING status if less than INTEGER units of disk are free"));
   printf (" %s\n", "-w, --warning=PERCENT%");
   printf ("    %s\n", _("Exit with WARNING status if less than PERCENT of disk space is free"));
-  printf (" %s\n", "-W, --iwarning=PERCENT%");
-  printf ("    %s\n", _("Exit with WARNING status if less than PERCENT of inode space is free"));
-  printf (" %s\n", "-K, --icritical=PERCENT%");
-  printf ("    %s\n", _("Exit with CRITICAL status if less than PERCENT of inode space is free"));
   printf (" %s\n", "-c, --critical=INTEGER");
   printf ("    %s\n", _("Exit with CRITICAL status if less than INTEGER units of disk are free"));
   printf (" %s\n", "-c, --critical=PERCENT%");
   printf ("    %s\n", _("Exit with CRITCAL status if less than PERCENT of disk space is free"));
-  printf (" %s\n", "-C, --clear");
-  printf ("    %s\n", _("Clear thresholds"));
-  printf (" %s\n", "-u, --units=STRING");
-  printf ("    %s\n", _("Choose bytes, kB, MB, GB, TB (default: MB)"));
-  printf (" %s\n", "-k, --kilobytes");
-  printf ("    %s\n", _("Same as '--units kB'"));
-  printf (" %s\n", "-m, --megabytes");
-  printf ("    %s\n", _("Same as '--units MB'"));
-  printf (" %s\n", "-l, --local");
-  printf ("    %s\n", _("Only check local filesystems"));
+  printf (" %s\n", "-W, --iwarning=PERCENT%");
+  printf ("    %s\n", _("Exit with WARNING status if less than PERCENT of inode space is free"));
+  printf (" %s\n", "-K, --icritical=PERCENT%");
+  printf ("    %s\n", _("Exit with CRITICAL status if less than PERCENT of inode space is free"));
   printf (" %s\n", "-p, --path=PATH, --partition=PARTITION");
   printf ("    %s\n", _("Path or partition (may be repeated)"));
-  printf (" %s\n", "-r, --ereg-path=PATH, --ereg-partition=PARTITION");
-  printf ("    %s\n", _("Regular expression for path or partition (may be repeated)"));
-  printf (" %s\n", "-R, --eregi-path=PATH, --eregi-partition=PARTITION");
-  printf ("    %s\n", _("Case insensitive regular expression for path/partition (may be repeated)"));
-  printf (" %s\n", "-g, --group=NAME");
-  printf ("    %s\n", _("Group pathes. Thresholds apply to (free-)space of all partitions together"));
   printf (" %s\n", "-x, --exclude_device=PATH <STRING>");
   printf ("    %s\n", _("Ignore device (only works if -p unspecified)"));
-  printf (" %s\n", "-X, --exclude-type=TYPE <STRING>");
-  printf ("    %s\n", _("Ignore all filesystems of indicated type (may be repeated)"));
-  printf (" %s\n", "-M, --mountpoint");
-  printf ("    %s\n", _("Display the mountpoint instead of the partition"));
+  printf (" %s\n", "-C, --clear");
+  printf ("    %s\n", _("Clear thresholds"));
   printf (" %s\n", "-E, --exact-match");
   printf ("    %s\n", _("For paths or partitions specified with -p, only check for exact paths"));
   printf (" %s\n", "-e, --errors-only");
   printf ("    %s\n", _("Display only devices/mountpoints with errors"));
+  printf (" %s\n", "-g, --group=NAME");
+  printf ("    %s\n", _("Group pathes. Thresholds apply to (free-)space of all partitions together"));
+  printf (" %s\n", "-k, --kilobytes");
+  printf ("    %s\n", _("Same as '--units kB'"));
+  printf (" %s\n", "-l, --local");
+  printf ("    %s\n", _("Only check local filesystems"));
+  printf (" %s\n", "-L, --stat-remote-fs");
+  printf ("    %s\n", _("Only check local filesystems against thresholds. Yet call stat on remote filesystems"));
+  printf ("    %s\n", _("to test if they are accessible (e.g. to detect Stale NFS Handles)"));
+  printf (" %s\n", "-M, --mountpoint");
+  printf ("    %s\n", _("Display the mountpoint instead of the partition"));
+  printf (" %s\n", "-m, --megabytes");
+  printf ("    %s\n", _("Same as '--units MB'"));
+  printf (" %s\n", "-A, --all");
+  printf ("    %s\n", _("Explicitly select all pathes. This is equivalent to -R '.*'"));
+  printf (" %s\n", "-R, --eregi-path=PATH, --eregi-partition=PARTITION");
+  printf ("    %s\n", _("Case insensitive regular expression for path/partition (may be repeated)"));
+  printf (" %s\n", "-r, --ereg-path=PATH, --ereg-partition=PARTITION");
+  printf ("    %s\n", _("Regular expression for path or partition (may be repeated)"));
+  printf (" %s\n", "-I, --ignore-eregi-path=PATH, --ignore-eregi-partition=PARTITION");
+  printf ("    %s\n", _("Regular expression to ignore selected path/partition (case insensitive) (may be repeated)"));
+  printf (" %s\n", "-i, --ignore-ereg-path=PATH, --ignore-ereg-partition=PARTITION");
+  printf ("    %s\n", _("Regular expression to ignore selected path or partition (may be repeated)"));
   printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+  printf (" %s\n", "-u, --units=STRING");
+  printf ("    %s\n", _("Choose bytes, kB, MB, GB, TB (default: MB)"));
   printf (_(UT_VERBOSE));
+  printf (" %s\n", "-X, --exclude-type=TYPE");
+  printf ("    %s\n", _("Ignore all filesystems of indicated type (may be repeated)"));
   printf ("\n");
   printf ("%s\n", _("Examples:"));
   printf (" %s\n", "check_disk -w 10% -c 5% -p /tmp -p /var -C -w 100000 -c 50000 -p /");
   printf ("    %s\n", _("Checks /tmp and /var at 10% and 5%, and / at 100MB and 50MB"));
+  printf (" %s\n", "check_disk -w 100M -c 50M -C -w 1000M -c 500M -g sidDATA -r '^/oracle/SID/data.*$'");
+  printf ("    %s\n", _("Checks all filesystems not matching -r at 100M and 50M. The fs matching the -r regex"));
+  printf ("    %s\n", _("are grouped which means the freespace thresholds are applied to all disks together"));
+  printf (" %s\n", "check_disk -w 100M -c 50M -C -w 1000M -c 500M -p /foo -C -w 5% -c 3% -p /bar");
+  printf ("    %s\n", _("Checks /foo for 1000M/500M and /bar for 5/3%. All remaining volumes use 100M/50M"));
   printf (_(UT_SUPPORT));
 }
 
@@ -910,6 +961,21 @@ void
 print_usage (void)
 {
   printf (_("Usage:"));
-  printf (" %s -w limit -c limit [-p path | -x device] [-t timeout]", progname);
-  printf ("[-m] [-e] [-W limit] [-K limit] [-v] [-q] [-E]\n");
+  printf (" %s -w limit -c limit [-W limit] [-K limit] {-p path | -x device}\n", progname);
+  printf ("[-C] [-E] [-e] [-g group ] [-k] [-l] [-M] [-m] [-R path ] [-r path ]\n");
+  printf ("[-t timeout] [-u unit] [-v] [-X type]\n");
+}
+
+void
+stat_path (struct parameter_list *p)
+{
+  /* Stat entry to check that dir exists and is accessible */
+  if (verbose > 3)
+    printf("calling stat on %s\n", p->name);
+  if (stat (p->name, &stat_buf[0])) {
+    if (verbose > 3)
+      printf("stat failed on %s\n", p->name);
+    printf("DISK %s - ", _("CRITICAL"));
+    die (STATE_CRITICAL, _("%s %s: %s\n"), p->name, _("is not accessible"), strerror(errno));
+  }
 }

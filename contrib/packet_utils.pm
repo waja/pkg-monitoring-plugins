@@ -1,8 +1,8 @@
 package packet_utils;
 
-# $Id: packet_utils.pm,v 1.1 2005/01/25 09:12:47 stanleyhopcroft Exp $
+# $Id: packet_utils.pm 1100 2005-01-25 09:12:47Z stanleyhopcroft $
 
-# $Log: packet_utils.pm,v $
+# $Log$
 # Revision 1.1  2005/01/25 09:12:47  stanleyhopcroft
 # packet creation and dumping hacks used by check_ica* and check_lotus
 #

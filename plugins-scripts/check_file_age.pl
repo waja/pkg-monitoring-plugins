@@ -1,5 +1,5 @@
 #!/bin/perl -w
-# $Id: check_file_age.pl,v 1.3 2005/12/15 15:17:49 tonvoon Exp $
+# $Id: check_file_age.pl 1750 2007-07-07 11:54:29Z psychotrahe $
 
 # check_file_age.pl Copyright (C) 2003 Steven Grimm <koreth-nagios@midwinter.com>
 #
@@ -55,7 +55,7 @@ GetOptions(
 	"C=f" => \$opt_C, "critical-size=f" => \$opt_C);
 
 if ($opt_V) {
-	print_revision($PROGNAME, '$Id: check_file_age.pl,v 1.3 2005/12/15 15:17:49 tonvoon Exp $');
+	print_revision($PROGNAME, '$Revision: 1750 $');
 	exit $ERRORS{'OK'};
 }
 
@@ -102,7 +102,7 @@ sub print_usage () {
 }
 
 sub print_help () {
-	print_revision($PROGNAME, '$Id: check_file_age.pl,v 1.3 2005/12/15 15:17:49 tonvoon Exp $');
+	print_revision($PROGNAME, '$Revision: 1750 $');
 	print "Copyright (c) 2003 Steven Grimm\n\n";
 	print_usage();
 	print "\n";

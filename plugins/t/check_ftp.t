@@ -2,7 +2,7 @@
 #
 # File Transfer Protocol (FTP) Test via check_ftp
 #
-# $Id: check_ftp.t,v 1.3 2005/07/25 01:47:14 illumino Exp $
+# $Id: check_ftp.t 1207 2005-07-25 01:47:15Z illumino $
 #
 
 use strict;

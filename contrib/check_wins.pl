@@ -1,8 +1,8 @@
 #!/usr/bin/perl -w
 
-# $Id: check_wins.pl,v 1.3 2004/11/25 04:46:16 stanleyhopcroft Exp $
+# $Id: check_wins.pl 940 2004-11-25 04:46:16Z stanleyhopcroft $
 
-# $Log: check_wins.pl,v $
+# $Log$
 # Revision 1.3  2004/11/25 04:46:16  stanleyhopcroft
 # Non functional tidy ups to check_wins
 #
@@ -190,7 +190,7 @@ sub print_usage () {
 }
 
 sub print_help () {
-	print_revision($PROGNAME,'$Revision: 1.3 $ ');
+	print_revision($PROGNAME,'$Revision: 940 $ ');
 	print "Copyright (c) 2001 Karl DeBisschop/S Hopcroft
 
 Perl Check WINS plugin for NetSaint.
@@ -237,7 +237,7 @@ The plugin works by
 }
 
 sub version () {
-	print_revision($PROGNAME,'$Revision: 1.3 $ ');
+	print_revision($PROGNAME,'$Revision: 940 $ ');
 	exit $ERRORS{'OK'};
 }
 

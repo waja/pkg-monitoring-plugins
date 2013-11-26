@@ -2,7 +2,7 @@
 #
 # HyperText Transfer Protocol (HTTP) Test via check_http
 #
-# $Id: check_http.t,v 1.14 2007/04/01 14:21:09 psychotrahe Exp $
+# $Id: check_http.t 1669 2007-04-01 14:21:09Z psychotrahe $
 #
 
 use strict;

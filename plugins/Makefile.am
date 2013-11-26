@@ -13,7 +13,7 @@ MATHLIBS = @MATHLIBS@
 # This is not portable. Run ". tools/devmode" to get development compile flags
 #AM_CFLAGS = -Wall
 
-libexec_PROGRAMS = check_apt check_disk check_dummy check_http check_load \
+libexec_PROGRAMS = check_apt check_cluster check_disk check_dummy check_http check_load \
 	check_mrtg check_mrtgtraf check_ntp check_nwstat check_overcr check_ping \
 	check_real check_smtp check_ssh check_tcp check_time \
 	check_ups check_users negate \
@@ -48,6 +48,7 @@ test:
 # the actual targets
 
 check_apt_LDADD = $(BASEOBJS) runcmd.o
+check_cluster_LDADD = $(BASEOBJS)
 check_dig_LDADD = $(NETLIBS) runcmd.o 
 check_disk_LDADD = $(BASEOBJS) popen.o
 check_dns_LDADD = $(NETLIBS) runcmd.o
@@ -86,10 +87,11 @@ check_ups_LDADD = $(NETLIBS)
 check_users_LDADD = $(BASEOBJS) popen.o
 check_by_ssh_LDADD = $(NETLIBS) runcmd.o
 check_ide_smart_LDADD = $(BASEOBJS)
-negate_LDADD = $(BASEOBJS) popen.o
+negate_LDADD = $(BASEOBJS)
 urlize_LDADD = $(BASEOBJS) popen.o
 
 check_apt_DEPENDENCIES = check_apt.c $(BASEOBJS) runcmd.o $(DEPLIBS)
+check_cluster_DEPENDENCIES = check_cluster.c $(BASEOBJS) $(DEPLIBS)
 check_dig_DEPENDENCIES = check_dig.c $(NETOBJS) runcmd.o $(DEPLIBS)
 check_disk_DEPENDENCIES = check_disk.c $(BASEOBJS) popen.o $(DEPLIBS) 
 check_dns_DEPENDENCIES = check_dns.c $(NETOBJS) runcmd.o $(DEPLIBS)
@@ -124,7 +126,7 @@ check_time_DEPENDENCIES = check_time.c $(NETOBJS) $(DEPLIBS)
 check_ups_DEPENDENCIES = check_ups.c $(NETOBJS) $(DEPLIBS)
 check_users_DEPENDENCIES = check_users.c $(BASEOBJS) popen.o $(DEPLIBS)
 check_by_ssh_DEPENDENCIES = check_by_ssh.c $(NETOBJS) runcmd.o $(DEPLIBS)
-negate_DEPENDENCIES = negate.c $(BASEOBJS) popen.o $(DEPLIBS)
+negate_DEPENDENCIES = negate.c $(BASEOBJS) $(DEPLIBS)
 urlize_DEPENDENCIES = urlize.c $(BASEOBJS) popen.o $(DEPLIBS)
 
 ##############################################################################

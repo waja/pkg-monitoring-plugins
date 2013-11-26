@@ -29,9 +29,11 @@ lines=`cat $tempfile | grep -i $port`
 status=`echo $lines | awk '{ print $3 }'`
 if [ "$status" == "Printing" ]; then
 	bytes=`echo $lines | awk '{ print $4 }'`;
-	comments=`echo $lines | tr -d "" | awk '{ print $5 " " $6 }'`;
+	comments=`echo $lines | tr -d "
+" | awk '{ print $5 " " $6 }'`;
 else
-	comments=`echo $lines | tr -d "" | awk '{ print $4 " " $5 }'`;
+	comments=`echo $lines | tr -d "
+" | awk '{ print $4 " " $5 }'`;
 fi
 
 comma=`echo $comments | grep , | wc -l`

@@ -8,7 +8,7 @@
 *               2004 Arnaud Quette <arnaud.quette@mgeups.com>
 * Copyright (c) 2002-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/01/28 21:46:41 $
+* Last Modified: $Date: 2007-05-09 10:16:33 +0100 (Wed, 09 May 2007) $
 *
 * Description:
 *
@@ -33,12 +33,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-*  $Id: check_ups.c,v 1.31 2007/01/28 21:46:41 hweiss Exp $
+*  $Id: check_ups.c 1709 2007-05-09 09:16:33Z psychotrahe $
 *
 ******************************************************************************/
 
 const char *progname = "check_ups";
-const char *revision = "$Revision: 1.31 $";
+const char *revision = "$Revision: 1709 $";
 const char *copyright = "2002-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -618,12 +618,16 @@ print_help (void)
   printf ("    %s\n", _("Name of UPS"));
   printf (" %s\n", "-T, --temperature");
   printf ("    %s\n", _("Output of temperatures in Celsius"));
+  printf (" %s\n", "-v, --variable=STRING");
+  printf ("    %s %s\n", _("Valid values for STRING are"), "LINE, TEMP, BATTPCT or LOADPCT");
 
 	printf (_(UT_WARN_CRIT));
 
 	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
 
-	printf (_(UT_VERBOSE));
+/* TODO: -v clashing with -v/-variable. Commenting out help text since verbose
+         is unused up to now */
+/*	printf (_(UT_VERBOSE)); */
 
   printf ("\n");
   printf ("%s\n", _("Notes:"));

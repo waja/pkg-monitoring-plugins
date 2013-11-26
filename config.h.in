@@ -318,6 +318,10 @@
 /* Define to 1 if you have the `radiusclient' library (-lradiusclient). */
 #undef HAVE_LIBRADIUSCLIENT
 
+/* Define to 1 if you have the `radiusclient-ng' library (-lradiusclient-ng).
+   */
+#undef HAVE_LIBRADIUSCLIENT_NG
+
 /* Define to 1 if you have the `listmntent' function. */
 #undef HAVE_LISTMNTENT
 
@@ -527,6 +531,9 @@
 /* Define to 1 if the system has the type `swaptbl_t'. */
 #undef HAVE_SWAPTBL_T
 
+/* Define if sysconf returns number of cpus */
+#undef HAVE_SYSCONF__SC_NPROCESSORS_CONF
+
 /* Define to 1 if you have the <syslog.h> header file. */
 #undef HAVE_SYSLOG_H
 
@@ -559,6 +566,9 @@
 
 /* Define to 1 if you have the <sys/socket.h> header file. */
 #undef HAVE_SYS_SOCKET_H
+
+/* Define to 1 if you have the <sys/sockio.h> header file. */
+#undef HAVE_SYS_SOCKIO_H
 
 /* Define to 1 if you have the <sys/statfs.h> header file. */
 #undef HAVE_SYS_STATFS_H

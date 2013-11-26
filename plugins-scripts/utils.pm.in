@@ -1,5 +1,5 @@
 # Utility drawer for Nagios plugins.
-# $Id: utils.pm.in,v 1.12 2006/12/12 08:56:01 tonvoon Exp $
+# $Id: utils.pm.in 1751 2007-07-07 11:55:48Z psychotrahe $
 #
 # This will be deprecated soon. Please use Nagios::Plugin from CPAN
 # for new plugins
@@ -34,7 +34,7 @@ sub print_revision ($$) {
 	my $pluginRevision = shift;
 	$pluginRevision =~ s/^\$Revision: //;
 	$pluginRevision =~ s/ \$\s*$//;
-	print "$commandName (@PACKAGE@ @VERSION@) $pluginRevision\n";
+	print "$commandName v$pluginRevision (@PACKAGE@ @VERSION@)\n";
 	print "@WARRANTY@";
 }
 

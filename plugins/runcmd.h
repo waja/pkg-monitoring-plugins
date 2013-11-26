@@ -1,5 +1,5 @@
 /*
- * $Id: runcmd.h,v 1.2 2005/10/24 11:10:29 seanius Exp $
+ * $Id: runcmd.h 1260 2005-10-24 11:10:29Z seanius $
  * 
  * Author: Andreas Ericsson <ae@op5.se>
  *

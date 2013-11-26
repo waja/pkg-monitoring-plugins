@@ -2,7 +2,7 @@
 #
 # Simple Network Management Protocol (SNMP) Test via check_snmp
 #
-# $Id: check_snmp.t,v 1.3 2006/12/23 18:59:36 dermoth Exp $
+# $Id: check_snmp.t 1557 2006-12-23 18:59:36Z dermoth $
 #
 
 use strict;

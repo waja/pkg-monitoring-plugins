@@ -7,7 +7,7 @@
 *  Copyright (c) 1999-2006 nagios-plugins team
 *  Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
 *
-* Last Modified: $Date: 2007/03/29 17:58:28 $
+* Last Modified: $Date: 2007-03-29 18:58:28 +0100 (Thu, 29 Mar 2007) $
 *
 * Description:
 *
@@ -32,12 +32,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_mysql.c,v 1.35 2007/03/29 17:58:28 hweiss Exp $
+* $Id: check_mysql.c 1655 2007-03-29 17:58:28Z hweiss $
 *
 ******************************************************************************/
 
 const char *progname = "check_mysql";
-const char *revision = "$Revision: 1.35 $";
+const char *revision = "$Revision: 1655 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 

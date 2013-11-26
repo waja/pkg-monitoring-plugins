@@ -2,7 +2,7 @@
 #
 # Logged in Users Tests via check_users
 #
-# $Id: check_users.t,v 1.2 2005/07/25 01:47:15 illumino Exp $
+# $Id: check_users.t 1207 2005-07-25 01:47:15Z illumino $
 #
 
 use strict;

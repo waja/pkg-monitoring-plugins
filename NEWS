@@ -1,5 +1,53 @@
 This file documents the major additions and syntax changes between releases.
 
+1.4.10 28th September 2007
+	Fix check_http buffer overflow vulnerability when following HTTP redirects
+	check_http now explicitly asks HTTP/1.1 servers to close the connection
+	  after completion of the response
+	Check_ldaps' guessing which secure method to use (starttls vs. ssl on connect)  
+	  is now deprecated. See --help for further information.
+	Check_disk now calls stat() on all filesystems to check. (Old: only the ones selected using -p) 
+	  A meaningful error message (eg "Stale NFS Handle") is printed if stat fails.
+	New check_disk option -L: Only check local filesystems, but call stat() on remote ones, too.
+	  Thus accessibility of remote filesystems can be checked without any threshold comparison.
+	Check_disk's --help now prints some examples for the new features introduced in 1.4.8
+	New check_disk -i/-I option to ignore pathes/partitions based on regular expressions
+	New check_disk -A option to select all filesystems explicitly
+	WARNING: check_disk's -E option must now be passed before -p or -r/-R arguments
+	  Passing -E after -p or -r results in UNKNOWN state, now
+	  This is needed due to the new ignore feature
+	Fix check_disk bug when mixing case sensitive and case insensitive regex arguments
+	New check_dhcp -u/--unicast option for emulating a DHCP relay in order
+	  to check DHCP servers on remote networks
+	New check_dhcp -m/--mac option which allows for specifying the MAC
+	  address to use in the DHCP request
+	The check_dhcp -r and -s options now accept host names, too
+	Fix possible check_icmp bus errors on some (non-x86/AMD64) platforms
+	Fix check_smtp's handling of multiple-packet server responses
+	WARNING: Fix for negate which may break existing commands:
+	  - stop evaluating command line options through shell twice 
+	  - enforce a full path for the command to run
+	The "negate" utility can now remap custom states
+	Check_radius now supports radiusclient-ng
+	The (undocumented) positional parameter parsing which check_radius used
+	  instead of getopt(3) if 8 arguments were given is no longer available
+	Check_by_ssh now supports multiline output
+	IPv6 support can now be disabled using ./configure --without-ipv6
+	Fix check_ntp now honor ntp flags
+
+1.4.9 4th June 2006
+	Inclusion of contrib/check_cluster2 as check_cluster with some improvements
+	New/improved -E/--skip-stderr and -S/--skip-stdout options for check_by_ssh
+	check_snmp now supports Counter64
+	Fix compilation of check_ldap, check_radius and check_pgsql
+	check_load can optionally divide by number of cpus
+	Fix check_time returning wrong OK when time is before the epoch on some arch
+	Make check_http output more consistent
+	Fix possible check_http segfaults when following HTTP redirects
+	check_snmp don't warn anymore if something is printed on stderr
+	Fix check_tcp segfault when multiple expect strings are given
+	New option for check_tcp: -A/--all to test if all given expect strings match
+
 1.4.8 11th April 2007
 	Respects --without-world-permissions for setuid plugins
 	check_disk extra options for regex matching of filesystems and grouping of filesystems

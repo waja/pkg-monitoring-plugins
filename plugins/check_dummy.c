@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2006/10/19 00:25:16 $
+* Last Modified: $Date: 2007-05-24 09:35:53 +0100 (Thu, 24 May 2007) $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_dummy.c,v 1.17 2006/10/19 00:25:16 opensides Exp $
+ $Id: check_dummy.c 1716 2007-05-24 08:35:53Z tonvoon $
  
 ******************************************************************************/
 
 const char *progname = "check_dummy";
-const char *revision = "$Revision: 1.17 $";
+const char *revision = "$Revision: 1716 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -84,8 +84,10 @@ main (int argc, char **argv)
     printf (_("UNKNOWN"));
     break;
   default:
+    printf (_("UNKNOWN"));
+    printf (": ");
     printf (_("Status %d is not a supported error state\n"), result);
-    break;
+    return STATE_UNKNOWN;
   }
 
   if (argc >= 3) 

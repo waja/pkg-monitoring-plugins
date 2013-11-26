@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/03/12 10:51:05 $
+* Last Modified: $Date: 2007-04-23 08:30:47 +0100 (Mon, 23 Apr 2007) $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_ping.c,v 1.60 2007/03/12 10:51:05 tonvoon Exp $
+ $Id: check_ping.c 1699 2007-04-23 07:30:47Z hweiss $
  
 ******************************************************************************/
 
 const char *progname = "check_ping";
-const char *revision = "$Revision: 1.60 $";
+const char *revision = "$Revision: 1699 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -105,7 +105,7 @@ main (int argc, char **argv)
 
 	/* If ./configure finds ping has timeout values, set plugin alarm slightly
 	 * higher so that we can use response from command line ping */
-#ifdef PING_PACKETS_FIRST && PING_HAS_TIMEOUT
+#if defined(PING_PACKETS_FIRST) && defined(PING_HAS_TIMEOUT)
 	alarm (timeout_interval + 1);
 #else
 	alarm (timeout_interval);

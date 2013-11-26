@@ -10,7 +10,7 @@
 * Copyright (c) 2000 Robert Dale <rdale@digital-mission.com>
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007/02/06 21:03:21 $
+* Last Modified: $Date: 2007-06-13 10:43:28 +0100 (Wed, 13 Jun 2007) $
 *
 * Description:
 *
@@ -35,11 +35,11 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  *
- * $Id: check_ide_smart.c,v 1.14 2007/02/06 21:03:21 opensides Exp $
+ * $Id: check_ide_smart.c 1739 2007-06-13 09:43:28Z psychotrahe $
  */
 
 const char *progname = "check_ide_smart";
-const char *revision = "$Revision: 1.14 $";
+const char *revision = "$Revision: 1739 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 	
@@ -437,23 +437,6 @@ print_values (values_t * p, thresholds_t * t)
 }
 
 
-
-void
-print_thresholds (thresholds_t * p) 
-{
-	threshold_t * threshold = p->thresholds;
-	int i;
-	printf ("\n");
-	printf ("SmartRevision=%d\n", p->revision);
-	for (i = 0; i < NR_ATTRIBUTES; i++) {
-		if (threshold->id) {
-			printf ("Id=%3d, Threshold=%3d\n", threshold->id,
-							threshold->threshold); }
-		++threshold;
-	}
-	printf ("CheckSum=%d\n", p->checksum);
-}
-
 int
 smart_cmd_simple (int fd, enum SmartCommand command, __u8 val0, char show_error) 
 {
@@ -541,7 +524,7 @@ print_help (void)
 void
 print_usage (void)
 {
-	printf (_("Usage:");
+  printf (_("Usage:"));
   printf ("%s [-d <device>] [-i <immediate>] [-q quiet] [-1 <auto-on>]",progname);
-  pritnf (" [-O <auto-off>] [-n <nagios>]\n");
+  printf (" [-O <auto-off>] [-n <nagios>]\n");
 }

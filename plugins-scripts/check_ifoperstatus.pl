@@ -25,7 +25,7 @@
 # Report bugs to:  nagiosplug-help@lists.sourceforge.net
 #
 # 11.01.2000 Version 1.0
-# $Id: check_ifoperstatus.pl,v 1.7 2007/03/16 12:11:46 gonzai Exp $
+# $Id: check_ifoperstatus.pl 1642 2007-03-16 12:11:46Z gonzai $
 #
 # Patches from Guy Van Den Bergh to warn on ifadminstatus down interfaces
 # instead of critical.
@@ -304,7 +304,7 @@ sub print_help() {
 	printf "intensive.  Use it sparingly or not at all.  -n is used to match against\n";
 	printf "a much more descriptive ifName value in the IfXTable to verify that the\n";
 	printf "snmpkey has not changed to some other network interface after a reboot.\n\n";
-	print_revision($PROGNAME, '$Revision: 1.7 $');
+	print_revision($PROGNAME, '$Revision: 1642 $');
 	
 }
 
@@ -341,7 +341,7 @@ sub process_arguments() {
 	}
   
 	if ($opt_V) {
-		print_revision($PROGNAME,'$Revision: 1.7 $ ');
+		print_revision($PROGNAME,'$Revision: 1642 $ ');
 		exit $ERRORS{'OK'};
 	}
 

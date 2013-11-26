@@ -1,7 +1,7 @@
 ###############################################################################
 # COMMAND CONFIGURATION
 #
-# $Id: command.cfg.in,v 1.13 2004/12/02 04:48:37 mattkent Exp $
+# $Id: command.cfg.in 973 2004-12-02 04:48:37Z mattkent $
 #
 # SYNTAX:
 # command[<command_name>]=<command_line>
