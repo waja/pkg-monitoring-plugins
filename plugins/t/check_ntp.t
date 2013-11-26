@@ -2,7 +2,6 @@
 #
 # Testing NTP
 #
-# $Id: check_ntp.t 1865 2007-12-11 13:54:23Z dermoth $
 #
 
 use strict;

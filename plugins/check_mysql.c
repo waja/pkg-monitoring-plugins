@@ -5,10 +5,8 @@
 * License: GPL
 * Copyright (c) 1999 Didi Rieder (adrieder@sbox.tu-graz.ac.at)
 * Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
-* Copyright (c) 1999-2007 Nagios Plugins Development Team
+* Copyright (c) 1999-2009 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-*
 * Description:
 * 
 * This file contains the check_mysql plugin
@@ -29,12 +27,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_mysql.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_mysql";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -71,9 +67,9 @@ main (int argc, char **argv)
 	MYSQL mysql;
 	MYSQL_RES *res;
 	MYSQL_ROW row;
-	
+
 	/* should be status */
-	
+
 	char *result = NULL;
 	char *error = NULL;
 	char slaveresult[SLAVERESULTSIZE];
@@ -181,13 +177,14 @@ main (int argc, char **argv)
 					continue;
 				}
 			}
+
 			if ((slave_io_field < 0) || (slave_sql_field < 0) || (num_fields == 0)) {
 				mysql_free_result (res);
 				mysql_close (&mysql);
 				die (STATE_CRITICAL, "Slave status unavailable\n");
 			}
-			
-			snprintf (slaveresult, SLAVERESULTSIZE, "Slave IO: %s Slave SQL: %s Seconds Behind Master: %s", row[slave_io_field], row[slave_sql_field], row[seconds_behind_field]);
+
+			snprintf (slaveresult, SLAVERESULTSIZE, "Slave IO: %s Slave SQL: %s Seconds Behind Master: %s", row[slave_io_field], row[slave_sql_field], seconds_behind_field!=-1?row[seconds_behind_field]:"Unknown");
 			if (strcmp (row[slave_io_field], "Yes") != 0 || strcmp (row[slave_sql_field], "Yes") != 0) {
 				mysql_free_result (res);
 				mysql_close (&mysql);
@@ -310,7 +307,7 @@ process_arguments (int argc, char **argv)
 			critical = optarg;
 			break;
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'h':									/* help */
 			print_help ();
@@ -361,9 +358,6 @@ validate_arguments (void)
 	if (db_host == NULL)
 		db_host = strdup("");
 
-	if (db_pass == NULL)
-		db_pass == strdup("");
-
 	if (db == NULL)
 		db = strdup("");
 
@@ -377,11 +371,11 @@ print_help (void)
 	char *myport;
 	asprintf (&myport, "%d", MYSQL_PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf (_(COPYRIGHT), copyright, email);
 
-	printf ("%s\n", _("This program tests connections to a mysql server"));
+	printf ("%s\n", _("This program tests connections to a MySQL server"));
 
   printf ("\n\n");
 
@@ -420,6 +414,9 @@ print_help (void)
 	printf ("\n");
 	printf ("%s\n", _("Notes:"));
 	printf (_(UT_EXTRA_OPTS_NOTES));
+	printf ("\n");
+	printf (" %s\n", _("You must specify -p with an empty string to force an empty password,"));
+	printf (" %s\n", _("overriding any my.cnf settings."));
 #endif
 
 	printf (_(UT_SUPPORT));

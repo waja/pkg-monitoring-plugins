@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_disk plugin
@@ -28,12 +26,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_fping.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_fping";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -58,6 +54,8 @@ void print_usage (void);
 char *server_name = NULL;
 int packet_size = PACKET_SIZE;
 int packet_count = PACKET_COUNT;
+int target_timeout = 0;
+int packet_interval = 0;
 int verbose = FALSE;
 int cpl;
 int wpl;
@@ -77,6 +75,7 @@ main (int argc, char **argv)
   char *server = NULL;
   char *command_line = NULL;
   char *input_buffer = NULL;
+  char *option_string = "";
   input_buffer = malloc (MAX_INPUT_BUFFER);
 
   setlocale (LC_ALL, "");
@@ -92,8 +91,13 @@ main (int argc, char **argv)
   server = strscpy (server, server_name);
 
   /* compose the command */
-  asprintf (&command_line, "%s -b %d -c %d %s", PATH_TO_FPING,
-            packet_size, packet_count, server);
+  if (target_timeout)
+    asprintf(&option_string, "%s-t %d ", option_string, target_timeout);
+  if (packet_interval)
+    asprintf(&option_string, "%s-p %d ", option_string, packet_interval);
+
+  asprintf (&command_line, "%s %s-b %d -c %d %s", PATH_TO_FPING,
+            option_string, packet_size, packet_count, server);
 
   if (verbose)
     printf ("%s\n", command_line);
@@ -232,6 +236,8 @@ process_arguments (int argc, char **argv)
     {"warning", required_argument, 0, 'w'},
     {"bytes", required_argument, 0, 'b'},
     {"number", required_argument, 0, 'n'},
+    {"target-timeout", required_argument, 0, 'T'},
+    {"interval", required_argument, 0, 'i'},
     {"verbose", no_argument, 0, 'v'},
     {"version", no_argument, 0, 'V'},
     {"help", no_argument, 0, 'h'},
@@ -252,7 +258,7 @@ process_arguments (int argc, char **argv)
   }
 
   while (1) {
-    c = getopt_long (argc, argv, "+hVvH:c:w:b:n:", longopts, &option);
+    c = getopt_long (argc, argv, "+hVvH:c:w:b:n:T:i:", longopts, &option);
 
     if (c == -1 || c == EOF || c == 1)
       break;
@@ -264,7 +270,7 @@ process_arguments (int argc, char **argv)
       print_help ();
       exit (STATE_OK);
     case 'V':                 /* version */
-      print_revision (progname, revision);
+      print_revision (progname, NP_VERSION);
       exit (STATE_OK);
     case 'v':                 /* verbose mode */
       verbose = TRUE;
@@ -312,6 +318,18 @@ process_arguments (int argc, char **argv)
         packet_count = atoi (optarg);
       else
         usage (_("Packet count must be a positive integer"));
+      break;
+    case 'T':                 /* timeout in msec */
+      if (is_intpos (optarg))
+        target_timeout = atoi (optarg);
+      else
+        usage (_("Target timeout must be a positive integer"));
+      break;
+    case 'i':                 /* interval in msec */
+      if (is_intpos (optarg))
+        packet_interval = atoi (optarg);
+      else
+        usage (_("Interval must be a positive integer"));
       break;
     }
   }
@@ -368,7 +386,7 @@ void
 print_help (void)
 {
 
-  print_revision (progname, revision);
+  print_revision (progname, NP_VERSION);
 
   printf ("Copyright (c) 1999 Didi Rieder <adrieder@sbox.tu-graz.ac.at>\n");
   printf (COPYRIGHT, copyright, email);
@@ -391,9 +409,13 @@ print_help (void)
   printf (" %s\n", "-c, --critical=THRESHOLD");
   printf ("    %s\n", _("critical threshold pair"));
   printf (" %s\n", "-b, --bytes=INTEGER");
-  printf ("    %s\n", _("size of ICMP packet (default: %d)"),PACKET_SIZE);
+  printf ("    %s (default: %d)\n", _("size of ICMP packet"),PACKET_SIZE);
   printf (" %s\n", "-n, --number=INTEGER");
-  printf ("    %s\n", _("number of ICMP packets to send (default: %d)"),PACKET_COUNT);
+  printf ("    %s (default: %d)\n", _("number of ICMP packets to send"),PACKET_COUNT);
+  printf (" %s\n", "-T, --target-timeout=INTEGER");
+  printf ("    %s (default: fping's default for -t)\n", _("Target timeout (ms)"),PACKET_COUNT);
+  printf (" %s\n", "-i, --interval=INTEGER");
+  printf ("    %s (default: fping's default for -p)\n", _("Interval (ms) between sending packets"),PACKET_COUNT);
   printf (_(UT_VERBOSE));
   printf ("\n");
   printf (" %s\n", _("THRESHOLD is <rta>,<pl>%% where <rta> is the round trip average travel time (ms)"));
@@ -414,5 +436,5 @@ void
 print_usage (void)
 {
   printf (_("Usage:"));
-  printf (" %s <host_address> -w limit -c limit [-b size] [-n number]\n", progname);
+  printf (" %s <host_address> -w limit -c limit [-b size] [-n number] [-T number] [-i number]\n", progname);
 }

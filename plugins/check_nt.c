@@ -6,8 +6,6 @@
 * Copyright (c) 2000-2002 Yves Rubin (rubiyz@yahoo.com)
 * Copyright (c) 2003-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_nt plugin
@@ -31,12 +29,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_nt.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_nt";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -97,6 +93,7 @@ int main(int argc, char **argv){
 	char *temp_string_perf=NULL;
 	char *description=NULL,*counter_unit = NULL;
 	char *minval = NULL, *maxval = NULL, *errcvt = NULL;
+	char *fds=NULL, *tds=NULL;
 
 	double total_disk_space=0;
 	double free_disk_space=0;
@@ -163,9 +160,9 @@ int main(int argc, char **argv){
 
 			/* loop until one of the parameters is wrong or not present */
 			while (lvalue_list[0+offset]> (unsigned long)0 &&
-						 lvalue_list[0+offset]<=(unsigned long)17280 && 
+						 lvalue_list[0+offset]<=(unsigned long)17280 &&
 						 lvalue_list[1+offset]> (unsigned long)0 &&
-						 lvalue_list[1+offset]<=(unsigned long)100 && 
+						 lvalue_list[1+offset]<=(unsigned long)100 &&
 						 lvalue_list[2+offset]> (unsigned long)0 &&
 						 lvalue_list[2+offset]<=(unsigned long)100) {
 
@@ -174,7 +171,7 @@ int main(int argc, char **argv){
 				fetch_data (server_address, server_port, send_buffer);
 
 				utilization=strtoul(recv_buffer,NULL,10);
-				
+
 				/* Check if any of the request is in a warning or critical state */
 				if(utilization >= lvalue_list[2+offset])
 					return_code=STATE_CRITICAL;
@@ -194,7 +191,7 @@ int main(int argc, char **argv){
 				perfdata = temp_string_perf;
 			} else
 				output_message = strdup (_("not enough values for -l parameters"));
-		}	
+		}
 		break;
 
 	case CHECK_UPTIME:
@@ -202,7 +199,7 @@ int main(int argc, char **argv){
 		asprintf(&send_buffer, "%s&3", req_password);
 		fetch_data (server_address, server_port, send_buffer);
 		uptime=strtoul(recv_buffer,NULL,10);
-		updays = uptime / 86400; 			
+		updays = uptime / 86400;
 		uphours = (uptime % 86400) / 3600;
 		upminutes = ((uptime % 86400) % 3600) / 60;
 		asprintf(&output_message,_("System Uptime - %u day(s) %u hour(s) %u minute(s)"),updays,uphours, upminutes);
@@ -218,13 +215,18 @@ int main(int argc, char **argv){
 		else {
 			asprintf(&send_buffer,"%s&4&%s", req_password, value_list);
 			fetch_data (server_address, server_port, send_buffer);
-			free_disk_space=atof(strtok(recv_buffer,"&"));
-			total_disk_space=atof(strtok(NULL,"&"));
-			percent_used_space = ((total_disk_space - free_disk_space) / total_disk_space) * 100;
-			warning_used_space = ((float)warning_value / 100) * total_disk_space;
-			critical_used_space = ((float)critical_value / 100) * total_disk_space;
+			fds=strtok(recv_buffer,"&");
+			tds=strtok(NULL,"&");
+			if(fds!=NULL)
+				free_disk_space=atof(fds);
+			if(tds!=NULL)
+				total_disk_space=atof(tds);
 
-			if (free_disk_space>=0) {
+			if (total_disk_space>0 && free_disk_space>=0) {
+				percent_used_space = ((total_disk_space - free_disk_space) / total_disk_space) * 100;
+				warning_used_space = ((float)warning_value / 100) * total_disk_space;
+				critical_used_space = ((float)critical_value / 100) * total_disk_space;
+
 				asprintf(&temp_string,_("%s:\\ - total: %.2f Gb - used: %.2f Gb (%.0f%%) - free %.2f Gb (%.0f%%)"),
 				  value_list, total_disk_space / 1073741824, (total_disk_space - free_disk_space) / 1073741824,
 				  percent_used_space, free_disk_space / 1073741824, (free_disk_space / total_disk_space)*100);
@@ -235,14 +237,14 @@ int main(int argc, char **argv){
 				if(check_critical_value==TRUE && percent_used_space >= critical_value)
 					return_code=STATE_CRITICAL;
 				else if (check_warning_value==TRUE && percent_used_space >= warning_value)
-					return_code=STATE_WARNING;	
+					return_code=STATE_WARNING;
 				else
-					return_code=STATE_OK;	
+					return_code=STATE_OK;
 
 				output_message = strdup (temp_string);
 				perfdata = temp_string_perf;
 			} else {
-				output_message = strdup (_("Free disk space : Invalid drive "));
+				output_message = strdup (_("Free disk space : Invalid drive"));
 				return_code=STATE_UNKNOWN;
 			}
 		}
@@ -265,7 +267,7 @@ int main(int argc, char **argv){
 		break;
 
 	case CHECK_MEMUSE:
-		
+
 		asprintf(&send_buffer,"%s&7", req_password);
 		fetch_data (server_address, server_port, send_buffer);
 		mem_commitLimit=atof(strtok(recv_buffer,"&"));
@@ -274,130 +276,129 @@ int main(int argc, char **argv){
 		warning_used_space = ((float)warning_value / 100) * mem_commitLimit;
 		critical_used_space = ((float)critical_value / 100) * mem_commitLimit;
 
-		/* Divisor should be 1048567, not 3044515, as we are measuring "Commit Charge" here, 
+		/* Divisor should be 1048567, not 3044515, as we are measuring "Commit Charge" here,
 		which equals RAM + Pagefiles. */
-		asprintf(&output_message,_("Memory usage: total:%.2f Mb - used: %.2f Mb (%.0f%%) - free: %.2f Mb (%.0f%%)"), 
-		  mem_commitLimit / 1048567, mem_commitByte / 1048567, percent_used_space,  
+		asprintf(&output_message,_("Memory usage: total:%.2f Mb - used: %.2f Mb (%.0f%%) - free: %.2f Mb (%.0f%%)"),
+		  mem_commitLimit / 1048567, mem_commitByte / 1048567, percent_used_space,
 		  (mem_commitLimit - mem_commitByte) / 1048567, (mem_commitLimit - mem_commitByte) / mem_commitLimit * 100);
 		asprintf(&perfdata,_("'Memory usage'=%.2fMb;%.2f;%.2f;0.00;%.2f"), mem_commitByte / 1048567,
 		  warning_used_space / 1048567, critical_used_space / 1048567, mem_commitLimit / 1048567);
-	
+
 		return_code=STATE_OK;
 		if(check_critical_value==TRUE && percent_used_space >= critical_value)
 			return_code=STATE_CRITICAL;
 		else if (check_warning_value==TRUE && percent_used_space >= warning_value)
-			return_code=STATE_WARNING;	
+			return_code=STATE_WARNING;
 
 		break;
 
 	case CHECK_COUNTER:
 
 
-		/* 
+		/*
 		CHECK_COUNTER has been modified to provide extensive perfdata information.
-       	 	In order to do this, some modifications have been done to the code
-       		and some constraints have been introduced.
-       		
-       		1) For the sake of simplicity of the code, perfdata information will only be 
-       		 provided when the "description" field is added. 
-       		
-       		2) If the counter you're going to measure is percent-based, the code will detect
-       		 the percent sign in its name and will attribute minimum (0%) and maximum (100%) 
-       		 values automagically, as well the ¨%" sign to graph units.
+		In order to do this, some modifications have been done to the code
+		and some constraints have been introduced.
 
-       		3) OTOH, if the counter is "absolute", you'll have to provide the following
-       		 the counter unit - that is, the dimensions of the counter you're getting. Examples:
-       		 pages/s, packets transferred, etc.
+		1) For the sake of simplicity of the code, perfdata information will only be
+		 provided when the "description" field is added.
 
-       		4) If you want, you may provide the minimum and maximum values to expect. They aren't mandatory,
-       		 but once specified they MUST have the same order of magnitude and units of -w and -c; otherwise.
-       		 strange things will happen when you make graphs of your data.
+		2) If the counter you're going to measure is percent-based, the code will detect
+		 the percent sign in its name and will attribute minimum (0%) and maximum (100%)
+		 values automagically, as well the ¨%" sign to graph units.
+
+		3) OTOH, if the counter is "absolute", you'll have to provide the following
+		 the counter unit - that is, the dimensions of the counter you're getting. Examples:
+		 pages/s, packets transferred, etc.
+
+		4) If you want, you may provide the minimum and maximum values to expect. They aren't mandatory,
+		 but once specified they MUST have the same order of magnitude and units of -w and -c; otherwise.
+		 strange things will happen when you make graphs of your data.
 		*/
 
-      		if (value_list == NULL)
+		if (value_list == NULL)
 			output_message = strdup (_("No counter specified"));
-      		else
+		else
 		{
-	  		preparelist (value_list);	/* replace , between services with & to send the request */
-	  		isPercent = (strchr (value_list, '%') != NULL);
+			preparelist (value_list);	/* replace , between services with & to send the request */
+			isPercent = (strchr (value_list, '%') != NULL);
 
-	  		strtok (value_list, "&");	/* burn the first parameters */
-	  		description = strtok (NULL, "&");
-	  		counter_unit = strtok (NULL, "&");
-	  		asprintf (&send_buffer, "%s&8&%s", req_password, value_list);
-	  		fetch_data (server_address, server_port, send_buffer);
-	  		counter_value = atof (recv_buffer);
+			strtok (value_list, "&");	/* burn the first parameters */
+			description = strtok (NULL, "&");
+			counter_unit = strtok (NULL, "&");
+			asprintf (&send_buffer, "%s&8&%s", req_password, value_list);
+			fetch_data (server_address, server_port, send_buffer);
+			counter_value = atof (recv_buffer);
 
+			if (description == NULL)
+			asprintf (&output_message, "%.f", counter_value);
+			else if (isPercent)
+			{
+				counter_unit = strdup ("%");
+				allRight = TRUE;
+			}
 
-	  		if (description == NULL)
-	    		asprintf (&output_message, "%.f", counter_value);
-	  		else if (isPercent)
-	    		     {	
-	      			counter_unit = strdup ("%");
-	      			allRight = TRUE;
-	    		     }
+			if ((counter_unit != NULL) && (!allRight))
+			{
+				minval = strtok (NULL, "&");
+				maxval = strtok (NULL, "&");
 
-	  		if ((counter_unit != NULL) && (!allRight))
-	    		{	
-	      			minval = strtok (NULL, "&");
-	      			maxval = strtok (NULL, "&");
+				/* All parameters specified. Let's check the numbers */
 
-	      			/* All parameters specified. Let's check the numbers */
+				fminval = (minval != NULL) ? strtod (minval, &errcvt) : -1;
+				fmaxval = (minval != NULL) ? strtod (maxval, &errcvt) : -1;
 
-	      			fminval = (minval != NULL) ? strtod (minval, &errcvt) : -1;
-	      			fmaxval = (minval != NULL) ? strtod (maxval, &errcvt) : -1;
-
-	      			if ((fminval == 0) && (minval == errcvt))
+				if ((fminval == 0) && (minval == errcvt))
 					output_message = strdup (_("Minimum value contains non-numbers"));
-			        else
+				else
 				{
-		  			if ((fmaxval == 0) && (maxval == errcvt))
-		  	  			output_message = strdup (_("Maximum value contains non-numbers"));
-		  			else
-		    				allRight = TRUE;	/* Everything is OK. */
+					if ((fmaxval == 0) && (maxval == errcvt))
+						output_message = strdup (_("Maximum value contains non-numbers"));
+					else
+						allRight = TRUE;	/* Everything is OK. */
 
 				}
-	    		}
-	  		else if ((counter_unit == NULL) && (description != NULL))
-	    			output_message = strdup (_("No unit counter specified"));
+			}
+			else if ((counter_unit == NULL) && (description != NULL))
+				output_message = strdup (_("No unit counter specified"));
 
-	  		if (allRight)
-	    		{
-	      			/* Let's format the output string, finally... */
+			if (allRight)
+			{
+				/* Let's format the output string, finally... */
 					if (strstr(description, "%") == NULL) {
-						asprintf (&output_message, "%s = %.2f %s", 											description, counter_value, counter_unit);
+						asprintf (&output_message, "%s = %.2f %s", description, counter_value, counter_unit);
 					} else {
 						/* has formatting, will segv if wrong */
-	      				asprintf (&output_message, description, counter_value);
+						asprintf (&output_message, description, counter_value);
 					}
 					asprintf (&output_message, "%s |", output_message);
-	      			asprintf (&output_message,"%s %s", output_message, 
-						fperfdata (description, counter_value, 
+					asprintf (&output_message,"%s %s", output_message,
+						fperfdata (description, counter_value,
 							counter_unit, 1, warning_value, 1, critical_value,
-				   			(!(isPercent) && (minval != NULL)), fminval,
-				   			(!(isPercent) && (minval != NULL)), fmaxval));
-	    		}
+							(!(isPercent) && (minval != NULL)), fminval,
+							(!(isPercent) && (minval != NULL)), fmaxval));
+			}
 		}
 
-      		if (critical_value > warning_value)
+		if (critical_value > warning_value)
 		{			/* Normal thresholds */
-	  		if (check_critical_value == TRUE && counter_value >= critical_value)
-	    		     return_code = STATE_CRITICAL;
-	  		else if (check_warning_value == TRUE && counter_value >= warning_value)
-	    			return_code = STATE_WARNING;
-	  		     else
-	    			return_code = STATE_OK;
+			if (check_critical_value == TRUE && counter_value >= critical_value)
+				return_code = STATE_CRITICAL;
+			else if (check_warning_value == TRUE && counter_value >= warning_value)
+				return_code = STATE_WARNING;
+			else
+				return_code = STATE_OK;
 		}
-      		else
+		else
 		{			/* inverse thresholds */
-	  		return_code = STATE_OK;
-	  		if (check_critical_value == TRUE && counter_value <= critical_value)
-	    		     return_code = STATE_CRITICAL;
-	  		else if (check_warning_value == TRUE && counter_value <= warning_value)
-				    return_code = STATE_WARNING;
+			return_code = STATE_OK;
+			if (check_critical_value == TRUE && counter_value <= critical_value)
+				return_code = STATE_CRITICAL;
+			else if (check_warning_value == TRUE && counter_value <= warning_value)
+				return_code = STATE_WARNING;
 		}
-        break;
-		
+	break;
+
 	case CHECK_FILEAGE:
 
 		if (value_list==NULL)
@@ -409,27 +410,27 @@ int main(int argc, char **argv){
 			age_in_minutes = atoi(strtok(recv_buffer,"&"));
 			description = strtok(NULL,"&");
 			output_message = strdup (description);
-	
+
 			if (critical_value > warning_value) {        /* Normal thresholds */
 				if(check_critical_value==TRUE && age_in_minutes >= critical_value)
 					return_code=STATE_CRITICAL;
 				else if (check_warning_value==TRUE && age_in_minutes >= warning_value)
-					return_code=STATE_WARNING;	
+					return_code=STATE_WARNING;
 				else
-					return_code=STATE_OK;	
+					return_code=STATE_OK;
 			}
 			else {                                       /* inverse thresholds */
 				if(check_critical_value==TRUE && age_in_minutes <= critical_value)
 					return_code=STATE_CRITICAL;
 				else if (check_warning_value==TRUE && age_in_minutes <= warning_value)
-					return_code=STATE_WARNING;	
+					return_code=STATE_WARNING;
 				else
-					return_code=STATE_OK;	
+					return_code=STATE_OK;
 			}
 		}
 		break;
 
-	case CHECK_INSTANCES:		
+	case CHECK_INSTANCES:
 		if (value_list==NULL)
 			output_message = strdup (_("No counter specified"));
 		else {
@@ -439,7 +440,7 @@ int main(int argc, char **argv){
 				printf("NSClient - %s\n",recv_buffer);
 				exit(STATE_UNKNOWN);
 			}
-			asprintf(&output_message,"%s",recv_buffer);			
+			asprintf(&output_message,"%s",recv_buffer);
 			return_code=STATE_OK;
 		}
 		break;
@@ -469,13 +470,17 @@ int process_arguments(int argc, char **argv){
 
 	int option = 0;
 	static struct option longopts[] =
-	{ 
+	{
 		{"port",     required_argument,0,'p'},
 		{"timeout",  required_argument,0,'t'},
 		{"critical", required_argument,0,'c'},
 		{"warning",  required_argument,0,'w'},
 		{"variable", required_argument,0,'v'},
 		{"hostname", required_argument,0,'H'},
+		{"params",   required_argument,0,'l'},
+		{"secret",   required_argument,0,'s'},
+		{"display",  required_argument,0,'d'},
+		{"unknown-timeout", no_argument, 0, 'u'},
 		{"version",  no_argument,      0,'V'},
 		{"help",     no_argument,      0,'h'},
 		{0,0,0,0}
@@ -492,17 +497,17 @@ int process_arguments(int argc, char **argv){
 		argc--;
 	}
 
-  for (c=1;c<argc;c++) {
-    if(strcmp("-to",argv[c])==0)
-      strcpy(argv[c],"-t");
-    else if (strcmp("-wv",argv[c])==0)
-      strcpy(argv[c],"-w");
-    else if (strcmp("-cv",argv[c])==0)
-      strcpy(argv[c],"-c");
+	for (c=1;c<argc;c++) {
+		if(strcmp("-to",argv[c])==0)
+			strcpy(argv[c],"-t");
+		else if (strcmp("-wv",argv[c])==0)
+			strcpy(argv[c],"-w");
+		else if (strcmp("-cv",argv[c])==0)
+			strcpy(argv[c],"-c");
 	}
 
 	while (1) {
-		c = getopt_long(argc,argv,"+hVH:t:c:w:p:v:l:s:d:",longopts,&option);
+		c = getopt_long(argc,argv,"+hVH:t:c:w:p:v:l:s:d:u",longopts,&option);
 
 		if (c==-1||c==EOF||c==1)
 			break;
@@ -514,10 +519,9 @@ int process_arguments(int argc, char **argv){
 				print_help();
 				exit(STATE_OK);
 			case 'V': /* version */
-				print_revision(progname,revision);
+				print_revision(progname, NP_VERSION);
 				exit(STATE_OK);
 			case 'H': /* hostname */
-				if (server_address)	free(server_address);
 				server_address = optarg;
 				break;
 			case 's': /* password */
@@ -570,6 +574,9 @@ int process_arguments(int argc, char **argv){
 				if (!strcmp(optarg,"SHOWALL"))
 					show_all = TRUE;
 				break;
+			case 'u':
+				socket_timeout_state=STATE_UNKNOWN;
+				break;
 			case 't': /* timeout */
 				socket_timeout=atoi(optarg);
 				if(socket_timeout<=0)
@@ -577,6 +584,8 @@ int process_arguments(int argc, char **argv){
 			}
 
 	}
+	if (server_address == NULL)
+		usage4 (_("You must provide a server address or host name"));
 
 	if (vars_to_check==CHECK_NONE)
 		return ERROR;
@@ -596,7 +605,7 @@ void fetch_data (const char *address, int port, const char *sendb) {
 
 	if(result!=STATE_OK)
 		die (result, _("could not fetch information from server\n"));
-		
+
 	if (!strncmp(recv_buffer,"ERROR",5))
 		die (STATE_UNKNOWN, "NSClient - %s\n",recv_buffer);
 }
@@ -608,15 +617,15 @@ int strtoularray(unsigned long *array, char *string, const char *delim) {
 
 	for (idx=0;idx<MAX_VALUE_LIST;idx++)
 		array[idx]=0;
-	
+
 	idx=0;
 	for(t1 = strtok(string,delim);t1 != NULL; t1 = strtok(NULL, delim)) {
 		if (is_numeric(t1) && idx<MAX_VALUE_LIST) {
 			array[idx]=strtoul(t1,NULL,10);
 			idx++;
-		} else  
+		} else
 			return FALSE;
-	}		
+	}
 	return TRUE;
 }
 
@@ -634,117 +643,124 @@ void preparelist(char *string) {
 
 void print_help(void)
 {
-	print_revision(progname,revision);
-	
+	print_revision(progname, NP_VERSION);
+
 	printf ("Copyright (c) 2000 Yves Rubin (rubiyz@yahoo.com)\n");
 	printf (COPYRIGHT, copyright, email);
-	
-	printf ("%s\n", _("This plugin collects data from the NSClient service running on a"));
-  printf ("%s\n", _("Windows NT/2000/XP/2003 server."));
 
-  printf ("\n\n");
+	printf ("%s\n", _("This plugin collects data from the NSClient service running on a"));
+	printf ("%s\n", _("Windows NT/2000/XP/2003 server."));
+
+	printf ("\n\n");
 
 	print_usage();
-	
-  printf (_(UT_HELP_VRSN));
-  printf (_(UT_EXTRA_OPTS));
 
-  printf ("%s\n", _("Options:"));
-  printf (" %s\n", "-H, --hostname=HOST");
-  printf ("   %s\n", _("Name of the host to check"));
-  printf (" %s\n", "-p, --port=INTEGER");
-  printf ("   %s", _("Optional port number (default: "));
-  printf ("%d)\n", PORT);
-  printf (" %s\n", "-s <password>");
-  printf ("   %s\n", _("Password needed for the request"));
-  printf (" %s\n", "-w, --warning=INTEGER");
-  printf ("   %s\n", _("Threshold which will result in a warning status"));
-  printf (" %s\n", "-c, --critical=INTEGER");
-  printf ("   %s\n", _("Threshold which will result in a critical status"));
-  printf (" %s\n", "-t, --timeout=INTEGER");
-  printf ("   %s", _("Seconds before connection attempt times out (default: "));
-  printf ("%d)\n", DEFAULT_SOCKET_TIMEOUT);
-  printf (" %s\n", "-h, --help");
-  printf ("   %s\n", _("Print this help screen"));
-  printf (" %s\n", "-V, --version");
-  printf ("   %s\n", _("Print version information"));
-  printf (" %s\n", "-v, --variable=STRING");
-  printf ("   %s\n\n", _("Variable to check"));
-  printf ("%s\n", _("Valid variables are:"));
-  printf (" %s", "CLIENTVERSION =");
-  printf (" %s\n", _("Get the NSClient version"));
-  printf ("  %s\n", _("If -l <version> is specified, will return warning if versions differ."));
-  printf (" %s\n", "CPULOAD =");
-  printf ("  %s\n", _("Average CPU load on last x minutes."));
-  printf ("  %s\n", _("Request a -l parameter with the following syntax:"));
-  printf ("  %s\n", _("-l <minutes range>,<warning threshold>,<critical threshold>."));
-  printf ("  %s\n", _("<minute range> should be less than 24*60."));
-  printf ("  %s\n", _("Thresholds are percentage and up to 10 requests can be done in one shot."));
-  printf ("  %s\n", "ie: -l 60,90,95,120,90,95");
-  printf (" %s\n", "UPTIME =");
-  printf ("  %s\n", _("Get the uptime of the machine."));
-  printf ("  %s\n", _("No specific parameters. No warning or critical threshold"));
-  printf (" %s\n", "USEDDISKSPACE =");
-  printf ("  %s\n", _("Size and percentage of disk use."));
-  printf ("  %s\n", _("Request a -l parameter containing the drive letter only."));
-  printf ("  %s\n", _("Warning and critical thresholds can be specified with -w and -c."));
-  printf (" %s\n", "MEMUSE =");
-  printf ("  %s\n", _("Memory use."));
-  printf ("  %s\n", _("Warning and critical thresholds can be specified with -w and -c."));
-  printf (" %s\n", "SERVICESTATE =");
-  printf ("  %s\n", _("Check the state of one or several services."));
-  printf ("  %s\n", _("Request a -l parameters with the following syntax:"));
-  printf ("  %s\n", _("-l <service1>,<service2>,<service3>,..."));
-  printf ("  %s\n", _("You can specify -d SHOWALL in case you want to see working services"));
-  printf ("  %s\n", _("in the returned string."));
-  printf (" %s\n", "PROCSTATE =");
-  printf ("  %s\n", _("Check if one or several process are running."));
-  printf ("  %s\n", _("Same syntax as SERVICESTATE."));
-  printf (" %s\n", "COUNTER =");
-  printf ("  %s\n", _("Check any performance counter of Windows NT/2000."));
-  printf ("  %s\n", _("Request a -l parameters with the following syntax:"));
-  printf ("  %s\n", _("-l \"\\\\<performance object>\\\\counter\",\"<description>"));
-  printf ("  %s\n", _("The <description> parameter is optional and is given to a printf "));
-  printf ("  %s\n", _("output command which requires a float parameter."));
-  printf ("  %s\n", _("If <description> does not include \"%%\", it is used as a label."));
-  printf ("  %s\n", _("Some examples:"));
-  printf ("  %s\n", "\"Paging file usage is %%.2f %%%%\"");
-  printf ("  %s\n", "\"%%.f %%%% paging file used.\"");
-  printf (" %s\n", "INSTANCES =");  
-  printf ("  %s\n", _("Check any performance counter object of Windows NT/2000."));
-  printf ("  %s\n", _("Syntax: check_nt -H <hostname> -p <port> -v INSTANCES -l <counter object>"));
-  printf ("  %s\n", _("<counter object> is a Windows Perfmon Counter object (eg. Process),"));
-  printf ("  %s\n", _("if it is two words, it should be enclosed in quotes"));
-  printf ("  %s\n", _("The returned results will be a comma-separated list of instances on "));
-  printf ("  %s\n", _(" the selected computer for that object."));
-  printf ("  %s\n", _("The purpose of this is to be run from command line to determine what instances"));
-  printf ("  %s\n", _(" are available for monitoring without having to log onto the Windows server"));
-  printf ("  %s\n", _("  to run Perfmon directly."));
-  printf ("  %s\n", _("It can also be used in scripts that automatically create Nagios service"));
-  printf ("  %s\n", _(" configuration files."));
-  printf ("  %s\n", _("Some examples:"));
-  printf ("  %s\n\n", _("check_nt -H 192.168.1.1 -p 1248 -v INSTANCES -l Process"));
+	printf (_(UT_HELP_VRSN));
+	printf (_(UT_EXTRA_OPTS));
 
-  printf ("%s\n", _("Notes:"));
-  printf (" %s\n", _("- The NSClient service should be running on the server to get any information"));
-  printf ("   %s\n", "(http://nsclient.ready2run.nl).");
-  printf (" %s\n", _("- Critical thresholds should be lower than warning thresholds"));
-  printf (" %s\n", _("- Default port 1248 is sometimes in use by other services. The error"));
-  printf ("   %s\n", _("output when this happens contains \"Cannot map xxxxx to protocol number\"."));
-  printf ("   %s\n", _("One fix for this is to change the port to something else on check_nt "));
-  printf ("   %s\n", _("and on the client service it\'s connecting to."));
+	printf ("%s\n", _("Options:"));
+	printf (" %s\n", "-H, --hostname=HOST");
+	printf ("   %s\n", _("Name of the host to check"));
+	printf (" %s\n", "-p, --port=INTEGER");
+	printf ("   %s", _("Optional port number (default: "));
+	printf ("%d)\n", PORT);
+	printf (" %s\n", "-s, --secret=<password>");
+	printf ("   %s\n", _("Password needed for the request"));
+	printf (" %s\n", "-w, --warning=INTEGER");
+	printf ("   %s\n", _("Threshold which will result in a warning status"));
+	printf (" %s\n", "-c, --critical=INTEGER");
+	printf ("   %s\n", _("Threshold which will result in a critical status"));
+	printf (" %s\n", "-t, --timeout=INTEGER");
+	printf ("   %s", _("Seconds before connection attempt times out (default: "));
+	printf (" %s\n", "-l, --params=<parameters>");
+	printf ("   %s", _("Parameters passed to specified check (see below)"));
+	printf (" %s\n", "-d, --display={SHOWALL}");
+	printf ("   %s", _("Display options (currently only SHOWALL works)"));
+	printf (" %s\n", "-u, --unknown-timeout");
+	printf ("   %s", _("Return UNKNOWN on timeouts"));
+	printf ("%d)\n", DEFAULT_SOCKET_TIMEOUT);
+	printf (" %s\n", "-h, --help");
+	printf ("   %s\n", _("Print this help screen"));
+	printf (" %s\n", "-V, --version");
+	printf ("   %s\n", _("Print version information"));
+	printf (" %s\n", "-v, --variable=STRING");
+	printf ("   %s\n\n", _("Variable to check"));
+	printf ("%s\n", _("Valid variables are:"));
+	printf (" %s", "CLIENTVERSION =");
+	printf (" %s\n", _("Get the NSClient version"));
+	printf ("  %s\n", _("If -l <version> is specified, will return warning if versions differ."));
+	printf (" %s\n", "CPULOAD =");
+	printf ("  %s\n", _("Average CPU load on last x minutes."));
+	printf ("  %s\n", _("Request a -l parameter with the following syntax:"));
+	printf ("  %s\n", _("-l <minutes range>,<warning threshold>,<critical threshold>."));
+	printf ("  %s\n", _("<minute range> should be less than 24*60."));
+	printf ("  %s\n", _("Thresholds are percentage and up to 10 requests can be done in one shot."));
+	printf ("  %s\n", "ie: -l 60,90,95,120,90,95");
+	printf (" %s\n", "UPTIME =");
+	printf ("  %s\n", _("Get the uptime of the machine."));
+	printf ("  %s\n", _("No specific parameters. No warning or critical threshold"));
+	printf (" %s\n", "USEDDISKSPACE =");
+	printf ("  %s\n", _("Size and percentage of disk use."));
+	printf ("  %s\n", _("Request a -l parameter containing the drive letter only."));
+	printf ("  %s\n", _("Warning and critical thresholds can be specified with -w and -c."));
+	printf (" %s\n", "MEMUSE =");
+	printf ("  %s\n", _("Memory use."));
+	printf ("  %s\n", _("Warning and critical thresholds can be specified with -w and -c."));
+	printf (" %s\n", "SERVICESTATE =");
+	printf ("  %s\n", _("Check the state of one or several services."));
+	printf ("  %s\n", _("Request a -l parameters with the following syntax:"));
+	printf ("  %s\n", _("-l <service1>,<service2>,<service3>,..."));
+	printf ("  %s\n", _("You can specify -d SHOWALL in case you want to see working services"));
+	printf ("  %s\n", _("in the returned string."));
+	printf (" %s\n", "PROCSTATE =");
+	printf ("  %s\n", _("Check if one or several process are running."));
+	printf ("  %s\n", _("Same syntax as SERVICESTATE."));
+	printf (" %s\n", "COUNTER =");
+	printf ("  %s\n", _("Check any performance counter of Windows NT/2000."));
+	printf ("	%s\n", _("Request a -l parameters with the following syntax:"));
+	printf ("	%s\n", _("-l \"\\\\<performance object>\\\\counter\",\"<description>"));
+	printf ("	%s\n", _("The <description> parameter is optional and is given to a printf "));
+	printf ("  %s\n", _("output command which requires a float parameter."));
+	printf ("  %s\n", _("If <description> does not include \"%%\", it is used as a label."));
+	printf ("  %s\n", _("Some examples:"));
+	printf ("  %s\n", "\"Paging file usage is %%.2f %%%%\"");
+	printf ("  %s\n", "\"%%.f %%%% paging file used.\"");
+	printf (" %s\n", "INSTANCES =");
+	printf ("  %s\n", _("Check any performance counter object of Windows NT/2000."));
+	printf ("  %s\n", _("Syntax: check_nt -H <hostname> -p <port> -v INSTANCES -l <counter object>"));
+	printf ("  %s\n", _("<counter object> is a Windows Perfmon Counter object (eg. Process),"));
+	printf ("  %s\n", _("if it is two words, it should be enclosed in quotes"));
+	printf ("  %s\n", _("The returned results will be a comma-separated list of instances on "));
+	printf ("  %s\n", _(" the selected computer for that object."));
+	printf ("  %s\n", _("The purpose of this is to be run from command line to determine what instances"));
+	printf ("  %s\n", _(" are available for monitoring without having to log onto the Windows server"));
+	printf ("  %s\n", _("  to run Perfmon directly."));
+	printf ("  %s\n", _("It can also be used in scripts that automatically create Nagios service"));
+	printf ("  %s\n", _(" configuration files."));
+	printf ("  %s\n", _("Some examples:"));
+	printf ("  %s\n\n", _("check_nt -H 192.168.1.1 -p 1248 -v INSTANCES -l Process"));
+
+	printf ("%s\n", _("Notes:"));
+	printf (" %s\n", _("- The NSClient service should be running on the server to get any information"));
+	printf ("   %s\n", "(http://nsclient.ready2run.nl).");
+	printf (" %s\n", _("- Critical thresholds should be lower than warning thresholds"));
+	printf (" %s\n", _("- Default port 1248 is sometimes in use by other services. The error"));
+	printf ("   %s\n", _("output when this happens contains \"Cannot map xxxxx to protocol number\"."));
+	printf ("   %s\n", _("One fix for this is to change the port to something else on check_nt "));
+	printf ("   %s\n", _("and on the client service it\'s connecting to."));
 #ifdef NP_EXTRA_OPTS
-  printf (" -%s", _(UT_EXTRA_OPTS_NOTES));
+	printf (" -%s", _(UT_EXTRA_OPTS_NOTES));
 #endif
 
-  printf (_(UT_SUPPORT));
+	printf (_(UT_SUPPORT));
 }
 
 
 
 void print_usage(void)
 {
-  printf (_("Usage:"));
-	printf ("%s -H host -v variable [-p port] [-w warning] [-c critical]",progname);
-  printf ("[-l params] [-d SHOWALL] [-t timeout]\n");
+	printf (_("Usage:"));
+	printf ("%s -H host -v variable [-p port] [-w warning] [-c critical]\n",progname);
+	printf ("[-l params] [-d SHOWALL] [-u] [-t timeout]\n");
 }
+

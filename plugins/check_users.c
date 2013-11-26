@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_users plugin
@@ -29,12 +27,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_users.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_users";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -108,9 +104,9 @@ main (int argc, char **argv)
 		result = possibly_set (result, STATE_UNKNOWN);
 
 	/* else check the user count against warning and critical thresholds */
-	if (users >= cusers)
+	if (users > cusers)
 		result = STATE_CRITICAL;
-	else if (users >= wusers)
+	else if (users > wusers)
 		result = STATE_WARNING;
 	else if (users >= 0)
 		result = STATE_OK;
@@ -163,7 +159,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'c':									/* critical */
 			if (!is_intnonneg (optarg))
@@ -203,7 +199,7 @@ process_arguments (int argc, char **argv)
 void
 print_help (void)
 {
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Ethan Galstad\n");
 	printf (COPYRIGHT, copyright, email);

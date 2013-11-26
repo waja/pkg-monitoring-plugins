@@ -6,9 +6,6 @@
 * Copyright (c) 2000-2004 Ethan Galstad (nagios@nagios.org)
 * Copyright (c) 2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
-* 
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -22,12 +19,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_cluster.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_cluster";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -124,7 +119,7 @@ int main(int argc, char **argv){
 		        }
 	        }
         }
-	
+
 
 	/* return the status of the cluster */
 	if(check_type==CHECK_SERVICES){
@@ -149,7 +144,7 @@ int main(int argc, char **argv){
 int process_arguments(int argc, char **argv){
 	int c;
 	int option=0;
-	static struct option longopts[]={ 
+	static struct option longopts[]={
 		{"data",     required_argument,0,'d'},
 		{"warning",  required_argument,0,'w'},
 		{"critical", required_argument,0,'c'},
@@ -204,7 +199,7 @@ int process_arguments(int argc, char **argv){
 			break;
 
 		case 'V': /* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 			break;
 
@@ -228,7 +223,7 @@ int process_arguments(int argc, char **argv){
 void
 print_help(void)
 {
-	print_revision(progname, revision);
+	print_revision(progname, NP_VERSION);
 	printf ("Copyright (c) 2000-2004 Ethan Galstad (nagios@nagios.org)\n");
 	printf(COPYRIGHT, copyright, email);
 

@@ -6,8 +6,6 @@
 * Copyright (c) 2006 Sean Finney <seanius@seanius.net>
 * Copyright (c) 2006-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_ntp_peer plugin
@@ -34,12 +32,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_ntp_peer.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_ntp_peer";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2006-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -48,6 +44,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include "utils.h"
 
 static char *server_address=NULL;
+static int port=123;
 static int verbose=0;
 static int quiet=0;
 static short do_offset=0;
@@ -130,7 +127,7 @@ typedef struct {
 /* NTP control message header is 12 bytes, plus any data in the data
  * field, plus null padding to the nearest 32-bit boundary per rfc.
  */
-#define SIZEOF_NTPCM(m) (12+ntohs(m.count)+((m.count)?4-(ntohs(m.count)%4):0))
+#define SIZEOF_NTPCM(m) (12+ntohs(m.count)+((ntohs(m.count)%4)?4-(ntohs(m.count)%4):0))
 
 /* finally, a little helper or two for debugging: */
 #define DBG(x) do{if(verbose>1){ x; }}while(0);
@@ -161,7 +158,7 @@ void print_ntp_control_message(const ntp_control_message *p){
 	if(p->op&REM_RESP && p->op&OP_READSTAT){
 		peer=(ntp_assoc_status_pair*)p->data;
 		for(i=0;i<numpeers;i++){
-			printf("\tpeer id %.2x status %.2x", 
+			printf("\tpeer id %.2x status %.2x",
 			       ntohs(peer[i].assoc), ntohs(peer[i].status));
 			if (PEER_SEL(peer[i].status) >= PEER_INCLUDED){
 				if(PEER_SEL(peer[i].status) >= PEER_SYNCSOURCE){
@@ -173,27 +170,6 @@ void print_ntp_control_message(const ntp_control_message *p){
 			printf("\n");
 		}
 	}
-}
-
-char *extract_value(const char *varlist, const char *name){
-	char *tmpvarlist=NULL, *tmpkey=NULL, *value=NULL;
-	int last=0;
-
-	/* The following code require a non-empty varlist */
-	if(strlen(varlist) == 0)
-		return NULL;
-
-	tmpvarlist = strdup(varlist);
-	tmpkey = strtok(tmpvarlist, "=");
-
-	do {
-		if(strstr(tmpkey, name) != NULL) {
-		value = strtok(NULL, ",");
-			last = 1;
-		}
-	} while (last == 0 && (tmpkey = strtok(NULL, "=")));
-
-	return value;
 }
 
 void
@@ -250,7 +226,7 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 	 * 4) Extract the offset, jitter and stratum value from the data[]
 	 *    (it's ASCII)
 	 */
-	my_udp_connect(server_address, 123, &conn);
+	my_udp_connect(server_address, port, &conn);
 
 	/* keep sending requests until the server stops setting the
 	 * REM_MORE bit, though usually this is only 1 packet. */
@@ -265,6 +241,9 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 		if(read(conn, &req, SIZEOF_NTPCM(req)) == -1)
 			die(STATE_CRITICAL, "NTP CRITICAL: No response from NTP server\n");
 		DBG(print_ntp_control_message(&req));
+		/* discard obviously invalid packets */
+		if (ntohs(req.count) > MAX_CM_SIZE)
+			die(STATE_CRITICAL, "NTP CRITICAL: Invalid packet received from NTP server\n");
 		if (LI(req.flags) == LI_ALARM) li_alarm = 1;
 		/* Each peer identifier is 4 bytes in the data section, which
 	 	 * we represent as a ntp_assoc_status_pair datatype.
@@ -354,7 +333,7 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 			if(verbose)
 				printf("parsing offset from peer %.2x: ", ntohs(peers[i].assoc));
 
-			value = extract_value(data, "offset");
+			value = np_extract_ntpvar(data, "offset");
 			nptr=NULL;
 			/* Convert the value if we have one */
 			if(value != NULL)
@@ -378,7 +357,7 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 				if(verbose) {
 					printf("parsing %s from peer %.2x: ", strstr(getvar, "dispersion") != NULL ? "dispersion" : "jitter", ntohs(peers[i].assoc));
 				}
-				value = extract_value(data, strstr(getvar, "dispersion") != NULL ? "dispersion" : "jitter");
+				value = np_extract_ntpvar(data, strstr(getvar, "dispersion") != NULL ? "dispersion" : "jitter");
 				nptr=NULL;
 				/* Convert the value if we have one */
 				if(value != NULL)
@@ -397,7 +376,7 @@ int ntp_request(const char *host, double *offset, int *offset_result, double *ji
 				if(verbose) {
 					printf("parsing stratum from peer %.2x: ", ntohs(peers[i].assoc));
 				}
-				value = extract_value(data, "stratum");
+				value = np_extract_ntpvar(data, "stratum");
 				nptr=NULL;
 				/* Convert the value if we have one */
 				if(value != NULL)
@@ -436,15 +415,16 @@ int process_arguments(int argc, char **argv){
 		{"jcrit", required_argument, 0, 'k'},
 		{"timeout", required_argument, 0, 't'},
 		{"hostname", required_argument, 0, 'H'},
+		{"port", required_argument, 0, 'p'},
 		{0, 0, 0, 0}
 	};
 
-	
+
 	if (argc < 2)
 		usage ("\n");
 
 	while (1) {
-		c = getopt_long (argc, argv, "Vhv46qw:c:W:C:j:k:t:H:", longopts, &option);
+		c = getopt_long (argc, argv, "Vhv46qw:c:W:C:j:k:t:H:p:", longopts, &option);
 		if (c == -1 || c == EOF || c == 1)
 			break;
 
@@ -454,7 +434,7 @@ int process_arguments(int argc, char **argv){
 			exit(STATE_OK);
 			break;
 		case 'V':
-			print_revision(progname, revision);
+			print_revision(progname, NP_VERSION);
 			exit(STATE_OK);
 			break;
 		case 'v':
@@ -491,6 +471,9 @@ int process_arguments(int argc, char **argv){
 			if(is_host(optarg) == FALSE)
 				usage2(_("Invalid hostname/address"), optarg);
 			server_address = strdup(optarg);
+			break;
+		case 'p':
+			port=atoi(optarg);
 			break;
 		case 't':
 			socket_timeout=atoi(optarg);
@@ -630,7 +613,7 @@ int main(int argc, char *argv[]){
 
 
 void print_help(void){
-	print_revision(progname, revision);
+	print_revision(progname, NP_VERSION);
 
 	printf ("Copyright (c) 2006 Sean Finney\n");
 	printf (COPYRIGHT, copyright, email);

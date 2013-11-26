@@ -6,8 +6,6 @@
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
 * Copyright (c) 2003-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-01-31 11:27:22 +0000 (Thu, 31 Jan 2008) $
-* 
 * Description:
 * 
 * This file contains commons functions used in many of the plugins.
@@ -26,7 +24,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: netutils.c 1918 2008-01-31 11:27:22Z dermoth $
 * 
 *****************************************************************************/
 
@@ -35,7 +32,6 @@
 #include "common.h"
 #include "netutils.h"
 
-unsigned int socket_timeout = DEFAULT_SOCKET_TIMEOUT; 
 int econn_refuse_state = STATE_CRITICAL;
 int was_refused = FALSE;
 #if USE_IPV6
@@ -49,16 +45,16 @@ void
 socket_timeout_alarm_handler (int sig)
 {
 	if (sig == SIGALRM)
-		printf (_("CRITICAL - Socket timeout after %d seconds\n"), socket_timeout);
+		printf (_("%s - Socket timeout after %d seconds\n"), state_text(socket_timeout_state),  socket_timeout);
 	else
-		printf (_("CRITICAL - Abnormal timeout after %d seconds\n"), socket_timeout);
+		printf (_("%s - Abnormal timeout after %d seconds\n"), state_text(socket_timeout_state), socket_timeout);
 
-	exit (STATE_CRITICAL);
+	exit (socket_timeout_state);
 }
 
 
-/* connects to a host on a specified tcp port, sends a string, and gets a 
-	 response. loops on select-recv until timeout or eof to get all of a 
+/* connects to a host on a specified tcp port, sends a string, and gets a
+	 response. loops on select-recv until timeout or eof to get all of a
 	 multi-packet answer */
 int
 process_tcp_request2 (const char *server_address, int server_port,
@@ -106,7 +102,7 @@ process_tcp_request2 (const char *server_address, int server_port,
 		}
 		else {											/* it has */
 			recv_result =
-				recv (sd, recv_buffer + recv_length, 
+				recv (sd, recv_buffer + recv_length,
 					(size_t)recv_size - recv_length - 1, 0);
 			if (recv_result == -1) {
 				/* recv failed, bail out */
@@ -137,7 +133,7 @@ process_tcp_request2 (const char *server_address, int server_port,
 }
 
 
-/* connects to a host on a specified port, sends a string, and gets a 
+/* connects to a host on a specified port, sends a string, and gets a
    response */
 int
 process_request (const char *server_address, int server_port, int proto,
@@ -229,7 +225,7 @@ np_net_connect (const char *host_name, int port, int *sd, int proto)
 			r = r->ai_next;
 		}
 		freeaddrinfo (res);
-	} 
+	}
 	/* else the hostname is interpreted as a path to a unix socket */
 	else {
 		if(strlen(host_name) >= UNIX_PATH_MAX){
@@ -251,7 +247,7 @@ np_net_connect (const char *host_name, int port, int *sd, int proto)
 		return STATE_OK;
 	else if (was_refused) {
 		switch (econn_refuse_state) { /* a user-defined expected outcome */
-		case STATE_OK:       
+		case STATE_OK:
 		case STATE_WARNING:  /* user wants WARN or OK on refusal */
 			return econn_refuse_state;
 			break;
@@ -285,7 +281,7 @@ send_request (int sd, int proto, const char *send_buffer, char *recv_buffer, int
 		result = STATE_WARNING;
 	}
 
-	/* wait up to the number of seconds for socket timeout minus one 
+	/* wait up to the number of seconds for socket timeout minus one
 	   for data from the host */
 	tv.tv_sec = socket_timeout - 1;
 	tv.tv_usec = 0;
@@ -340,7 +336,7 @@ is_addr (const char *address)
 #ifdef USE_IPV6
 	if (address_family == AF_INET && is_inet_addr (address))
 		return TRUE;
-	else if (address_family == AF_INET6 && is_inet6_addr (address)) 
+	else if (address_family == AF_INET6 && is_inet6_addr (address))
 		return TRUE;
 #else
 	if (is_inet_addr (address))

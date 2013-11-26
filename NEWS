@@ -1,5 +1,61 @@
 This file documents the major additions and syntax changes between releases.
 
+1.4.14 ...
+	check_http has options to specify the HTTP method (#2155152)
+	check_users thresholds were not working exactly as documented (>= rather than >)
+	Updated tinderbox_build script to point to new tinderbox server
+	check_ifoperstatus -n flag now works as expected (sf.net #1569488)
+	check_ifoperstatus now supports ifType based lookup for ifIndex
+	check_ups now sends a LOGOUT string (debian bug #387001)
+	Extra-opts (C plugins) now allows both '#' and ';' for comments (like N::P)
+	Extra-opts (C plugins) does not allow trailing comments anymore (like N::P)
+	Fixed dependency issue on libtap when ./configure --enable-libtap used. Warning: will install libtap
+	Fixed segfault in extra-opts under some circumstance when reading multiple sections
+	Fix long options parsing in check_disk, check_dns, check_mrtg, check_mrtgtraf and check_tcp
+	Add missing long options for check_nt (for use with extra-opts)
+	check_icmp now reports min and max round trip time perfdata (Steve Rader)
+	Fixed check_http bug where additional headers with redirection caused a segfault (Dieter Van de Walle - 2089159)
+	check_disk: make autofs mount paths specified with -p before we determine the mount list (Erik Welch)
+	Fixed buffer overflow in check_ntp/check_ntp_peer (#1999319, Ubuntu #291265)
+	Re-bundled libtap as a built-in library (--enable-libtap): detects system library as pre-1.4.13 and does not install the built-in library anymore
+	Fixed check_mrtg returning UNKNOWN instead of OK (bug #2378068)
+	Fixed check_http behaviour: all check are now performed as long as a valid response is returned (sf.net #1460312)
+	check_http --onredirect=sticky follows using the same IP address (sf.net #2550208)
+	check_http --onredirect=stickyport also follows the same port
+	Fixed coredump from check_nt when invalid drive is specified (#2179754 - Olli Hauer)
+	Fixed crash from check_nt when -H unspecified or given multiple times (sf.net #2731755, debian #521097)
+	Fixed passing of quotes in OID for check_snmp (#1985230 - Jan Wagner, patch by John Barbuto)
+	Fixed check_http sending HTTP/1.0 with v1.1 headers (#2638765)
+	Fixed check_http not timing-out on redirects
+	Fixed negate not printing the real timeout in ALRM handler when left to default
+	negate timeout result is now configurable
+	Fixed segfault in check_mysql with old slaves (#2696823 - Oskar Ahner)
+	check_nt can return UNKNOWN on timeouts (-u)
+	Fixed typos for check_disk (Chris Pepper)
+	Fixed check_mysql* not using password set in my.cnf (#2531905 - Ben Timby) - Specify an empty password explicitly if you need to override it.
+	Fixed awk subst.in/subst script path error (#2722832 - Martin Foster)
+	check_http: Add SSL/TLS hostname extension support (SNI) - (#1939022 - Joe Presbrey)
+	Fixed wrong perfdata label for output traffic in check_mrtgtraf (#2654308 - Gavin Williams)
+	Fixed check_by_ssh interpretation of quotes in -C parameter (#1985246, #2268675)
+	check_snmp now supports standard threshold ranges and doubles (floating numbers) in thresholds
+	check_fping now supports passing target timeout and interval to fping (#2347686 - Martin Foster)
+	Fixed SNMPv3 behaviour of check_ifoperstatus and check_ifstatus. Added -P to define privprotocol (#2343438 - Robin Schroeder)
+	check_ifoperstatus and check_ifstatus are now more user-friendly in case of missing arguments
+
+1.4.13 25th Sept 2008
+	Fix Debian bug #460097: check_http --max-age broken (Hilko Bengen)
+	Optimised pst3 for systems with large number of processes (Duncan Ferguson)
+	Updated Nagios::Plugin to 0.27
+	Fix Debian bug #479013: check_dig's -l is mandatory now (sf.net #1986306)
+	check_dig now returns CRITICAL instead of WARNING when no answer section is found
+	check_procs now captures stderr in external command and adds to plugin output
+	check_snmp now only prints perfdata for non numeric values (#1867716)
+	check_icmp now supports packet size modification
+	check_http -e now accepts a comma-delimited list of expected status codes (Sven Nierlein)
+	libtap now included with this distribution for easier testing. Run ./configure with --enable-libtap
+	check_ntp_peer/check_ntp_time used to show port in --help but ignored the argument - now implemented
+	Fix possible segfault in check_ntp_peer with deliberately invalid packets
+
 1.4.12 27th May 2008
 	Added ./check_nt -v INSTANCES to count number of instances (Alessandro Ren)
 	New check_icmp -s option to specify the source IP address

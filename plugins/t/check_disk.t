@@ -2,7 +2,6 @@
 #
 # Disk Space Tests via check_disk
 #
-# $Id: check_disk.t 1786 2007-09-22 17:40:35Z psychotrahe $
 #
 
 # TODO: Add in tests for perf data. Need to beef up Nagios::Plugin::Performance to cater for max, min, etc

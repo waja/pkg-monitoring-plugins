@@ -2,7 +2,6 @@
 #
 # TCP Connection Based Tests via check_tcp
 #
-# $Id: check_tcp.t 1901 2008-01-08 11:57:24Z tonvoon $
 #
 
 use strict;

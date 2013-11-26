@@ -37,7 +37,7 @@
  *****************************************************************************/
 
 const char *progname = "check_http";
-#define REVISION "$Revision: 1117 $"
+#define REVISION "$Revision: 2091 $"
 #define CVSREVISION "1.24"
 #define COPYRIGHT "2003"
 #define AUTHORS "Fabian Pehla"

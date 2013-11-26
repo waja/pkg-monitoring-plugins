@@ -2,7 +2,6 @@
 #
 # Simple Mail Transfer Protocol (SMTP) Test via check_smtp
 #
-# $Id: check_smtp.t 1500 2006-10-19 11:56:34Z tonvoon $
 #
 
 use strict;

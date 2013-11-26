@@ -2,7 +2,6 @@
 #
 # HyperText Transfer Protocol (HTTP) Test via check_http
 #
-# $Id: check_http.t 1669 2007-04-01 14:21:09Z psychotrahe $
 #
 
 use strict;
@@ -35,7 +34,7 @@ my $host_tcp_http2;
 if ($internet_access eq "no") {
     $host_tcp_http2     = getTestParameter( "NP_HOST_TCP_HTTP2", 
             "A host providing an index page containing the string 'nagios'", 
-            "altinity.com" );
+            "www.nagios.com" );
 }
 
 
@@ -74,7 +73,7 @@ SKIP: {
         skip "No internet access and no host serving nagios in index file",
               7 if $internet_access eq "no" && ! $host_tcp_http2;
 
-        $host_tcp_http2 = "altinity.com" if (! $host_tcp_http2);
+        $host_tcp_http2 = "www.nagios.com" if (! $host_tcp_http2);
 
         $res = NPTest->testCmd( "./check_http -H $host_tcp_http2 -r 'nagios'" );
         cmp_ok( $res->return_code, "==", 0, "Got a reference to 'nagios'");

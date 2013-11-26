@@ -8,14 +8,12 @@
 *               2004 Arnaud Quette <arnaud.quette@mgeups.com>
 * Copyright (c) 2002-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains Network UPS Tools plugin for Nagios
 * 
-* This plugin tests the UPS service on the specified host.Network UPS Tools
-* from www.networkupstools.org must be running for thisplugin to work.
+* This plugin tests the UPS service on the specified host. Network UPS Tools
+* from www.networkupstools.org must be running for this plugin to work.
 * 
 * 
 * This program is free software: you can redistribute it and/or modify
@@ -31,12 +29,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_ups.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_ups";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -398,12 +394,15 @@ get_ups_variable (const char *varname, char *buf, size_t buflen)
 	char temp_buffer[MAX_INPUT_BUFFER];
 	char send_buffer[MAX_INPUT_BUFFER];
 	char *ptr;
+	char *logout = "OK Goodbye\n";
+	int logout_len = strlen(logout);
 	int len;
 
 	*buf=0;
-	
+
 	/* create the command string to send to the UPS daemon */
-	sprintf (send_buffer, "GET VAR %s %s\n", ups_name, varname);
+	/* Add LOGOUT to avoid read failure logs */
+	sprintf (send_buffer, "GET VAR %s %s\nLOGOUT\n", ups_name, varname);
 
 	/* send the command to the daemon and get a response back */
 	if (process_tcp_request
@@ -415,9 +414,10 @@ get_ups_variable (const char *varname, char *buf, size_t buflen)
 
 	ptr = temp_buffer;
 	len = strlen(ptr);
+	if (len > logout_len && strcmp (ptr + len - logout_len, logout) == 0) len -= logout_len;
 	if (len > 0 && ptr[len-1] == '\n') ptr[len-1]=0;
 	if (strcmp (ptr, "ERR UNKNOWN-UPS") == 0) {
-		printf (_("CRITICAL - no such ups '%s' on that host\n"), ups_name);
+		printf (_("CRITICAL - no such UPS '%s' on that host\n"), ups_name);
 		return ERROR;
 	}
 
@@ -449,7 +449,7 @@ get_ups_variable (const char *varname, char *buf, size_t buflen)
 }
 
 
-/* Command line: CHECK_UPS -H <host_address> -u ups [-p port] [-v variable] 
+/* Command line: CHECK_UPS -H <host_address> -u ups [-p port] [-v variable]
 			   [-wv warn_value] [-cv crit_value] [-to to_sec] */
 
 
@@ -504,7 +504,7 @@ process_arguments (int argc, char **argv)
 				usage2 (_("Invalid hostname/address"), optarg);
 			}
 			break;
-		case 'T': /* FIXME: to be improved (ie "-T C" for Celsius or "-T F" for Farenheit) */ 
+		case 'T': /* FIXME: to be improved (ie "-T C" for Celsius or "-T F" for Farenheit) */
 			temp_output_c = 1;
 			break;
 		case 'u':									/* ups name */
@@ -557,7 +557,7 @@ process_arguments (int argc, char **argv)
 			}
 			break;
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'h':									/* help */
 			print_help ();
@@ -584,7 +584,7 @@ int
 validate_arguments (void)
 {
 	if (! ups_name) {
-		printf ("%s\n", _("Error : no ups indicated"));
+		printf ("%s\n", _("Error : no UPS indicated"));
 		return ERROR;
 	}
 	return OK;
@@ -597,7 +597,7 @@ print_help (void)
 	char *myport;
 	asprintf (&myport, "%d", PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 2000 Tom Shields\n");
 	printf ("Copyright (c) 2004 Alain Richard <alain.richard@equation.fr>\n");
@@ -605,7 +605,7 @@ print_help (void)
 	printf (COPYRIGHT, copyright, email);
 
 	printf ("%s\n", _("This plugin tests the UPS service on the specified host. Network UPS Tools"));
-  printf ("%s\n", _("from www.networkupstools.org must be running for thisplugin to work."));
+  printf ("%s\n", _("from www.networkupstools.org must be running for this plugin to work."));
 
   printf ("\n\n");
 
@@ -635,18 +635,18 @@ print_help (void)
 	printf ("%s\n", _("This plugin attempts to determine the status of a UPS (Uninterruptible Power"));
   printf ("%s\n", _("Supply) on a local or remote host. If the UPS is online or calibrating, the"));
   printf ("%s\n", _("plugin will return an OK state. If the battery is on it will return a WARNING"));
-  printf ("%s\n", _("state.If the UPS is off or has a low battery the plugin will return a CRITICAL"));
+  printf ("%s\n", _("state. If the UPS is off or has a low battery the plugin will return a CRITICAL"));
   printf ("%s\n", _("state."));
 
   printf ("\n");
   printf ("%s\n", _("Notes:"));
   printf (" %s\n", _("You may also specify a variable to check (such as temperature, utility voltage,"));
-  printf (" %s\n", _("battery load, etc.)  as well as warning and critical thresholds for the value"));
+  printf (" %s\n", _("battery load, etc.) as well as warning and critical thresholds for the value"));
   printf (" %s\n", _("of that variable.  If the remote host has multiple UPS that are being monitored"));
   printf (" %s\n", _("you will have to use the --ups option to specify which UPS to check."));
   printf ("\n");
-  printf (" %s\n", _("This plugin requires that the UPSD daemon distributed with Russel Kroll's"));
-  printf (" %s\n", _("Smart UPS Tools be installed on the remote host. If you do not have the"));
+  printf (" %s\n", _("This plugin requires that the UPSD daemon distributed with Russell Kroll's"));
+  printf (" %s\n", _("Network UPS Tools be installed on the remote host. If you do not have the"));
   printf (" %s\n", _("package installed on your system, you can download it from"));
   printf (" %s\n", _("http://www.networkupstools.org"));
 #ifdef NP_EXTRA_OPTS

@@ -41,7 +41,7 @@ GetOptions
 	
 
 if ($opt_V) {
-        print_revision($PROGNAME,'$Revision: 72 $ ');
+        print_revision($PROGNAME,'$Revision: 2091 $ ');
         exit $ERRORS{'OK'};
 }
 
@@ -114,7 +114,7 @@ sub print_usage () {
 }
                 
 sub print_help () {
-        print_revision($PROGNAME,'$Revision: 72 $');
+        print_revision($PROGNAME,'$Revision: 2091 $');
         print "Copyright (c) 2002 Andrew Ryder\n";
         print "\n";
         print_usage();

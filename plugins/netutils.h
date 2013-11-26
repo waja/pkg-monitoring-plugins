@@ -6,8 +6,6 @@
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
 * Copyright (c) 2003-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-01-31 11:45:28 +0000 (Thu, 31 Jan 2008) $
-* 
 * Description:
 * 
 * This file contains common include files and function definitions
@@ -27,7 +25,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: netutils.h 1919 2008-01-31 11:45:28Z dermoth $
 * 
 *****************************************************************************/
 
@@ -38,7 +35,7 @@
 #include "utils.h"
 #include <netinet/in.h>
 #include <arpa/inet.h>
-#include "getaddrinfo.h"
+#include <netdb.h>
 
 #ifdef HAVE_SYS_UN_H
 # include <sys/un.h>
@@ -47,8 +44,6 @@
 #  define UNIX_PATH_MAX 108
 # endif /* UNIX_PATH_MAX */
 #endif /* HAVE_SYS_UN_H */
-
-RETSIGTYPE socket_timeout_alarm_handler (int) __attribute__((noreturn));
 
 /* process_request and wrapper macros */
 #define process_tcp_request(addr, port, sbuf, rbuf, rsize) \
@@ -86,7 +81,16 @@ void host_or_die(const char *str);
 #  define is_hostname(addr) resolve_host_or_addr(addr, AF_INET)
 #endif
 
+#ifdef LOCAL_TIMEOUT_ALARM_HANDLER
 extern unsigned int socket_timeout;
+extern int socket_timeout_state;
+RETSIGTYPE socket_timeout_alarm_handler (int) __attribute__((noreturn));
+#else
+unsigned int socket_timeout = DEFAULT_SOCKET_TIMEOUT;
+unsigned int socket_timeout_state = STATE_CRITICAL;
+extern RETSIGTYPE socket_timeout_alarm_handler (int) __attribute__((noreturn));
+#endif
+
 extern int econn_refuse_state;
 extern int was_refused;
 extern int address_family;
@@ -95,6 +99,7 @@ extern int address_family;
 #ifdef HAVE_SSL
 /* maybe this could be merged with the above np_net_connect, via some flags */
 int np_net_ssl_init(int sd);
+int np_net_ssl_init_with_hostname(int sd, char *host_name);
 void np_net_ssl_cleanup();
 int np_net_ssl_write(const void *buf, int num);
 int np_net_ssl_read(void *buf, int num);

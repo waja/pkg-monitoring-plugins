@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 1999-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_pgsql plugin
@@ -27,12 +25,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_pgsql.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_pgsql";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -71,6 +67,7 @@ char *pguser = NULL;
 char *pgpasswd = NULL;
 double twarn = (double)DEFAULT_WARN;
 double tcrit = (double)DEFAULT_CRIT;
+int verbose = 0;
 
 PGconn *conn;
 /*PGresult   *res;*/
@@ -155,6 +152,8 @@ main (int argc, char **argv)
 
 	if (process_arguments (argc, argv) == ERROR)
 		usage4 (_("Could not parse arguments"));
+	if (verbose > 2)
+		printf("Arguments initialized\n");
 
 	/* Set signal handling and alarm */
 	if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR) {
@@ -162,14 +161,24 @@ main (int argc, char **argv)
 	}
 	alarm (timeout_interval);
 
+	if (verbose)
+		printf("Connecting to database:\n DB: %s\n User: %s\n Host: %s\n Port: %d\n", dbName,
+		(pguser != NULL) ? pguser : "unspecified",
+		(pghost != NULL) ? pghost : "unspecified",
+		(pgport != NULL) ? atoi(pgport) : DEFAULT_PORT);
+
 	/* make a connection to the database */
 	time (&start_time);
 	conn =
 		PQsetdbLogin (pghost, pgport, pgoptions, pgtty, dbName, pguser, pgpasswd);
 	time (&end_time);
 	elapsed_time = (int) (end_time - start_time);
+	if (verbose)
+		printf("Time elapsed: %d\n", elapsed_time);
 
 	/* check to see that the backend connection was successfully made */
+	if (verbose)
+		printf("Verifying connection\n");
 	if (PQstatus (conn) == CONNECTION_BAD) {
 		printf (_("CRITICAL - no connection to '%s' (%s).\n"),
 		        dbName,	PQerrorMessage (conn));
@@ -185,8 +194,10 @@ main (int argc, char **argv)
 	else {
 		status = STATE_OK;
 	}
+	if (verbose)
+		printf("Closing connection\n");
 	PQfinish (conn);
-	printf (_(" %s - database %s (%d sec.)|%s\n"), 
+	printf (_(" %s - database %s (%d sec.)|%s\n"),
 	        state_text(status), dbName, elapsed_time,
 	        fperfdata("time", elapsed_time, "s",
 	                 (int)twarn, twarn, (int)tcrit, tcrit, TRUE, 0, FALSE,0));
@@ -214,11 +225,12 @@ process_arguments (int argc, char **argv)
 		{"authorization", required_argument, 0, 'a'},
 		{"port", required_argument, 0, 'P'},
 		{"database", required_argument, 0, 'd'},
+		{"verbose", no_argument, 0, 'v'},
 		{0, 0, 0, 0}
 	};
 
 	while (1) {
-		c = getopt_long (argc, argv, "hVt:c:w:H:P:d:l:p:a:",
+		c = getopt_long (argc, argv, "hVt:c:w:H:P:d:l:p:a:v",
 		                 longopts, &option);
 
 		if (c == EOF)
@@ -231,7 +243,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case 'V':     /* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 't':     /* timeout period */
 			if (!is_integer (optarg))
@@ -278,6 +290,9 @@ process_arguments (int argc, char **argv)
 		case 'p':     /* authentication password */
 		case 'a':
 			pgpasswd = optarg;
+			break;
+		case 'v':
+			verbose++;
 			break;
 		}
 	}
@@ -355,7 +370,7 @@ is_pg_dbname (char *dbname)
 
 /**
 
-the tango program should eventually create an entity here based on the 
+the tango program should eventually create an entity here based on the
 function prototype
 
 @@-
@@ -389,7 +404,7 @@ is_pg_logname (char *username)
 
 /******************************************************************************
 @@-
-</sect2> 
+</sect2>
 </sect1>
 </article>
 -@@
@@ -404,13 +419,13 @@ print_help (void)
 
 	asprintf (&myport, "%d", DEFAULT_PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf (COPYRIGHT, copyright, email);
 
 	printf (_("Test whether a PostgreSQL Database is accepting connections."));
 
-  printf ("\n\n");
+	printf ("\n\n");
 
 	print_usage ();
 
@@ -422,12 +437,12 @@ print_help (void)
 	printf (_(UT_IPv46));
 
 	printf (" %s\n", "-d, --database=STRING");
-  printf ("    %s", _("Database to check "));
-  printf (_("(default: %s)"), DEFAULT_DB);
-  printf (" %s\n", "-l, --logname = STRING");
-  printf ("    %s\n", _("Login name of user"));
-  printf (" %s\n", "-p, --password = STRING");
-  printf ("    %s\n", _("Password (BIG SECURITY ISSUE)"));
+	printf ("    %s", _("Database to check "));
+	printf (_("(default: %s)"), DEFAULT_DB);
+	printf (" %s\n", "-l, --logname = STRING");
+	printf ("    %s\n", _("Login name of user"));
+	printf (" %s\n", "-p, --password = STRING");
+	printf ("    %s\n", _("Password (BIG SECURITY ISSUE)"));
 
 	printf (_(UT_WARN_CRIT));
 
@@ -435,26 +450,26 @@ print_help (void)
 
 	printf (_(UT_VERBOSE));
 
-  printf ("\n");
+	printf ("\n");
 	printf (" %s\n", _("All parameters are optional."));
-  printf (" %s\n", _("This plugin tests a PostgreSQL DBMS to determine whether it is active and"));
-  printf (" %s\n", _("accepting queries. In its current operation, it simply connects to the"));
-  printf (" %s\n", _("specified database, and then disconnects. If no database is specified, it"));
-  printf (" %s\n", _("connects to the template1 database, which is present in every functioning"));
-  printf (" %s\n\n", _("PostgreSQL DBMS."));
+	printf (" %s\n", _("This plugin tests a PostgreSQL DBMS to determine whether it is active and"));
+	printf (" %s\n", _("accepting queries. In its current operation, it simply connects to the"));
+	printf (" %s\n", _("specified database, and then disconnects. If no database is specified, it"));
+	printf (" %s\n", _("connects to the template1 database, which is present in every functioning"));
+	printf (" %s\n\n", _("PostgreSQL DBMS."));
 
 	printf (" %s\n", _("The plugin will connect to a local postmaster if no host is specified. To"));
-  printf (" %s\n", _("connect to a remote host, be sure that the remote postmaster accepts TCP/IP"));
-  printf (" %s\n\n", _("connections (start the postmaster with the -i option)."));
+	printf (" %s\n", _("connect to a remote host, be sure that the remote postmaster accepts TCP/IP"));
+	printf (" %s\n\n", _("connections (start the postmaster with the -i option)."));
 
 	printf (" %s\n", _("Typically, the nagios user (unless the --logname option is used) should be"));
-  printf (" %s\n", _("able to connect to the database without a password. The plugin can also send"));
-  printf (" %s\n", _("a password, but no effort is made to obsure or encrypt the password."));
+	printf (" %s\n", _("able to connect to the database without a password. The plugin can also send"));
+	printf (" %s\n", _("a password, but no effort is made to obsure or encrypt the password."));
 
 #ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
+	printf ("\n");
+	printf ("%s\n", _("Notes:"));
+	printf (_(UT_EXTRA_OPTS_NOTES));
 #endif
 
 	printf (_(UT_SUPPORT));
@@ -465,7 +480,7 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+	printf (_("Usage:"));
 	printf ("%s [-H <host>] [-P <port>] [-c <critical time>] [-w <warning time>]\n", progname);
-  printf (" [-t <timeout>] [-d <database>] [-l <logname>] [-p <password>]\n");
+	printf (" [-t <timeout>] [-d <database>] [-l <logname>] [-p <password>]\n");
 }

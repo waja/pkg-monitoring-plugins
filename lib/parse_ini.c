@@ -5,9 +5,6 @@
 * License: GPL
 * Copyright (c) 2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-04-04 11:11:22 +0100 (Fri, 04 Apr 2008) $
-* 
-* 
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -21,7 +18,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: parse_ini.c 1976 2008-04-04 10:11:22Z dermoth $
 * 
 *****************************************************************************/
 
@@ -79,10 +75,13 @@ static void parse_locator(const char *locator, const char *def_stanza, np_ini_in
 	/* if there is no @file part */
 	if(stanza_len==locator_len){
 		i->file=default_file();
+		if(strcmp(i->file, "") == 0){
+			die(STATE_UNKNOWN, _("Cannot find '%s' or '%s' in any standard location.\n"), NP_DEFAULT_INI_FILENAME1, NP_DEFAULT_INI_FILENAME2);
+		}
 	} else {
 		i->file=strdup(&(locator[stanza_len+1]));
 	}
-	
+
 	if(i->file==NULL || i->stanza==NULL){
 		die(STATE_UNKNOWN, _("malloc() failed!\n"));
 	}
@@ -110,7 +109,7 @@ np_arg_list* np_get_defaults(const char *locator, const char *default_section){
 		if(inifile!=stdin) fclose(inifile);
 	}
 	free(i.stanza);
-	return defaults;	
+	return defaults;
 }
 
 /* read_defaults is where the meat of the parsing takes place.
@@ -132,6 +131,7 @@ static int read_defaults(FILE *f, const char *stanza, np_arg_list **opts){
 		if(isspace(c)) continue;
 		switch(c){
 			/* globble up coment lines */
+			case ';':
 			case '#':
 				GOBBLE_TO(f, c, '\n');
 				break;
@@ -160,7 +160,7 @@ static int read_defaults(FILE *f, const char *stanza, np_arg_list **opts){
 			default:
 				switch(stanzastate){
 					/* we never found the start of the first stanza, so
-					 * we're dealing with a config error 
+					 * we're dealing with a config error
 					 */
 					case NOSTANZA:
 						die(STATE_UNKNOWN, _("Config file error"));
@@ -232,10 +232,8 @@ static int add_option(FILE *f, np_arg_list **optlst){
 	if(optptr==eqptr) die(STATE_UNKNOWN, _("Config file error\n"));
 	/* continue from '=' to start of value or EOL */
 	for(valptr=eqptr+1; valptr<lineend && isspace(*valptr); valptr++);
-	/* continue to the end of value (FIXME: watching for trailing comments) */
-	for(valend=valptr; valend<lineend; valend++)
-		/* FIXME: N::P doesn't allow comments here. Remove next line and parse_ini won't either */
-		if(*valend=='#') break;
+	/* continue to the end of value */
+	for(valend=valptr; valend<lineend; valend++);
 	--valend;
 	/* Finally trim off trailing spaces */
 	for(valend; isspace(*valend); valend--);
@@ -304,7 +302,7 @@ static char* default_file(void){
 	size_t len;
 
 	if((np_env=getenv("NAGIOS_CONFIG_PATH"))!=NULL) {
-		/* skip ant starting colon... */
+		/* skip any starting colon... */
 		while(*np_env==':') np_env++;
 		/* Look for NP_DEFAULT_INI_FILENAME1 and NP_DEFAULT_INI_FILENAME2 in
 		 * every PATHs defined (colon-separated).
@@ -340,8 +338,8 @@ static char* default_file(void){
 			default_file=strdup(temp_file);
 	}
 
-	/* Return default_file or empty string (should return NULL if we want to
-	 * die there...
+	/* Return default_file or empty string (should return NULL if we want plugins
+	 * to die there)...
 	 */
 	if(default_file)
 		return default_file;
@@ -354,7 +352,7 @@ static char* default_file(void){
 static int test_file(const char* env, int len, const char* file, char* temp_file){
 	struct stat sb;
 
-	/* test for len + filelen + '/' + '\0' */
+	/* test if len + filelen + '/' + '\0' fits in temp_file */
 	if((len+strlen(file)+2)>MAX_INPUT_BUFFER)	return -1;
 
 	strncpy(temp_file,env,len);

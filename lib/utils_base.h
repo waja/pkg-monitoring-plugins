@@ -35,6 +35,9 @@ void print_thresholds(const char *, thresholds *);
 int check_range(double, range *);
 int get_status(double, thresholds *);
 
+/* All possible characters in a threshold range */
+#define NP_THRESHOLDS_CHARS "0123456789.:@~"
+
 char *np_escaped_string (const char *);
 
 void die (int, const char *, ...) __attribute__((noreturn,format(printf, 2, 3)));
@@ -49,5 +52,19 @@ int np_check_if_root(void);
 /* and a helpful wrapper around that.  it returns the same status
  * code from the above function, in case it's helpful for testing */
 int np_warn_if_not_root(void);
+
+/*
+ * Extract the value from key/value pairs, or return NULL. The value returned
+ * can be free()ed.
+ * This function can be used to parse NTP control packet data and performance
+ * data strings.
+ */
+char *np_extract_value(const char*, const char*, char);
+
+/*
+ * Same as np_extract_value with separator suitable for NTP control packet
+ * payloads (comma)
+ */
+#define np_extract_ntpvar(l, n) np_extract_value(l, n, ',')
 
 #endif /* _UTILS_BASE_ */

@@ -5,9 +5,6 @@
 * License: GPL
 * Copyright (c) 2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-03-15 18:42:01 -0400 (Sat, 15 Mar 2008) $
-* 
-* 
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -20,8 +17,6 @@
 * 
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-* 
-* $Id: parse_ini.c 1950 2008-03-15 22:42:01Z dermoth $
 * 
 *****************************************************************************/
 
@@ -103,14 +98,13 @@ char **np_extra_opts(int *argc, char **argv, const char *plugin_name){
 				ea_tmp=extra_args;
 				while(ea_tmp->next) {
 					ea_tmp=ea_tmp->next;
-					ea_num++;
 				}
 				ea_tmp->next=ea1;
+				while(ea1=ea1->next) ea_num++;
 			}
 			ea1=ea_tmp=NULL;
 		}
-		/* lather, rince, repeat */
-	}
+	} /* lather, rince, repeat */
 
 	if(ea_num==*argc && extra_args==NULL){
 		/* No extra-opts */

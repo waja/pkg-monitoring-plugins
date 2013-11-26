@@ -2,7 +2,6 @@
 #
 # check_nagios tests
 #
-# $Id: check_nagios.t 1953 2008-03-17 23:08:21Z tonvoon $
 #
 
 use strict;

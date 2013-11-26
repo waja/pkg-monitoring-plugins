@@ -2,7 +2,6 @@
 #
 # Process Tests via check_procs
 #
-# $Id: check_procs.t 1937 2008-02-28 16:21:59Z tonvoon $
 #
 
 use strict;
@@ -11,7 +10,7 @@ use NPTest;
 
 my $t;
 
-if (`uname -s` eq "SunOS\n") {
+if (`uname -s` eq "SunOS\n" && ! -x "/usr/local/nagios/libexec/pst3") {
 	plan skip_all => "Ignoring tests on solaris because of pst3";
 } else {
 	plan tests => 12;

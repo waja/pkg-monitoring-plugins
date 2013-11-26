@@ -13,7 +13,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: test_tcp.c 1914 2008-01-30 09:38:37Z dermoth $
 * 
 *****************************************************************************/
 

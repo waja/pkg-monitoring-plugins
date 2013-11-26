@@ -14,7 +14,7 @@ use Sys::Hostname;
 use Cwd;
 use Time::Local;
 
-my $Version = '$Revision: 1904 $';
+my $Version = `git describe --abbrev=4 HEAD`;
 
 my $myhost = hostname;
 chomp($myhost);
@@ -29,7 +29,9 @@ my $ReportStatus = 0;  # Do not send results to server
 # Set these to what makes sense for your system
 
 # Set these proper values for your tinderbox server
-my $Tinderbox_server = 'tinderbox2@tinderbox.altinity.org';
+# Have the StrictHostKeyChecking=no so that a new host will automatically add hostkey without
+# prompting. If host key changes, then will get error, so this should still be secure
+my $Tinderbox_server = '-p 1022 -o StrictHostKeyChecking=no tinderbox2@tinderbox.opsera.com';
 
 # These shouldn't really need to be changed
 my $BuildTree = 'nagiosplug';
@@ -82,7 +84,7 @@ sub BuildIt {
 	if (-e (my $file = "nagios-plugins.spec")) {
 		open F, $file;
 		while (<F>) {
-			if (/^Version: HEAD-(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)$/) {
+			if (/^Version: trunk-(\d\d\d\d)(\d\d)(\d\d)(\d\d)(\d\d)$/) {
 				$StartTime = timegm(0, $5, $4, $3, ($2 - 1), ($1 - 1900));
 				last;
 			}
@@ -232,8 +234,10 @@ sub SetupPath {
     $Path = $ENV{PATH};
     print "Path before: $Path\n";
 
-    if ( $OS eq 'SunOS' ) {
-	$ENV{'PATH'} = '/usr/ccs/bin:' . $ENV{'PATH'};
+    # Don't alter path if we're building off a repository tree;
+    # SunOS make will be used only for snapshots and releases.
+    if ( $OS eq 'SunOS' && !( -e '.svn' || -e '.git' )) {
+        $ENV{'PATH'} = '/usr/ccs/bin:' . $ENV{'PATH'};
     }
 
     $Path = $ENV{PATH};
@@ -242,8 +246,8 @@ sub SetupPath {
 
 sub configure {
 	# Configure
-        print LOG "./configure $ConfigureArgs\n";
-        open (CONFIGURE, "./configure $ConfigureArgs 2>&1 |") || die "../configure: $!\n";
+        print LOG "./configure --enable-extra-opts --enable-libtap $ConfigureArgs 2>&1\n";
+        open (CONFIGURE, "./configure --enable-extra-opts --enable-libtap $ConfigureArgs 2>&1 |") || die "../configure: $!\n";
         while (<CONFIGURE>) {
             print $_;
             print LOG $_;
@@ -266,8 +270,8 @@ sub make {
 
 sub maketest {
         # Tests
-        print LOG "LANG=C make test 2>&1\n";
-        open( MAKE, "LANG=C make test && make install DESTDIR=$TmpDir/tinderbox_build.$$ && make install-strip DESTDIR=$TmpDir/tinderbox_build2.$$ 2>&1 |");
+        print LOG "LANG=C make test 2>&1 && make install DESTDIR=$TmpDir/tinderbox_build.$$ 2>&1 && make install-strip DESTDIR=$TmpDir/tinderbox_build2.$$ 2>&1\n";
+        open( MAKE, "LANG=C make test 2>&1 && make install DESTDIR=$TmpDir/tinderbox_build.$$ 2>&1 && make install-strip DESTDIR=$TmpDir/tinderbox_build2.$$ 2>&1 |");
 	while ( <MAKE> ) {
 		print $_;
 		print LOG $_;

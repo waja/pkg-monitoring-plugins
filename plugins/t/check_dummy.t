@@ -2,7 +2,6 @@
 #
 # check_dummy tests
 #
-# $Id: check_dummy.t 1716 2007-05-24 08:35:53Z tonvoon $
 #
 
 use strict;
