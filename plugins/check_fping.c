@@ -52,6 +52,8 @@ void print_help (void);
 void print_usage (void);
 
 char *server_name = NULL;
+char *sourceip = NULL;
+char *sourceif = NULL;
 int packet_size = PACKET_SIZE;
 int packet_count = PACKET_COUNT;
 int target_timeout = 0;
@@ -72,6 +74,8 @@ main (int argc, char **argv)
 /* normaly should be  int result = STATE_UNKNOWN; */
 
   int status = STATE_UNKNOWN;
+  int result = 0;
+  char *fping_prog = NULL;
   char *server = NULL;
   char *command_line = NULL;
   char *input_buffer = NULL;
@@ -92,11 +96,24 @@ main (int argc, char **argv)
 
   /* compose the command */
   if (target_timeout)
-    asprintf(&option_string, "%s-t %d ", option_string, target_timeout);
+    xasprintf(&option_string, "%s-t %d ", option_string, target_timeout);
   if (packet_interval)
-    asprintf(&option_string, "%s-p %d ", option_string, packet_interval);
+    xasprintf(&option_string, "%s-p %d ", option_string, packet_interval);
+  if (sourceip)
+    xasprintf(&option_string, "%s-S %s ", option_string, sourceip);
+  if (sourceif)
+    xasprintf(&option_string, "%s-I %s ", option_string, sourceif);
 
-  asprintf (&command_line, "%s %s-b %d -c %d %s", PATH_TO_FPING,
+#ifdef PATH_TO_FPING6
+  if (address_family == AF_INET6)
+    fping_prog = strdup(PATH_TO_FPING6);
+  else
+    fping_prog = strdup(PATH_TO_FPING);
+#else
+  fping_prog = strdup(PATH_TO_FPING);
+#endif
+
+  xasprintf (&command_line, "%s %s-b %d -c %d %s", fping_prog,
             option_string, packet_size, packet_count, server);
 
   if (verbose)
@@ -130,9 +147,23 @@ main (int argc, char **argv)
   (void) fclose (child_stderr);
 
   /* close the pipe */
-  if (spclose (child_process))
+  if (result = spclose (child_process))
     /* need to use max_state not max */
     status = max_state (status, STATE_WARNING);
+
+  if (result > 1 ) {
+    status = max_state (status, STATE_UNKNOWN);
+    if (result == 2) {
+      die (STATE_UNKNOWN, _("FPING UNKNOWN - IP address not found\n"));
+    }
+    if (result == 3) {
+      die (STATE_UNKNOWN, _("FPING UNKNOWN - invalid commandline argument\n"));
+    }
+    if (result == 4) {
+      die (STATE_UNKNOWN, _("FPING UNKNOWN - failed system call\n"));
+    }
+
+  }
 
   printf ("FPING %s - %s\n", state_text (status), server_name);
 
@@ -158,6 +189,10 @@ textscan (char *buf)
     die (STATE_CRITICAL, _("FPING CRITICAL - %s is unreachable\n"),
                "host");
 
+  }
+  else if (strstr (buf, "Operation not permitted") || strstr (buf, "No such device") ) {
+    die (STATE_UNKNOWN, _("FPING UNKNOWN - %s parameter error\n"),
+               "host");
   }
   else if (strstr (buf, "is down")) {
     die (STATE_CRITICAL, _("FPING CRITICAL - %s is down\n"), server_name);
@@ -232,6 +267,8 @@ process_arguments (int argc, char **argv)
   int option = 0;
   static struct option longopts[] = {
     {"hostname", required_argument, 0, 'H'},
+    {"sourceip", required_argument, 0, 'S'},
+    {"sourceif", required_argument, 0, 'I'},
     {"critical", required_argument, 0, 'c'},
     {"warning", required_argument, 0, 'w'},
     {"bytes", required_argument, 0, 'b'},
@@ -241,6 +278,8 @@ process_arguments (int argc, char **argv)
     {"verbose", no_argument, 0, 'v'},
     {"version", no_argument, 0, 'V'},
     {"help", no_argument, 0, 'h'},
+    {"use-ipv4", no_argument, 0, '4'},
+    {"use-ipv6", no_argument, 0, '6'},
     {0, 0, 0, 0}
   };
 
@@ -258,7 +297,7 @@ process_arguments (int argc, char **argv)
   }
 
   while (1) {
-    c = getopt_long (argc, argv, "+hVvH:c:w:b:n:T:i:", longopts, &option);
+    c = getopt_long (argc, argv, "+hVvH:S:c:w:b:n:T:i:I:46", longopts, &option);
 
     if (c == -1 || c == EOF || c == 1)
       break;
@@ -280,6 +319,24 @@ process_arguments (int argc, char **argv)
         usage2 (_("Invalid hostname/address"), optarg);
       }
       server_name = strscpy (server_name, optarg);
+      break;
+    case 'S':                 /* sourceip */
+      if (is_host (optarg) == FALSE) {
+        usage2 (_("Invalid hostname/address"), optarg);
+      }
+      sourceip = strscpy (sourceip, optarg);
+      break;
+    case 'I':                 /* sourceip */
+      sourceif = strscpy (sourceif, optarg);
+    case '4':                 /* IPv4 only */
+      address_family = AF_INET;
+      break;
+    case '6':                 /* IPv6 only */
+#ifdef USE_IPV6
+      address_family = AF_INET6;
+#else
+      usage (_("IPv6 support not available\n"));
+#endif
       break;
     case 'c':
       get_threshold (optarg, rv);
@@ -402,6 +459,8 @@ print_help (void)
   printf (UT_HELP_VRSN);
   printf (UT_EXTRA_OPTS);
 
+  printf (UT_IPv46);
+
   printf (" %s\n", "-H, --hostname=HOST");
   printf ("    %s\n", _("name or IP Address of host to ping (IP Address bypasses name lookup, reducing system load)"));
   printf (" %s\n", "-w, --warning=THRESHOLD");
@@ -413,14 +472,21 @@ print_help (void)
   printf (" %s\n", "-n, --number=INTEGER");
   printf ("    %s (default: %d)\n", _("number of ICMP packets to send"),PACKET_COUNT);
   printf (" %s\n", "-T, --target-timeout=INTEGER");
-  printf ("    %s (default: fping's default for -t)\n", _("Target timeout (ms)"),PACKET_COUNT);
+  printf ("    %s (default: fping's default for -t)\n", _("Target timeout (ms)"));
   printf (" %s\n", "-i, --interval=INTEGER");
-  printf ("    %s (default: fping's default for -p)\n", _("Interval (ms) between sending packets"),PACKET_COUNT);
+  printf ("    %s (default: fping's default for -p)\n", _("Interval (ms) between sending packets"));
+  printf (" %s\n", "-S, --sourceip=HOST");
+  printf ("    %s\n", _("name or IP Address of sourceip"));
+  printf (" %s\n", "-I, --sourceif=IF");
+  printf ("    %s\n", _("source interface name"));
   printf (UT_VERBOSE);
   printf ("\n");
   printf (" %s\n", _("THRESHOLD is <rta>,<pl>%% where <rta> is the round trip average travel time (ms)"));
   printf (" %s\n", _("which triggers a WARNING or CRITICAL state, and <pl> is the percentage of"));
   printf (" %s\n", _("packet loss to trigger an alarm state."));
+
+  printf ("\n");
+  printf (" %s\n", _("IPv4 is used by default. Specify -6 to use IPv6."));
 
   printf (UT_SUPPORT);
 }

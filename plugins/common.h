@@ -82,10 +82,12 @@
    getting that data
    Will return -1 if cannot get data
 */
-#ifdef HAVE_SYSCONF__SC_NPROCESSORS_CONF 
-#define GET_NUMBER_OF_CPUS() sysconf(_SC_NPROCESSORS_CONF)
+#if defined(HAVE_SYSCONF__SC_NPROCESSORS_ONLN)
+# define GET_NUMBER_OF_CPUS() sysconf(_SC_NPROCESSORS_ONLN)
+#elif defined (HAVE_SYSCONF__SC_NPROCESSORS_CONF)
+# define GET_NUMBER_OF_CPUS() sysconf(_SC_NPROCESSORS_CONF)
 #else
-#define GET_NUMBER_OF_CPUS() -1
+# define GET_NUMBER_OF_CPUS() -1
 #endif
 
 #ifdef TIME_WITH_SYS_TIME
@@ -115,9 +117,7 @@
 #include <getopt.h>
 #include "dirname.h"
 
-#ifdef HAVE_LOCALE_H
 #include <locale.h>
-#endif
 
 #ifdef HAVE_SYS_POLL_H
 # include "sys/poll.h"
@@ -141,6 +141,7 @@
 #ifdef HAVE_GNUTLS_OPENSSL_H
 #  include <gnutls/openssl.h>
 #else
+#  define OPENSSL_LOAD_CONF /* See the OPENSSL_config(3) man page. */
 #  ifdef HAVE_SSL_H
 #    include <rsa.h>
 #    include <crypto.h>

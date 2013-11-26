@@ -241,7 +241,7 @@ ssh_connect (char *haddr, int hport, char *remote_version)
 		ssh_server = ssh_proto + strspn (ssh_proto, "-0123456789. ");
 		ssh_proto[strspn (ssh_proto, "0123456789. ")] = 0;
 
-		asprintf (&buffer, "SSH-%s-check_ssh_%s\r\n", ssh_proto, rev_no);
+		xasprintf (&buffer, "SSH-%s-check_ssh_%s\r\n", ssh_proto, rev_no);
 		send (sd, buffer, strlen (buffer), MSG_DONTWAIT);
 		if (verbose)
 			printf ("%s\n", buffer);
@@ -271,7 +271,7 @@ void
 print_help (void)
 {
 	char *myport;
-	asprintf (&myport, "%d", SSH_DFL_PORT);
+	xasprintf (&myport, "%d", SSH_DFL_PORT);
 
 	print_revision (progname, NP_VERSION);
 
@@ -307,6 +307,6 @@ void
 print_usage (void)
 {
   printf ("%s\n", _("Usage:"));
-	printf ("%s [-46] [-t <timeout>] [-r <remote version>] [-p <port>] <host>\n", progname);
+	printf ("%s  [-4|-6] [-t <timeout>] [-r <remote version>] [-p <port>] <host>\n", progname);
 }
 

@@ -2,6 +2,7 @@ This software is brought to you by the Nagios Plugins Development Team. However,
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
+Diego Elio Pettenò
 fabiodds
 dag rob?le
 Randy O'Meara
@@ -39,6 +40,7 @@ Jeffery Blank
 Tom De Blende
 Eric Bollengier
 Aurelien Bompard
+Alex Bradley
 Richard Brodie
 Matthew Brown
 Tobias Brox
@@ -66,6 +68,7 @@ Phil Dibowitz
 Jason Dixon
 Paul Dlug
 Andy Doran
+Emmanuel Dreyfus
 Rainer Duffner
 Ian Duggan
 Edwin Eefting
@@ -87,6 +90,7 @@ Duncan Ferguson
 Paulo Fessel
 Paulo Afonso Graner Fessel
 James Fidell
+Roman Fiedler
 Johan Fischer
 Bernhard Fischer
 Matthias Flacke
@@ -128,6 +132,7 @@ Mark Jewiss
 Nikita Kalabukhov
 Frank Kannemann
 Roy Sigurd Karlsbakk
+Anders Kaseorg
 Jason Kau
 Ryan Kelly
 Bo Kersey
@@ -149,6 +154,7 @@ Lynne Lawrence
 Sakari Lehtonen
 William Leibzon
 Pedro Leite
+Richard Leitner
 Craig Leres
 Jan Lipphaus
 Larry Low
@@ -181,8 +187,10 @@ Sivakumar Nellurandi
 Truongchinh Nguyen
 Simon L Nielsen
 Thomas Nilsen
+Sebastian Nohn
 Walbert Oberngruber
 Craig Orsinger
+Vaclav Ovsik
 Remi Paulmier
 Tom Payerle
 Fabian Pehla
@@ -217,6 +225,7 @@ Kenny Root
 Wolfgang Rosenauer
 John Rouillard
 Jonathan Rozes
+Fabio Rueda
 Sascha Runschke
 Dietmar Ruzicka
 Ralph Rye
@@ -239,6 +248,7 @@ Sean Shore
 Antony Simmonds
 John Sivak
 Nik Soggia
+Robin Sonefors
 Lars Stavholm
 Nikolay Sturm
 David Sullivan
@@ -249,6 +259,7 @@ Ben Timby
 Ronald Tin
 Ibere Tizio
 Julien Touche
+Gabriele Tozzi
 Kyle Tucker
 Jerome Tytgat
 Stéphane Urbanovski
@@ -277,4 +288,5 @@ Howard Wilkinson
 Shawn Wills
 Rob Windsor
 Mario Witte
+Brian De Wolf
 Jamie Zawinski

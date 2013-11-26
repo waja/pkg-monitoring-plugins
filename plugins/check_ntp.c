@@ -398,7 +398,11 @@ double offset_request(const char *host, int *status){
 			die(STATE_UNKNOWN, "can not create new socket");
 		}
 		if(connect(socklist[i], ai_tmp->ai_addr, ai_tmp->ai_addrlen)){
-			die(STATE_UNKNOWN, "can't create socket connection");
+			/* don't die here, because it is enough if there is one server
+			   answering in time. This also would break for dual ipv4/6 stacked
+			   ntp servers when the client only supports on of them.
+			 */
+			DBG(printf("can't create socket connection on peer %i: %s\n", i, strerror(errno)));
 		} else {
 			ufds[i].fd=socklist[i];
 			ufds[i].events=POLLIN;
@@ -800,28 +804,28 @@ int main(int argc, char *argv[]){
 
 	switch (result) {
 		case STATE_CRITICAL :
-			asprintf(&result_line, _("NTP CRITICAL:"));
+			xasprintf(&result_line, _("NTP CRITICAL:"));
 			break;
 		case STATE_WARNING :
-			asprintf(&result_line, _("NTP WARNING:"));
+			xasprintf(&result_line, _("NTP WARNING:"));
 			break;
 		case STATE_OK :
-			asprintf(&result_line, _("NTP OK:"));
+			xasprintf(&result_line, _("NTP OK:"));
 			break;
 		default :
-			asprintf(&result_line, _("NTP UNKNOWN:"));
+			xasprintf(&result_line, _("NTP UNKNOWN:"));
 			break;
 	}
 	if(offset_result == STATE_UNKNOWN){
-		asprintf(&result_line, "%s %s", result_line, _("Offset unknown"));
-		asprintf(&perfdata_line, "");
+		xasprintf(&result_line, "%s %s", result_line, _("Offset unknown"));
+		xasprintf(&perfdata_line, "");
 	} else {
-		asprintf(&result_line, "%s %s %.10g secs", result_line, _("Offset"), offset);
-		asprintf(&perfdata_line, "%s", perfd_offset(offset));
+		xasprintf(&result_line, "%s %s %.10g secs", result_line, _("Offset"), offset);
+		xasprintf(&perfdata_line, "%s", perfd_offset(offset));
 	}
 	if (do_jitter) {
-		asprintf(&result_line, "%s, jitter=%f", result_line, jitter);
-		asprintf(&perfdata_line, "%s %s", perfdata_line,  perfd_jitter(jitter));
+		xasprintf(&result_line, "%s, jitter=%f", result_line, jitter);
+		xasprintf(&perfdata_line, "%s %s", perfdata_line,  perfd_jitter(jitter));
 	}
 	printf("%s|%s\n", result_line, perfdata_line);
 
@@ -845,6 +849,7 @@ void print_help(void){
 	printf (UT_HELP_VRSN);
 	printf (UT_EXTRA_OPTS);
 	printf (UT_HOST_PORT, 'p', "123");
+	printf (UT_IPv46);
 	printf (" %s\n", "-w, --warning=THRESHOLD");
 	printf ("    %s\n", _("Offset to result in warning status (seconds)"));
 	printf (" %s\n", "-c, --critical=THRESHOLD");
@@ -881,5 +886,5 @@ print_usage(void)
 	printf ("%s\n", _("WARNING: check_ntp is deprecated. Please use check_ntp_peer or"));
 	printf ("%s\n\n", _("check_ntp_time instead."));
 	printf ("%s\n", _("Usage:"));
-	printf(" %s -H <host> [-w <warn>] [-c <crit>] [-j <warn>] [-k <crit>] [-v verbose]\n", progname);
+	printf(" %s -H <host> [-w <warn>] [-c <crit>] [-j <warn>] [-k <crit>] [-4|-6] [-v verbose]\n", progname);
 }

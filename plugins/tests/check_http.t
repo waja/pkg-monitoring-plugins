@@ -12,14 +12,13 @@
 # Common Name (eg, YOUR name) []:Ton Voon
 # Email Address []:tonvoon@mac.com
 
-
 use strict;
 use Test::More;
 use NPTest;
 use FindBin qw($Bin);
 
-my $common_tests = 66;
-my $ssl_only_tests = 6;
+my $common_tests = 70;
+my $ssl_only_tests = 8;
 # Check that all dependent modules are available
 eval {
 	require HTTP::Daemon;
@@ -152,6 +151,10 @@ sub run_server {
 				unshift @persist, $c;
 				delete($persist[1000]);
 				next MAINLOOP;
+			} elsif ($r->url->path eq "/header_check") {
+				$c->send_basic_header;
+				$c->send_header('foo');
+				$c->send_crlf;
 			} else {
 				$c->send_error(HTTP::Status->RC_FORBIDDEN);
 			}
@@ -160,9 +163,9 @@ sub run_server {
 	}
 }
 
-END { 
+END {
 	foreach my $pid (@pids) {
-		if ($pid) { print "Killing $pid\n"; kill "INT", $pid } 
+		if ($pid) { print "Killing $pid\n"; kill "INT", $pid }
 	}
 };
 
@@ -179,7 +182,7 @@ run_common_tests( { command => "$command -p $port_http" } );
 SKIP: {
 	skip "HTTP::Daemon::SSL not installed", $common_tests + $ssl_only_tests if ! exists $servers->{https};
 	run_common_tests( { command => "$command -p $port_https", ssl => 1 } );
-	
+
 	$result = NPTest->testCmd( "$command -p $port_https -S -C 14" );
 	is( $result->return_code, 0, "$command -p $port_https -S -C 14" );
 	is( $result->output, 'OK - Certificate \'Ton Voon\' will expire on 03/03/2019 21:41.', "output ok" );
@@ -188,14 +191,14 @@ SKIP: {
 	is( $result->return_code, 1, "$command -p $port_https -S -C 14000" );
 	like( $result->output, '/WARNING - Certificate \'Ton Voon\' expires in \d+ day\(s\) \(03/03/2019 21:41\)./', "output ok" );
 
-        $result = NPTest->testCmd( "$command -p $port_https -S -C 13960,14000" );
-        is( $result->return_code, 1, "$command -p $port_https -S -C 139600,14000" );
-        like( $result->output, '/CRITICAL - Certificate \'Ton Voon\' expires in \d+ day\(s\) \(03/03/2019 21:41\)./', "output ok" );
-
 	# Expired cert tests
+	$result = NPTest->testCmd( "$command -p $port_https -S -C 13960,14000" );
+	is( $result->return_code, 2, "$command -p $port_https -S -C 13960,14000" );
+	like( $result->output, '/CRITICAL - Certificate \'Ton Voon\' expires in \d+ day\(s\) \(03/03/2019 21:41\)./', "output ok" );
+
 	$result = NPTest->testCmd( "$command -p $port_https_expired -S -C 7" );
 	is( $result->return_code, 2, "$command -p $port_https_expired -S -C 7" );
-	is( $result->output, 
+	is( $result->output,
 		'CRITICAL - Certificate \'Ton Voon\' expired on 03/05/2009 00:13.',
 		"output ok" );
 
@@ -224,6 +227,13 @@ sub run_common_tests {
 	is( $result->return_code, 2, "Missing string check");
 	like( $result->output, qr%HTTP CRITICAL: HTTP/1\.1 200 OK - string 'NonRootWithOver30charsAndM...' not found on 'https?://127\.0\.0\.1:\d+/file/root'%, "Shows search string and location");
 
+	$result = NPTest->testCmd( "$command -u /header_check -d foo" );
+	is( $result->return_code, 0, "header_check search for string");
+	like( $result->output, '/^HTTP OK: HTTP/1.1 200 OK - 96 bytes in [\d\.]+ second/', "Output correct" );
+
+	$result = NPTest->testCmd( "$command -u /header_check -d bar" );
+	is( $result->return_code, 2, "Missing header string check");
+	like( $result->output, qr%^HTTP CRITICAL: HTTP/1\.1 200 OK - header 'bar' not found on 'https?://127\.0\.0\.1:\d+/header_check'%, "Shows search string and location");
 
 	my $cmd;
 	$cmd = "$command -u /slow";
@@ -406,4 +416,3 @@ sub run_common_tests {
 	isnt( $@, "alarm\n", $cmd );
 
 }
-

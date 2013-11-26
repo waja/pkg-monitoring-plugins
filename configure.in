@@ -255,54 +255,96 @@ fi
 LIBS="$_SAVEDLIBS"
 CPPFLAGS="$_SAVEDCPPFLAGS"
 
+AC_ARG_WITH([dbi], [AS_HELP_STRING([--without-dbi], [Skips the dbi plugin])])
+dnl Check for DBI libraries
+AS_IF([test "x$with_dbi" != "xno"], [
+  _SAVEDLIBS="$LIBS"
+  AC_CHECK_LIB(dbi,dbi_initialize)
+  if test "$ac_cv_lib_dbi_dbi_initialize" = "yes"; then
+    EXTRAS="$EXTRAS check_dbi"
+  	DBILIBS="-ldbi"
+    AC_SUBST(DBILIBS)
+  else
+    AC_MSG_WARN([Skipping dbi plugin])
+    AC_MSG_WARN([install DBI libs to compile this plugin (see REQUIREMENTS).])
+  fi
+  LIBS="$_SAVEDLIBS"
+])
+
+AC_ARG_WITH([radius], [AS_HELP_STRING([--without-radius], [Skips the radius plugin])])
+
 dnl Check for radius libraries
-_SAVEDLIBS="$LIBS"
-AC_CHECK_LIB(radiusclient,rc_read_config)
-if test "$ac_cv_lib_radiusclient_rc_read_config" = "yes"; then
-  EXTRAS="$EXTRAS check_radius"
-	RADIUSLIBS="-lradiusclient"
-  AC_SUBST(RADIUSLIBS)
-else
-  AC_CHECK_LIB(radiusclient-ng,rc_read_config)
-  if test "$ac_cv_lib_radiusclient_ng_rc_read_config" = "yes"; then
+AS_IF([test "x$with_radius" != "xno"], [
+  _SAVEDLIBS="$LIBS"
+  AC_CHECK_LIB(radiusclient,rc_read_config)
+  if test "$ac_cv_lib_radiusclient_rc_read_config" = "yes"; then
     EXTRAS="$EXTRAS check_radius"
-  	  RADIUSLIBS="-lradiusclient-ng"
+  	RADIUSLIBS="-lradiusclient"
     AC_SUBST(RADIUSLIBS)
   else
-    AC_MSG_WARN([Skipping radius plugin])
-    AC_MSG_WARN([install radius libs to compile this plugin (see REQUIREMENTS).])
+    AC_CHECK_LIB(radiusclient-ng,rc_read_config)
+    if test "$ac_cv_lib_radiusclient_ng_rc_read_config" = "yes"; then
+      EXTRAS="$EXTRAS check_radius"
+    	  RADIUSLIBS="-lradiusclient-ng"
+      AC_SUBST(RADIUSLIBS)
+    else
+      AC_MSG_WARN([Skipping radius plugin])
+      AC_MSG_WARN([install radius libs to compile this plugin (see REQUIREMENTS).])
+    fi
   fi
-fi
-LIBS="$_SAVEDLIBS"
+  LIBS="$_SAVEDLIBS"
+])
+
+AC_ARG_WITH([ldap], [AS_HELP_STRING([--without-ldap], [Skips the LDAP plugin])])
 
 dnl Check for LDAP libraries
-_SAVEDLIBS="$LIBS"
-AC_CHECK_LIB(ldap,main,,,-llber)
-if test "$ac_cv_lib_ldap_main" = "yes"; then
-  LDAPLIBS="-lldap -llber"\
-  LDAPINCLUDE="-I/usr/include/ldap"
-  AC_SUBST(LDAPLIBS)
-  AC_SUBST(LDAPINCLUDE)
-  AC_CHECK_FUNCS(ldap_set_option)
-  EXTRAS="$EXTRAS check_ldap"
-	AC_CHECK_FUNCS(ldap_init ldap_set_option ldap_get_option ldap_start_tls_s)
-else
-  AC_MSG_WARN([Skipping LDAP plugin])
-  AC_MSG_WARN([install LDAP libs to compile this plugin (see REQUIREMENTS).])
-fi
-LIBS="$_SAVEDLIBS"
+AS_IF([test "x$with_ldap" != "xno"], [
+  _SAVEDLIBS="$LIBS"
+  AC_CHECK_LIB(ldap,main,,,-llber)
+  if test "$ac_cv_lib_ldap_main" = "yes"; then
+    LDAPLIBS="-lldap -llber"\
+    LDAPINCLUDE="-I/usr/include/ldap"
+    AC_SUBST(LDAPLIBS)
+    AC_SUBST(LDAPINCLUDE)
+    AC_CHECK_FUNCS(ldap_set_option)
+    EXTRAS="$EXTRAS check_ldap"
+  	AC_CHECK_FUNCS(ldap_init ldap_set_option ldap_get_option ldap_start_tls_s)
+  else
+    AC_MSG_WARN([Skipping LDAP plugin])
+    AC_MSG_WARN([install LDAP libs to compile this plugin (see REQUIREMENTS).])
+  fi
+  LIBS="$_SAVEDLIBS"
+])
 
 dnl Check for headers used by check_ide_smart
-AC_CHECK_HEADER(linux/hdreg.h, FOUNDINCLUDE=yes, FOUNDINCLUDE=no)
-if test "$FOUNDINCLUDE" = "yes" ; then
-	AC_CHECK_HEADER(linux/types.h, FOUNDINCLUDE=yes, FOUNDINCLUDE=no)
-fi
+case $host in
+  *linux*)
+    AC_CHECK_HEADER(linux/hdreg.h, FOUNDINCLUDE=yes, FOUNDINCLUDE=no)
+    if test "$FOUNDINCLUDE" = "yes" ; then
+    	AC_CHECK_HEADER(linux/types.h, FOUNDINCLUDE=yes, FOUNDINCLUDE=no)
+    fi
+    if test "$FOUNDINCLUDE" = "no" ; then
+	AC_MSG_WARN([Skipping check_ide_smart plugin.])
+	AC_MSG_WARN([check_ide_smart requires linux/hdreg.h and linux/types.h.])
+    fi
+  ;;
+  *netbsd*)
+    AC_CHECK_HEADER(dev/ata/atareg.h, FOUNDINCLUDE=yes, FOUNDINCLUDE=no)
+    if test "$FOUNDINCLUDE" = "yes" ; then
+    	AC_CHECK_HEADER(dev/ic/wdcreg.h, FOUNDINCLUDE=yes, FOUNDINCLUDE=no)
+    fi
+    if test "$FOUNDINCLUDE" = "no" ; then
+	AC_MSG_WARN([Skipping check_ide_smart plugin.])
+	AC_MSG_WARN([check_ide_smart requires dev/ata/atareg.h and dev/ic/wdcreg.h])
+    fi
+  ;;
+  *)
+    AC_MSG_WARN([Skipping check_ide_smart plugin.])
+    AC_MSG_WARN([check_ide_smart works only on Linux and NetBSD])
+esac
 
 if test "$FOUNDINCLUDE" = "yes" ; then
 	EXTRAS="$EXTRAS check_ide_smart"
-else
-	AC_MSG_WARN([Skipping check_ide_smart plugin.])
-	AC_MSG_WARN([check_ide_smart is linux specific. It requires linux/hdreg.h and linux/types.h.])
 fi
 
 dnl Check for mysql libraries
@@ -318,6 +360,26 @@ else
   AC_SUBST(MYSQLINCLUDE)
   AC_SUBST(MYSQLLIBS)
   AC_SUBST(MYSQLCFLAGS)
+fi
+
+dnl Check for headers used by check_users
+AC_CHECK_HEADERS(utmpx.h)
+AM_CONDITIONAL([HAVE_UTMPX], [test "$ac_cv_header_utmpx_h" = "yes"])
+
+dnl Fallback to who(1) if the system doesn't provide an utmpx(5) interface
+if test "$ac_cv_header_utmpx_h" = "no"
+then
+	AC_PATH_PROG(PATH_TO_WHO,who)
+
+	if [$PATH_TO_WHO -q 2>/dev/null | egrep -i "^# users=[0-9]+$" >/dev/null]
+	then
+		ac_cv_path_to_who="$PATH_TO_WHO -q"
+	else
+		ac_cv_path_to_who="$PATH_TO_WHO"
+	fi
+
+	AC_DEFINE_UNQUOTED(WHO_COMMAND,"$ac_cv_path_to_who",
+		[path and arguments for invoking 'who'])
 fi
 
 AC_ARG_WITH([ipv6],
@@ -1244,10 +1306,18 @@ if test -n "$ac_cv_nslookup_command"; then
 	AC_DEFINE_UNQUOTED(NSLOOKUP_COMMAND,"$ac_cv_nslookup_command", [path and args for nslookup])
 fi
 
-AC_MSG_CHECKING([for number of cpus])
+AC_MSG_CHECKING([for number of online cpus])
+AC_TRY_COMPILE([#include <unistd.h>],
+	[sysconf(_SC_NPROCESSORS_ONLN) > 0;],
+	AC_DEFINE(HAVE_SYSCONF__SC_NPROCESSORS_ONLN,1,[Define if sysconf returns number of online cpus])
+	AC_MSG_RESULT([sysconf(_SC_NPROCESSORS_ONLN)]),
+	AC_MSG_RESULT([cannot calculate])
+	)
+
+AC_MSG_CHECKING([for number of available cpus])
 AC_TRY_COMPILE([#include <unistd.h>],
 	[sysconf(_SC_NPROCESSORS_CONF) > 0;],
-	AC_DEFINE(HAVE_SYSCONF__SC_NPROCESSORS_CONF,1,[Define if sysconf returns number of cpus])
+	AC_DEFINE(HAVE_SYSCONF__SC_NPROCESSORS_CONF,1,[Define if sysconf returns number of available cpus])
 	AC_MSG_RESULT([sysconf(_SC_NPROCESSORS_CONF)]),
 	AC_MSG_RESULT([cannot calculate])
 	)
@@ -1283,19 +1353,6 @@ then
 else
 	AC_MSG_WARN([Get smbclient from Samba.org to monitor SMB shares])
 fi
-
-
-AC_PATH_PROG(PATH_TO_WHO,who)
-
-if [$PATH_TO_WHO -q 2>/dev/null | egrep -i "^# users=[0-9]+$" >/dev/null]
-then
-	ac_cv_path_to_who="$PATH_TO_WHO -q"
-else
-	ac_cv_path_to_who="$PATH_TO_WHO"
-fi
-
-AC_DEFINE_UNQUOTED(WHO_COMMAND,"$ac_cv_path_to_who",
-	[path and arguments for invoking 'who'])
 
 AC_PATH_PROG(PATH_TO_SNMPGET,snmpget)
 AC_ARG_WITH(snmpget_command,
@@ -1354,13 +1411,22 @@ then
 fi
 
 AC_PATH_PROG(PATH_TO_FPING,fping)
+AC_PATH_PROG(PATH_TO_FPING6,fping6)
+
 AC_ARG_WITH(fping_command,
             ACX_HELP_STRING([--with-fping-command=PATH],
                             [Path to fping command]), PATH_TO_FPING=$withval)
+AC_ARG_WITH(fping6_command,
+            ACX_HELP_STRING([--with-fping6-command=PATH],
+                            [Path to fping6 command]), PATH_TO_FPING6=$withval)
+
 if test -n "$PATH_TO_FPING"
 then
 	AC_DEFINE_UNQUOTED(PATH_TO_FPING,"$PATH_TO_FPING",[path to fping])
 	EXTRAS="$EXTRAS check_fping"
+	if test x"$with_ipv6" != xno && test -n "$PATH_TO_FPING6"; then
+		AC_DEFINE_UNQUOTED(PATH_TO_FPING6,"$PATH_TO_FPING6",[path to fping6])
+	fi
 else
 	AC_MSG_WARN([Get fping from http://www.fping.com in order to make check_fping plugin])
 fi
@@ -1721,7 +1787,6 @@ AC_OUTPUT(
   plugins-scripts/utils.pm
   plugins-scripts/utils.sh
   perlmods/Makefile
-  command.cfg
   test.pl
   pkg/solaris/pkginfo
   po/Makefile.in
