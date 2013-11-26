@@ -2,15 +2,15 @@ This software is brought to you by the Nagios Plugins Development Team. However,
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-Randy O'Meara
 dag rob?le
-Diego Elio Pettenò
+Randy O'Meara
 fabiodds
+Diego Elio Pettenò
 Oskar Ahner
 Lance Albertson
 David Alden
-Paul Allen
 Rodger Allen
+Paul Allen
 Patrick Allen
 Felipe Gustavo de Almeida
 Michael Almond
@@ -164,8 +164,8 @@ Guenther Mair
 Pawel Malachowski
 Michael Markstaller
 John Marquart
-Ernst-Dieter Martin
 Jason Martin
+Ernst-Dieter Martin
 Christopher Maser
 Mathieu Masseboeuf
 Alexander Matey

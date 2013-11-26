@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fr\n"
 "Report-Msgid-Bugs-To: nagiosplug-devel@lists.sourceforge.net\n"
-"POT-Creation-Date: 2013-09-10 13:48+0200\n"
+"POT-Creation-Date: 2013-09-10 23:13+0200\n"
 "PO-Revision-Date: 2010-04-21 23:38-0400\n"
 "Last-Translator: Thomas Guyot-Sionnest <dermoth@aei.ca>\n"
 "Language-Team: Nagios Plugin Development Mailing List <nagiosplug-"
@@ -33,14 +33,14 @@ msgstr ""
 #: plugins/check_pgsql.c:172 plugins/check_ping.c:95 plugins/check_procs.c:171
 #: plugins/check_radius.c:160 plugins/check_real.c:80 plugins/check_smtp.c:144
 #: plugins/check_snmp.c:239 plugins/check_ssh.c:73 plugins/check_swap.c:110
-#: plugins/check_tcp.c:210 plugins/check_time.c:78 plugins/check_ups.c:122
-#: plugins/check_users.c:77 plugins/negate.c:211 plugins-root/check_dhcp.c:270
+#: plugins/check_tcp.c:212 plugins/check_time.c:78 plugins/check_ups.c:122
+#: plugins/check_users.c:77 plugins/negate.c:214 plugins-root/check_dhcp.c:270
 msgid "Could not parse arguments"
 msgstr "Impossible de décomposer les arguments"
 
 #: plugins/check_by_ssh.c:90 plugins/check_dig.c:82 plugins/check_dns.c:95
 #: plugins/check_nagios.c:95 plugins/check_pgsql.c:178 plugins/check_ping.c:99
-#: plugins/check_procs.c:186 plugins/negate.c:76
+#: plugins/check_procs.c:186 plugins/negate.c:79
 msgid "Cannot catch SIGALRM"
 msgstr "Impossible d'obtenir le signal SIGALRM"
 
@@ -68,14 +68,14 @@ msgstr "%s: Erreur d'analyse du résultat\n"
 #: plugins/check_http.c:278 plugins/check_ldap.c:293 plugins/check_pgsql.c:311
 #: plugins/check_procs.c:429 plugins/check_radius.c:308
 #: plugins/check_real.c:356 plugins/check_smtp.c:581 plugins/check_snmp.c:726
-#: plugins/check_ssh.c:138 plugins/check_tcp.c:487 plugins/check_time.c:302
-#: plugins/check_ups.c:556 plugins/negate.c:161
+#: plugins/check_ssh.c:138 plugins/check_tcp.c:489 plugins/check_time.c:302
+#: plugins/check_ups.c:556 plugins/negate.c:164
 msgid "Timeout interval must be a positive integer"
 msgstr "Le délai d'attente doit être un entier positif"
 
 #: plugins/check_by_ssh.c:230 plugins/check_pgsql.c:341
 #: plugins/check_radius.c:272 plugins/check_real.c:327
-#: plugins/check_smtp.c:506 plugins/check_tcp.c:493 plugins/check_time.c:296
+#: plugins/check_smtp.c:506 plugins/check_tcp.c:495 plugins/check_time.c:296
 #: plugins/check_ups.c:518
 msgid "Port must be a positive integer"
 msgstr "Le numéro du port doit être un entier positif"
@@ -231,7 +231,7 @@ msgstr ""
 #: plugins/check_dig.c:355 plugins/check_disk.c:924 plugins/check_http.c:1560
 #: plugins/check_nagios.c:312 plugins/check_ntp.c:869
 #: plugins/check_ntp_peer.c:705 plugins/check_ntp_time.c:633
-#: plugins/check_procs.c:755 plugins/negate.c:268 plugins/urlize.c:180
+#: plugins/check_procs.c:755 plugins/negate.c:271 plugins/urlize.c:180
 msgid "Examples:"
 msgstr "Exemples:"
 
@@ -247,9 +247,9 @@ msgstr "Exemples:"
 #: plugins/check_ping.c:603 plugins/check_procs.c:773
 #: plugins/check_radius.c:385 plugins/check_real.c:451
 #: plugins/check_smtp.c:843 plugins/check_snmp.c:1197 plugins/check_ssh.c:309
-#: plugins/check_swap.c:558 plugins/check_tcp.c:666 plugins/check_time.c:371
+#: plugins/check_swap.c:558 plugins/check_tcp.c:668 plugins/check_time.c:371
 #: plugins/check_ups.c:660 plugins/check_users.c:240
-#: plugins/check_ide_smart.c:634 plugins/negate.c:292 plugins/urlize.c:197
+#: plugins/check_ide_smart.c:640 plugins/negate.c:295 plugins/urlize.c:197
 #: plugins-root/check_dhcp.c:1417 plugins-root/check_icmp.c:1354
 msgid "Usage:"
 msgstr "Utilisation:"
@@ -301,7 +301,7 @@ msgstr "virgules"
 #: plugins/check_nt.c:758 plugins/check_ntp.c:865 plugins/check_ntp_peer.c:696
 #: plugins/check_ntp_time.c:626 plugins/check_nwstat.c:1670
 #: plugins/check_overcr.c:456 plugins/check_snmp.c:1168
-#: plugins/check_swap.c:547 plugins/check_ups.c:642 plugins/negate.c:274
+#: plugins/check_swap.c:547 plugins/check_ups.c:642 plugins/negate.c:277
 #: plugins-root/check_icmp.c:1329
 msgid "Notes:"
 msgstr "Notes:"
@@ -1188,8 +1188,8 @@ msgid "file does not exist or is not readable"
 msgstr ""
 
 #: plugins/check_http.c:310 plugins/check_http.c:315 plugins/check_http.c:321
-#: plugins/check_smtp.c:600 plugins/check_tcp.c:558 plugins/check_tcp.c:562
-#: plugins/check_tcp.c:568
+#: plugins/check_smtp.c:600 plugins/check_tcp.c:560 plugins/check_tcp.c:564
+#: plugins/check_tcp.c:570
 msgid "Invalid certificate expiration period"
 msgstr "Période d'expiration du certificat invalide"
 
@@ -1199,7 +1199,7 @@ msgid ""
 "(SSLv3)"
 msgstr ""
 
-#: plugins/check_http.c:354 plugins/check_tcp.c:581
+#: plugins/check_http.c:354 plugins/check_tcp.c:583
 msgid "Invalid option - SSL is not available"
 msgstr "Option invalide - SSL n'est pas disponible"
 
@@ -1223,7 +1223,7 @@ msgstr "Impossible de compiler l'expression rationnelle: %s"
 
 #: plugins/check_http.c:464 plugins/check_ntp.c:722
 #: plugins/check_ntp_peer.c:513 plugins/check_ntp_time.c:512
-#: plugins/check_smtp.c:621 plugins/check_ssh.c:149 plugins/check_tcp.c:459
+#: plugins/check_smtp.c:621 plugins/check_ssh.c:149 plugins/check_tcp.c:461
 msgid "IPv6 support not available"
 msgstr "Support IPv6 non disponible"
 
@@ -4320,7 +4320,7 @@ msgstr "Réponses REAL invalide reçue de l'hôte"
 msgid "Invalid REAL response received from host on port %d\n"
 msgstr "Réponses REAL invalide reçue de l'hôte sur le port %d\n"
 
-#: plugins/check_real.c:184 plugins/check_tcp.c:287
+#: plugins/check_real.c:184 plugins/check_tcp.c:289
 #, c-format
 msgid "No data received from host\n"
 msgstr "Pas de données reçues de l'hôte\n"
@@ -4560,7 +4560,7 @@ msgstr ""
 msgid "FQDN used for HELO"
 msgstr ""
 
-#: plugins/check_smtp.c:809 plugins/check_tcp.c:647
+#: plugins/check_smtp.c:809 plugins/check_tcp.c:649
 msgid "Minimum number of days a certificate has to be valid."
 msgstr "Nombre de jours minimum pour que le certificat soit valide."
 
@@ -5025,46 +5025,46 @@ msgstr ""
 "Sur AIX, si -a est spécifié, le plugin utilise lsps -a, sinon il utilise "
 "lsps -s."
 
-#: plugins/check_tcp.c:198
+#: plugins/check_tcp.c:200
 msgid "CRITICAL - Generic check_tcp called with unknown service\n"
 msgstr ""
 "CRITIQUE -check_tcp version générique utilisé avec un service inconnu\n"
 
-#: plugins/check_tcp.c:222
+#: plugins/check_tcp.c:224
 msgid "With UDP checks, a send/expect string must be specified."
 msgstr ""
 "Avec la surveillance UDP, une chaîne d'envoi et un chaîne de réponse doit "
 "être spécifiée."
 
-#: plugins/check_tcp.c:414
+#: plugins/check_tcp.c:416
 msgid "No arguments found"
 msgstr "Pas de paramètres"
 
-#: plugins/check_tcp.c:516
+#: plugins/check_tcp.c:518
 msgid "Maxbytes must be a positive integer"
 msgstr "Maxbytes doit être un entier positif"
 
-#: plugins/check_tcp.c:534
+#: plugins/check_tcp.c:536
 msgid "Refuse must be one of ok, warn, crit"
 msgstr "Refuse doit être parmis ok, warn, crit"
 
-#: plugins/check_tcp.c:544
+#: plugins/check_tcp.c:546
 msgid "Mismatch must be one of ok, warn, crit"
 msgstr "Mismatch doit être parmis ok, warn, crit"
 
-#: plugins/check_tcp.c:550
+#: plugins/check_tcp.c:552
 msgid "Delay must be a positive integer"
 msgstr "Delay doit être un entier positif"
 
-#: plugins/check_tcp.c:595
+#: plugins/check_tcp.c:597
 msgid "You must provide a server address"
 msgstr "Vous devez fournir une adresse serveur"
 
-#: plugins/check_tcp.c:597
+#: plugins/check_tcp.c:599
 msgid "Invalid hostname, address or socket"
 msgstr "Adresse/Nom/Socket invalide"
 
-#: plugins/check_tcp.c:611
+#: plugins/check_tcp.c:613
 #, c-format
 msgid ""
 "This plugin tests %s connections with the specified host (or unix socket).\n"
@@ -5073,7 +5073,7 @@ msgstr ""
 "Ce plugin teste %s connections avec l'hôte spécifié (ou socket unix).\n"
 "\n"
 
-#: plugins/check_tcp.c:624
+#: plugins/check_tcp.c:626
 msgid ""
 "Can use \\n, \\r, \\t or \\ in send or quit string. Must come before send or "
 "quit option"
@@ -5081,59 +5081,59 @@ msgstr ""
 "Permet d'utiliser \\n, \\r, \\t ou \\ dans la chaîne de caractères send ou "
 "quit. Doit être placé avant ces dernières."
 
-#: plugins/check_tcp.c:625
+#: plugins/check_tcp.c:627
 msgid "Default: nothing added to send, \\r\\n added to end of quit"
 msgstr ""
 "Par défaut: Rien n'est ajouté à send, \\r\\n est ajouté à la fin de quit"
 
-#: plugins/check_tcp.c:627
+#: plugins/check_tcp.c:629
 msgid "String to send to the server"
 msgstr "Chaîne de caractères à envoyer au serveur"
 
-#: plugins/check_tcp.c:629
+#: plugins/check_tcp.c:631
 msgid "String to expect in server response"
 msgstr "Chaîne de caractères à attendre en réponse"
 
-#: plugins/check_tcp.c:629
+#: plugins/check_tcp.c:631
 msgid "(may be repeated)"
 msgstr "(peut être utilisé plusieurs fois)"
 
-#: plugins/check_tcp.c:631
+#: plugins/check_tcp.c:633
 msgid "All expect strings need to occur in server response. Default is any"
 msgstr ""
 "Toutes les chaînes attendus (expect) doivent être repérés dans la réponse. "
 "Par défaut, n'importe laquelle suffit."
 
-#: plugins/check_tcp.c:633
+#: plugins/check_tcp.c:635
 msgid "String to send server to initiate a clean close of the connection"
 msgstr "Chaîne de caractères à envoyer pour fermer gracieusement la connection"
 
-#: plugins/check_tcp.c:635
+#: plugins/check_tcp.c:637
 msgid "Accept TCP refusals with states ok, warn, crit (default: crit)"
 msgstr ""
 
-#: plugins/check_tcp.c:637
+#: plugins/check_tcp.c:639
 msgid ""
 "Accept expected string mismatches with states ok, warn, crit (default: warn)"
 msgstr ""
 
-#: plugins/check_tcp.c:639
+#: plugins/check_tcp.c:641
 msgid "Hide output from TCP socket"
 msgstr "Cacher la réponse provenant du socket TCP"
 
-#: plugins/check_tcp.c:641
+#: plugins/check_tcp.c:643
 msgid "Close connection once more than this number of bytes are received"
 msgstr ""
 
-#: plugins/check_tcp.c:643
+#: plugins/check_tcp.c:645
 msgid "Seconds to wait between sending string and polling for response"
 msgstr ""
 
-#: plugins/check_tcp.c:648
+#: plugins/check_tcp.c:650
 msgid "1st is #days for warning, 2nd is critical (if not specified - 0)."
 msgstr ""
 
-#: plugins/check_tcp.c:650
+#: plugins/check_tcp.c:652
 msgid "Use SSL for the connection."
 msgstr ""
 
@@ -5402,71 +5402,71 @@ msgstr ""
 "Sortir avec un résultat CRITIQUE si plus de INTEGER utilisateurs sont "
 "connectés"
 
-#: plugins/check_ide_smart.c:250
+#: plugins/check_ide_smart.c:256
 #, c-format
 msgid "CRITICAL - Couldn't open device %s: %s\n"
 msgstr "Critique - Impossible d'ouvrir le périphérique %s: %s\n"
 
-#: plugins/check_ide_smart.c:255
+#: plugins/check_ide_smart.c:261
 #, c-format
 msgid "CRITICAL - SMART_CMD_ENABLE\n"
 msgstr "CRITIQUE - SMART_CMD_ENABLE\n"
 
-#: plugins/check_ide_smart.c:317 plugins/check_ide_smart.c:344
+#: plugins/check_ide_smart.c:323 plugins/check_ide_smart.c:350
 #, c-format
 msgid "CRITICAL - SMART_READ_VALUES: %s\n"
 msgstr "CRITIQUE - SMART_READ_VALUES: %s\n"
 
-#: plugins/check_ide_smart.c:415
+#: plugins/check_ide_smart.c:421
 #, c-format
 msgid "CRITICAL - %d Harddrive PreFailure%cDetected! %d/%d tests failed.\n"
 msgstr ""
 "CRITIQUE - %d État de pré-panne %c Détecté! %d/%d les tests on échoués.\n"
 
-#: plugins/check_ide_smart.c:423
+#: plugins/check_ide_smart.c:429
 #, c-format
 msgid "WARNING - %d Harddrive Advisor%s Detected. %d/%d tests failed.\n"
 msgstr ""
 "AVERTISSEMENT -  %d État de pré-panne %s Détecté! %d/%d les tests on "
 "échoués.\n"
 
-#: plugins/check_ide_smart.c:431
+#: plugins/check_ide_smart.c:437
 #, c-format
 msgid "OK - Operational (%d/%d tests passed)\n"
 msgstr "OK - En fonctionnement (%d/%d les tests on été réussi)\n"
 
-#: plugins/check_ide_smart.c:435
+#: plugins/check_ide_smart.c:441
 #, c-format
 msgid "ERROR - Status '%d' unkown. %d/%d tests passed\n"
 msgstr "ERREUR - État '%d' inconnu. %d/%d les tests on réussi\n"
 
-#: plugins/check_ide_smart.c:468
+#: plugins/check_ide_smart.c:474
 #, c-format
 msgid "OffLineStatus=%d {%s}, AutoOffLine=%s, OffLineTimeout=%d minutes\n"
 msgstr ""
 "Etat Hors Ligne=%d {%s}, Hors Ligne Auto=%s, Temps avant arrêt=%d minutes\n"
 
-#: plugins/check_ide_smart.c:474
+#: plugins/check_ide_smart.c:480
 #, c-format
 msgid "OffLineCapability=%d {%s %s %s}\n"
 msgstr "Capacité Hors Ligne=%d {%s %s %s}\n"
 
-#: plugins/check_ide_smart.c:480
+#: plugins/check_ide_smart.c:486
 #, c-format
 msgid "SmartRevision=%d, CheckSum=%d, SmartCapability=%d {%s %s}\n"
 msgstr "Révision Smart=%d, Somme de contrôle=%d, Capacité Smart=%d {%s %s}\n"
 
-#: plugins/check_ide_smart.c:502 plugins/check_ide_smart.c:526
+#: plugins/check_ide_smart.c:508 plugins/check_ide_smart.c:532
 #, c-format
 msgid "CRITICAL - %s: %s\n"
 msgstr "CRITIQUE - %s: %s\n"
 
-#: plugins/check_ide_smart.c:547 plugins/check_ide_smart.c:574
+#: plugins/check_ide_smart.c:553 plugins/check_ide_smart.c:580
 #, c-format
 msgid "CRITICAL - SMART_READ_THRESHOLDS: %s\n"
 msgstr "CRITIQUE - SMART_READ_THRESHOLDS: %s\n"
 
-#: plugins/check_ide_smart.c:593
+#: plugins/check_ide_smart.c:599
 #, c-format
 msgid ""
 "This plugin checks a local hard drive with the (Linux specific) SMART "
@@ -5475,41 +5475,41 @@ msgstr ""
 "Ce plugin vérifie un disque dur local à l'aide de l'interface SMART (pour "
 "Linux) [http://smartlinux.sourceforge.net/smart/index.php]."
 
-#: plugins/check_ide_smart.c:603
+#: plugins/check_ide_smart.c:609
 msgid "Select device DEVICE"
 msgstr ""
 
-#: plugins/check_ide_smart.c:604
+#: plugins/check_ide_smart.c:610
 msgid ""
 "Note: if the device is selected with this option, _no_ other options are "
 "accepted"
 msgstr ""
 
-#: plugins/check_ide_smart.c:606
+#: plugins/check_ide_smart.c:612
 msgid "Perform immediately offline tests"
 msgstr ""
 
-#: plugins/check_ide_smart.c:608
+#: plugins/check_ide_smart.c:614
 msgid "Returns the number of failed tests"
 msgstr ""
 
-#: plugins/check_ide_smart.c:610
+#: plugins/check_ide_smart.c:616
 msgid "Turn on automatic offline tests"
 msgstr ""
 
-#: plugins/check_ide_smart.c:612
+#: plugins/check_ide_smart.c:618
 msgid "Turn off automatic offline tests"
 msgstr ""
 
-#: plugins/check_ide_smart.c:614
+#: plugins/check_ide_smart.c:620
 msgid "Output suitable for Nagios"
 msgstr ""
 
-#: plugins/negate.c:96
+#: plugins/negate.c:99
 msgid "No data returned from command\n"
 msgstr "Pas de données reçues de la commande\n"
 
-#: plugins/negate.c:167
+#: plugins/negate.c:170
 msgid ""
 "Timeout result must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) "
 "or integer (0-3)."
@@ -5517,7 +5517,7 @@ msgstr ""
 "Le résultat de temps dépassé doit être un nom d'état valide (OK, WARNING, "
 "CRITICAL, UNKNOWN) ou un nombre entier (0-3)."
 
-#: plugins/negate.c:171
+#: plugins/negate.c:174
 msgid ""
 "Ok must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or integer "
 "(0-3)."
@@ -5525,7 +5525,7 @@ msgstr ""
 "Ok doit être un nom d'état valide (OK, WARNING, CRITICAL, UNKNOWN) ou un "
 "nombre entier (0-3)."
 
-#: plugins/negate.c:177
+#: plugins/negate.c:180
 msgid ""
 "Warning must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or "
 "integer (0-3)."
@@ -5533,7 +5533,7 @@ msgstr ""
 "Warning doit être un nom d'état valide (OK, WARNING, CRITICAL, UNKNOWN) ou "
 "un nombre entier (0-3)."
 
-#: plugins/negate.c:182
+#: plugins/negate.c:185
 msgid ""
 "Critical must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or "
 "integer (0-3)."
@@ -5541,7 +5541,7 @@ msgstr ""
 "Critical doit être un nom d'état valide (OK, WARNING, CRITICAL, UNKNOWN) ou "
 "un nombre entier (0-3)."
 
-#: plugins/negate.c:187
+#: plugins/negate.c:190
 msgid ""
 "Unknown must be a valid state name (OK, WARNING, CRITICAL, UNKNOWN) or "
 "integer (0-3)."
@@ -5549,33 +5549,33 @@ msgstr ""
 "Unknown doit être un nom d'état valide (OK, WARNING, CRITICAL, UNKNOWN) ou "
 "un nombre entier (0-3)."
 
-#: plugins/negate.c:214
+#: plugins/negate.c:217
 msgid "Require path to command"
 msgstr "Chemin vers la commande requis"
 
-#: plugins/negate.c:243
+#: plugins/negate.c:246
 msgid ""
 "Negates the status of a plugin (returns OK for CRITICAL and vice-versa)."
 msgstr ""
 "Inverse le statut d'un plugin (retourne OK pour CRITIQUE et vice-versa)."
 
-#: plugins/negate.c:244
+#: plugins/negate.c:247
 msgid "Additional switches can be used to control which state becomes what."
 msgstr ""
 "Des options additionnelles peuvent être utilisées pour contrôler quel état "
 "devient quoi."
 
-#: plugins/negate.c:253
+#: plugins/negate.c:256
 msgid "Keep timeout longer than the plugin timeout to retain CRITICAL status."
 msgstr ""
 "Utilisez un délai de réponse plus long que celui du plugin afin de conserver "
 "les résultats CRITIQUE"
 
-#: plugins/negate.c:255
+#: plugins/negate.c:258
 msgid "Custom result on Negate timeouts; see below for STATUS definition\n"
 msgstr ""
 
-#: plugins/negate.c:261
+#: plugins/negate.c:264
 #, c-format
 msgid ""
 "    STATUS can be 'OK', 'WARNING', 'CRITICAL' or 'UNKNOWN' without single\n"
@@ -5583,97 +5583,97 @@ msgstr ""
 "    STATUS peut être 'OK', 'WARNING', 'CRITICAL' ou 'UNKNOWN' sans les "
 "simple\n"
 
-#: plugins/negate.c:262
+#: plugins/negate.c:265
 #, c-format
 msgid ""
 "    quotes. Numeric values are accepted. If nothing is specified, permutes\n"
 msgstr "    quotes. Les valeurs numériques sont acceptées. Si rien n'est\n"
 
-#: plugins/negate.c:263
+#: plugins/negate.c:266
 #, c-format
 msgid "    OK and CRITICAL.\n"
 msgstr "    spécifié, inverse OK et CRITIQUE.\n"
 
-#: plugins/negate.c:265
+#: plugins/negate.c:268
 #, c-format
 msgid ""
 "    Substitute output text as well. Will only substitute text in CAPITALS\n"
 msgstr ""
 
-#: plugins/negate.c:270
+#: plugins/negate.c:273
 msgid "Run check_ping and invert result. Must use full path to plugin"
 msgstr ""
 "Execute check_ping et inverse le résultat. Le chemin complet du plug-in doit "
 "être spécifié"
 
-#: plugins/negate.c:272
+#: plugins/negate.c:275
 msgid "This will return OK instead of WARNING and UNKNOWN instead of CRITICAL"
 msgstr ""
 "Ceci retournera OK au lieu de AVERTISSEMENT et INCONNU au lieu de CRITIQUE"
 
-#: plugins/negate.c:275
+#: plugins/negate.c:278
 msgid ""
 "This plugin is a wrapper to take the output of another plugin and invert it."
 msgstr ""
 "Ce plugin est un adaptateur qui prends l'état d'un autre plug-in et "
 "l'inverse."
 
-#: plugins/negate.c:276
+#: plugins/negate.c:279
 msgid "The full path of the plugin must be provided."
 msgstr "Le chemin complet du plugin doit être spécifié."
 
-#: plugins/negate.c:277
+#: plugins/negate.c:280
 msgid "If the wrapped plugin returns OK, the wrapper will return CRITICAL."
 msgstr "Si le plugin executé retourne OK, l'adaptateur retournera CRITIQUE."
 
-#: plugins/negate.c:278
+#: plugins/negate.c:281
 msgid "If the wrapped plugin returns CRITICAL, the wrapper will return OK."
 msgstr "Si le plugin executé retourne CRITIQUE, l'adaptateur retournera OK."
 
-#: plugins/negate.c:279
+#: plugins/negate.c:282
 msgid "Otherwise, the output state of the wrapped plugin is unchanged."
 msgstr "Autrement, l'état du plugin executé reste inchangé."
 
-#: plugins/negate.c:281
+#: plugins/negate.c:284
 msgid ""
 "Using timeout-result, it is possible to override the timeout behaviour or a"
 msgstr ""
 
-#: plugins/negate.c:282
+#: plugins/negate.c:285
 msgid "plugin by setting the negate timeout a bit lower."
 msgstr ""
 
-#: plugins/netutils.c:48
+#: plugins/netutils.c:49
 #, c-format
 msgid "%s - Socket timeout after %d seconds\n"
 msgstr "%s - Le socket n'a pas répondu dans les %d secondes\n"
 
-#: plugins/netutils.c:50
+#: plugins/netutils.c:51
 #, c-format
 msgid "%s - Abnormal timeout after %d seconds\n"
 msgstr "%s - Dépassement anormal du temps de réponse après %d secondes\n"
 
-#: plugins/netutils.c:78 plugins/netutils.c:280
+#: plugins/netutils.c:79 plugins/netutils.c:281
 msgid "Send failed"
 msgstr "L'envoi à échoué"
 
-#: plugins/netutils.c:95 plugins/netutils.c:295
+#: plugins/netutils.c:96 plugins/netutils.c:296
 msgid "No data was received from host!"
 msgstr "Pas de données reçues de l'hôte!"
 
-#: plugins/netutils.c:203 plugins/netutils.c:239
+#: plugins/netutils.c:204 plugins/netutils.c:240
 msgid "Socket creation failed"
 msgstr "La création du socket à échoué "
 
-#: plugins/netutils.c:232
+#: plugins/netutils.c:233
 msgid "Supplied path too long unix domain socket"
 msgstr "Le chemin fourni est trop long pour un socket unix"
 
-#: plugins/netutils.c:304
+#: plugins/netutils.c:305
 msgid "Receive failed"
 msgstr "La réception à échoué"
 
-#: plugins/netutils.c:330 plugins-root/check_dhcp.c:1337
+#: plugins/netutils.c:331 plugins-root/check_dhcp.c:1337
 #, c-format
 msgid "Invalid hostname/address - %s"
 msgstr "Adresse/Nom invalide - %s"
@@ -5759,25 +5759,25 @@ msgstr ""
 msgid "urlize http://example.com/ \"check_http -H example.com -r 'two words'\""
 msgstr ""
 
-#: plugins/utils.c:171
+#: plugins/utils.c:174
 #, c-format
 msgid "%s - Plugin timed out after %d seconds\n"
 msgstr "%s - Le plugin n'as pas répondu dans les %d secondes\n"
 
-#: plugins/utils.c:466
+#: plugins/utils.c:469
 msgid "failed realloc in strpcpy\n"
 msgstr "La fonction realloc à échoué dans strpcpy\n"
 
-#: plugins/utils.c:508
+#: plugins/utils.c:511
 msgid "failed malloc in strscat\n"
 msgstr "La fonction malloc à échoué dans strscat\n"
 
-#: plugins/utils.c:528
+#: plugins/utils.c:531
 #, fuzzy
 msgid "failed malloc in xvasprintf\n"
 msgstr "La fonction malloc à échoué dans strscat\n"
 
-#: plugins/utils.h:142
+#: plugins/utils.h:137
 #, c-format
 msgid ""
 "       %s (-h | --help) for detailed help\n"
@@ -5786,7 +5786,7 @@ msgstr ""
 "       %s (-h | --help) pour l'aide détaillée\n"
 "       %s (-V | --version) pour les informations relative à la version\n"
 
-#: plugins/utils.h:146
+#: plugins/utils.h:141
 msgid ""
 "\n"
 "Options:\n"
@@ -5802,7 +5802,7 @@ msgstr ""
 " -V, --version\n"
 "    Afficher les informations relative à la version\n"
 
-#: plugins/utils.h:153
+#: plugins/utils.h:148
 #, c-format
 msgid ""
 " -H, --hostname=ADDRESS\n"
@@ -5815,7 +5815,7 @@ msgstr ""
 " -%c, --port=INTEGER\n"
 "    Numéro de port (défaut: %s)\n"
 
-#: plugins/utils.h:159
+#: plugins/utils.h:154
 msgid ""
 " -4, --use-ipv4\n"
 "    Use IPv4 connection\n"
@@ -5827,7 +5827,7 @@ msgstr ""
 " -6, --use-ipv6\n"
 "    Utiliser une connection IPv6\n"
 
-#: plugins/utils.h:165
+#: plugins/utils.h:160
 msgid ""
 " -v, --verbose\n"
 "    Show details for command-line debugging (Nagios may truncate output)\n"
@@ -5836,7 +5836,7 @@ msgstr ""
 "    Affiche les informations de déboguage en ligne de commande (Nagios peut "
 "tronquer la sortie)\n"
 
-#: plugins/utils.h:169
+#: plugins/utils.h:164
 msgid ""
 " -w, --warning=DOUBLE\n"
 "    Response time to result in warning status (seconds)\n"
@@ -5848,7 +5848,7 @@ msgstr ""
 " -c, --critical=DOUBLE\n"
 "    Temps de réponse résultant en un état critique (secondes)\n"
 
-#: plugins/utils.h:175
+#: plugins/utils.h:170
 msgid ""
 " -w, --warning=RANGE\n"
 "    Warning range (format: start:end). Alert if outside this range\n"
@@ -5861,7 +5861,7 @@ msgstr ""
 " -c, --critical=RANGE\n"
 "    Seuil critique\n"
 
-#: plugins/utils.h:181
+#: plugins/utils.h:176
 #, c-format
 msgid ""
 " -t, --timeout=INTEGER\n"
@@ -5870,7 +5870,7 @@ msgstr ""
 " -t, --timeout=INTEGER\n"
 "    Délais de connection en secondes (défaut: %d)\n"
 
-#: plugins/utils.h:186
+#: plugins/utils.h:181
 msgid ""
 " --extra-opts=[section][@file]\n"
 "    Read options from an ini file. See http://nagiosplugins.org/extra-opts\n"
@@ -5881,7 +5881,7 @@ msgstr ""
 "opts\n"
 "    pour les instructions et examples.\n"
 
-#: plugins/utils.h:194
+#: plugins/utils.h:189
 msgid ""
 " See:\n"
 " http://nagiosplug.sourceforge.net/developer-guidelines."
@@ -5893,7 +5893,7 @@ msgstr ""
 "html#THRESHOLDFORMAT\n"
 " pour le format et examples des seuils (THRESHOLD).\n"
 
-#: plugins/utils.h:199
+#: plugins/utils.h:194
 msgid ""
 "\n"
 "Send email to nagios-users@lists.sourceforge.net if you have questions\n"
@@ -5909,7 +5909,7 @@ msgstr ""
 "améliorations, envoyez un email à nagiosplug-devel@lists.sourceforge.net\n"
 "\n"
 
-#: plugins/utils.h:204
+#: plugins/utils.h:199
 msgid ""
 "\n"
 "The nagios plugins come with ABSOLUTELY NO WARRANTY. You may redistribute\n"
