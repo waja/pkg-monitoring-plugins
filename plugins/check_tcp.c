@@ -3,7 +3,7 @@
 * Nagios check_tcp plugin
 *
 * License: GPL
-* Copyright (c) 1999-2008 Nagios Plugins Development Team
+* Copyright (c) 1999-2013 Nagios Plugins Development Team
 *
 * Description:
 *
@@ -82,15 +82,14 @@ static int sd = 0;
 #define MAXBUF 1024
 static char buffer[MAXBUF];
 static int expect_mismatch_state = STATE_WARNING;
+static int match_flags = NP_MATCH_EXACT;
 
 #define FLAG_SSL 0x01
 #define FLAG_VERBOSE 0x02
-#define FLAG_EXACT_MATCH 0x04
-#define FLAG_TIME_WARN 0x08
-#define FLAG_TIME_CRIT 0x10
-#define FLAG_HIDE_OUTPUT 0x20
-#define FLAG_MATCH_ALL 0x40
-static size_t flags = FLAG_EXACT_MATCH;
+#define FLAG_TIME_WARN 0x04
+#define FLAG_TIME_CRIT 0x08
+#define FLAG_HIDE_OUTPUT 0x10
+static size_t flags;
 
 int
 main (int argc, char **argv)
@@ -278,30 +277,32 @@ main (int argc, char **argv)
 			status = realloc(status, len + i + 1);
 			memcpy(&status[len], buffer, i);
 			len += i;
+			status[len] = '\0';
 
 			/* stop reading if user-forced */
 			if (maxbytes && len >= maxbytes)
 				break;
+
+			if ((match = np_expect_match(status,
+			    server_expect,
+			    server_expect_count,
+			    match_flags)) != NP_MATCH_RETRY)
+				break;
 		}
+		if (match == NP_MATCH_RETRY)
+			match = NP_MATCH_FAILURE;
 
 		/* no data when expected, so return critical */
 		if (len == 0)
 			die (STATE_CRITICAL, _("No data received from host\n"));
 
-		/* force null-termination and strip whitespace from end of output */
-		status[len--] = '\0';
 		/* print raw output if we're debugging */
 		if(flags & FLAG_VERBOSE)
 			printf("received %d bytes from host\n#-raw-recv-------#\n%s\n#-raw-recv-------#\n",
 			       (int)len + 1, status);
-		while(isspace(status[len])) status[len--] = '\0';
-
-		match = np_expect_match(status,
-                                server_expect,
-                                server_expect_count,
-                                (flags & FLAG_MATCH_ALL ? TRUE : FALSE),
-                                (flags & FLAG_EXACT_MATCH ? TRUE : FALSE),
-                                (flags & FLAG_VERBOSE ? TRUE : FALSE));
+		/* strip whitespace from end of output */
+		while(--len > 0 && isspace(status[len]))
+			status[len] = '\0';
 	}
 
 	if (server_quit != NULL) {
@@ -321,7 +322,7 @@ main (int argc, char **argv)
 		result = STATE_WARNING;
 
 	/* did we get the response we hoped? */
-	if(match == FALSE && result != STATE_CRITICAL)
+	if(match == NP_MATCH_FAILURE && result != STATE_CRITICAL)
 		result = expect_mismatch_state;
 
 	/* reset the alarm */
@@ -332,10 +333,10 @@ main (int argc, char **argv)
 	 * the response we were looking for. if-else */
 	printf("%s %s - ", SERVICE, state_text(result));
 
-	if(match == FALSE && len && !(flags & FLAG_HIDE_OUTPUT))
+	if(match == NP_MATCH_FAILURE && len && !(flags & FLAG_HIDE_OUTPUT))
 		printf("Unexpected response from host/socket: %s", status);
 	else {
-		if(match == FALSE)
+		if(match == NP_MATCH_FAILURE)
 			printf("Unexpected response from host/socket on ");
 		else
 			printf("%.3f second response time on ", elapsed_time);
@@ -345,13 +346,13 @@ main (int argc, char **argv)
 			printf("socket %s", server_address);
 	}
 
-	if (match != FALSE && !(flags & FLAG_HIDE_OUTPUT) && len)
+	if (match != NP_MATCH_FAILURE && !(flags & FLAG_HIDE_OUTPUT) && len)
 		printf (" [%s]", status);
 
 	/* perf-data doesn't apply when server doesn't talk properly,
 	 * so print all zeroes on warn and crit. Use fperfdata since
 	 * localisation settings can make different outputs */
-	if(match == FALSE)
+	if(match == NP_MATCH_FAILURE)
 		printf ("|%s",
 				fperfdata ("time", elapsed_time, "s",
 				(flags & FLAG_TIME_WARN ? TRUE : FALSE), 0,
@@ -450,6 +451,7 @@ process_arguments (int argc, char **argv)
 			exit (STATE_OK);
 		case 'v':                 /* verbose mode */
 			flags |= FLAG_VERBOSE;
+			match_flags |= NP_MATCH_VERBOSE;
 			break;
 		case '4':
 			address_family = AF_INET;
@@ -506,7 +508,7 @@ process_arguments (int argc, char **argv)
 				xasprintf(&server_send, "%s", optarg);
 			break;
 		case 'e': /* expect string (may be repeated) */
-			flags &= ~FLAG_EXACT_MATCH;
+			match_flags &= ~NP_MATCH_EXACT;
 			if (server_expect_count == 0)
 				server_expect = malloc (sizeof (char *) * (++server_expect_count));
 			else
@@ -584,7 +586,7 @@ process_arguments (int argc, char **argv)
 #endif
 			break;
 		case 'A':
-			flags |= FLAG_MATCH_ALL;
+			match_flags |= NP_MATCH_ALL;
 			break;
 		}
 	}
