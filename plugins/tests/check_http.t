@@ -18,9 +18,24 @@ use Test::More;
 use NPTest;
 use FindBin qw($Bin);
 
-use HTTP::Daemon;
-use HTTP::Status;
-use HTTP::Response;
+my $common_tests = 66;
+my $ssl_only_tests = 6;
+# Check that all dependent modules are available
+eval {
+	require HTTP::Daemon;
+	require HTTP::Status;
+	require HTTP::Response;
+};
+
+if ($@) {
+	plan skip_all => "Missing required module for test: $@";
+} else {
+	if (-x "./check_http") {
+		plan tests => $common_tests * 2 + $ssl_only_tests;
+	} else {
+		plan skip_all => "No check_http compiled";
+	}
+}
 
 my $servers = { http => 0 };	# HTTP::Daemon should always be available
 eval { require HTTP::Daemon::SSL };
@@ -112,9 +127,9 @@ sub run_server {
 				$c->send_response("slow");
 			} elsif ($r->url->path eq "/method") {
 				if ($r->method eq "DELETE") {
-					$c->send_error(RC_METHOD_NOT_ALLOWED);
+					$c->send_error(HTTP::Status->RC_METHOD_NOT_ALLOWED);
 				} elsif ($r->method eq "foo") {
-					$c->send_error(RC_NOT_IMPLEMENTED);
+					$c->send_error(HTTP::Status->RC_NOT_IMPLEMENTED);
 				} else {
 					$c->send_status_line(200, $r->method);
 				}
@@ -138,7 +153,7 @@ sub run_server {
 				delete($persist[1000]);
 				next MAINLOOP;
 			} else {
-				$c->send_error(RC_FORBIDDEN);
+				$c->send_error(HTTP::Status->RC_FORBIDDEN);
 			}
 			$c->close;
 		}
@@ -157,14 +172,6 @@ if ($ARGV[0] && $ARGV[0] eq "-d") {
 	}
 }
 
-my $common_tests = 66;
-my $ssl_only_tests = 6;
-if (-x "./check_http") {
-	plan tests => $common_tests * 2 + $ssl_only_tests;
-} else {
-	plan skip_all => "No check_http compiled";
-}
-
 my $result;
 my $command = "./check_http -H 127.0.0.1";
 
@@ -175,17 +182,17 @@ SKIP: {
 	
 	$result = NPTest->testCmd( "$command -p $port_https -S -C 14" );
 	is( $result->return_code, 0, "$command -p $port_https -S -C 14" );
-	is( $result->output, 'OK - Certificate will expire on 03/03/2019 21:41.', "output ok" );
+	is( $result->output, 'OK - Certificate \'Ton Voon\' will expire on 03/03/2019 21:41.', "output ok" );
 
 	$result = NPTest->testCmd( "$command -p $port_https -S -C 14000" );
 	is( $result->return_code, 1, "$command -p $port_https -S -C 14000" );
-	like( $result->output, '/WARNING - Certificate expires in \d+ day\(s\) \(03/03/2019 21:41\)./', "output ok" );
+	like( $result->output, '/WARNING - Certificate \'Ton Voon\' expires in \d+ day\(s\) \(03/03/2019 21:41\)./', "output ok" );
 
 	# Expired cert tests
 	$result = NPTest->testCmd( "$command -p $port_https_expired -S -C 7" );
 	is( $result->return_code, 2, "$command -p $port_https_expired -S -C 7" );
 	is( $result->output, 
-		'CRITICAL - Certificate expired on 03/05/2009 00:13.',
+		'CRITICAL - Certificate \'Ton Voon\' expired on 03/05/2009 00:13.',
 		"output ok" );
 
 }

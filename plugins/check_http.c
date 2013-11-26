@@ -34,7 +34,7 @@
 /* splint -I. -I../../plugins -I../../lib/ -I/usr/kerberos/include/ ../../plugins/check_http.c */
 
 const char *progname = "check_http";
-const char *copyright = "1999-2008";
+const char *copyright = "1999-2011";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
@@ -59,6 +59,7 @@ enum {
 #ifdef HAVE_SSL
 int check_cert = FALSE;
 int days_till_exp;
+int ssl_version;
 char *randbuff;
 X509 *server_cert;
 #  define my_recv(buf, len) ((use_ssl) ? np_net_ssl_read(buf, len) : read(sd, buf, len))
@@ -101,10 +102,9 @@ int server_expect_yn = 0;
 char server_expect[MAX_INPUT_BUFFER] = HTTP_EXPECT;
 char string_expect[MAX_INPUT_BUFFER] = "";
 char output_string_search[30] = "";
-double warning_time = 0;
-int check_warning_time = FALSE;
-double critical_time = 0;
-int check_critical_time = FALSE;
+char *warning_thresholds = NULL;
+char *critical_thresholds = NULL;
+thresholds *thlds;
 char user_auth[MAX_INPUT_BUFFER] = "";
 char proxy_auth[MAX_INPUT_BUFFER] = "";
 int display_html = FALSE;
@@ -189,7 +189,7 @@ process_arguments (int argc, char **argv)
     STD_LONG_OPTS,
     {"link", no_argument, 0, 'L'},
     {"nohtml", no_argument, 0, 'n'},
-    {"ssl", no_argument, 0, 'S'},
+    {"ssl", optional_argument, 0, 'S'},
     {"sni", no_argument, 0, SNI_OPTION},
     {"post", required_argument, 0, 'P'},
     {"method", required_argument, 0, 'j'},
@@ -235,7 +235,7 @@ process_arguments (int argc, char **argv)
   }
 
   while (1) {
-    c = getopt_long (argc, argv, "Vvh46t:c:w:A:k:H:P:j:T:I:a:b:e:p:s:R:r:u:f:C:nlLSm:M:N", longopts, &option);
+    c = getopt_long (argc, argv, "Vvh46t:c:w:A:k:H:P:j:T:I:a:b:e:p:s:R:r:u:f:C:nlLS::m:M:N", longopts, &option);
     if (c == -1 || c == EOF)
       break;
 
@@ -258,20 +258,10 @@ process_arguments (int argc, char **argv)
         socket_timeout = atoi (optarg);
       break;
     case 'c': /* critical time threshold */
-      if (!is_nonnegative (optarg))
-        usage2 (_("Critical threshold must be integer"), optarg);
-      else {
-        critical_time = strtod (optarg, NULL);
-        check_critical_time = TRUE;
-      }
+      critical_thresholds = optarg;
       break;
     case 'w': /* warning time threshold */
-      if (!is_nonnegative (optarg))
-        usage2 (_("Warning threshold must be integer"), optarg);
-      else {
-        warning_time = strtod (optarg, NULL);
-        check_warning_time = TRUE;
-      }
+      warning_thresholds = optarg;
       break;
     case 'A': /* User Agent String */
       asprintf (&user_agent, "User-Agent: %s", optarg);
@@ -305,6 +295,13 @@ process_arguments (int argc, char **argv)
       usage4 (_("Invalid option - SSL is not available"));
 #endif
       use_ssl = TRUE;
+      if (optarg == NULL || c != 'S')
+        ssl_version = 0;
+      else {
+        ssl_version = atoi(optarg);
+        if (ssl_version < 1 || ssl_version > 3)
+            usage4 (_("Invalid option - Valid values for SSL Version are 1 (TLSv1), 2 (SSLv2) or 3 (SSLv3)"));
+      }
       if (specify_port == FALSE)
         server_port = HTTPS_PORT;
       break;
@@ -478,8 +475,10 @@ process_arguments (int argc, char **argv)
       server_address = strdup (host_name);
   }
 
-  if (check_critical_time && critical_time>(double)socket_timeout)
-    socket_timeout = (int)critical_time + 1;
+  set_thresholds(&thlds, warning_thresholds, critical_thresholds);
+
+  if (critical_thresholds && thlds->critical->end>(double)socket_timeout)
+    socket_timeout = (int)thlds->critical->end + 1;
 
   if (http_method == NULL)
     http_method = strdup ("GET");
@@ -807,7 +806,9 @@ check_http (void)
     die (STATE_CRITICAL, _("HTTP CRITICAL - Unable to open TCP socket\n"));
 #ifdef HAVE_SSL
   if (use_ssl == TRUE) {
-    np_net_ssl_init_with_hostname(sd, (use_sni ? host_name : NULL));
+    result = np_net_ssl_init_with_hostname_and_version(sd, (use_sni ? host_name : NULL), ssl_version);
+    if (result != STATE_OK)
+      return result;
     if (check_cert == TRUE) {
       result = np_net_ssl_check_cert(days_till_exp);
       np_net_ssl_cleanup();
@@ -1099,10 +1100,7 @@ check_http (void)
             (display_html ? "</A>" : ""),
             perfd_time (elapsed_time), perfd_size (page_len));
 
-  if (check_critical_time == TRUE && elapsed_time > critical_time)
-    result = STATE_CRITICAL;
-  if (check_warning_time == TRUE && elapsed_time > warning_time)
-    result =  max_state_alt(STATE_WARNING, result);
+  result = max_state_alt(get_status(elapsed_time, thlds), result);
 
   die (result, "HTTP %s: %s\n", state_text(result), msg);
   /* die failed? */
@@ -1284,8 +1282,8 @@ server_port_check (int ssl_flag)
 char *perfd_time (double elapsed_time)
 {
   return fperfdata ("time", elapsed_time, "s",
-            check_warning_time, warning_time,
-            check_critical_time, critical_time,
+            thlds->warning?TRUE:FALSE, thlds->warning?thlds->warning->end:0,
+            thlds->critical?TRUE:FALSE, thlds->critical?thlds->critical->end:0,
                    TRUE, 0, FALSE, 0);
 }
 
@@ -1335,13 +1333,14 @@ print_help (void)
   printf (UT_IPv46);
 
 #ifdef HAVE_SSL
-  printf (" %s\n", "-S, --ssl");
-  printf ("   %s\n", _("Connect via SSL. Port defaults to 443"));
+  printf (" %s\n", "-S, --ssl=VERSION");
+  printf ("    %s\n", _("Connect via SSL. Port defaults to 443. VERSION is optional, and prevents"));
+  printf ("    %s\n", _("auto-negotiation (1 = TLSv1, 2 = SSLv2, 3 = SSLv3)."));
   printf (" %s\n", "--sni");
-  printf ("   %s\n", _("Enable SSL/TLS hostname extension support (SNI)"));
+  printf ("    %s\n", _("Enable SSL/TLS hostname extension support (SNI)"));
   printf (" %s\n", "-C, --certificate=INTEGER");
-  printf ("   %s\n", _("Minimum number of days a certificate has to be valid. Port defaults to 443"));
-  printf ("   %s\n", _("(when this option is used the URL is not checked.)\n"));
+  printf ("    %s\n", _("Minimum number of days a certificate has to be valid. Port defaults to 443"));
+  printf ("    %s\n", _("(when this option is used the URL is not checked.)\n"));
 #endif
 
   printf (" %s\n", "-e, --expect=STRING");
@@ -1378,16 +1377,16 @@ print_help (void)
   printf (" %s\n", "-a, --authorization=AUTH_PAIR");
   printf ("    %s\n", _("Username:password on sites with basic authentication"));
   printf (" %s\n", "-b, --proxy-authorization=AUTH_PAIR");
-  printf (" 	%s\n", _("Username:password on proxy-servers with basic authentication"));
+  printf ("    %s\n", _("Username:password on proxy-servers with basic authentication"));
   printf (" %s\n", "-A, --useragent=STRING");
   printf ("    %s\n", _("String to be sent in http header as \"User Agent\""));
   printf (" %s\n", "-k, --header=STRING");
-  printf ("    %s\n", _(" Any other tags to be sent in http header. Use multiple times for additional headers"));
+  printf ("    %s\n", _("Any other tags to be sent in http header. Use multiple times for additional headers"));
   printf (" %s\n", "-L, --link");
   printf ("    %s\n", _("Wrap output in HTML link (obsoleted by urlize)"));
   printf (" %s\n", "-f, --onredirect=<ok|warning|critical|follow|sticky|stickyport>");
   printf ("    %s\n", _("How to handle redirected pages. sticky is like follow but stick to the"));
-  printf ("    %s\n", _("specified IP address. stickyport also ensure post stays the same."));
+  printf ("    %s\n", _("specified IP address. stickyport also ensures port stays the same."));
   printf (" %s\n", "-m, --pagesize=INTEGER<:INTEGER>");
   printf ("    %s\n", _("Minimum page size required (bytes) : Maximum page size required (bytes)"));
 
@@ -1411,6 +1410,10 @@ print_help (void)
   printf (" %s\n", _("This plugin can also check whether an SSL enabled web server is able to"));
   printf (" %s\n", _("serve content (optionally within a specified time) or whether the X509 "));
   printf (" %s\n", _("certificate is still valid for the specified number of days."));
+  printf ("\n");
+  printf (" %s\n", _("Please note that this plugin does not check if the presented server"));
+  printf (" %s\n", _("certificate matches the hostname of the server, or if the certificate"));
+  printf (" %s\n", _("has a valid chain of trust to one of the locally installed CAs."));
   printf ("\n");
   printf ("%s\n", _("Examples:"));
   printf (" %s\n\n", "CHECK CONTENT: check_http -w 5 -c 10 --ssl -H www.verisign.com");
@@ -1441,6 +1444,6 @@ print_usage (void)
   printf ("       [-b proxy_auth] [-f <ok|warning|critcal|follow|sticky|stickyport>]\n");
   printf ("       [-e <expect>] [-s string] [-l] [-r <regex> | -R <case-insensitive regex>]\n");
   printf ("       [-P string] [-m <min_pg_size>:<max_pg_size>] [-4|-6] [-N] [-M <age>]\n");
-  printf ("       [-A string] [-k string] [-S] [--sni] [-C <age>] [-T <content-type>]\n");
+  printf ("       [-A string] [-k string] [-S <version>] [--sni] [-C <age>] [-T <content-type>]\n");
   printf ("       [-j method]\n");
 }
