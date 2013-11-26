@@ -1,5 +1,14 @@
 ## Process this file with automake to produce Makefile.in
 
+if RELEASE_PRESENT
+NP_VERSION = $(PACKAGE_VERSION)
+else
+NP-VERSION-FILE: .FORCE-NP-VERSION-FILE
+	@$(SHELL_PATH) $(top_srcdir)/NP-VERSION-GEN
+.FORCE-NP-VERSION-FILE:
+-include NP-VERSION-FILE
+endif
+
 SUFFIXES = .pl .sh
 
 VPATH=$(top_srcdir) $(top_srcdir)/plugins-scripts $(top_srcdir)/plugins-scripts/t
@@ -29,9 +38,13 @@ test-debug:
 CLEANFILES=$(libexec_SCRIPTS)
 
 .pl :
-	$(AWK) -f ./subst $< > $@
+	NP_VERSION=$(NP_VERSION) $(AWK) -f ./subst $< > $@
 	chmod +x $@
 
 .sh :
-	$(AWK) -f ./subst $< > $@
+	NP_VERSION=$(NP_VERSION) $(AWK) -f ./subst $< > $@
 	chmod +x $@
+
+clean-local:
+	rm -f NP-VERSION-FILE
+

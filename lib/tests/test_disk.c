@@ -13,7 +13,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: test_disk.c 1914 2008-01-30 09:38:37Z dermoth $
 * 
 *****************************************************************************/
 
@@ -220,5 +219,6 @@ np_test_mount_entry_regex (struct mount_entry *dummy_mount_list, char *regstr, i
 		    desc, regstr, expect, matches);
 
 	} else
-		ok ( false, "regex '%s' not compileable", regstr);
+		ok ( false, "regex '%s' not compilable", regstr);
 }
+

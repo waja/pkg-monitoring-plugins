@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_smtp plugin
@@ -27,12 +25,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_smtp.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_smtp";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -168,7 +164,7 @@ main (int argc, char **argv)
 
 	if (verbose && smtp_use_dummycmd)
 		printf ("FROM CMD: %s", cmd_str);
-	
+
 	/* initialize alarm signal handling */
 	(void) signal (SIGALRM, socket_timeout_alarm_handler);
 
@@ -285,7 +281,7 @@ main (int argc, char **argv)
 #  endif /* USE_OPENSSL */
 		}
 #endif
-				
+
 		/* sendmail will syslog a "NOQUEUE" error if session does not attempt
 		 * to do something useful. This can be prevented by giving a command
 		 * even if syntax is illegal (MAIL requires a FROM:<...> argument)
@@ -293,7 +289,6 @@ main (int argc, char **argv)
 		 * According to rfc821 you can include a null reversepath in the from command
 		 * - but a log message is generated on the smtp server.
 		 *
-		 * You can disable sending mail_command with '--nocommand'
 		 * Use the -f option to provide a FROM address
 		 */
 		if (smtp_use_dummycmd) {
@@ -474,7 +469,6 @@ process_arguments (int argc, char **argv)
 		{"authpass", required_argument, 0, 'P'},
 		{"command", required_argument, 0, 'C'},
 		{"response", required_argument, 0, 'R'},
-		{"nocommand", required_argument, 0, 'n'},
 		{"verbose", no_argument, 0, 'v'},
 		{"version", no_argument, 0, 'V'},
 		{"use-ipv4", no_argument, 0, '4'},
@@ -620,7 +614,7 @@ process_arguments (int argc, char **argv)
 #endif
 			break;
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'h':									/* help */
 			print_help ();
@@ -746,7 +740,7 @@ recvlines(char *buf, size_t bufsize)
 }
 
 
-int 
+int
 my_close (void)
 {
 #ifdef HAVE_SSL
@@ -762,7 +756,7 @@ print_help (void)
 	char *myport;
 	asprintf (&myport, "%d", SMTP_PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999-2001 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);
@@ -782,8 +776,6 @@ print_help (void)
 
 	printf (" %s\n", "-e, --expect=STRING");
   printf (_("    String to expect in first line of server response (default: '%s')\n"), SMTP_EXPECT);
-  printf (" %s\n", "-n, nocommand");
-  printf ("    %s\n", _("Suppress SMTP command"));
   printf (" %s\n", "-C, --command=STRING");
   printf ("    %s\n", _("SMTP command (may be used repeatedly)"));
   printf (" %s\n", "-R, --command=STRING");
@@ -833,6 +825,6 @@ print_usage (void)
   printf (_("Usage:"));
 	printf ("%s -H host [-p port] [-e expect] [-C command] [-f from addr]", progname);
   printf ("[-A authtype -U authuser -P authpass] [-w warn] [-c crit] [-t timeout]\n");
-  printf ("[-S] [-D days] [-n] [-v] [-4|-6]\n");
+  printf ("[-S] [-D days] [-v] [-4|-6]\n");
 }
 

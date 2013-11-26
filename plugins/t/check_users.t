@@ -2,8 +2,11 @@
 #
 # Logged in Users Tests via check_users
 #
-# $Id: check_users.t 1207 2005-07-25 01:47:15Z illumino $
+# Trick: This ckeck requires at least 1 user logged in. These commands should
+#        leave a session open forever in the background:
 #
+#   $ ssh -tt localhost </dev/null >/dev/null 2>/dev/null &
+#   $ disown %1
 
 use strict;
 use Test;

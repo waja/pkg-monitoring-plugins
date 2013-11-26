@@ -2,7 +2,6 @@
 #
 # Ping Response Tests via check_ping
 #
-# $Id: check_ping.t 1639 2007-03-12 10:51:06Z tonvoon $
 #
 
 use strict;

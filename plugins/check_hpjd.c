@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_hpjd plugin
@@ -28,12 +26,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_hpjd.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_hpjd";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -123,7 +119,7 @@ main (int argc, char **argv)
 		 HPJD_GD_DOOR_OPEN, HPJD_GD_PAPER_OUTPUT, HPJD_GD_STATUS_DISPLAY);
 
 	/* get the command to run */
-	sprintf (command_line, "%s -OQa -m : -v 1 -c %s %s %s", PATH_TO_SNMPGET, community, 
+	sprintf (command_line, "%s -OQa -m : -v 1 -c %s %s %s", PATH_TO_SNMPGET, community,
 									address, query_string);
 
 	/* run the command */
@@ -198,7 +194,7 @@ main (int argc, char **argv)
 				strcpy (display_message, temp_buffer + 1);
 				break;
 			default:										/* fold multiline message */
-				strncat (display_message, input_buffer, 
+				strncat (display_message, input_buffer,
 						sizeof (display_message) - strlen (display_message) - 1);
 			}
 
@@ -218,7 +214,7 @@ main (int argc, char **argv)
 		sprintf (errmsg, "%s", input_buffer );
 
 	}
-	
+
 	/* close stderr */
 	(void) fclose (child_stderr);
 
@@ -232,7 +228,7 @@ main (int argc, char **argv)
 		/* might not be the problem, but most likely is. */
 		result = STATE_UNKNOWN ;
 		asprintf (&errmsg, "%s : Timeout from host %s\n", errmsg, address );
-		 
+
 	}
 
 	/* if we had no read errors, check the printer status results... */
@@ -326,7 +322,7 @@ process_arguments (int argc, char **argv)
 	if (argc < 2)
 		return ERROR;
 
-	
+
 	while (1) {
 		c = getopt_long (argc, argv, "+hVH:C:", longopts, &option);
 
@@ -346,7 +342,7 @@ process_arguments (int argc, char **argv)
 			community = strscpy (community, optarg);
 			break;
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'h':									/* help */
 			print_help ();
@@ -365,7 +361,7 @@ process_arguments (int argc, char **argv)
 			usage2 (_("Invalid hostname/address"), argv[c]);
 		}
 	}
-	
+
 	if (community == NULL) {
 		if (argv[c] != NULL )
 			community = argv[c];
@@ -387,7 +383,7 @@ validate_arguments (void)
 void
 print_help (void)
 {
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);

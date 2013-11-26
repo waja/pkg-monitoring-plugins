@@ -2,7 +2,6 @@
 #
 # Load Average Tests via check_load
 #
-# $Id: check_load.t 1851 2007-12-10 00:19:27Z psychotrahe $
 #
 
 use strict;

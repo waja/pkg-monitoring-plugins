@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 1999-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_mrtg plugin
@@ -28,12 +26,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_mrtg.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_mrtg";
-const char *revision =  "$Revision: 1991 $";
 const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -57,7 +53,7 @@ char *units;
 int
 main (int argc, char **argv)
 {
-	int result = STATE_UNKNOWN;
+	int result = STATE_OK;
 	FILE *fp;
 	int line;
 	char input_buffer[MAX_INPUT_BUFFER];
@@ -181,7 +177,7 @@ process_arguments (int argc, char **argv)
 		{"warning", required_argument, 0, 'w'},
 		{"label", required_argument, 0, 'l'},
 		{"units", required_argument, 0, 'u'},
-		{"verbose", no_argument, 0, 'v'},
+		{"variable", required_argument, 0, 'v'},
 		{"version", no_argument, 0, 'V'},
 		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0}
@@ -237,7 +233,7 @@ process_arguments (int argc, char **argv)
 			units = optarg;
 			break;
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'h':									/* help */
 			print_help ();
@@ -317,7 +313,7 @@ validate_arguments (void)
 void
 print_help (void)
 {
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);
@@ -334,7 +330,7 @@ print_help (void)
 
 	printf (" %s\n", "-F, --logfile=FILE");
   printf ("   %s\n", _("The MRTG log file containing the data you want to monitor"));
-  printf ("-e, --expires=MINUTES");
+  printf (" %s\n", "-e, --expires=MINUTES");
   printf ("   %s\n", _("Minutes before MRTG data is considered to be too old"));
   printf (" %s\n", "-a, --aggregation=AVG|MAX");
   printf ("   %s\n", _("Should we check average or maximum values?"));
@@ -380,7 +376,7 @@ print_help (void)
 
 
 
-/* original command line: 
+/* original command line:
 	 <log_file> <expire_minutes> <AVG|MAX> <variable> <vwl> <vcl> <label> [units] */
 
 void

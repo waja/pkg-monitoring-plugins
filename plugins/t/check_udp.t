@@ -2,7 +2,6 @@
 #
 # UDP Connection Based Tests via check_udp
 #
-# $Id: check_udp.t 1459 2006-07-28 22:44:11Z tonvoon $
 #
 
 use strict;

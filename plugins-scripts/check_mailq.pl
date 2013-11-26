@@ -22,7 +22,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 #
-# $Id: check_mailq.pl 1443 2006-07-05 13:45:57Z tonvoon $
 #
 ############################################################################
 
@@ -522,7 +521,7 @@ sub process_arguments(){
 		 );
 
 	if ($opt_V) {
-		print_revision($PROGNAME,'$Revision: 1443 $ ');
+		print_revision($PROGNAME,'@NP_VERSION@');
 		exit $ERRORS{'OK'};
 	}
 
@@ -580,7 +579,7 @@ sub print_usage () {
 }
 
 sub print_help () {
-	print_revision($PROGNAME,'$Revision: 1443 $');
+	print_revision($PROGNAME,'@NP_VERSION@');
 	print "Copyright (c) 2002 Subhendu Ghosh/Carlos Canau/Benjamin Schmid\n";
 	print "\n";
 	print_usage();
@@ -588,7 +587,7 @@ sub print_help () {
 	print "   Checks the number of messages in the mail queue (supports multiple sendmail queues, qmail)\n";
 	print "   Feedback/patches to support non-sendmail mailqueue welcome\n\n";
 	print "-w (--warning)   = Min. number of messages in queue to generate warning\n";
-	print "-c (--critical)  = Min. number of messages in queu to generate critical alert ( w < c )\n";
+	print "-c (--critical)  = Min. number of messages in queue to generate critical alert ( w < c )\n";
 	print "-W (--Warning)   = Min. number of messages for same domain in queue to generate warning\n";
 	print "-C (--Critical)  = Min. number of messages for same domain in queue to generate critical alert ( W < C )\n";
 	print "-t (--timeout)   = Plugin timeout in seconds (default = $utils::TIMEOUT)\n";

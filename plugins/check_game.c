@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2002-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_game plugin
@@ -28,12 +26,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_game.c 1991 2008-05-07 10:02:42Z dermoth $
 *
 *****************************************************************************/
 
 const char *progname = "check_game";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2002-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -105,7 +101,7 @@ main (int argc, char **argv)
   /* was thinking about running qstat without any options, capturing the
      -default line, parsing it & making an array of all know server types
      but thought this would be too much hassle considering this is a tool
-     for intelligent sysadmins (ha). Could put a static array of known 
+     for intelligent sysadmins (ha). Could put a static array of known
      server types in a header file but then we'd be limiting ourselves
 
      In the end, I figured I'd simply let an error occur & then trap it
@@ -139,10 +135,10 @@ main (int argc, char **argv)
     result = STATE_CRITICAL;
   }
   else {
-    printf ("OK: %s/%s %s (%s), Ping: %s ms|%s %s\n", 
+    printf ("OK: %s/%s %s (%s), Ping: %s ms|%s %s\n",
             ret[qstat_game_players],
             ret[qstat_game_players_max],
-            ret[qstat_game_field], 
+            ret[qstat_game_field],
             ret[qstat_map_field],
             ret[qstat_ping_field],
             perfdata ("players", atol(ret[qstat_game_players]), "",
@@ -202,7 +198,7 @@ process_arguments (int argc, char **argv)
       print_help ();
       exit (STATE_OK);
     case 'V': /* version */
-      print_revision (progname, revision);
+      print_revision (progname, NP_VERSION);
       exit (STATE_OK);
     case 'v': /* version */
       verbose = TRUE;
@@ -293,7 +289,7 @@ validate_arguments (void)
 void
 print_help (void)
 {
-  print_revision (progname, revision);
+  print_revision (progname, NP_VERSION);
 
   printf ("Copyright (c) 1999 Ian Cass, Knowledge Matters Limited\n");
   printf (COPYRIGHT, copyright, email);
@@ -345,7 +341,7 @@ print_usage (void)
  * Test Cases:
  *
  * ./check_game --players 7 -p 8 --map 5 qs 67.20.190.61 26000
- * 
+ *
  * qstat -raw , -qs 67.20.190.61
  *  ==> QS,67.20.190.61,Nightmare.fintek.ca,67.20.190.61:26000,3,e2m1,6,0,83,0
  *

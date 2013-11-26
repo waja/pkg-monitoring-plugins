@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2005-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-01-31 11:27:22 +0000 (Thu, 31 Jan 2008) $
-* 
 * Description:
 * 
 * A safe alternative to popen
@@ -37,7 +35,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: popen.c 1918 2008-01-31 11:27:22Z dermoth $
 * 
 *****************************************************************************/
 
@@ -140,7 +137,7 @@ spopen (const char *cmdstring)
 	/* there cannot be more args than characters */
 	argc = strlen (cmdstring) + 1;	/* add 1 for NULL termination */
 	argv = malloc (sizeof(char*)*argc);
-	
+
 	if (argv == NULL) {
 		printf ("%s\n", _("Could not malloc argv array in popen()"));
 		return NULL;
@@ -165,7 +162,7 @@ spopen (const char *cmdstring)
 		}
 		else if (strcspn(str,"'") < strcspn (str, " \t\r\n")) {
 										/* handle --option='foo bar' strings */
-			tmp = str + strcspn(str, "'") + 1; 
+			tmp = str + strcspn(str, "'") + 1;
 			if (!strstr (tmp, "'"))
 				return NULL;						/* balanced? */
 			tmp += strcspn(tmp,"'") + 1;

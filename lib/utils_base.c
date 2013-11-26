@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2006 Nagios Plugins Development Team
 *
-* Last Modified: $Date: 2008-03-11 00:10:23 +0000 (Tue, 11 Mar 2008) $
-*
 * Library of useful functions for plugins
 * 
 *
@@ -23,7 +21,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: utils_base.c 1938 2008-03-11 00:10:23Z tonvoon $
 *
 *****************************************************************************/
 
@@ -89,7 +86,7 @@ range
 		set_range_end(temp_range, end);
 	}
 
-	if (temp_range->start_infinity == TRUE || 
+	if (temp_range->start_infinity == TRUE ||
 		temp_range->end_infinity == TRUE ||
 		temp_range->start <= temp_range->end) {
 		return temp_range;
@@ -104,7 +101,9 @@ _set_thresholds(thresholds **my_thresholds, char *warn_string, char *critical_st
 {
 	thresholds *temp_thresholds = NULL;
 
-	temp_thresholds = malloc(sizeof(temp_thresholds));
+	if ((temp_thresholds = malloc(sizeof(thresholds))) == NULL)
+		die(STATE_UNKNOWN, _("Cannot allocate memory: %s\n"),
+		    strerror(errno));
 
 	temp_thresholds->warning = NULL;
 	temp_thresholds->critical = NULL;
@@ -164,7 +163,7 @@ check_range(double value, range *my_range)
 {
 	int no = FALSE;
 	int yes = TRUE;
-	
+
 	if (my_range->alert_on == INSIDE) {
 		no = TRUE;
 		yes = FALSE;
@@ -254,3 +253,60 @@ int np_warn_if_not_root(void) {
 	}
 	return status;
 }
+
+/*
+ * Extract the value from key/value pairs, or return NULL. The value returned
+ * can be free()ed.
+ * This function can be used to parse NTP control packet data and performance
+ * data strings.
+ */
+char *np_extract_value(const char *varlist, const char *name, char sep) {
+	char *tmp=NULL, *value=NULL;
+	int i;
+
+	while (1) {
+		/* Strip any leading space */
+		for (varlist; isspace(varlist[0]); varlist++);
+
+		if (strncmp(name, varlist, strlen(name)) == 0) {
+			varlist += strlen(name);
+			/* strip trailing spaces */
+			for (varlist; isspace(varlist[0]); varlist++);
+
+			if (varlist[0] == '=') {
+				/* We matched the key, go past the = sign */
+				varlist++;
+				/* strip leading spaces */
+				for (varlist; isspace(varlist[0]); varlist++);
+
+				if (tmp = index(varlist, sep)) {
+					/* Value is delimited by a comma */
+					if (tmp-varlist == 0) continue;
+					value = (char *)malloc(tmp-varlist+1);
+					strncpy(value, varlist, tmp-varlist);
+					value[tmp-varlist] = '\0';
+				} else {
+					/* Value is delimited by a \0 */
+					if (strlen(varlist) == 0) continue;
+					value = (char *)malloc(strlen(varlist) + 1);
+					strncpy(value, varlist, strlen(varlist));
+					value[strlen(varlist)] = '\0';
+				}
+				break;
+			}
+		}
+		if (tmp = index(varlist, sep)) {
+			/* More keys, keep going... */
+			varlist = tmp + 1;
+		} else {
+			/* We're done */
+			break;
+		}
+	}
+
+	/* Clean-up trailing spaces/newlines */
+	if (value) for (i=strlen(value)-1; isspace(value[i]); i--) value[i] = '\0';
+
+	return value;
+}
+

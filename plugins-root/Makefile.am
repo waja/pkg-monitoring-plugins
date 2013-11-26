@@ -1,5 +1,16 @@
 ## Process this file with automake to produce Makefile.in
 
+if RELEASE_PRESENT
+NP_VERSION = $(PACKAGE_VERSION)
+else
+NP-VERSION-FILE: .FORCE-NP-VERSION-FILE
+	@$(SHELL_PATH) $(top_srcdir)/NP-VERSION-GEN
+.FORCE-NP-VERSION-FILE:
+-include NP-VERSION-FILE
+endif
+
+AM_CFLAGS = -DNP_VERSION='"$(NP_VERSION)"'
+
 VPATH = $(top_srcdir) $(top_srcdir)/lib $(top_srcdir)/plugins $(top_srcdir)/plugins/t $(srcdir)
 
 INCLUDES = -I.. -I$(top_srcdir)/lib -I$(top_srcdir)/gl -I$(top_srcdir)/intl -I$(top_srcdir)/plugins @SSLINCLUDE@
@@ -71,7 +82,10 @@ check_icmp_LDADD = @LTLIBINTL@ $(NETLIBS) $(SOCKETLIBS)
 # -m64 needed at compiler and linker phase
 pst3_CFLAGS = @PST3CFLAGS@
 pst3_LDFLAGS = @PST3CFLAGS@
-pst3_LDADD = -lkvm
 
 check_dhcp_DEPENDENCIES = check_dhcp.c $(NETOBJS) $(DEPLIBS) 
 check_icmp_DEPENDENCIES = check_icmp.c $(NETOBJS)
+
+clean-local:
+	rm -f NP-VERSION-FILE
+

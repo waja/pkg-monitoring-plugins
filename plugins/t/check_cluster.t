@@ -2,7 +2,6 @@
 #
 # check_cluster tests
 #
-# $Id: check_cluster.t 1702 2007-04-28 21:57:17Z psychotrahe $
 #
 
 use strict;

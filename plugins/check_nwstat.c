@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_nwstat plugin
@@ -28,12 +26,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_nwstat.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_nwstat";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -203,7 +199,7 @@ main(int argc, char **argv) {
 
 	/* check CPU load */
 	if (vars_to_check==LOAD1 || vars_to_check==LOAD5 || vars_to_check==LOAD15) {
-			
+
 		switch(vars_to_check) {
 		case LOAD1:
 			temp_buffer = strdup ("1");
@@ -249,7 +245,7 @@ main(int argc, char **argv) {
 			  temp_buffer,
 			  utilization,
 			  warning_value,
-			  critical_value);	
+			  critical_value);
 
 		/* check number of user connections */
 	} else if (vars_to_check==CONNS) {
@@ -457,7 +453,7 @@ main(int argc, char **argv) {
 				 critical_value);
 		}
 
-		
+
 		/* check % free space on volume */
 	} else if (vars_to_check==VPF) {
 
@@ -568,11 +564,11 @@ main(int argc, char **argv) {
 				result=STATE_WARNING;
 				asprintf (&output_message,_("Warning - NRM Status is suspect!"));
 			}
-			
+
 			asprintf (&output_message,_("OK - NRM Status is good!"));
 		}
 
-		
+
 
 		/* check packet receive buffers */
 	} else if (vars_to_check==UPRB || vars_to_check==PUPRB) {
@@ -827,7 +823,7 @@ main(int argc, char **argv) {
 				open_files,
 				warning_value,
 				critical_value);
-			
+
 
 		/* check # of abended threads (Netware > 5.x only) */
 	} else if (vars_to_check==ABENDS) {
@@ -914,7 +910,7 @@ main(int argc, char **argv) {
 
 
 
-		
+
 		/* check LRU sitting time in secondss */
 	} else if (vars_to_check==LRUS) {
 
@@ -977,7 +973,7 @@ main(int argc, char **argv) {
 				total_cache_buffers,
 				warning_value,
 				critical_value);
-		
+
 	} else if (vars_to_check==DSVER) {
 
 		close(sd);
@@ -1005,7 +1001,7 @@ main(int argc, char **argv) {
 
 		recv_buffer[sizeof(recv_buffer)-1]=0;
 		recv_buffer[strlen(recv_buffer)-1]=0;
-	
+
 		asprintf (&output_message,_("Up %s"),recv_buffer);
 
 	} else if (vars_to_check==NLM) {
@@ -1024,7 +1020,7 @@ main(int argc, char **argv) {
 		} else {
 			result=STATE_CRITICAL;
 			asprintf (&output_message,_("Module %s is not loaded"),nlm_name);
-		
+
 			}
 	} else if (vars_to_check==NRMP) {
 
@@ -1313,7 +1309,7 @@ int process_arguments(int argc, char **argv) {
 
 	int option = 0;
 	static struct option longopts[] =
-		{ 
+		{
 			{"port",     required_argument,0,'p'},
 			{"timeout",  required_argument,0,'t'},
 			{"critical", required_argument,0,'c'},
@@ -1360,7 +1356,7 @@ int process_arguments(int argc, char **argv) {
 				print_help();
 				exit(STATE_OK);
 			case 'V': /* version */
-				print_revision(progname, revision);
+				print_revision(progname, NP_VERSION);
 				exit(STATE_OK);
 			case 'H': /* hostname */
 				server_address=optarg;
@@ -1498,7 +1494,7 @@ int process_arguments(int argc, char **argv) {
 					nrmm_name = strdup (optarg+4);
 					if (!strcmp(nrmm_name,""))
 						nrmm_name = strdup ("AVAILABLE_CACHE_MEMORY");
-	
+
 				}
 
 				else if (strncmp(optarg,"NRMS",4)==0) {
@@ -1506,7 +1502,7 @@ int process_arguments(int argc, char **argv) {
 					nrms_name = strdup (optarg+4);
 					if (!strcmp(nrms_name,""))
 						nrms_name = strdup ("USED_SWAP_SPACE");
-	
+
 				}
 
 				else if (strncmp(optarg,"NSS1",4)==0) {
@@ -1514,7 +1510,7 @@ int process_arguments(int argc, char **argv) {
 					nss1_name = strdup (optarg+4);
 					if (!strcmp(nss1_name,""))
 						nss1_name = strdup ("CURRENTBUFFERCACHESIZE");
-	
+
 				}
 
 				else if (strncmp(optarg,"NSS2",4)==0) {
@@ -1522,7 +1518,7 @@ int process_arguments(int argc, char **argv) {
 					nss2_name = strdup (optarg+4);
 					if (!strcmp(nss2_name,""))
 						nss2_name = strdup ("CACHEHITS");
-	
+
 				}
 
 				else if (strncmp(optarg,"NSS3",4)==0) {
@@ -1530,7 +1526,7 @@ int process_arguments(int argc, char **argv) {
 					nss3_name = strdup (optarg+4);
 					if (!strcmp(nss3_name,""))
 						nss3_name = strdup ("CACHEGITPERCENT");
-	
+
 				}
 
 				else if (strncmp(optarg,"NSS4",4)==0) {
@@ -1538,7 +1534,7 @@ int process_arguments(int argc, char **argv) {
 					nss4_name = strdup (optarg+4);
 					if (!strcmp(nss4_name,""))
 						nss4_name = strdup ("CURRENTOPENCOUNT");
-	
+
 				}
 
 				else if (strncmp(optarg,"NSS5",4)==0) {
@@ -1546,7 +1542,7 @@ int process_arguments(int argc, char **argv) {
 					nss5_name = strdup (optarg+4);
 					if (!strcmp(nss5_name,""))
 						nss5_name = strdup ("CACHEMISSES");
-	
+
 				}
 
 
@@ -1555,7 +1551,7 @@ int process_arguments(int argc, char **argv) {
 					nss6_name = strdup (optarg+4);
 					if (!strcmp(nss6_name,""))
 						nss6_name = strdup ("PENDINGWORKSCOUNT");
-	
+
 				}
 
 
@@ -1564,7 +1560,7 @@ int process_arguments(int argc, char **argv) {
 					nss7_name = strdup (optarg+4);
 					if (!strcmp(nss7_name,""))
 						nss7_name = strdup ("CACHESIZE");
-	
+
 				}
 
 
@@ -1597,7 +1593,7 @@ void print_help(void)
 	char *myport;
 	asprintf (&myport, "%d", PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);

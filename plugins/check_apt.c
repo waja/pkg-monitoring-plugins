@@ -7,8 +7,6 @@
 * 
 * Original author: Sean Finney
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_apt plugin
@@ -29,12 +27,9 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_apt.c 1991 2008-05-07 10:02:42Z dermoth $
-* 
 *****************************************************************************/
 
 const char *progname = "check_apt";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2006-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -116,7 +111,7 @@ int main (int argc, char **argv) {
 		result = max_state(result, STATE_OK);
 	}
 
-	printf(_("APT %s: %d packages available for %s (%d critical updates). %s%s%s%s\n"), 
+	printf(_("APT %s: %d packages available for %s (%d critical updates). %s%s%s%s\n"),
 	       state_text(result),
 	       packages_available,
 	       (upgrade==DIST_UPGRADE)?"dist-upgrade":"upgrade",
@@ -159,7 +154,7 @@ int process_arguments (int argc, char **argv) {
 			print_help();
 			exit(STATE_OK);
 		case 'V':
-			print_revision(progname, revision);
+			print_revision(progname, NP_VERSION);
 			exit(STATE_OK);
 		case 'v':
 			verbose++;
@@ -305,7 +300,7 @@ int run_upgrade(int *pkgcount, int *secpkgcount){
 	}
 	regfree(&ireg);
 	regfree(&sreg);
-	if(do_exclude!=NULL) regfree(&ereg); 
+	if(do_exclude!=NULL) regfree(&ereg);
 	free(cmdline);
 	return result;
 }
@@ -364,7 +359,7 @@ char* add_to_regexp(char *expr, const char *next){
 		sprintf((char*)(re+strlen(re)-2), "|%s) ", next);
 	}
 
-	return re;	
+	return re;
 }
 
 char* construct_cmdline(upgrade_type u, const char *opts){
@@ -404,7 +399,7 @@ char* construct_cmdline(upgrade_type u, const char *opts){
 void
 print_help (void)
 {
-  print_revision(progname, revision);
+  print_revision(progname, NP_VERSION);
 
   printf(_(COPYRIGHT), copyright, email);
 

@@ -6,8 +6,6 @@
 * Copyright (c) 2005-2008 Nagios Plugins Development Team
 * Original Author : Andreas Ericsson <ae@op5.se>
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_icmp plugin
@@ -35,14 +33,12 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_icmp.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 /* progname may change */
 /* char *progname = "check_icmp"; */
 char *progname;
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2005-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -74,6 +70,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include <netinet/ip_icmp.h>
 #include <arpa/inet.h>
 #include <signal.h>
+#include <float.h>
 
 
 /** sometimes undefined system macros (quite a few, actually) **/
@@ -106,6 +103,9 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 # define ICMP_UNREACH_PRECEDENCE_CUTOFF 15
 #endif
 
+#ifndef DBL_MAX
+# define DBL_MAX 9.9999999999e999
+#endif
 
 typedef unsigned short range_t;  /* type for get_range() -- unimplemented */
 
@@ -120,6 +120,8 @@ typedef struct rta_host {
 	unsigned char icmp_type, icmp_code; /* type and code from errors */
 	unsigned short flags;        /* control/status flags */
 	double rta;                  /* measured RTA */
+	double rtmax;                /* max rtt */
+	double rtmin;                /* min rtt */
 	unsigned char pl;            /* measured packet loss */
 	struct rta_host *next;       /* linked list */
 } rta_host;
@@ -182,14 +184,14 @@ static u_int get_timevar(const char *);
 static u_int get_timevaldiff(struct timeval *, struct timeval *);
 static in_addr_t get_ip_address(const char *);
 static int wait_for_reply(int, u_int);
-static int recvfrom_wto(int, char *, unsigned int, struct sockaddr *, u_int *);
+static int recvfrom_wto(int, void *, unsigned int, struct sockaddr *, u_int *);
 static int send_icmp_ping(int, struct rta_host *);
 static int get_threshold(char *str, threshold *th);
 static void run_checks(void);
 static void set_source_ip(char *);
 static int add_target(char *);
 static int add_target_ip(char *, struct in_addr *);
-static int handle_random_icmp(char *, struct sockaddr_in *);
+static int handle_random_icmp(unsigned char *, struct sockaddr_in *);
 static unsigned short icmp_checksum(unsigned short *, int);
 static void finish(int);
 static void crash(const char *, ...);
@@ -203,7 +205,9 @@ extern char **environ;
 static struct rta_host **table, *cursor, *list;
 static threshold crit = {80, 500000}, warn = {40, 200000};
 static int mode, protocols, sockets, debug = 0, timeout = 10;
-static unsigned short icmp_pkt_size, icmp_data_size = DEFAULT_PING_DATA_SIZE;
+static unsigned short icmp_data_size = DEFAULT_PING_DATA_SIZE;
+static unsigned short icmp_pkt_size = DEFAULT_PING_DATA_SIZE + ICMP_MINLEN;
+
 static unsigned int icmp_sent = 0, icmp_recv = 0, icmp_lost = 0;
 #define icmp_pkts_en_route (icmp_sent - (icmp_recv + icmp_lost))
 static unsigned short targets_down = 0, targets = 0, packets = 0;
@@ -296,7 +300,7 @@ get_icmp_error_msg(unsigned char icmp_type, unsigned char icmp_code)
 }
 
 static int
-handle_random_icmp(char *packet, struct sockaddr_in *addr)
+handle_random_icmp(unsigned char *packet, struct sockaddr_in *addr)
 {
 	struct icmp p, sent_icmp;
 	struct rta_host *host = NULL;
@@ -453,12 +457,22 @@ main(int argc, char **argv)
 	/* parse the arguments */
 	for(i = 1; i < argc; i++) {
 		while((arg = getopt(argc, argv, "vhVw:c:n:p:t:H:s:i:b:I:l:m:")) != EOF) {
+			long size;
 			switch(arg) {
 			case 'v':
 				debug++;
 				break;
 			case 'b':
-				/* silently ignored for now */
+				size = strtol(optarg,NULL,0);
+				if (size >= (sizeof(struct icmp) + sizeof(struct icmp_ping_data)) &&
+				    size < MAX_PING_DATA) {
+					icmp_data_size = size;
+					icmp_pkt_size = size + ICMP_MINLEN;
+				} else
+					usage_va("ICMP data length must be between: %d and %d",
+					         sizeof(struct icmp) + sizeof(struct icmp_ping_data),
+					         MAX_PING_DATA - 1);
+
 				break;
 			case 'i':
 				pkt_interval = get_timevar(optarg);
@@ -499,7 +513,7 @@ main(int argc, char **argv)
 				set_source_ip(optarg);
 				break;
       case 'V':                 /* version */
-        /*print_revision (progname, revision);*/ /* FIXME: Why? */
+        print_revision (progname, NP_VERSION);
         exit (STATE_OK);
       case 'h':                 /* help */
         print_help ();
@@ -586,13 +600,6 @@ main(int argc, char **argv)
 				   max_completion_time / 1000000 + 1);
 		}
 	}
-
-	icmp_pkt_size = icmp_data_size + ICMP_MINLEN;
-	if(debug > 2) printf("icmp_pkt_size = %u\n", icmp_pkt_size);
-	if(icmp_pkt_size < sizeof(struct icmp) + sizeof(struct icmp_ping_data)) {
-		icmp_pkt_size = sizeof(struct icmp) + sizeof(struct icmp_ping_data);
-	}
-	if(debug > 2) printf("icmp_pkt_size = %u\n", icmp_pkt_size);
 
 	if(debug) {
 		printf("crit = {%u, %u%%}, warn = {%u, %u%%}\n",
@@ -687,7 +694,7 @@ static int
 wait_for_reply(int sock, u_int t)
 {
 	int n, hlen;
-	static char buf[4096];
+	static unsigned char buf[4096];
 	struct sockaddr_in resp_addr;
 	struct ip *ip;
 	struct icmp icp;
@@ -777,11 +784,15 @@ wait_for_reply(int sock, u_int t)
 		host->time_waited += tdiff;
 		host->icmp_recv++;
 		icmp_recv++;
+		if (tdiff > host->rtmax)
+			host->rtmax = tdiff;
+		if (tdiff < host->rtmin)
+			host->rtmin = tdiff;
 
 		if(debug) {
-			printf("%0.3f ms rtt from %s, outgoing ttl: %u, incoming ttl: %u\n",
+			printf("%0.3f ms rtt from %s, outgoing ttl: %u, incoming ttl: %u, max: %0.3f, min: %0.3f\n",
 				   (float)tdiff / 1000, inet_ntoa(resp_addr.sin_addr),
-				   ttl, ip->ip_ttl);
+				   ttl, ip->ip_ttl, (float)host->rtmax / 1000, (float)host->rtmin / 1000);
 		}
 
 		/* if we're in hostcheck mode, exit with limited printouts */
@@ -803,7 +814,7 @@ static int
 send_icmp_ping(int sock, struct rta_host *host)
 {
 	static union {
-		char *buf; /* re-use so we prevent leaks */
+		void *buf; /* re-use so we prevent leaks */
 		struct icmp *icp;
 		u_short *cksum_in;
 	} packet = { NULL };
@@ -856,7 +867,7 @@ send_icmp_ping(int sock, struct rta_host *host)
 }
 
 static int
-recvfrom_wto(int sock, char *buf, unsigned int len, struct sockaddr *saddr,
+recvfrom_wto(int sock, void *buf, unsigned int len, struct sockaddr *saddr,
 			 u_int *timo)
 {
 	u_int slen;
@@ -988,11 +999,12 @@ finish(int sig)
 	host = list;
 	while(host) {
 		if(debug) puts("");
-		printf("%srta=%0.3fms;%0.3f;%0.3f;0; %spl=%u%%;%u;%u;; ",
+		printf("%srta=%0.3fms;%0.3f;%0.3f;0; %spl=%u%%;%u;%u;; %srtmax=%0.3fms;;;; %srtmin=%0.3fms;;;; ",
 			   (targets > 1) ? host->name : "",
 			   host->rta / 1000, (float)warn.rta / 1000, (float)crit.rta / 1000,
-			   (targets > 1) ? host->name : "",
-			   host->pl, warn.pl, crit.pl);
+			   (targets > 1) ? host->name : "", host->pl, warn.pl, crit.pl,
+			   (targets > 1) ? host->name : "", (float)host->rtmax / 1000,
+			   (targets > 1) ? host->name : "", (host->rtmin < DBL_MAX) ? (float)host->rtmin / 1000 : (float)0);
 
 		host = host->next;
 	}
@@ -1023,7 +1035,7 @@ get_timevaldiff(struct timeval *early, struct timeval *later)
 	if(!early) early = &prog_start;
 
 	/* if early > later we return 0 so as to indicate a timeout */
-	if(early->tv_sec > early->tv_sec ||
+	if(early->tv_sec > later->tv_sec ||
 	   (early->tv_sec == later->tv_sec && early->tv_usec > later->tv_usec))
 	{
 		return 0;
@@ -1068,6 +1080,8 @@ add_target_ip(char *arg, struct in_addr *in)
 	/* fill out the sockaddr_in struct */
 	host->saddr_in.sin_family = AF_INET;
 	host->saddr_in.sin_addr.s_addr = in->s_addr;
+
+	host->rtmin = DBL_MAX;
 
 	if(!list) list = cursor = host;
 	else cursor->next = host;
@@ -1255,7 +1269,7 @@ void
 print_help(void)
 {
 
-  /*print_revision (progname, revision);*/ /* FIXME: Why? */
+  /*print_revision (progname);*/ /* FIXME: Why? */
 
   printf ("Copyright (c) 2005 Andreas Ericsson <ae@op5.se>\n");
   printf (COPYRIGHT, copyright, email);
@@ -1271,10 +1285,10 @@ print_help(void)
   printf ("    %s\n", _("specify a target"));
   printf (" %s\n", "-w");
   printf ("    %s", _("warning threshold (currently "));
-  printf ("%0.3fms,%u%%)\n", (float)warn.rta / 1000 , warn.pl / 1000);
+  printf ("%0.3fms,%u%%)\n", (float)warn.rta / 1000, warn.pl);
   printf (" %s\n", "-c");
   printf ("    %s", _("critical threshold (currently "));
-  printf ("%0.3fms,%u%%)\n", (float)crit.rta, crit.pl);
+  printf ("%0.3fms,%u%%)\n", (float)crit.rta / 1000, crit.pl);
   printf (" %s\n", "-s");
   printf ("    %s\n", _("specify a source IP address or device name"));
   printf (" %s\n", "-n");
@@ -1291,12 +1305,13 @@ print_help(void)
   printf ("\n");
   printf (" %s\n", "-l");
   printf ("    %s", _("TTL on outgoing packets (currently "));
-  printf ("%u)", ttl);
+  printf ("%u)\n", ttl);
   printf (" %s\n", "-t");
   printf ("    %s",_("timeout value (seconds, currently  "));
   printf ("%u)\n", timeout);
   printf (" %s\n", "-b");
-  printf ("    %s\n", _("icmp packet size (currenly ignored)"));
+  printf ("    %s\n", _("Number of icmp data bytes to send"));
+  printf ("    %s %u + %d)\n", _("Packet size will be data bytes + icmp header (currently"),icmp_data_size, ICMP_MINLEN);
   printf (" %s\n", "-v");
   printf ("    %s\n", _("verbose"));
 

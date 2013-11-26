@@ -2,7 +2,6 @@
 #
 # MySQL Database Server Tests via check_mysql
 #
-# $Id: check_mysql.t 1988 2008-04-30 12:50:52Z dermoth $
 #
 #
 # These are the database permissions required for this test:

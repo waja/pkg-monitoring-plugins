@@ -2,7 +2,6 @@
 #
 # Jabber Server Tests via check_jabber
 #
-# $Id: check_jabber.t 1901 2008-01-08 11:57:24Z tonvoon $
 #
 
 use strict;

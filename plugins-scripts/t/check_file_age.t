@@ -2,7 +2,6 @@
 #
 # check_file_age tests
 #
-# $Id: check_file_age.t 1297 2005-12-15 15:17:49Z tonvoon $
 #
 
 use strict;

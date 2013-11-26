@@ -26,18 +26,17 @@ suite of plugins. */
 
 /* Standardize version information, termination */
 
-/* $Id: utils.h 1991 2008-05-07 10:02:42Z dermoth $ */
-
 void support (void);
-char *clean_revstring (const char *);
 void print_revision (const char *, const char *);
 
 /* Handle timeouts */
 
 #ifdef LOCAL_TIMEOUT_ALARM_HANDLER
+extern unsigned int timeout_state;
 extern unsigned int timeout_interval;
 RETSIGTYPE timeout_alarm_handler (int);
 #else
+unsigned int timeout_state = STATE_CRITICAL;
 unsigned int timeout_interval = DEFAULT_SOCKET_TIMEOUT;
 extern RETSIGTYPE timeout_alarm_handler (int);
 #endif

@@ -2,7 +2,6 @@
 #
 # Swap Space Tests via check_swap
 #
-# $Id: check_swap.t 1279 2005-11-09 16:40:12Z tonvoon $
 #
 
 use strict;

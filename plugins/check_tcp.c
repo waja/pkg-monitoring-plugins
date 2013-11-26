@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 1999-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_tcp plugin
@@ -24,14 +22,13 @@
 * 
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*  
-* $Id: check_tcp.c 1991 2008-05-07 10:02:42Z dermoth $
+*
+* $Id: check_tcp.c 2153 2009-02-21 09:59:24Z dermoth $
 * 
 *****************************************************************************/
 
 /* progname "check_tcp" changes depending on symlink called */
 char *progname;
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "1999-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -315,7 +312,7 @@ main (int argc, char **argv)
 	}
 #ifdef HAVE_SSL
 	np_net_ssl_cleanup();
-#endif 
+#endif
 	if (sd) close (sd);
 
 	microsec = deltime (tv);
@@ -395,10 +392,10 @@ process_arguments (int argc, char **argv)
 		{"critical-codes", required_argument, 0, 'C'},
 		{"warning-codes", required_argument, 0, 'W'},
 		{"timeout", required_argument, 0, 't'},
-		{"protocol", required_argument, 0, 'P'},
+		{"protocol", required_argument, 0, 'P'}, /* FIXME: Unhandled */
 		{"port", required_argument, 0, 'p'},
-		{"escape", required_argument, 0, 'E'},
-		{"all", required_argument, 0, 'A'},
+		{"escape", no_argument, 0, 'E'},
+		{"all", no_argument, 0, 'A'},
 		{"send", required_argument, 0, 's'},
 		{"expect", required_argument, 0, 'e'},
 		{"maxbytes", required_argument, 0, 'm'},
@@ -412,10 +409,8 @@ process_arguments (int argc, char **argv)
 		{"verbose", no_argument, 0, 'v'},
 		{"version", no_argument, 0, 'V'},
 		{"help", no_argument, 0, 'h'},
-#ifdef HAVE_SSL
 		{"ssl", no_argument, 0, 'S'},
 		{"certificate", required_argument, 0, 'D'},
-#endif
 		{0, 0, 0, 0}
 	};
 
@@ -453,7 +448,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case 'V':                 /* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'v':                 /* verbose mode */
 			flags |= FLAG_VERBOSE;
@@ -594,7 +589,7 @@ process_arguments (int argc, char **argv)
 void
 print_help (void)
 {
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);
@@ -623,7 +618,7 @@ print_help (void)
   printf (" %s\n", "-q, --quit=STRING");
   printf ("    %s\n", _("String to send server to initiate a clean close of the connection"));
   printf (" %s\n", "-r, --refuse=ok|warn|crit");
-  printf ("    %s\n", _("Accept tcp refusals with states ok, warn, crit (default: crit)"));
+  printf ("    %s\n", _("Accept TCP refusals with states ok, warn, crit (default: crit)"));
   printf (" %s\n", "-M, --mismatch=ok|warn|crit");
   printf ("    %s\n", _("Accept expected string mismatches with states ok, warn, crit (default: warn)"));
   printf (" %s\n", "-j, --jail");

@@ -6,8 +6,6 @@
 * Copyright (c) 2006 Sean Finney <seanius@seanius.net>
 * Copyright (c) 2006-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_ntp plugin
@@ -29,12 +27,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_ntp.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_ntp";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2006-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -80,7 +76,7 @@ typedef struct {
 
 /* this structure holds data about results from querying offset from a peer */
 typedef struct {
-	time_t waiting;         /* ts set when we started waiting for a response */ 
+	time_t waiting;         /* ts set when we started waiting for a response */
 	int num_responses;      /* number of successfully recieved responses */
 	uint8_t stratum;        /* copied verbatim from the ntp_message */
 	double rtdelay;         /* converted from the ntp_message */
@@ -150,7 +146,7 @@ typedef struct {
  they are divided into halves, each being a 16-bit int in network byte order:
  - the first 16 bits are an int on the left side of a decimal point.
  - the second 16 bits represent a fraction n/(2^16)
- likewise for the 64-bit "fixed point" numbers with everything doubled :) 
+ likewise for the 64-bit "fixed point" numbers with everything doubled :)
  **/
 
 /* macros to access the left/right 16 bits of a 32-bit ntp "fixed point"
@@ -198,7 +194,7 @@ typedef struct {
 /* NTP control message header is 12 bytes, plus any data in the data
  * field, plus null padding to the nearest 32-bit boundary per rfc.
  */
-#define SIZEOF_NTPCM(m) (12+ntohs(m.count)+((m.count)?4-(ntohs(m.count)%4):0))
+#define SIZEOF_NTPCM(m) (12+ntohs(m.count)+((ntohs(m.count)%4)?4-(ntohs(m.count)%4):0))
 
 /* finally, a little helper or two for debugging: */
 #define DBG(x) do{if(verbose>1){ x; }}while(0);
@@ -265,7 +261,7 @@ void print_ntp_control_message(const ntp_control_message *p){
 	if(p->op&REM_RESP && p->op&OP_READSTAT){
 		peer=(ntp_assoc_status_pair*)p->data;
 		for(i=0;i<numpeers;i++){
-			printf("\tpeer id %.2x status %.2x", 
+			printf("\tpeer id %.2x status %.2x",
 			       ntohs(peer[i].assoc), ntohs(peer[i].status));
 			if (PEER_SEL(peer[i].status) >= PEER_INCLUDED){
 				if(PEER_SEL(peer[i].status) >= PEER_SYNCSOURCE){
@@ -353,7 +349,7 @@ int best_offset_server(const ntp_server_results *slist, int nservers){
 
 /* do everything we need to get the total average offset
  * - we use a certain amount of parallelization with poll() to ensure
- *   we don't waste time sitting around waiting for single packets. 
+ *   we don't waste time sitting around waiting for single packets.
  * - we also "manually" handle resolving host names and connecting, because
  *   we have to do it in a way that our lazy macros don't handle currently :( */
 double offset_request(const char *host, int *status){
@@ -667,7 +663,7 @@ int process_arguments(int argc, char **argv){
 		{0, 0, 0, 0}
 	};
 
-	
+
 	if (argc < 2)
 		usage ("\n");
 
@@ -682,7 +678,7 @@ int process_arguments(int argc, char **argv){
 			exit(STATE_OK);
 			break;
 		case 'V':
-			print_revision(progname, revision);
+			print_revision(progname, NP_VERSION);
 			exit(STATE_OK);
 			break;
 		case 'v':
@@ -836,7 +832,7 @@ int main(int argc, char *argv[]){
 
 
 void print_help(void){
-	print_revision(progname, revision);
+	print_revision(progname, NP_VERSION);
 
 	printf ("Copyright (c) 2006 Sean Finney\n");
 	printf (COPYRIGHT, copyright, email);

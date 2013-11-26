@@ -18,7 +18,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: runcmd.h 1919 2008-01-31 11:45:28Z dermoth $
 * 
 *****************************************************************************/
 

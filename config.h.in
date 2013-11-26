@@ -1,5 +1,9 @@
 /* config.h.in.  Generated from configure.in by autoheader.  */
 
+/* Define if the compiler is building for multiple architectures of Apple
+   platforms at once. */
+#undef AA_APPLE_UNIVERSAL_BUILD
+
 /* Define to the number of bits in type 'ptrdiff_t'. */
 #undef BITSIZEOF_PTRDIFF_T
 
@@ -45,9 +49,6 @@
    language is requested. */
 #undef ENABLE_NLS
 
-/* Define as good substitute value for EOVERFLOW. */
-#undef EOVERFLOW
-
 /* Define on systems for which file names may have a so-called `drive letter'
    prefix, define this to compute the length of that prefix, including the
    colon. */
@@ -71,6 +72,12 @@
 /* Define to indicate the 'malloc' module. */
 #undef GNULIB_MALLOC_GNU
 
+/* Define to 1 when using the gnulib module open. */
+#undef GNULIB_OPEN
+
+/* Define to 1 if you have the `alarm' function. */
+#undef HAVE_ALARM
+
 /* Define to 1 if you have 'alloca' after including <alloca.h>, a header that
    may be supplied by this distribution. */
 #undef HAVE_ALLOCA
@@ -81,6 +88,9 @@
 
 /* Define to 1 if you have the <arpa/inet.h> header file. */
 #undef HAVE_ARPA_INET_H
+
+/* Define to 1 if you have the `btowc' function. */
+#undef HAVE_BTOWC
 
 /* Define to 1 if you have the MacOS X function CFLocaleCopyCurrent in the
    CoreFoundation framework. */
@@ -168,6 +178,10 @@
    don't. */
 #undef HAVE_DECL_SYSCONF
 
+/* Define to 1 if you have the declaration of `timegm', and to 0 if you don't.
+   */
+#undef HAVE_DECL_TIMEGM
+
 /* Define to 1 if you have the declaration of `vsnprintf', and to 0 if you
    don't. */
 #undef HAVE_DECL_VSNPRINTF
@@ -187,6 +201,9 @@
 
 /* Define to 1 if you have the <err.h> header file. */
 #undef HAVE_ERR_H
+
+/* Define to 1 if you have the <fcntl.h> header file. */
+#undef HAVE_FCNTL_H
 
 /* Define to 1 if you have the <features.h> header file. */
 #undef HAVE_FEATURES_H
@@ -224,6 +241,9 @@
 /* Define to 1 if you have the `getopt_long_only' function. */
 #undef HAVE_GETOPT_LONG_ONLY
 
+/* Define to 1 if you have the `getservbyname' function. */
+#undef HAVE_GETSERVBYNAME
+
 /* Define if the GNU gettext() function is already present or preinstalled. */
 #undef HAVE_GETTEXT
 
@@ -238,9 +258,6 @@
 
 /* Define if you have the iconv() function and it works. */
 #undef HAVE_ICONV
-
-/* Define if your compiler supports the #include_next directive. */
-#undef HAVE_INCLUDE_NEXT
 
 /* Define to 1 if you have the `inet_ntop' function. */
 #undef HAVE_INET_NTOP
@@ -305,6 +322,9 @@
 /* Define to 1 if you have the `dl' library (-ldl). */
 #undef HAVE_LIBDL
 
+/* Define to 1 if you have the <libintl.h> header file. */
+#undef HAVE_LIBINTL_H
+
 /* Define to 1 if you have the `kstat' library (-lkstat). */
 #undef HAVE_LIBKSTAT
 
@@ -319,6 +339,9 @@
 
 /* Define to 1 if you have the <libpq-fe.h> header file. */
 #undef HAVE_LIBPQ_FE_H
+
+/* Define to 1 if you have the `pthread' library (-lpthread). */
+#undef HAVE_LIBPTHREAD
 
 /* Define to 1 if you have the `radiusclient' library (-lradiusclient). */
 #undef HAVE_LIBRADIUSCLIENT
@@ -351,6 +374,9 @@
 
 /* Define to 1 if you have the `mbrtowc' function. */
 #undef HAVE_MBRTOWC
+
+/* Define to 1 if you have the `mbsinit' function. */
+#undef HAVE_MBSINIT
 
 /* Define to 1 if <wchar.h> declares mbstate_t. */
 #undef HAVE_MBSTATE_T
@@ -418,11 +444,17 @@
 /* Define to 1 if you have the `pstat_getdynamic' function. */
 #undef HAVE_PSTAT_GETDYNAMIC
 
+/* Define to 1 if you have the <random.h> header file. */
+#undef HAVE_RANDOM_H
+
 /* Define to 1 if you have the <rsa.h> header file. */
 #undef HAVE_RSA_H
 
 /* Define to 1 if you have the `select' function. */
 #undef HAVE_SELECT
+
+/* Define to 1 if you have the `shutdown' function. */
+#undef HAVE_SHUTDOWN
 
 /* Define to 1 if you have the <signal.h> header file. */
 #undef HAVE_SIGNAL_H
@@ -482,6 +514,9 @@
 /* Define if you have the strndup() function and it works. */
 #undef HAVE_STRNDUP
 
+/* Define to 1 if you have the `strnlen' function. */
+#undef HAVE_STRNLEN
+
 /* Define to 1 if you have the `strstr' function. */
 #undef HAVE_STRSTR
 
@@ -499,6 +534,15 @@
 
 /* Define to 1 if `n_un.n_name' is member of `struct nlist'. */
 #undef HAVE_STRUCT_NLIST_N_UN_N_NAME
+
+/* Define to 1 if the system has the type `struct random_data'. */
+#undef HAVE_STRUCT_RANDOM_DATA
+
+/* Define to 1 if `sa_len' is member of `struct sockaddr'. */
+#undef HAVE_STRUCT_SOCKADDR_SA_LEN
+
+/* Define to 1 if the system has the type `struct sockaddr_storage'. */
+#undef HAVE_STRUCT_SOCKADDR_STORAGE
 
 /* Define to 1 if `f_fstypename' is member of `struct statfs'. */
 #undef HAVE_STRUCT_STATFS_F_FSTYPENAME
@@ -538,6 +582,9 @@
 
 /* Define to 1 if you have the <sys/inttypes.h> header file. */
 #undef HAVE_SYS_INTTYPES_H
+
+/* Define to 1 if you have the <sys/loadavg.h> header file. */
+#undef HAVE_SYS_LOADAVG_H
 
 /* Define to 1 if you have the <sys/mntent.h> header file. */
 #undef HAVE_SYS_MNTENT_H
@@ -590,6 +637,12 @@
 /* Define to 1 if you have <sys/wait.h> that is POSIX.1 compatible. */
 #undef HAVE_SYS_WAIT_H
 
+/* Define to 1 if you have the `timegm' function. */
+#undef HAVE_TIMEGM
+
+/* Define to 1 if you have the <time.h> header file. */
+#undef HAVE_TIME_H
+
 /* Define to 1 if you have the <uio.h> header file. */
 #undef HAVE_UIO_H
 
@@ -629,6 +682,9 @@
 /* Define to 1 if you have the `wcslen' function. */
 #undef HAVE_WCSLEN
 
+/* Define to 1 if you have the `wcsnlen' function. */
+#undef HAVE_WCSNLEN
+
 /* Define to 1 if you have the <wctype.h> header file. */
 #undef HAVE_WCTYPE_H
 
@@ -637,6 +693,12 @@
 
 /* Define if you have the 'wint_t' type. */
 #undef HAVE_WINT_T
+
+/* Define to 1 if O_NOATIME works. */
+#undef HAVE_WORKING_O_NOATIME
+
+/* Define to 1 if O_NOFOLLOW works. */
+#undef HAVE_WORKING_O_NOFOLLOW
 
 /* Define to 1 if you have the <ws2tcpip.h> header file. */
 #undef HAVE_WS2TCPIP_H
@@ -655,6 +717,15 @@
 #else
 # define ISSLASH(C) ((C) == '/')
 #endif
+
+/* Define if the mbrtowc function has the NULL string argument bug. */
+#undef MBRTOWC_NULL_ARG_BUG
+
+/* Define if the mbrtowc function does not return 0 for a NUL character. */
+#undef MBRTOWC_NUL_RETVAL_BUG
+
+/* Define if the mbrtowc function returns a wrong return value. */
+#undef MBRTOWC_RETVAL_BUG
 
 /* Define if there is no specific function for reading the list of mounted
    file systems. fread will be used to read /etc/mnttab. (SVR2) */
@@ -720,6 +791,9 @@
 
 /* path and args for nslookup */
 #undef NSLOOKUP_COMMAND
+
+/* Define to 1 if open() fails to recognize a trailing slash. */
+#undef OPEN_TRAILING_SLASH_BUG
 
 /* Name of package */
 #undef PACKAGE
@@ -956,6 +1030,9 @@
 /* Define if you want regoff_t to be at least as wide POSIX requires. */
 #undef _REGEX_LARGE_OFFSETS
 
+/* Define to 500 only on HP-UX. */
+#undef _XOPEN_SOURCE
+
 /* Enable extensions on AIX 3, Interix.  */
 #ifndef _ALL_SOURCE
 # undef _ALL_SOURCE
@@ -1006,11 +1083,24 @@
 /* Define to long or long long if <stdint.h> and <inttypes.h> don't define. */
 #undef intmax_t
 
+/* Work around a bug in Apple GCC 4.0.1 build 5465: In C99 mode, it supports
+   the ISO C 99 semantics of 'extern inline' (unlike the GNU C semantics of
+   earlier versions), but does not display it by setting __GNUC_STDC_INLINE__.
+   __APPLE__ && __MACH__ test for MacOS X.
+   __APPLE_CC__ tests for the Apple compiler and its version.
+   __STDC_VERSION__ tests for the C99 mode.  */
+#if defined __APPLE__ && defined __MACH__ && __APPLE_CC__ >= 5465 && !defined __cplusplus && __STDC_VERSION__ >= 199901L && !defined __GNUC_STDC_INLINE__
+# define __GNUC_STDC_INLINE__ 1
+#endif
+
 /* Define to rpl_malloc if the replacement function should be used. */
 #undef malloc
 
 /* Define to a type if <wchar.h> does not define. */
 #undef mbstate_t
+
+/* Define to rpl_mktime if the replacement function should be used. */
+#undef mktime
 
 /* Define to `int' if <sys/types.h> does not define. */
 #undef pid_t
@@ -1088,3 +1178,13 @@
 
 /* Define to rpl_strnlen if the replacement function should be used. */
 #undef strnlen
+
+/* Define as a marker that can be attached to function parameter declarations
+   for parameters that are not used.  This helps to reduce warnings, such as
+   from GCC -Wunused-parameter.  */
+#if __GNUC__ >= 3 || (__GNUC__ == 2 && __GNUC_MINOR__ >= 7)
+# define _UNUSED_PARAMETER_ __attribute__ ((__unused__))
+#else
+# define _UNUSED_PARAMETER_
+#endif
+

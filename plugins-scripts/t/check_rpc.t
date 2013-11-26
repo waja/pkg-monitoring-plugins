@@ -2,7 +2,6 @@
 #
 # Remote Procedure Call (RPC) Tests via check_rpc
 #
-# $Id: check_rpc.t 1207 2005-07-25 01:47:15Z illumino $
 #
 
 use strict;

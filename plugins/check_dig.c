@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2002-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_dig plugin
@@ -25,7 +23,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_dig.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
@@ -36,7 +33,6 @@
  *  because on some architectures those strings are in non-writable memory */
 
 const char *progname = "check_dig";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2002-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -143,8 +139,10 @@ main (int argc, char **argv)
     }
   }
 
-  if (result == STATE_UNKNOWN)
+  if (result == STATE_UNKNOWN) {
     msg = (char *)_("No ANSWER SECTION found");
+    result = STATE_CRITICAL;
+  }
 
   /* If we get anything on STDERR, at least set warning */
   if(chld_err.buflen > 0) {
@@ -218,7 +216,7 @@ process_arguments (int argc, char **argv)
       print_help ();
       exit (STATE_OK);
     case 'V':                 /* version */
-      print_revision (progname, revision);
+      print_revision (progname, NP_VERSION);
       exit (STATE_OK);
     case 'H':                 /* hostname */
       host_or_die(optarg);
@@ -295,7 +293,10 @@ process_arguments (int argc, char **argv)
 int
 validate_arguments (void)
 {
-  return OK;
+  if (query_address != NULL)
+    return OK;
+  else
+    return ERROR;
 }
 
 
@@ -307,7 +308,7 @@ print_help (void)
 
   asprintf (&myport, "%d", DEFAULT_PORT);
 
-  print_revision (progname, revision);
+  print_revision (progname, NP_VERSION);
 
   printf ("Copyright (c) 2000 Karl DeBisschop <kdebisschop@users.sourceforge.net>\n");
   printf (COPYRIGHT, copyright, email);
@@ -357,7 +358,7 @@ void
 print_usage (void)
 {
   printf (_("Usage:"));
-  printf ("%s -H <host> -l <query_address> [-p <server port>]\n", progname);
+  printf ("%s -l <query_address> [-H <host>] [-p <server port>]\n", progname);
   printf (" [-T <query type>] [-w <warning interval>] [-c <critical interval>]\n");
   printf (" [-t <timeout>] [-a <expected answer address>] [-v]\n");
 }

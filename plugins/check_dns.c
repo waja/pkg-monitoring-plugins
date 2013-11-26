@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-13 10:14:45 +0100 (Tue, 13 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_dns plugin
@@ -28,12 +26,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_dns.c 1992 2008-05-13 09:14:45Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_dns";
-const char *revision = "$Revision: 1992 $";
 const char *copyright = "2000-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -123,7 +119,7 @@ main (int argc, char **argv)
 
   /* scan stdout */
   for(i = 0; i < chld_out.lines; i++) {
-    if (addresses == NULL)  
+    if (addresses == NULL)
       addresses = malloc(sizeof(*addresses)*10);
     else if (!(n_addresses % 10))
       addresses = realloc(addresses,sizeof(*addresses) * (n_addresses + 10));
@@ -255,7 +251,7 @@ main (int argc, char **argv)
     printf (_("DNS CRITICAL - %s\n"),
             !strcmp (msg, "") ? _(" Probably a non-existent host/domain") : msg);
   else
-    printf (_("DNS UNKNOW - %s\n"),
+    printf (_("DNS UNKNOWN - %s\n"),
             !strcmp (msg, "") ? _(" Probably a non-existent host/domain") : msg);
 
   return result;
@@ -289,7 +285,7 @@ error_scan (char *input_buffer)
             strstr (input_buffer, ": REFUSED")))
     die (STATE_CRITICAL, _("Connection to DNS %s was refused\n"), dns_server);
 
-  /* Query refused (usually by an ACL in the namserver) */ 
+  /* Query refused (usually by an ACL in the namserver) */
   else if (strstr (input_buffer, "Query refused"))
     die (STATE_CRITICAL, _("Query was refused by DNS server at %s\n"), dns_server);
 
@@ -340,8 +336,8 @@ process_arguments (int argc, char **argv)
     {"reverse-server", required_argument, 0, 'r'},
     {"expected-address", required_argument, 0, 'a'},
     {"expect-authority", no_argument, 0, 'A'},
-    {"warning", no_argument, 0, 'w'},
-    {"critical", no_argument, 0, 'c'},
+    {"warning", required_argument, 0, 'w'},
+    {"critical", required_argument, 0, 'c'},
     {0, 0, 0, 0}
   };
 
@@ -363,7 +359,7 @@ process_arguments (int argc, char **argv)
       print_help ();
       exit (STATE_OK);
     case 'V': /* version */
-      print_revision (progname, revision);
+      print_revision (progname, NP_VERSION);
       exit (STATE_OK);
     case 'v': /* version */
       verbose = TRUE;
@@ -446,7 +442,7 @@ validate_arguments ()
 void
 print_help (void)
 {
-  print_revision (progname, revision);
+  print_revision (progname, NP_VERSION);
 
   printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
   printf (COPYRIGHT, copyright, email);

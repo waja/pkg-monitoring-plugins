@@ -1,5 +1,16 @@
 ## Process this file with automake to produce Makefile.in
 
+if RELEASE_PRESENT
+NP_VERSION = $(PACKAGE_VERSION)
+else
+NP-VERSION-FILE: .FORCE-NP-VERSION-FILE
+	@$(SHELL_PATH) $(top_srcdir)/NP-VERSION-GEN
+.FORCE-NP-VERSION-FILE:
+-include NP-VERSION-FILE
+endif
+
+AM_CFLAGS = -DNP_VERSION='"$(NP_VERSION)"'
+
 VPATH = $(top_srcdir) $(top_srcdir)/lib $(top_srcdir)/plugins $(top_srcdir)/plugins/t 
 
 INCLUDES = -I.. -I$(top_srcdir)/lib -I$(top_srcdir)/gl -I$(top_srcdir)/intl @LDAPINCLUDE@ @PGINCLUDE@ @SSLINCLUDE@
@@ -65,10 +76,10 @@ check_ldap_LDADD = $(NETLIBS) $(LDAPLIBS)
 check_load_LDADD = $(BASEOBJS) popen.o
 check_mrtg_LDADD = $(BASEOBJS)
 check_mrtgtraf_LDADD = $(BASEOBJS)
-check_mysql_CFLAGS = $(MYSQLCFLAGS)
+check_mysql_CFLAGS = $(MYSQLCFLAGS) -DNP_VERSION='"$(NP_VERSION)"'
 check_mysql_CPPFLAGS = $(MYSQLINCLUDE)
 check_mysql_LDADD = $(NETLIBS) $(MYSQLLIBS)
-check_mysql_query_CFLAGS = $(MYSQLCFLAGS)
+check_mysql_query_CFLAGS = $(MYSQLCFLAGS) -DNP_VERSION='"$(NP_VERSION)"'
 check_mysql_query_CPPFLAGS = $(MYSQLINCLUDE)
 check_mysql_query_LDADD = $(NETLIBS) $(MYSQLLIBS)
 check_nagios_LDADD = $(BASEOBJS) runcmd.o
@@ -79,10 +90,10 @@ check_nwstat_LDADD = $(NETLIBS)
 check_overcr_LDADD = $(NETLIBS)
 check_pgsql_LDADD = $(NETLIBS) $(PGLIBS)
 check_ping_LDADD = $(NETLIBS) popen.o
-check_procs_LDADD = $(BASEOBJS) popen.o
+check_procs_LDADD = $(BASEOBJS)
 check_radius_LDADD = $(NETLIBS) $(RADIUSLIBS)
 check_real_LDADD = $(NETLIBS)
-check_snmp_LDADD = $(BASEOBJS) popen.o
+check_snmp_LDADD = $(BASEOBJS)
 check_smtp_LDADD = $(SSLOBJS) $(NETLIBS) $(SSLLIBS)
 check_ssh_LDADD = $(NETLIBS)
 check_swap_LDADD = $(MATHLIBS) $(BASEOBJS) popen.o
@@ -91,7 +102,7 @@ check_time_LDADD = $(NETLIBS)
 check_ntp_time_LDADD = $(NETLIBS) $(MATHLIBS)
 check_ups_LDADD = $(NETLIBS)
 check_users_LDADD = $(BASEOBJS) popen.o
-check_by_ssh_LDADD = $(NETLIBS) runcmd.o
+check_by_ssh_LDADD = $(NETLIBS)
 check_ide_smart_LDADD = $(BASEOBJS)
 negate_LDADD = $(BASEOBJS)
 urlize_LDADD = $(BASEOBJS) popen.o
@@ -124,7 +135,7 @@ check_ping_DEPENDENCIES = check_ping.c $(NETOBJS) popen.o $(DEPLIBS)
 check_procs_DEPENDENCIES = check_procs.c $(BASEOBJS) popen.o $(DEPLIBS)
 check_radius_DEPENDENCIES = check_radius.c $(NETOBJS)  $(DEPLIBS)
 check_real_DEPENDENCIES = check_real.c $(NETOBJS) $(DEPLIBS)
-check_snmp_DEPENDENCIES = check_snmp.c $(BASEOBJS) popen.o $(DEPLIBS)
+check_snmp_DEPENDENCIES = check_snmp.c $(BASEOBJS) $(DEPLIBS)
 check_smtp_DEPENDENCIES = check_smtp.c $(SSLOBJS) $(NETOBJS) $(DEPLIBS)
 check_ssh_DEPENDENCIES = check_ssh.c $(NETOBJS) $(DEPLIBS)
 check_swap_DEPENDENCIES = check_swap.c $(BASEOBJS) popen.o $(DEPLIBS)
@@ -133,7 +144,7 @@ check_time_DEPENDENCIES = check_time.c $(NETOBJS) $(DEPLIBS)
 check_ntp_time_DEPENDENCIES = check_ntp_time.c $(NETOBJS) $(DEPLIBS)
 check_ups_DEPENDENCIES = check_ups.c $(NETOBJS) $(DEPLIBS)
 check_users_DEPENDENCIES = check_users.c $(BASEOBJS) popen.o $(DEPLIBS)
-check_by_ssh_DEPENDENCIES = check_by_ssh.c $(NETOBJS) runcmd.o $(DEPLIBS)
+check_by_ssh_DEPENDENCIES = check_by_ssh.c $(NETOBJS) $(DEPLIBS)
 negate_DEPENDENCIES = negate.c $(BASEOBJS) $(DEPLIBS)
 urlize_DEPENDENCIES = urlize.c $(BASEOBJS) popen.o $(DEPLIBS)
 
@@ -149,10 +160,6 @@ utils.o: utils.c utils.h $(PLUGINHDRS)
 netutils.o: netutils.c netutils.h $(PLUGINHDRS)
 sslutils.o: sslutils.c netutils.h $(PLUGINHDRS)
 
-getaddrinfo.o: getaddrinfo.h $(PLUGINHDRS)
-
-gethostbyname.o: gethostbyname.h $(PLUGINHDRS)
-
 all-local: $(check_tcp_programs)
 
 $(check_tcp_programs): check_tcp
@@ -166,6 +173,8 @@ install-exec-hook:
 	
 clean-local:
 	rm -f $(check_tcp_programs)
+	rm -f NP-VERSION-FILE
 
 uninstall-local:
 	cd $(DESTDIR)$(libexecdir) && rm -f $(check_tcp_programs)
+

@@ -2,8 +2,6 @@
 #
 # Wrapper for running the test harnesses
 #
-# $Id: test.pl.in 1207 2005-07-25 01:47:15Z illumino $
-#
 
 use strict;
 
@@ -46,6 +44,6 @@ if ( ! scalar( @tests ) )
 
 use Test::Harness;
 
-#$Test::Harness::verbose=1;
+$Test::Harness::verbose=1;
 
 runtests( @tests );

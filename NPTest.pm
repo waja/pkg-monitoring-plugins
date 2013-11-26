@@ -21,7 +21,7 @@ use Data::Dumper;
 use Test;
 
 use vars qw($VERSION);
-$VERSION = do { my @r = (q$Revision: 1556 $ =~ /\d+/g); sprintf "%d."."%02d" x $#r, @r }; # must be all one line, for MakeMaker
+$VERSION = "1556."; # must be all one line, for MakeMaker
 
 =head1 NAME
 
@@ -625,10 +625,10 @@ sub testCmd {
 	chomp $output;
 	$object->output($output);
 
+	my ($pkg, $file, $line) = caller(0);
+	print "Testing: $command", $/;
 	if ($ENV{'NPTEST_DEBUG'}) {
-		my ($pkg, $file, $line) = caller(0);
 		print "testCmd: Called from line $line in $file", $/;
-		print "Testing: $command", $/;
 		print "Output:  ", $object->output, $/;
 		print "Return code: ", $object->return_code, $/;
 	}

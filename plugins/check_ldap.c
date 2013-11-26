@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_ldap plugin
@@ -25,13 +23,11 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_ldap.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 /* progname may be check_ldaps */
 char *progname = "check_ldap";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -87,15 +83,15 @@ main (int argc, char *argv[])
 	LDAPMessage *result;
 
 	/* should be 	int result = STATE_UNKNOWN; */
-	
+
 	int status = STATE_UNKNOWN;
 	long microsec;
 	double elapsed_time;
-	
+
 	/* for ldap tls */
-	
- 	int tls; 
- 	int version=3;
+
+	int tls;
+	int version=3;
 
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
@@ -129,7 +125,7 @@ main (int argc, char *argv[])
 		printf ("Could not connect to the server at port %i\n", ld_port);
 		return STATE_CRITICAL;
 	}
-#else	
+#else
 	if (!(ld = ldap_open (ld_host, ld_port))) {
 		if (verbose)
 			ldap_perror(ld, "ldap_open");
@@ -137,7 +133,7 @@ main (int argc, char *argv[])
 		return STATE_CRITICAL;
 	}
 #endif /* HAVE_LDAP_INIT */
-	
+
 #ifdef HAVE_LDAP_SET_OPTION
 	/* set ldap options */
 	if (ldap_set_option (ld, LDAP_OPT_PROTOCOL_VERSION, &ld_protocol) !=
@@ -152,7 +148,7 @@ main (int argc, char *argv[])
 #if defined(HAVE_LDAP_SET_OPTION) && defined(LDAP_OPT_X_TLS)
 		/* ldaps: set option tls */
 		tls = LDAP_OPT_X_TLS_HARD;
-		
+
 		if (ldap_set_option (ld, LDAP_OPT_X_TLS, &tls) != LDAP_SUCCESS)
 		{
 			if (verbose)
@@ -179,7 +175,7 @@ main (int argc, char *argv[])
 		/* call start_tls */
 		if (ldap_start_tls_s(ld, NULL, NULL) != LDAP_SUCCESS)
 		{
-			if (verbose) 
+			if (verbose)
 				ldap_perror(ld, "ldap_start_tls");
 			printf (_("Could not init startTLS at port %i!\n"), ld_port);
 			return STATE_CRITICAL;
@@ -189,13 +185,13 @@ main (int argc, char *argv[])
 		return STATE_CRITICAL;
 #endif /* HAVE_LDAP_START_TLS_S */
 	}
-	
+
 	/* bind to the ldap server */
 	if (ldap_bind_s (ld, ld_binddn, ld_passwd, LDAP_AUTH_SIMPLE) !=
 			LDAP_SUCCESS) {
 		if (verbose)
 			ldap_perror(ld, "ldap_bind");
-		printf (_("Could not bind to the ldap-server\n"));
+		printf (_("Could not bind to the LDAP server\n"));
 		return STATE_CRITICAL;
 	}
 
@@ -289,7 +285,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 't':									/* timeout period */
 			if (!is_intnonneg (optarg))
@@ -390,7 +386,7 @@ print_help (void)
 	char *myport;
 	asprintf (&myport, "%d", DEFAULT_PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Didi Rieder (adrieder@sbox.tu-graz.ac.at)\n");
 	printf (COPYRIGHT, copyright, email);

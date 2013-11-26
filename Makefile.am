@@ -1,10 +1,10 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = gl lib plugins plugins-scripts plugins-root po @PERLMODS_DIR@
+SUBDIRS = gl tap lib plugins plugins-scripts plugins-root po @PERLMODS_DIR@
 
 EXTRA_DIST = config.rpath \
 	ABOUT-NLS ACKNOWLEDGEMENTS AUTHORS BUGS CODING FAQ LEGAL NEWS \
-	REQUIREMENTS SUPPORT THANKS \
+	NP-VERSION-GEN REQUIREMENTS SUPPORT THANKS \
 	NPTest.pm contrib pkg nagios-plugins.spec \
 	config_test/Makefile config_test/run_tests config_test/child_test.c \
 	perlmods tools/build_perl_modules \
@@ -17,7 +17,7 @@ DEFS = -DLOCALEDIR=\"$(localedir)\"
 
 dist-hook:
 	make THANKS nagios-plugins.spec pkg/fedora/nagios-plugins.spec
-	rm -rf `find $(distdir) -name CVS`
+	echo ${VERSION} >$(distdir)/release
 
 install-root:
 	cd plugins-root && $(MAKE) $@
@@ -57,3 +57,4 @@ THANKS: THANKS.in
 
 pkgclean:
 	rm -rf $(BUILDDIR) $(PACKDIR)
+

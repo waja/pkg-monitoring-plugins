@@ -3,10 +3,8 @@
 * Nagios check_mysql_query plugin
 * 
 * License: GPL
-* Copyright (c) 2006-2007 Nagios Plugins Development Team
+* Copyright (c) 2006-2009 Nagios Plugins Development Team
 * Original code from check_mysql, copyright 1999 Didi Rieder
-* 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
 * 
 * Description:
 * 
@@ -28,12 +26,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_mysql_query.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_mysql_query";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -192,7 +188,7 @@ process_arguments (int argc, char **argv)
 		return ERROR;
 
 	while (1) {
-		c = getopt_long (argc, argv, "hvVSP:p:u:d:H:s:q:w:c:", longopts, &option);
+		c = getopt_long (argc, argv, "hvVP:p:u:d:H:s:q:w:c:", longopts, &option);
 
 		if (c == -1 || c == EOF)
 			break;
@@ -231,7 +227,7 @@ process_arguments (int argc, char **argv)
 			verbose++;
 			break;
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'h':									/* help */
 			print_help ();
@@ -270,9 +266,6 @@ validate_arguments (void)
 	if (db_host == NULL)
 		db_host = strdup("");
 
-	if (db_pass == NULL)
-		db_pass == strdup("");
-
 	if (db == NULL)
 		db = strdup("");
 
@@ -286,7 +279,7 @@ print_help (void)
 	char *myport;
 	asprintf (&myport, "%d", MYSQL_PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf (_(COPYRIGHT), copyright, email);
 
@@ -321,6 +314,9 @@ print_help (void)
 	printf ("\n");
 	printf ("%s\n", _("Notes:"));
 	printf (_(UT_EXTRA_OPTS_NOTES));
+	printf ("\n");
+	printf (" %s\n", _("You must specify -p with an empty string to force an empty password,"));
+	printf (" %s\n", _("overriding any my.cnf settings."));
 #endif
 
 	printf (_(UT_SUPPORT));

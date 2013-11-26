@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2005-2006 Nagios Plugins Development Team
 *
-* Last Modified: $Date$
-*
 * Description :
 *
 * A simple interface to executing programs from other programs, using an
@@ -35,7 +33,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
-* $Id$
 *
 *****************************************************************************/
 
@@ -45,6 +42,7 @@
 #include "common.h"
 #include "utils_cmd.h"
 #include "utils_base.h"
+#include <fcntl.h>
 
 #ifdef HAVE_SYS_WAIT_H
 # include <sys/wait.h>
@@ -376,4 +374,21 @@ cmd_run_array (char *const *argv, output * out, output * err, int flags)
 		err->lines = _cmd_fetch_output (pfd_err[0], err, flags);
 
 	return _cmd_close (fd);
+}
+
+int
+cmd_file_read ( char *filename, output *out, int flags)
+{
+	int fd;
+	if(out)
+		memset (out, 0, sizeof(output));
+
+	if ((fd = open(filename, O_RDONLY)) == -1) {
+		die( STATE_UNKNOWN, _("Error opening %s: %s"), filename, strerror(errno) );
+	}
+	
+	if(out)
+		out->lines = _cmd_fetch_output (fd, out, flags);
+
+	return 0;
 }

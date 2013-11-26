@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_ssh plugin
@@ -27,12 +25,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_ssh.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_ssh";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -78,7 +74,7 @@ main (int argc, char **argv)
 
 	/* initialize alarm signal handling */
 	signal (SIGALRM, socket_timeout_alarm_handler);
-	
+
 	alarm (socket_timeout);
 
 	/* ssh_connect exits if error is found */
@@ -129,7 +125,7 @@ process_arguments (int argc, char **argv)
 		case '?':									/* help */
 			usage5 ();
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'h':									/* help */
 			print_help ();
@@ -218,9 +214,7 @@ ssh_connect (char *haddr, int hport, char *remote_version)
 	char *buffer = NULL;
 	char *ssh_proto = NULL;
 	char *ssh_server = NULL;
-	char rev_no[20];
-
-	sscanf ("$Revision: 1991 $", "$Revision: %[0123456789.]", rev_no);
+	static char *rev_no = VERSION;
 
 	result = my_tcp_connect (haddr, hport, &sd);
 
@@ -255,7 +249,7 @@ ssh_connect (char *haddr, int hport, char *remote_version)
 			close(sd);
 			exit (STATE_WARNING);
 		}
-		
+
 		printf
 			(_("SSH OK - %s (protocol %s)\n"),
 			 ssh_server, ssh_proto);
@@ -272,7 +266,7 @@ print_help (void)
 	char *myport;
 	asprintf (&myport, "%d", SSH_DFL_PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Remi Paulmier <remi@sinfomic.fr>\n");
 	printf (COPYRIGHT, copyright, email);
@@ -294,7 +288,7 @@ print_help (void)
 
 	printf (" %s\n", "-r, --remote-version=STRING");
   printf ("    %s\n", _("Warn if string doesn't match expected server version (ex: OpenSSH_3.9p1)"));
-	
+
 	printf (_(UT_VERBOSE));
 
 #ifdef NP_EXTRA_OPTS

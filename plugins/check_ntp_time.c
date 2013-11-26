@@ -6,8 +6,6 @@
 * Copyright (c) 2006 Sean Finney <seanius@seanius.net>
 * Copyright (c) 2006-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_ntp_time plugin
@@ -33,12 +31,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_ntp_time.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_ntp_time";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2006-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -47,6 +43,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include "utils.h"
 
 static char *server_address=NULL;
+static char *port="123";
 static int verbose=0;
 static int quiet=0;
 static char *owarn="60";
@@ -80,7 +77,7 @@ typedef struct {
 
 /* this structure holds data about results from querying offset from a peer */
 typedef struct {
-	time_t waiting;         /* ts set when we started waiting for a response */ 
+	time_t waiting;         /* ts set when we started waiting for a response */
 	int num_responses;      /* number of successfully recieved responses */
 	uint8_t stratum;        /* copied verbatim from the ntp_message */
 	double rtdelay;         /* converted from the ntp_message */
@@ -131,7 +128,7 @@ typedef struct {
  they are divided into halves, each being a 16-bit int in network byte order:
  - the first 16 bits are an int on the left side of a decimal point.
  - the second 16 bits represent a fraction n/(2^16)
- likewise for the 64-bit "fixed point" numbers with everything doubled :) 
+ likewise for the 64-bit "fixed point" numbers with everything doubled :)
  **/
 
 /* macros to access the left/right 16 bits of a 32-bit ntp "fixed point"
@@ -298,7 +295,7 @@ int best_offset_server(const ntp_server_results *slist, int nservers){
 
 /* do everything we need to get the total average offset
  * - we use a certain amount of parallelization with poll() to ensure
- *   we don't waste time sitting around waiting for single packets. 
+ *   we don't waste time sitting around waiting for single packets.
  * - we also "manually" handle resolving host names and connecting, because
  *   we have to do it in a way that our lazy macros don't handle currently :( */
 double offset_request(const char *host, int *status){
@@ -319,7 +316,7 @@ double offset_request(const char *host, int *status){
 	hints.ai_socktype = SOCK_DGRAM;
 
 	/* fill in ai with the list of hosts resolved by the host name */
-	ga_result = getaddrinfo(host, "123", &hints, &ai);
+	ga_result = getaddrinfo(host, port, &hints, &ai);
 	if(ga_result!=0){
 		die(STATE_UNKNOWN, "error getting address for %s: %s\n",
 		    host, gai_strerror(ga_result));
@@ -456,15 +453,16 @@ int process_arguments(int argc, char **argv){
 		{"critical", required_argument, 0, 'c'},
 		{"timeout", required_argument, 0, 't'},
 		{"hostname", required_argument, 0, 'H'},
+		{"port", required_argument, 0, 'p'},
 		{0, 0, 0, 0}
 	};
 
-	
+
 	if (argc < 2)
 		usage ("\n");
 
 	while (1) {
-		c = getopt_long (argc, argv, "Vhv46qw:c:t:H:", longopts, &option);
+		c = getopt_long (argc, argv, "Vhv46qw:c:t:H:p:", longopts, &option);
 		if (c == -1 || c == EOF || c == 1)
 			break;
 
@@ -474,7 +472,7 @@ int process_arguments(int argc, char **argv){
 			exit(STATE_OK);
 			break;
 		case 'V':
-			print_revision(progname, revision);
+			print_revision(progname, NP_VERSION);
 			exit(STATE_OK);
 			break;
 		case 'v':
@@ -493,6 +491,9 @@ int process_arguments(int argc, char **argv){
 			if(is_host(optarg) == FALSE)
 				usage2(_("Invalid hostname/address"), optarg);
 			server_address = strdup(optarg);
+			break;
+		case 'p':
+			port = strdup(optarg);
 			break;
 		case 't':
 			socket_timeout=atoi(optarg);
@@ -589,7 +590,7 @@ int main(int argc, char *argv[]){
 }
 
 void print_help(void){
-	print_revision(progname, revision);
+	print_revision(progname, NP_VERSION);
 
 	printf ("Copyright (c) 2006 Sean Finney\n");
 	printf (COPYRIGHT, copyright, email);

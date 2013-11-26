@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_ping plugin
@@ -27,12 +25,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_ping.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_ping";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -112,7 +108,7 @@ main (int argc, char **argv)
 #endif
 
 	for (i = 0 ; i < n_addresses ; i++) {
-		
+
 #ifdef PING6_COMMAND
 		if (address_family != AF_INET && is_inet6_addr(addresses[i]))
 			rawcmd = strdup(PING6_COMMAND);
@@ -150,8 +146,8 @@ main (int argc, char **argv)
 		else if (pl >= wpl || rta >= wrta)
 			this_result = STATE_WARNING;
 		else if (pl >= 0 && rta >= 0)
-			this_result = max_state (STATE_OK, this_result);	
-	
+			this_result = max_state (STATE_OK, this_result);
+
 		if (n_addresses > 1 && this_result != STATE_UNKNOWN)
 			die (STATE_OK, "%s is alive\n", addresses[i]);
 
@@ -231,7 +227,7 @@ process_arguments (int argc, char **argv)
 			exit (STATE_OK);
 			break;
 		case 'V':	/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 			break;
 		case 't':	/* timeout period */
@@ -370,7 +366,7 @@ get_threshold (char *arg, float *trta, int *tpl)
 		return OK;
 	else if (strpbrk (arg, ",:") && strstr (arg, "%") && sscanf (arg, "%f%*[:,]%d%%", trta, tpl) == 2)
 		return OK;
-	else if (strstr (arg, "%") && sscanf (arg, "%d%%", tpl) == 1) 
+	else if (strstr (arg, "%") && sscanf (arg, "%d%%", tpl) == 1)
 		return OK;
 
 	usage2 (_("%s: Warning threshold must be integer or percentage!\n\n"), arg);
@@ -555,7 +551,7 @@ error_scan (char buf[MAX_INPUT_BUFFER], const char *addr)
 void
 print_help (void)
 {
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);

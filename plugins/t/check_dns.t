@@ -2,7 +2,6 @@
 #
 # Domain Name Server (DNS) Tests via check_dns
 #
-# $Id: check_dns.t 1902 2008-01-08 16:05:36Z tonvoon $
 #
 
 use strict;

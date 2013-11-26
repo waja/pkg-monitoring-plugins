@@ -5,15 +5,13 @@
 * License: GPL
 * Copyright (c) 2000-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-01-31 11:27:22 +0000 (Thu, 31 Jan 2008) $
-* 
 * Description:
 * 
 * This file contains the urlize plugin
 * 
 * This plugin wraps the text output of another command (plugin) in HTML <A>
-* tags, thus displaying the plugin output in as a clickable link in the
-* Nagios status screen.  The return status is the same as the invoked plugin.
+* tags, thus displaying the child plugin's output as a clickable link in the
+* Nagios status screen.  This plugin returns the status of the invoked plugin.
 * 
 * 
 * This program is free software: you can redistribute it and/or modify
@@ -29,12 +27,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: urlize.c 1918 2008-01-31 11:27:22Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "urlize";
-const char *revision = "$Revision: 1918 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -79,7 +75,7 @@ main (int argc, char **argv)
 
 	while (1) {
 		c = getopt_long (argc, argv, "+hVu:", longopts, &option);
-		
+
 		if (c == -1 || c == EOF)
 			break;
 
@@ -89,7 +85,7 @@ main (int argc, char **argv)
 			exit (EXIT_SUCCESS);
 			break;
 		case 'V':     /* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (EXIT_SUCCESS);
 			break;
 		case 'u':
@@ -144,7 +140,7 @@ main (int argc, char **argv)
 	printf ("%s", nstr);
 	printf ("</A>");
 	nstr = strtok(NULL, PERF_CHARACTER);
-	if (nstr != NULL) 
+	if (nstr != NULL)
 		printf (" | %s", nstr);
 
 	/* close the pipe */
@@ -165,14 +161,14 @@ main (int argc, char **argv)
 void
 print_help (void)
 {
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 2000 Karl DeBisschop <kdebisschop@users.sourceforge.net>\n");
 	printf (COPYRIGHT, copyright, email);
 
 	printf ("%s\n", _("This plugin wraps the text output of another command (plugin)"));
-  printf ("%s\n", _("in HTML <A> tags, thus displaying the plugin output in as a clickable link in"));
-  printf ("%s\n", _("the Nagios status screen.  The return status is the same as the invoked plugin."));
+  printf ("%s\n", _("in HTML <A> tags, thus displaying the child plugin's output as a clickable link in"));
+  printf ("%s\n", _("the Nagios status screen.  This plugin returns the status of the invoked plugin."));
 
   printf ("\n\n");
 

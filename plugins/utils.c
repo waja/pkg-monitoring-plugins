@@ -6,9 +6,6 @@
 * Copyright (c) 2000 Karl DeBisschop (karl@debisschop.net)
 * Copyright (c) 2002-2007 Nagios Plugin Development Team
 * 
-* Last Modified: $Date: 2008-01-31 11:27:22 +0000 (Thu, 31 Jan 2008) $
-* 
-* 
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
@@ -22,7 +19,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: utils.c 1918 2008-01-31 11:27:22Z dermoth $
 * 
 *****************************************************************************/
 
@@ -142,24 +138,13 @@ usage5 (void)
 	exit (STATE_UNKNOWN);
 }
 
-char *
-clean_revstring (const char *revstring)
-{
-	char plugin_revision[STRLEN];
-	plugin_revision[0] = 'v';
-	if (sscanf (revstring,"$Revision: %[0-9.]", plugin_revision + 1) == 1)
-		return strscpy (NULL, plugin_revision);
-	else
-		return strscpy (NULL, "N/A");
-}
-
 void
-print_revision (const char *command_name, const char *revision_string)
+print_revision (const char *command_name, const char *revision)
 {
 	char plugin_revision[STRLEN];
 
-	printf ("%s %s (%s %s)\n",
-	         command_name, clean_revstring(revision_string), PACKAGE, VERSION);
+	printf ("%s v%s (%s %s)\n",
+	         command_name, revision, PACKAGE, VERSION);
 }
 
 const char *
@@ -183,9 +168,9 @@ void
 timeout_alarm_handler (int signo)
 {
 	if (signo == SIGALRM) {
-		printf (_("CRITICAL - Plugin timed out after %d seconds\n"),
-						timeout_interval);
-		exit (STATE_CRITICAL);
+		printf (_("%s - Plugin timed out after %d seconds\n"),
+						state_text(timeout_state), timeout_interval);
+		exit (timeout_state);
 	}
 }
 

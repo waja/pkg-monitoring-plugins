@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 1999-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-20 08:57:13 +0100 (Tue, 20 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_radius plugin
@@ -27,12 +25,10 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_radius.c 1994 2008-05-20 07:57:13Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_radius";
-const char *revision = "$Revision: 1994 $";
 const char *copyright = "2000-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -169,8 +165,8 @@ main (int argc, char **argv)
 				(nasid==NULL || my_rc_avpair_add (&data.send_pairs, PW_NAS_IDENTIFIER, nasid, 0))))
 		die (STATE_UNKNOWN, _("Out of Memory?"));
 
-	/* 
-	 * Fill in NAS-IP-Address 
+	/*
+	 * Fill in NAS-IP-Address
 	 */
 
 	if ((client_id = my_rc_own_ipaddress ()) == 0)
@@ -239,7 +235,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (OK);
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (OK);
 		case 'v':									/* verbose mode */
 			verbose = TRUE;
@@ -312,12 +308,12 @@ print_help (void)
 	char *myport;
 	asprintf (&myport, "%d", PW_AUTH_UDP_PORT);
 
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Robert August Vincent II\n");
 	printf (COPYRIGHT, copyright, email);
 
-	printf("%s\n", _("Tests to see if a radius server is accepting connections."));
+	printf("%s\n", _("Tests to see if a RADIUS server is accepting connections."));
 
   printf ("\n\n");
 
@@ -344,7 +340,7 @@ print_help (void)
 	printf (_(UT_TIMEOUT), timeout_interval);
 
   printf ("\n");
-  printf ("%s\n", _("This plugin tests a radius server to see if it is accepting connections."));
+  printf ("%s\n", _("This plugin tests a RADIUS server to see if it is accepting connections."));
   printf ("%s\n", _("The server to test must be specified in the invocation, as well as a user"));
   printf ("%s\n", _("name and password. A configuration file may also be present. The format of"));
   printf ("%s\n", _("the configuration file is described in the radiusclient library sources."));

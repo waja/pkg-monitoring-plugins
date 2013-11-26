@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 1999-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_mtrgtraf plugin
@@ -28,7 +26,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_mrtgtraf.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
@@ -36,7 +33,6 @@
 #include "utils.h"
 
 const char *progname = "check_mrtgtraf";
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -203,7 +199,7 @@ main (int argc, char **argv)
 	                   (int)incoming_warning_threshold, incoming_warning_threshold,
 	                   (int)incoming_critical_threshold, incoming_critical_threshold,
 	                   TRUE, 0, FALSE, 0),
-	          fperfdata("in", adjusted_outgoing_rate, outgoing_speed_rating,
+	          fperfdata("out", adjusted_outgoing_rate, outgoing_speed_rating,
 	                   (int)outgoing_warning_threshold, outgoing_warning_threshold,
 	                   (int)outgoing_critical_threshold, outgoing_critical_threshold,
 	                   TRUE, 0, FALSE, 0));
@@ -223,13 +219,11 @@ process_arguments (int argc, char **argv)
 
 	int option = 0;
 	static struct option longopts[] = {
-		{"logfile", required_argument, 0, 'F'},
+		{"filename", required_argument, 0, 'F'},
 		{"expires", required_argument, 0, 'e'},
 		{"aggregation", required_argument, 0, 'a'},
-		{"variable", required_argument, 0, 'v'},
 		{"critical", required_argument, 0, 'c'},
 		{"warning", required_argument, 0, 'w'},
-		{"verbose", no_argument, 0, 'v'},
 		{"version", no_argument, 0, 'V'},
 		{"help", no_argument, 0, 'h'},
 		{0, 0, 0, 0}
@@ -275,7 +269,7 @@ process_arguments (int argc, char **argv)
 							&outgoing_warning_threshold);
 			break;
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 'h':									/* help */
 			print_help ();
@@ -333,7 +327,7 @@ validate_arguments (void)
 void
 print_help (void)
 {
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);
@@ -385,6 +379,6 @@ void
 print_usage (void)
 {
 	printf (_("Usage"));
-  printf (" %s -F <log_file> -a <AVG | MAX> -v <variable> -w <warning_pair>",progname);
-  printf ("-c <critical_pair> [-e expire_minutes] [-t timeout] [-v]\n");
+  printf (" %s -F <log_file> -a <AVG | MAX> -w <warning_pair>\n",progname);
+  printf ("-c <critical_pair> [-e expire_minutes]\n");
 }

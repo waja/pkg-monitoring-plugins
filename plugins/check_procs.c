@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 2000-2008 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-05-07 11:02:42 +0100 (Wed, 07 May 2008) $
-* 
 * Description:
 * 
 * This file contains the check_procs plugin
@@ -30,19 +28,17 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: check_procs.c 1991 2008-05-07 10:02:42Z dermoth $
 * 
 *****************************************************************************/
 
 const char *progname = "check_procs";
 const char *program_name = "check_procs";  /* Required for coreutils libs */
-const char *revision = "$Revision: 1991 $";
 const char *copyright = "2000-2008";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
 #include "common.h"
-#include "popen.h"
 #include "utils.h"
+#include "utils_cmd.h"
 #include "regex.h"
 
 #include <pwd.h>
@@ -129,8 +125,9 @@ main (int argc, char **argv)
 	int expected_cols = PS_COLS - 1;
 	int warn = 0; /* number of processes in warn state */
 	int crit = 0; /* number of processes in crit state */
-	int i = 0;
+	int i = 0, j = 0;
 	int result = STATE_UNKNOWN;
+	output chld_out, chld_err;
 
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
@@ -153,41 +150,27 @@ main (int argc, char **argv)
 	mypid = getpid();
 
 	/* Set signal handling and alarm timeout */
-	if (signal (SIGALRM, popen_timeout_alarm_handler) == SIG_ERR) {
-		usage4 (_("Cannot catch SIGALRM"));
+	if (signal (SIGALRM, timeout_alarm_handler) == SIG_ERR) {
+		die (STATE_UNKNOWN, _("Cannot catch SIGALRM"));
 	}
-	alarm (timeout_interval);
+	(void) alarm ((unsigned) timeout_interval);
 
 	if (verbose >= 2)
 		printf (_("CMD: %s\n"), PS_COMMAND);
 
 	if (input_filename == NULL) {
-		ps_input = spopen (PS_COMMAND);
-		if (ps_input == NULL) {
-			printf (_("Could not open pipe: %s\n"), PS_COMMAND);
-			return STATE_UNKNOWN;
+		result = cmd_run( PS_COMMAND, &chld_out, &chld_err, 0);
+		if (chld_err.lines > 0) {
+			printf ("%s: %s", _("System call sent warnings to stderr"), chld_err.line[0]);
+			exit(STATE_WARNING);
 		}
-		child_stderr = fdopen (child_stderr_array[fileno (ps_input)], "r");
-		if (child_stderr == NULL)
-			printf (_("Could not open stderr for %s\n"), PS_COMMAND);
 	} else {
-		ps_input = fopen(input_filename, "r");
-		if (ps_input == NULL) {
-			die( STATE_UNKNOWN, _("Error opening %s\n"), input_filename );
-		}
+		result = cmd_file_read( input_filename, &chld_out, 0);
 	}
 
-	/* flush first line */
-	fgets (input_buffer, MAX_INPUT_BUFFER - 1, ps_input);
-	while ( input_buffer[strlen(input_buffer)-1] != '\n' )
-		fgets (input_buffer, MAX_INPUT_BUFFER - 1, ps_input);
-
-	while (fgets (input_buffer, MAX_INPUT_BUFFER - 1, ps_input)) {
-		asprintf (&input_line, "%s", input_buffer);
-		while ( input_buffer[strlen(input_buffer)-1] != '\n' ) {
-			fgets (input_buffer, MAX_INPUT_BUFFER - 1, ps_input);
-			asprintf (&input_line, "%s%s", input_line, input_buffer);
-		}
+	/* flush first line: j starts at 1 */
+	for (j = 1; j < chld_out.lines; j++) {
+		input_line = chld_out.line[j];
 
 		if (verbose >= 3)
 			printf ("%s", input_line);
@@ -283,27 +266,9 @@ main (int argc, char **argv)
 		}
 	}
 
-	/* If we get anything on STDERR, at least set warning */
-	if (input_filename == NULL) {
-		while (fgets (input_buffer, MAX_INPUT_BUFFER - 1, child_stderr)) {
-			if (verbose)
-				printf ("STDERR: %s", input_buffer);
-			result = max_state (result, STATE_WARNING);
-			printf (_("System call sent warnings to stderr\n"));
-		}
-	
-		(void) fclose (child_stderr);
-
-		/* close the pipe */
-		if (spclose (ps_input)) {
-			printf (_("System call returned nonzero status\n"));
-			result = max_state (result, STATE_WARNING);
-		}
-	}
-
 	if (found == 0) {							/* no process lines parsed so return STATE_UNKNOWN */
 		printf (_("Unable to read output\n"));
-		return result;
+		return STATE_UNKNOWN;
 	}
 
 	if ( result == STATE_UNKNOWN ) 
@@ -392,7 +357,7 @@ process_arguments (int argc, char **argv)
 			print_help ();
 			exit (STATE_OK);
 		case 'V':									/* version */
-			print_revision (progname, revision);
+			print_revision (progname, NP_VERSION);
 			exit (STATE_OK);
 		case 't':									/* timeout period */
 			if (!is_integer (optarg))
@@ -705,7 +670,7 @@ convert_to_seconds(char *etime) {
 void
 print_help (void)
 {
-	print_revision (progname, revision);
+	print_revision (progname, NP_VERSION);
 
 	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);
@@ -729,7 +694,7 @@ print_help (void)
   printf ("  %s\n", _("PROCS   - number of processes (default)"));
   printf ("  %s\n", _("VSZ     - virtual memory size"));
   printf ("  %s\n", _("RSS     - resident set memory size"));
-  printf ("  %s\n", _("CPU     - percentage cpu"));
+  printf ("  %s\n", _("CPU     - percentage CPU"));
 /* only linux etime is support currently */
 #if defined( __linux__ )
 	printf ("  %s\n", _("ELAPSED - time elapsed in seconds"));
@@ -748,11 +713,11 @@ print_help (void)
   printf (" %s\n", "-p, --ppid=PPID");
   printf ("   %s\n", _("Only scan for children of the parent process ID indicated."));
   printf (" %s\n", "-z, --vsz=VSZ");
-  printf ("   %s\n", _("Only scan for processes with vsz higher than indicated."));
+  printf ("   %s\n", _("Only scan for processes with VSZ higher than indicated."));
   printf (" %s\n", "-r, --rss=RSS");
-  printf ("   %s\n", _("Only scan for processes with rss higher than indicated."));
+  printf ("   %s\n", _("Only scan for processes with RSS higher than indicated."));
 	printf (" %s\n", "-P, --pcpu=PCPU");
-  printf ("   %s\n", _("Only scan for processes with pcpu higher than indicated."));
+  printf ("   %s\n", _("Only scan for processes with PCPU higher than indicated."));
   printf (" %s\n", "-u, --user=USER");
   printf ("   %s\n", _("Only scan for processes with user name or ID indicated."));
   printf (" %s\n", "-a, --argument-array=STRING");
@@ -788,9 +753,9 @@ be the total number of running processes\n\n"));
   printf ("  %s\n", _("Warning alert if > 10 processes with command arguments containing"));
   printf ("  %s\n\n", _("'/usr/local/bin/perl' and owned by root"));
   printf (" %s\n", "check_procs -w 50000 -c 100000 --metric=VSZ");
-  printf ("  %s\n\n", _("Alert if vsz of any processes over 50K or 100K"));
+  printf ("  %s\n\n", _("Alert if VSZ of any processes over 50K or 100K"));
   printf (" %s\n", "check_procs -w 10 -c 20 --metric=CPU");
-  printf ("  %s\n", _("Alert if cpu of any processes over 10%% or 20%%"));
+  printf ("  %s\n", _("Alert if CPU of any processes over 10%% or 20%%"));
 
 	printf (_(UT_SUPPORT));
 }

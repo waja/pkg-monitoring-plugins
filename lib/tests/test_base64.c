@@ -13,7 +13,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: test_base64.c 1927 2008-02-13 04:07:39Z dermoth $
 * 
 *****************************************************************************/
 

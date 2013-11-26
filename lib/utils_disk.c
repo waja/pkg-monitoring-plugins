@@ -5,8 +5,6 @@
 * License: GPL
 * Copyright (c) 1999-2007 Nagios Plugins Development Team
 * 
-* Last Modified: $Date: 2008-01-30 09:46:21 +0000 (Wed, 30 Jan 2008) $
-* 
 * Description:
 * 
 * This file contains utilities for check_disk. These are tested by libtap
@@ -25,7 +23,6 @@
 * You should have received a copy of the GNU General Public License
 * along with this program.  If not, see <http://www.gnu.org/licenses/>.
 * 
-* $Id: utils_disk.c 1915 2008-01-30 09:46:21Z dermoth $
 * 
 *****************************************************************************/
 
@@ -77,22 +74,21 @@ np_add_parameter(struct parameter_list **list, const char *name)
 struct parameter_list *
 np_del_parameter(struct parameter_list *item, struct parameter_list *prev)
 {
-	struct parameter_list *next;
-   	if (item->name_next)
-  		next = item->name_next;
-	else
-	  	next = NULL;
+  struct parameter_list *next;
 
-	
-	free(item);
-	if (prev)
-	  prev->name_next = next;
+  if (item->name_next)
+    next = item->name_next;
+  else
+    next = NULL;
 
-	return next;
+  free(item);
+  if (prev)
+    prev->name_next = next;
 
+  return next;
 }
 
-  
+
 /* returns a pointer to the struct found in the list */
 struct parameter_list *
 np_find_parameter(struct parameter_list *list, const char *name)
@@ -102,7 +98,7 @@ np_find_parameter(struct parameter_list *list, const char *name)
     if (! strcmp(temp_list->name, name))
         return temp_list;
   }
-        
+
   return NULL;
 }
 
@@ -127,7 +123,7 @@ np_set_best_match(struct parameter_list *desired, struct mount_entry *mount_list
       if (! best_match) {
         for (me = mount_list; me; me = me->me_next) {
           size_t len = strlen (me->me_mountdir);
-          if ((exact == FALSE && (best_match_len <= len && len <= name_len && 
+          if ((exact == FALSE && (best_match_len <= len && len <= name_len &&
              (len == 1 || strncmp (me->me_mountdir, d->name, len) == 0)))
              || (exact == TRUE && strcmp(me->me_mountdir, d->name)==0))
           {
@@ -176,7 +172,7 @@ np_seen_name(struct name_list *list, const char *name)
 }
 
 int
-np_regex_match_mount_entry (struct mount_entry* me, regex_t* re) 
+np_regex_match_mount_entry (struct mount_entry* me, regex_t* re)
 {
   if (regexec(re, me->me_devname, (size_t) 0, NULL, 0) == 0 ||
       regexec(re, me->me_mountdir, (size_t) 0, NULL, 0) == 0 ) {
