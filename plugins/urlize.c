@@ -174,7 +174,7 @@ print_help (void)
 
 	print_usage ();
 
-  printf (_(UT_HELP_VRSN));
+  printf (UT_HELP_VRSN);
 
   printf ("\n");
   printf ("%s\n", _("Examples:"));
@@ -186,7 +186,7 @@ print_help (void)
   printf ("    %s\n\n", _("You probably want:"));
   printf (" %s\n", _("urlize http://example.com/ \"check_http -H example.com -r 'two words'\""));
 
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
@@ -194,6 +194,6 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
 	printf ("%s <url> <plugin> <arg1> ... <argN>\n", progname);
 }

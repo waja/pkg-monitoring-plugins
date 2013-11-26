@@ -305,8 +305,8 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
 	printf (" %s\n", "-w, --warning=WLOAD1,WLOAD5,WLOAD15");
   printf ("    %s\n", _("Exit with WARNING status if load average exceeds WLOADn"));
@@ -316,18 +316,12 @@ print_help (void)
   printf (" %s\n", "-r, --percpu");
   printf ("    %s\n", _("Divide the load averages by the number of CPUs (when possible)"));
 
-#ifdef NP_EXTRA_OPTS
-	printf ("\n");
-	printf ("%s\n", _("Notes:"));
-	printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
 	printf ("%s [-r] -w WLOAD1,WLOAD5,WLOAD15 -c CLOAD1,CLOAD5,CLOAD15\n", progname);
 }

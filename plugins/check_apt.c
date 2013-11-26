@@ -411,10 +411,10 @@ print_help (void)
 
   print_usage();
 
-  printf(_(UT_HELP_VRSN));
-  printf(_(UT_EXTRA_OPTS));
+  printf(UT_HELP_VRSN);
+  printf(UT_EXTRA_OPTS);
 
-  printf(_(UT_TIMEOUT), timeout_interval);
+  printf(UT_TIMEOUT, timeout_interval);
 
   printf (" %s\n", "-U, --upgrade=OPTS");
   printf ("    %s\n", _("[Default] Perform an upgrade.  If an optional OPTS argument is provided,"));
@@ -453,13 +453,7 @@ print_help (void)
   printf ("    %s\n", _("timeout (with -t) to prevent the plugin from timing out if apt-get"));
   printf ("    %s\n", _("upgrade is expected to take longer than the default timeout."));
 
-#ifdef NP_EXTRA_OPTS
-  printf("\n");
-  printf("%s\n", _("Notes:"));
-  printf(_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-  printf(_(UT_SUPPORT));
+  printf(UT_SUPPORT);
 }
 
 
@@ -467,6 +461,6 @@ print_help (void)
 void
 print_usage(void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf ("%s [[-d|-u|-U]opts] [-n] [-t timeout]\n", progname);
 }

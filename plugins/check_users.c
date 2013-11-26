@@ -211,27 +211,21 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
 	printf (" %s\n", "-w, --warning=INTEGER");
   printf ("    %s\n", _("Set WARNING status if more than INTEGER users are logged in"));
   printf (" %s\n", "-c, --critical=INTEGER");
   printf ("    %s\n", _("Set CRITICAL status if more than INTEGER users are logged in"));
 
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
 	printf ("%s -w <users> -c <users>\n", progname);
 }

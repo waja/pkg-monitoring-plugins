@@ -683,8 +683,8 @@ print_help (void)
 
 	print_usage ();
 
-  printf (_(UT_HELP_VRSN));
-  printf (_(UT_EXTRA_OPTS));
+  printf (UT_HELP_VRSN);
+  printf (UT_EXTRA_OPTS);
   printf (" %s\n", "-w, --warning=RANGE");
   printf ("   %s\n", _("Generate warning state if metric is outside this range"));
   printf (" %s\n", "-c, --critical=RANGE");
@@ -699,7 +699,7 @@ print_help (void)
 #if defined( __linux__ )
 	printf ("  %s\n", _("ELAPSED - time elapsed in seconds"));
 #endif /* defined(__linux__) */
-	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
 	printf (" %s\n", "-v, --verbose");
   printf ("    %s\n", _("Extra information. Up to 3 verbosity levels"));
@@ -739,12 +739,6 @@ the specified threshold ranges. The process count can be filtered by\n\
 process owner, parent process PID, current state (e.g., 'Z'), or may\n\
 be the total number of running processes\n\n"));
 
-#ifdef NP_EXTRA_OPTS
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-  printf ("\n");
-#endif
-
 	printf ("%s\n", _("Examples:"));
   printf (" %s\n", "check_procs -w 2:2 -c 2:1024 -C portsentry");
   printf ("  %s\n", _("Warning if not two processes with command name portsentry."));
@@ -757,13 +751,13 @@ be the total number of running processes\n\n"));
   printf (" %s\n", "check_procs -w 10 -c 20 --metric=CPU");
   printf ("  %s\n", _("Alert if CPU of any processes over 10%% or 20%%"));
 
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 void
 print_usage (void)
 {
-  printf (_("Usage: "));
+  printf ("%s\n", _("Usage:"));
 	printf ("%s -w <range> -c <range> [-m metric] [-s state] [-p ppid]\n", progname);
   printf (" [-u user] [-r rss] [-z vsz] [-P %%cpu] [-a argument-array]\n");
   printf (" [-C command] [-t timeout] [-v]\n");

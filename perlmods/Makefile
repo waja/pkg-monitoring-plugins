@@ -37,20 +37,23 @@ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
 	$(top_srcdir)/gl/m4/00gnulib.m4 $(top_srcdir)/gl/m4/alloca.m4 \
 	$(top_srcdir)/gl/m4/arpa_inet_h.m4 \
+	$(top_srcdir)/gl/m4/asm-underscore.m4 \
 	$(top_srcdir)/gl/m4/base64.m4 $(top_srcdir)/gl/m4/btowc.m4 \
 	$(top_srcdir)/gl/m4/c-strtod.m4 $(top_srcdir)/gl/m4/cloexec.m4 \
 	$(top_srcdir)/gl/m4/codeset.m4 $(top_srcdir)/gl/m4/dirname.m4 \
 	$(top_srcdir)/gl/m4/dos.m4 \
 	$(top_srcdir)/gl/m4/double-slash-root.m4 \
-	$(top_srcdir)/gl/m4/errno_h.m4 $(top_srcdir)/gl/m4/error.m4 \
-	$(top_srcdir)/gl/m4/exitfail.m4 \
-	$(top_srcdir)/gl/m4/extensions.m4 \
+	$(top_srcdir)/gl/m4/dup2.m4 $(top_srcdir)/gl/m4/eealloc.m4 \
+	$(top_srcdir)/gl/m4/environ.m4 $(top_srcdir)/gl/m4/errno_h.m4 \
+	$(top_srcdir)/gl/m4/error.m4 $(top_srcdir)/gl/m4/extensions.m4 \
+	$(top_srcdir)/gl/m4/fcntl-o.m4 \
 	$(top_srcdir)/gl/m4/fcntl-safer.m4 \
-	$(top_srcdir)/gl/m4/fcntl_h.m4 $(top_srcdir)/gl/m4/float_h.m4 \
-	$(top_srcdir)/gl/m4/floorf.m4 \
+	$(top_srcdir)/gl/m4/fcntl.m4 $(top_srcdir)/gl/m4/fcntl_h.m4 \
+	$(top_srcdir)/gl/m4/float_h.m4 $(top_srcdir)/gl/m4/floorf.m4 \
 	$(top_srcdir)/gl/m4/fstypename.m4 \
 	$(top_srcdir)/gl/m4/fsusage.m4 \
 	$(top_srcdir)/gl/m4/getaddrinfo.m4 \
+	$(top_srcdir)/gl/m4/getdtablesize.m4 \
 	$(top_srcdir)/gl/m4/gethostname.m4 \
 	$(top_srcdir)/gl/m4/getloadavg.m4 \
 	$(top_srcdir)/gl/m4/getopt.m4 $(top_srcdir)/gl/m4/gettext.m4 \
@@ -63,48 +66,64 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
 	$(top_srcdir)/gl/m4/intlmacosx.m4 \
 	$(top_srcdir)/gl/m4/intmax_t.m4 \
 	$(top_srcdir)/gl/m4/inttypes_h.m4 \
+	$(top_srcdir)/gl/m4/langinfo_h.m4 \
 	$(top_srcdir)/gl/m4/lib-ld.m4 $(top_srcdir)/gl/m4/lib-link.m4 \
 	$(top_srcdir)/gl/m4/lib-prefix.m4 \
+	$(top_srcdir)/gl/m4/libtool.m4 \
 	$(top_srcdir)/gl/m4/localcharset.m4 \
 	$(top_srcdir)/gl/m4/locale-fr.m4 \
 	$(top_srcdir)/gl/m4/locale-ja.m4 \
 	$(top_srcdir)/gl/m4/locale-zh.m4 \
+	$(top_srcdir)/gl/m4/locale_h.m4 \
 	$(top_srcdir)/gl/m4/longlong.m4 \
 	$(top_srcdir)/gl/m4/ls-mntd-fs.m4 \
-	$(top_srcdir)/gl/m4/malloc.m4 $(top_srcdir)/gl/m4/math_h.m4 \
-	$(top_srcdir)/gl/m4/mbrtowc.m4 $(top_srcdir)/gl/m4/mbsinit.m4 \
-	$(top_srcdir)/gl/m4/mbstate_t.m4 $(top_srcdir)/gl/m4/mktime.m4 \
-	$(top_srcdir)/gl/m4/mountlist.m4 \
+	$(top_srcdir)/gl/m4/ltoptions.m4 \
+	$(top_srcdir)/gl/m4/ltsugar.m4 \
+	$(top_srcdir)/gl/m4/ltversion.m4 \
+	$(top_srcdir)/gl/m4/lt~obsolete.m4 \
+	$(top_srcdir)/gl/m4/malloc.m4 $(top_srcdir)/gl/m4/malloca.m4 \
+	$(top_srcdir)/gl/m4/math_h.m4 $(top_srcdir)/gl/m4/mbrtowc.m4 \
+	$(top_srcdir)/gl/m4/mbsinit.m4 \
+	$(top_srcdir)/gl/m4/mbstate_t.m4 $(top_srcdir)/gl/m4/memchr.m4 \
+	$(top_srcdir)/gl/m4/mktime.m4 $(top_srcdir)/gl/m4/mmap-anon.m4 \
+	$(top_srcdir)/gl/m4/mode_t.m4 $(top_srcdir)/gl/m4/mountlist.m4 \
 	$(top_srcdir)/gl/m4/multiarch.m4 \
 	$(top_srcdir)/gl/m4/netdb_h.m4 \
-	$(top_srcdir)/gl/m4/netinet_in_h.m4 $(top_srcdir)/gl/m4/nls.m4 \
+	$(top_srcdir)/gl/m4/netinet_in_h.m4 \
+	$(top_srcdir)/gl/m4/nl_langinfo.m4 $(top_srcdir)/gl/m4/nls.m4 \
 	$(top_srcdir)/gl/m4/onceonly.m4 $(top_srcdir)/gl/m4/open.m4 \
 	$(top_srcdir)/gl/m4/po.m4 $(top_srcdir)/gl/m4/printf.m4 \
 	$(top_srcdir)/gl/m4/progtest.m4 $(top_srcdir)/gl/m4/regex.m4 \
 	$(top_srcdir)/gl/m4/safe-read.m4 \
 	$(top_srcdir)/gl/m4/safe-write.m4 \
-	$(top_srcdir)/gl/m4/servent.m4 $(top_srcdir)/gl/m4/size_max.m4 \
-	$(top_srcdir)/gl/m4/snprintf.m4 $(top_srcdir)/gl/m4/socklen.m4 \
-	$(top_srcdir)/gl/m4/sockpfaf.m4 $(top_srcdir)/gl/m4/ssize_t.m4 \
-	$(top_srcdir)/gl/m4/stdbool.m4 $(top_srcdir)/gl/m4/stdint.m4 \
-	$(top_srcdir)/gl/m4/stdint_h.m4 $(top_srcdir)/gl/m4/stdio_h.m4 \
-	$(top_srcdir)/gl/m4/stdlib_h.m4 $(top_srcdir)/gl/m4/strdup.m4 \
-	$(top_srcdir)/gl/m4/strerror.m4 \
+	$(top_srcdir)/gl/m4/servent.m4 $(top_srcdir)/gl/m4/setenv.m4 \
+	$(top_srcdir)/gl/m4/sha1.m4 $(top_srcdir)/gl/m4/size_max.m4 \
+	$(top_srcdir)/gl/m4/snprintf.m4 $(top_srcdir)/gl/m4/sockets.m4 \
+	$(top_srcdir)/gl/m4/socklen.m4 $(top_srcdir)/gl/m4/sockpfaf.m4 \
+	$(top_srcdir)/gl/m4/ssize_t.m4 $(top_srcdir)/gl/m4/stat.m4 \
+	$(top_srcdir)/gl/m4/stdbool.m4 $(top_srcdir)/gl/m4/stddef_h.m4 \
+	$(top_srcdir)/gl/m4/stdint.m4 $(top_srcdir)/gl/m4/stdint_h.m4 \
+	$(top_srcdir)/gl/m4/stdio_h.m4 $(top_srcdir)/gl/m4/stdlib_h.m4 \
+	$(top_srcdir)/gl/m4/strdup.m4 $(top_srcdir)/gl/m4/strerror.m4 \
 	$(top_srcdir)/gl/m4/string_h.m4 $(top_srcdir)/gl/m4/strndup.m4 \
-	$(top_srcdir)/gl/m4/strnlen.m4 \
+	$(top_srcdir)/gl/m4/strnlen.m4 $(top_srcdir)/gl/m4/strsep.m4 \
+	$(top_srcdir)/gl/m4/strstr.m4 \
 	$(top_srcdir)/gl/m4/sys_socket_h.m4 \
+	$(top_srcdir)/gl/m4/sys_stat_h.m4 \
 	$(top_srcdir)/gl/m4/time_h.m4 $(top_srcdir)/gl/m4/time_r.m4 \
 	$(top_srcdir)/gl/m4/timegm.m4 \
 	$(top_srcdir)/gl/m4/unistd-safer.m4 \
 	$(top_srcdir)/gl/m4/unistd_h.m4 \
 	$(top_srcdir)/gl/m4/vasnprintf.m4 \
 	$(top_srcdir)/gl/m4/vasprintf.m4 \
-	$(top_srcdir)/gl/m4/vsnprintf.m4 $(top_srcdir)/gl/m4/wchar.m4 \
-	$(top_srcdir)/gl/m4/wchar_t.m4 $(top_srcdir)/gl/m4/wcrtomb.m4 \
-	$(top_srcdir)/gl/m4/wctype.m4 $(top_srcdir)/gl/m4/wint_t.m4 \
-	$(top_srcdir)/gl/m4/write.m4 $(top_srcdir)/gl/m4/xalloc.m4 \
-	$(top_srcdir)/gl/m4/xsize.m4 $(top_srcdir)/gl/m4/xstrndup.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.in
+	$(top_srcdir)/gl/m4/vsnprintf.m4 \
+	$(top_srcdir)/gl/m4/warn-on-use.m4 \
+	$(top_srcdir)/gl/m4/wchar_h.m4 $(top_srcdir)/gl/m4/wchar_t.m4 \
+	$(top_srcdir)/gl/m4/wcrtomb.m4 $(top_srcdir)/gl/m4/wctype_h.m4 \
+	$(top_srcdir)/gl/m4/wint_t.m4 $(top_srcdir)/gl/m4/write.m4 \
+	$(top_srcdir)/gl/m4/xalloc.m4 $(top_srcdir)/gl/m4/xsize.m4 \
+	$(top_srcdir)/gl/m4/xstrndup.m4 $(top_srcdir)/acinclude.m4 \
+	$(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
@@ -113,16 +132,16 @@ CONFIG_CLEAN_FILES =
 SOURCES =
 DIST_SOURCES =
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /Users/tonvoon/git/nagiosplugins/build-aux/missing --run aclocal-1.10
+ACLOCAL = ${SHELL} /tmp/nagiosplugins/build-aux/missing --run aclocal-1.10
 ALLOCA = 
 ALLOCA_H = alloca.h
-AMTAR = ${SHELL} /Users/tonvoon/git/nagiosplugins/build-aux/missing --run tar
+AMTAR = ${SHELL} /tmp/nagiosplugins/build-aux/missing --run tar
 APPLE_UNIVERSAL_BUILD = 0
 AR = ar
-ARPA_INET_H = arpa/inet.h
-AUTOCONF = ${SHELL} /Users/tonvoon/git/nagiosplugins/build-aux/missing --run autoconf
-AUTOHEADER = ${SHELL} /Users/tonvoon/git/nagiosplugins/build-aux/missing --run autoheader
-AUTOMAKE = ${SHELL} /Users/tonvoon/git/nagiosplugins/build-aux/missing --run automake-1.10
+ASM_SYMBOL_PREFIX = "_"
+AUTOCONF = ${SHELL} /tmp/nagiosplugins/build-aux/missing --run autoconf
+AUTOHEADER = ${SHELL} /tmp/nagiosplugins/build-aux/missing --run autoheader
+AUTOMAKE = ${SHELL} /tmp/nagiosplugins/build-aux/missing --run automake-1.10
 AWK = awk
 BASENAME = /usr/bin/basename
 BITSIZEOF_PTRDIFF_T = 32
@@ -135,15 +154,12 @@ CCDEPMODE = depmode=gcc3
 CFLAGS = -g -O2
 CPP = gcc -E
 CPPFLAGS = 
-CXX = g++
-CXXCPP = g++ -E
-CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DEPLIBS = 
-ECHO = /bin/echo
+DSYMUTIL = dsymutil
+DUMPBIN = 
 ECHO_C = \c
 ECHO_N = 
 ECHO_T = 
@@ -160,40 +176,53 @@ EXTRAS =  check_ldap check_mysql check_mysql_query check_procs check_nagios chec
 EXTRAS_ROOT = 
 EXTRA_NETOBJS = 
 EXTRA_TEST = 
-F77 = 
-FCNTL_H = fcntl.h
-FFLAGS = 
+FGREP = /usr/bin/grep -F
 FLOAT_H = 
 FLOORF_LIBM = 
 GETADDRINFO_LIB = 
+GETHOSTNAME_LIB = 
 GETLOADAVG_LIBS = 
 GETOPT_H = getopt.h
-GETTEXT_MACRO_VERSION = 0.17
+GETTEXT_MACRO_VERSION = 0.18
 GLIBC21 = no
 GMSGFMT = /opt/local/bin/msgfmt
 GMSGFMT_015 = /opt/local/bin/msgfmt
 GNULIB_ACCEPT = 0
+GNULIB_ACCEPT4 = 0
+GNULIB_ACOSL = 0
+GNULIB_ASINL = 0
+GNULIB_ATANL = 0
 GNULIB_ATOLL = 0
 GNULIB_BIND = 0
 GNULIB_BTOWC = 1
 GNULIB_CALLOC_POSIX = 0
+GNULIB_CANONICALIZE_FILE_NAME = 0
 GNULIB_CEILF = 0
 GNULIB_CEILL = 0
 GNULIB_CHOWN = 0
 GNULIB_CLOSE = 0
 GNULIB_CONNECT = 0
+GNULIB_COSL = 0
 GNULIB_DPRINTF = 0
-GNULIB_DUP2 = 0
-GNULIB_ENVIRON = 0
+GNULIB_DUP2 = 1
+GNULIB_DUP3 = 0
+GNULIB_DUPLOCALE = 0
+GNULIB_ENVIRON = 1
 GNULIB_EUIDACCESS = 0
+GNULIB_EXPL = 0
+GNULIB_FACCESSAT = 0
 GNULIB_FCHDIR = 0
+GNULIB_FCHMODAT = 0
+GNULIB_FCHOWNAT = 0
 GNULIB_FCLOSE = 0
+GNULIB_FCNTL = 1
 GNULIB_FFLUSH = 0
 GNULIB_FLOORF = 1
 GNULIB_FLOORL = 0
 GNULIB_FOPEN = 0
 GNULIB_FPRINTF = 1
 GNULIB_FPRINTF_POSIX = 0
+GNULIB_FPURGE = 0
 GNULIB_FPUTC = 1
 GNULIB_FPUTS = 1
 GNULIB_FREOPEN = 0
@@ -201,19 +230,23 @@ GNULIB_FREXP = 0
 GNULIB_FREXPL = 0
 GNULIB_FSEEK = 0
 GNULIB_FSEEKO = 0
+GNULIB_FSTATAT = 0
 GNULIB_FSYNC = 0
 GNULIB_FTELL = 0
 GNULIB_FTELLO = 0
 GNULIB_FTRUNCATE = 0
+GNULIB_FUTIMENS = 0
 GNULIB_FWRITE = 1
 GNULIB_GETADDRINFO = 1
 GNULIB_GETCWD = 0
 GNULIB_GETDELIM = 0
 GNULIB_GETDOMAINNAME = 0
-GNULIB_GETDTABLESIZE = 0
+GNULIB_GETDTABLESIZE = 1
+GNULIB_GETGROUPS = 0
 GNULIB_GETHOSTNAME = 1
 GNULIB_GETLINE = 0
 GNULIB_GETLOADAVG = 1
+GNULIB_GETLOGIN = 0
 GNULIB_GETLOGIN_R = 0
 GNULIB_GETPAGESIZE = 0
 GNULIB_GETPEERNAME = 0
@@ -221,6 +254,7 @@ GNULIB_GETSOCKNAME = 0
 GNULIB_GETSOCKOPT = 0
 GNULIB_GETSUBOPT = 0
 GNULIB_GETUSERSHELL = 0
+GNULIB_GRANTPT = 0
 GNULIB_INET_NTOP = 1
 GNULIB_INET_PTON = 0
 GNULIB_ISFINITE = 0
@@ -229,13 +263,17 @@ GNULIB_ISNAN = 0
 GNULIB_ISNAND = 0
 GNULIB_ISNANF = 0
 GNULIB_ISNANL = 0
+GNULIB_LCHMOD = 0
 GNULIB_LCHOWN = 0
 GNULIB_LDEXPL = 0
 GNULIB_LINK = 0
+GNULIB_LINKAT = 0
 GNULIB_LISTEN = 0
+GNULIB_LOGB = 0
+GNULIB_LOGL = 0
 GNULIB_LSEEK = 0
+GNULIB_LSTAT = 0
 GNULIB_MALLOC_POSIX = 1
-GNULIB_MATHL = 0
 GNULIB_MBRLEN = 0
 GNULIB_MBRTOWC = 1
 GNULIB_MBSCASECMP = 0
@@ -255,41 +293,68 @@ GNULIB_MBSSEP = 0
 GNULIB_MBSSPN = 0
 GNULIB_MBSSTR = 0
 GNULIB_MBSTOK_R = 0
+GNULIB_MEMCHR = 1
 GNULIB_MEMMEM = 0
 GNULIB_MEMPCPY = 0
 GNULIB_MEMRCHR = 0
+GNULIB_MKDIRAT = 0
 GNULIB_MKDTEMP = 0
+GNULIB_MKFIFO = 0
+GNULIB_MKFIFOAT = 0
+GNULIB_MKNOD = 0
+GNULIB_MKNODAT = 0
+GNULIB_MKOSTEMP = 0
+GNULIB_MKOSTEMPS = 0
 GNULIB_MKSTEMP = 0
+GNULIB_MKSTEMPS = 0
+GNULIB_MKTIME = 1
+GNULIB_NANOSLEEP = 0
+GNULIB_NL_LANGINFO = 1
 GNULIB_OBSTACK_PRINTF = 0
 GNULIB_OBSTACK_PRINTF_POSIX = 0
 GNULIB_OPEN = 1
+GNULIB_OPENAT = 0
 GNULIB_PERROR = 0
+GNULIB_PIPE2 = 0
+GNULIB_POPEN = 0
+GNULIB_PREAD = 0
 GNULIB_PRINTF = 1
 GNULIB_PRINTF_POSIX = 0
+GNULIB_PTSNAME = 0
 GNULIB_PUTC = 1
 GNULIB_PUTCHAR = 1
 GNULIB_PUTENV = 0
 GNULIB_PUTS = 1
+GNULIB_PWRITE = 0
 GNULIB_RANDOM_R = 0
 GNULIB_RAWMEMCHR = 0
 GNULIB_READLINK = 0
+GNULIB_READLINKAT = 0
 GNULIB_REALLOC_POSIX = 0
+GNULIB_REALPATH = 0
 GNULIB_RECV = 0
 GNULIB_RECVFROM = 0
+GNULIB_REMOVE = 0
+GNULIB_RENAME = 0
+GNULIB_RENAMEAT = 0
+GNULIB_RMDIR = 0
 GNULIB_ROUND = 0
 GNULIB_ROUNDF = 0
 GNULIB_ROUNDL = 0
 GNULIB_RPMATCH = 0
 GNULIB_SEND = 0
 GNULIB_SENDTO = 0
-GNULIB_SETENV = 0
+GNULIB_SETENV = 1
 GNULIB_SETSOCKOPT = 0
 GNULIB_SHUTDOWN = 0
 GNULIB_SIGNBIT = 0
+GNULIB_SINL = 0
 GNULIB_SLEEP = 0
 GNULIB_SNPRINTF = 1
 GNULIB_SOCKET = 0
 GNULIB_SPRINTF_POSIX = 0
+GNULIB_SQRTL = 0
+GNULIB_STAT = 1
 GNULIB_STDIO_H_SIGPIPE = 0
 GNULIB_STPCPY = 0
 GNULIB_STPNCPY = 0
@@ -297,22 +362,37 @@ GNULIB_STRCASESTR = 0
 GNULIB_STRCHRNUL = 0
 GNULIB_STRDUP = 1
 GNULIB_STRERROR = 1
+GNULIB_STRNCAT = 0
 GNULIB_STRNDUP = 1
 GNULIB_STRNLEN = 1
 GNULIB_STRPBRK = 0
-GNULIB_STRSEP = 0
+GNULIB_STRPTIME = 0
+GNULIB_STRSEP = 1
 GNULIB_STRSIGNAL = 0
-GNULIB_STRSTR = 0
+GNULIB_STRSTR = 1
 GNULIB_STRTOD = 0
 GNULIB_STRTOK_R = 0
 GNULIB_STRTOLL = 0
 GNULIB_STRTOULL = 0
 GNULIB_STRVERSCMP = 0
+GNULIB_SYMLINK = 0
+GNULIB_SYMLINKAT = 0
+GNULIB_TANL = 0
+GNULIB_TIMEGM = 1
+GNULIB_TIME_R = 1
+GNULIB_TMPFILE = 0
 GNULIB_TRUNC = 0
 GNULIB_TRUNCF = 0
 GNULIB_TRUNCL = 0
+GNULIB_TTYNAME_R = 0
+GNULIB_UNISTD_H_GETOPT = 1
 GNULIB_UNISTD_H_SIGPIPE = 0
-GNULIB_UNSETENV = 0
+GNULIB_UNLINK = 0
+GNULIB_UNLINKAT = 0
+GNULIB_UNLOCKPT = 0
+GNULIB_UNSETENV = 1
+GNULIB_USLEEP = 0
+GNULIB_UTIMENSAT = 0
 GNULIB_VASPRINTF = 1
 GNULIB_VDPRINTF = 0
 GNULIB_VFPRINTF = 1
@@ -328,16 +408,28 @@ GNULIB_WCTOB = 0
 GNULIB_WCWIDTH = 0
 GNULIB_WRITE = 1
 GREP = /usr/bin/grep
+HAVE_ACCEPT4 = 1
+HAVE_ACOSL = 1
 HAVE_ARPA_INET_H = 1
+HAVE_ASINL = 1
+HAVE_ATANL = 1
 HAVE_ATOLL = 1
 HAVE_BTOWC = 1
 HAVE_CALLOC_POSIX = 1
+HAVE_CANONICALIZE_FILE_NAME = 1
+HAVE_CHOWN = 1
+HAVE_COSL = 1
 HAVE_DECL_ACOSL = 1
 HAVE_DECL_ASINL = 1
 HAVE_DECL_ATANL = 1
+HAVE_DECL_CEILF = 1
+HAVE_DECL_CEILL = 1
 HAVE_DECL_COSL = 1
-HAVE_DECL_ENVIRON = 1
+HAVE_DECL_ENVIRON = 0
 HAVE_DECL_EXPL = 1
+HAVE_DECL_FLOORF = 1
+HAVE_DECL_FLOORL = 1
+HAVE_DECL_FPURGE = 1
 HAVE_DECL_FREEADDRINFO = 1
 HAVE_DECL_FREXPL = 1
 HAVE_DECL_GAI_STRERROR = 1
@@ -347,18 +439,23 @@ HAVE_DECL_GETLINE = 1
 HAVE_DECL_GETLOADAVG = 1
 HAVE_DECL_GETLOGIN_R = 1
 HAVE_DECL_GETNAMEINFO = 1
+HAVE_DECL_GETPAGESIZE = 1
+HAVE_DECL_GETUSERSHELL = 1
 HAVE_DECL_INET_NTOP = 1
 HAVE_DECL_INET_PTON = 1
 HAVE_DECL_LDEXPL = 1
+HAVE_DECL_LOGB = 1
 HAVE_DECL_LOGL = 1
 HAVE_DECL_MEMMEM = 1
 HAVE_DECL_MEMRCHR = 1
 HAVE_DECL_OBSTACK_PRINTF = 1
+HAVE_DECL_ROUND = 1
+HAVE_DECL_ROUNDF = 1
+HAVE_DECL_ROUNDL = 1
 HAVE_DECL_SINL = 1
 HAVE_DECL_SNPRINTF = 1
 HAVE_DECL_SQRTL = 1
 HAVE_DECL_STRDUP = 1
-HAVE_DECL_STRERROR = 1
 HAVE_DECL_STRNDUP = 0
 HAVE_DECL_STRNLEN = 0
 HAVE_DECL_STRSIGNAL = 1
@@ -366,58 +463,106 @@ HAVE_DECL_STRTOK_R = 1
 HAVE_DECL_TANL = 1
 HAVE_DECL_TRUNC = 1
 HAVE_DECL_TRUNCF = 1
+HAVE_DECL_TRUNCL = 1
 HAVE_DECL_VSNPRINTF = 1
 HAVE_DECL_WCTOB = 1
 HAVE_DECL_WCWIDTH = 1
 HAVE_DPRINTF = 1
 HAVE_DUP2 = 1
+HAVE_DUP3 = 1
+HAVE_DUPLOCALE = 1
 HAVE_EUIDACCESS = 1
+HAVE_EXPL = 1
+HAVE_FACCESSAT = 1
+HAVE_FCHDIR = 1
+HAVE_FCHMODAT = 1
+HAVE_FCHOWNAT = 1
+HAVE_FCNTL = 1
 HAVE_FSEEKO = 1
+HAVE_FSTATAT = 1
 HAVE_FSYNC = 1
 HAVE_FTELLO = 1
 HAVE_FTRUNCATE = 1
+HAVE_FUTIMENS = 1
 HAVE_GETDOMAINNAME = 1
 HAVE_GETDTABLESIZE = 1
+HAVE_GETGROUPS = 1
 HAVE_GETHOSTNAME = 1
+HAVE_GETLOGIN = 1
+HAVE_GETOPT_H = 1
 HAVE_GETPAGESIZE = 1
 HAVE_GETSUBOPT = 1
-HAVE_GETUSERSHELL = 1
+HAVE_GRANTPT = 1
 HAVE_INTTYPES_H = 1
 HAVE_ISNAND = 1
 HAVE_ISNANF = 1
 HAVE_ISNANL = 1
+HAVE_ISWBLANK = 1
 HAVE_ISWCNTRL = 1
+HAVE_LANGINFO_CODESET = 1
+HAVE_LANGINFO_ERA = 1
+HAVE_LANGINFO_H = 1
+HAVE_LCHMOD = 1
+HAVE_LCHOWN = 1
 HAVE_LINK = 1
+HAVE_LINKAT = 1
+HAVE_LOCALTIME_R = 1
+HAVE_LOGL = 1
 HAVE_LONG_LONG_INT = 1
+HAVE_LSTAT = 1
 HAVE_MALLOC_POSIX = 1
 HAVE_MBRLEN = 1
 HAVE_MBRTOWC = 1
 HAVE_MBSINIT = 1
+HAVE_MBSLEN = 0
 HAVE_MBSNRTOWCS = 1
 HAVE_MBSRTOWCS = 1
+HAVE_MEMCHR = 1
 HAVE_MEMPCPY = 1
+HAVE_MKDIRAT = 1
 HAVE_MKDTEMP = 1
+HAVE_MKFIFO = 1
+HAVE_MKFIFOAT = 1
+HAVE_MKNOD = 1
+HAVE_MKNODAT = 1
+HAVE_MKOSTEMP = 1
+HAVE_MKOSTEMPS = 1
+HAVE_MKSTEMP = 1
+HAVE_MKSTEMPS = 1
+HAVE_NANOSLEEP = 1
 HAVE_NETDB_H = 1
 HAVE_NETINET_IN_H = 
+HAVE_NL_LANGINFO = 1
+HAVE_OPENAT = 1
 HAVE_OS_H = 0
+HAVE_PIPE2 = 1
+HAVE_PREAD = 1
+HAVE_PTSNAME = 1
+HAVE_PWRITE = 1
 HAVE_RANDOM_H = 0
 HAVE_RANDOM_R = 1
 HAVE_RAWMEMCHR = 1
 HAVE_READLINK = 1
+HAVE_READLINKAT = 1
 HAVE_REALLOC_POSIX = 1
+HAVE_REALPATH = 1
+HAVE_RENAMEAT = 1
 HAVE_RPMATCH = 1
+HAVE_SA_FAMILY_T = 1
 HAVE_SETENV = 1
 HAVE_SIGNED_SIG_ATOMIC_T = 1
 HAVE_SIGNED_WCHAR_T = 1
 HAVE_SIGNED_WINT_T = 1
+HAVE_SINL = 1
 HAVE_SLEEP = 1
+HAVE_SQRTL = 1
 HAVE_STDINT_H = 1
 HAVE_STPCPY = 1
 HAVE_STPNCPY = 1
 HAVE_STRCASESTR = 1
 HAVE_STRCHRNUL = 1
-HAVE_STRNDUP = 0
 HAVE_STRPBRK = 1
+HAVE_STRPTIME = 1
 HAVE_STRSEP = 1
 HAVE_STRTOD = 1
 HAVE_STRTOLL = 1
@@ -426,18 +571,28 @@ HAVE_STRUCT_ADDRINFO = 1
 HAVE_STRUCT_RANDOM_DATA = 0
 HAVE_STRUCT_SOCKADDR_STORAGE = 1
 HAVE_STRVERSCMP = 1
+HAVE_SYMLINK = 1
+HAVE_SYMLINKAT = 1
 HAVE_SYS_BITYPES_H = 0
 HAVE_SYS_INTTYPES_H = 0
 HAVE_SYS_LOADAVG_H = 0
 HAVE_SYS_PARAM_H = 0
 HAVE_SYS_SOCKET_H = 1
 HAVE_SYS_TYPES_H = 1
+HAVE_TANL = 1
+HAVE_TIMEGM = 1
+HAVE_TTYNAME_R = 1
 HAVE_UNISTD_H = 1
+HAVE_UNLINKAT = 1
+HAVE_UNLOCKPT = 1
 HAVE_UNSETENV = 1
 HAVE_UNSIGNED_LONG_LONG_INT = 1
+HAVE_USLEEP = 1
+HAVE_UTIMENSAT = 1
 HAVE_VASPRINTF = 1
 HAVE_VDPRINTF = 1
 HAVE_WCHAR_H = 1
+HAVE_WCHAR_T = 1
 HAVE_WCRTOMB = 1
 HAVE_WCSNRTOMBS = 1
 HAVE_WCSRTOMBS = 1
@@ -445,11 +600,13 @@ HAVE_WCTYPE_H = 1
 HAVE_WINSOCK2_H = 0
 HAVE_WINT_T = 1
 HAVE_WS2TCPIP_H = 0
+HAVE_XLOCALE_H = 1
 HAVE__BOOL = 1
 HOSTENT_LIB = 
 HOSTNAME = /bin/hostname
 INCLUDE_NEXT = include_next
 INCLUDE_NEXT_AS_FIRST_DIRECTIVE = include_next
+INET_NTOP_LIB = 
 INSTALL = /usr/bin/install -c 
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
@@ -459,6 +616,7 @@ INTLLIBS =
 INTL_MACOSX_LIBS = -Wl,-framework -Wl,CoreFoundation
 KMEM_GROUP = 
 KRBINCLUDE = 
+LD = /usr/libexec/gcc/i686-apple-darwin9/4.0.1/ld
 LDAPINCLUDE = -I/usr/include/ldap
 LDAPLIBS = -lldap -llber
 LDFLAGS =  -L.
@@ -469,7 +627,9 @@ LIBICONV = -liconv
 LIBINTL = 
 LIBOBJS =  ${LIBOBJDIR}error$U.o
 LIBS = -lpthread -ldl 
+LIBSOCKET = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
+LIPO = lipo
 LN_S = ln -s
 LOCALCHARSET_TESTS_ENVIRONMENT = CHARSETALIASDIR="$(top_builddir)/gl"
 LOCALE_FR = fr_FR.ISO8859-1
@@ -479,7 +639,7 @@ LOCALE_ZH_CN = zh_CN.GB18030
 LTLIBICONV = -liconv
 LTLIBINTL = 
 LTLIBOBJS =  ${LIBOBJDIR}error$U.lo
-MAKEINFO = ${SHELL} /Users/tonvoon/git/nagiosplugins/build-aux/missing --run makeinfo
+MAKEINFO = ${SHELL} /tmp/nagiosplugins/build-aux/missing --run makeinfo
 MATHLIBS = -lm
 MKDIR_P = ../build-aux/install-sh -c -d
 MSGFMT = /opt/local/bin/msgfmt
@@ -489,31 +649,62 @@ MYSQLCFLAGS = -I/usr/local/mysql/include  -Os -arch i386 -fno-common   -D_P1003_
 MYSQLINCLUDE = -I/usr/local/mysql/include
 MYSQLLIBS = -L/usr/local/mysql/lib -lmysqlclient -lz -lm
 NEED_SETGID = false
-NETDB_H = netdb.h
 NETINET_IN_H = 
 NEXT_ARPA_INET_H = <arpa/inet.h>
+NEXT_AS_FIRST_DIRECTIVE_ARPA_INET_H = <arpa/inet.h>
+NEXT_AS_FIRST_DIRECTIVE_ERRNO_H = 
+NEXT_AS_FIRST_DIRECTIVE_FCNTL_H = <fcntl.h>
+NEXT_AS_FIRST_DIRECTIVE_FLOAT_H = 
+NEXT_AS_FIRST_DIRECTIVE_GETOPT_H = <getopt.h>
+NEXT_AS_FIRST_DIRECTIVE_LANGINFO_H = <langinfo.h>
+NEXT_AS_FIRST_DIRECTIVE_LOCALE_H = <locale.h>
+NEXT_AS_FIRST_DIRECTIVE_MATH_H = <math.h>
+NEXT_AS_FIRST_DIRECTIVE_NETDB_H = <netdb.h>
+NEXT_AS_FIRST_DIRECTIVE_NETINET_IN_H = 
+NEXT_AS_FIRST_DIRECTIVE_STDDEF_H = 
+NEXT_AS_FIRST_DIRECTIVE_STDINT_H = <stdint.h>
+NEXT_AS_FIRST_DIRECTIVE_STDIO_H = <stdio.h>
+NEXT_AS_FIRST_DIRECTIVE_STDLIB_H = <stdlib.h>
+NEXT_AS_FIRST_DIRECTIVE_STRING_H = <string.h>
+NEXT_AS_FIRST_DIRECTIVE_SYS_SOCKET_H = <sys/socket.h>
+NEXT_AS_FIRST_DIRECTIVE_SYS_STAT_H = <sys/stat.h>
+NEXT_AS_FIRST_DIRECTIVE_TIME_H = <time.h>
+NEXT_AS_FIRST_DIRECTIVE_UNISTD_H = <unistd.h>
+NEXT_AS_FIRST_DIRECTIVE_WCHAR_H = <wchar.h>
+NEXT_AS_FIRST_DIRECTIVE_WCTYPE_H = <wctype.h>
 NEXT_ERRNO_H = 
 NEXT_FCNTL_H = <fcntl.h>
 NEXT_FLOAT_H = 
+NEXT_GETOPT_H = <getopt.h>
+NEXT_LANGINFO_H = <langinfo.h>
+NEXT_LOCALE_H = <locale.h>
 NEXT_MATH_H = <math.h>
 NEXT_NETDB_H = <netdb.h>
 NEXT_NETINET_IN_H = 
+NEXT_STDDEF_H = 
 NEXT_STDINT_H = <stdint.h>
 NEXT_STDIO_H = <stdio.h>
 NEXT_STDLIB_H = <stdlib.h>
 NEXT_STRING_H = <string.h>
 NEXT_SYS_SOCKET_H = <sys/socket.h>
+NEXT_SYS_STAT_H = <sys/stat.h>
 NEXT_TIME_H = <time.h>
 NEXT_UNISTD_H = <unistd.h>
 NEXT_WCHAR_H = <wchar.h>
 NEXT_WCTYPE_H = <wctype.h>
+NM = /usr/bin/nm -p
+NMEDIT = nmedit
+NP_RELEASE = 1.4.15
+OBJDUMP = false
 OBJEXT = o
+OTOOL = otool
+OTOOL64 = :
 PACKAGE = nagios-plugins
 PACKAGE_BUGREPORT = 
 PACKAGE_NAME = nagios-plugins
-PACKAGE_STRING = nagios-plugins 1.4.14
+PACKAGE_STRING = nagios-plugins 1.4.15
 PACKAGE_TARNAME = nagios-plugins
-PACKAGE_VERSION = 1.4.14
+PACKAGE_VERSION = 1.4.15
 PATH_SEPARATOR = :
 PATH_TO_APTGET = 
 PATH_TO_DIG = /usr/bin/dig
@@ -547,32 +738,44 @@ POSUB =
 POW_LIB = 
 PRAGMA_SYSTEM_HEADER = #pragma GCC system_header
 PST3CFLAGS = 
+PTHREAD_H_DEFINES_STRUCT_TIMESPEC = 0
 PTRDIFF_T_SUFFIX = 
 PYTHON = /usr/bin/python
 RADIUSLIBS = 
 RANLIB = ranlib
 RELEASE = 1
 REPLACE_BTOWC = 0
+REPLACE_CANONICALIZE_FILE_NAME = 0
 REPLACE_CEILF = 0
 REPLACE_CEILL = 0
 REPLACE_CHOWN = 0
 REPLACE_CLOSE = 0
 REPLACE_DPRINTF = 0
-REPLACE_FCHDIR = 0
+REPLACE_DUP = 0
+REPLACE_DUP2 = 0
+REPLACE_DUPLOCALE = 0
+REPLACE_FCHOWNAT = 0
 REPLACE_FCLOSE = 0
+REPLACE_FCNTL = 1
 REPLACE_FFLUSH = 0
 REPLACE_FLOORF = 0
 REPLACE_FLOORL = 0
 REPLACE_FOPEN = 0
 REPLACE_FPRINTF = 0
+REPLACE_FPURGE = 0
 REPLACE_FREOPEN = 0
 REPLACE_FREXP = 0
 REPLACE_FREXPL = 0
 REPLACE_FSEEK = 0
 REPLACE_FSEEKO = 0
+REPLACE_FSTAT = 0
+REPLACE_FSTATAT = 0
 REPLACE_FTELL = 0
 REPLACE_FTELLO = 0
+REPLACE_FUTIMENS = 0
 REPLACE_GETCWD = 0
+REPLACE_GETDELIM = 0
+REPLACE_GETGROUPS = 0
 REPLACE_GETLINE = 0
 REPLACE_GETPAGESIZE = 0
 REPLACE_HUGE_VAL = 0
@@ -582,40 +785,75 @@ REPLACE_ISNAN = 0
 REPLACE_ISWCNTRL = 0
 REPLACE_LCHOWN = 0
 REPLACE_LDEXPL = 0
+REPLACE_LINK = 0
+REPLACE_LINKAT = 0
 REPLACE_LOCALTIME_R = 0
 REPLACE_LSEEK = 0
+REPLACE_LSTAT = 0
 REPLACE_MBRLEN = 0
 REPLACE_MBRTOWC = 0
 REPLACE_MBSINIT = 0
 REPLACE_MBSNRTOWCS = 0
 REPLACE_MBSRTOWCS = 0
 REPLACE_MBSTATE_T = 0
+REPLACE_MEMCHR = 0
 REPLACE_MEMMEM = 0
+REPLACE_MKDIR = 0
+REPLACE_MKFIFO = 0
+REPLACE_MKNOD = 0
 REPLACE_MKSTEMP = 0
+REPLACE_MKTIME = 0
 REPLACE_NAN = 0
 REPLACE_NANOSLEEP = GNULIB_PORTCHECK
+REPLACE_NL_LANGINFO = 0
+REPLACE_NULL = 0
 REPLACE_OBSTACK_PRINTF = 0
-REPLACE_OPEN = 0
+REPLACE_OPEN = 1
+REPLACE_OPENAT = 0
 REPLACE_PERROR = 0
+REPLACE_POPEN = 0
+REPLACE_PREAD = 0
 REPLACE_PRINTF = 0
 REPLACE_PUTENV = 0
+REPLACE_PWRITE = 0
+REPLACE_READLINK = 0
+REPLACE_REALPATH = 0
+REPLACE_REMOVE = 0
+REPLACE_RENAME = 0
+REPLACE_RENAMEAT = 0
+REPLACE_RMDIR = 0
 REPLACE_ROUND = 0
 REPLACE_ROUNDF = 0
 REPLACE_ROUNDL = 0
+REPLACE_SETENV = 1
 REPLACE_SIGNBIT = 0
 REPLACE_SIGNBIT_USING_GCC = 0
+REPLACE_SLEEP = 0
 REPLACE_SNPRINTF = 0
 REPLACE_SPRINTF = 0
+REPLACE_STAT = 1
 REPLACE_STDIO_WRITE_FUNCS = 0
+REPLACE_STPNCPY = 0
 REPLACE_STRCASESTR = 0
 REPLACE_STRDUP = 0
 REPLACE_STRERROR = 0
-REPLACE_STRPTIME = GNULIB_PORTCHECK
+REPLACE_STRNCAT = 0
+REPLACE_STRNDUP = 0
+REPLACE_STRNLEN = 0
 REPLACE_STRSIGNAL = 0
 REPLACE_STRSTR = 0
 REPLACE_STRTOD = 0
+REPLACE_STRTOK_R = 0
+REPLACE_SYMLINK = 0
 REPLACE_TIMEGM = 0
+REPLACE_TMPFILE = 0
 REPLACE_TRUNCL = 0
+REPLACE_TTYNAME_R = 0
+REPLACE_UNLINK = 0
+REPLACE_UNLINKAT = 0
+REPLACE_UNSETENV = 0
+REPLACE_USLEEP = 0
+REPLACE_UTIMENSAT = 0
 REPLACE_VASPRINTF = 0
 REPLACE_VDPRINTF = 0
 REPLACE_VFPRINTF = 0
@@ -628,9 +866,10 @@ REPLACE_WCSRTOMBS = 0
 REPLACE_WCTOB = 0
 REPLACE_WCWIDTH = 0
 REPLACE_WRITE = 0
-REV_DATESTAMP = 2009.09.16.09.38
-REV_TIMESTAMP = 20090916093814
+REV_DATESTAMP = 2010.07.27.21.48
+REV_TIMESTAMP = 20100727214823
 SCRIPT_TEST = t/check_file_age.t t/check_ifoperstatus.t t/check_ifstatus.t t/check_rpc.t t/utils.t
+SED = /usr/bin/sed
 SERVENT_LIB = 
 SET_MAKE = 
 SH = /bin/sh
@@ -641,31 +880,29 @@ SOCKETLIBS =  -lresolv
 SSLINCLUDE = -I/usr/include
 SSLLIBS = -lssl -lcrypto
 STDBOOL_H = 
+STDDEF_H = 
 STDINT_H = stdint.h
 STRIP = strip
 SUPPORT = Send email to nagios-users@lists.sourceforge.net if you have questions\nregarding use of this software. To submit patches or suggest improvements,\nsend email to nagiosplug-devel@lists.sourceforge.net.\nPlease include version information with all correspondence (when possible,\nuse output from the --version option of the plugin itself).\n
-SYS_SOCKET_H = 
 SYS_TIME_H_DEFINES_STRUCT_TIMESPEC = 0
 TIME_H_DEFINES_STRUCT_TIMESPEC = 1
+UNDEFINE_STRTOK_R = 0
 UNISTD_H_HAVE_WINSOCK2_H = 0
+UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS = 0
 USE_NLS = no
-VERSION = 1.4.14
-VOID_UNSETENV = 0
+VERSION = 1.4.15
 WARRANTY = The nagios plugins come with ABSOLUTELY NO WARRANTY. You may redistribute\ncopies of the plugins under the terms of the GNU General Public License.\nFor more information about these matters, see the file named COPYING.\n
-WCHAR_H = 
 WCHAR_T_SUFFIX = 
-WCTYPE_H = 
 WINT_T_SUFFIX = 
 XGETTEXT = /opt/local/bin/xgettext
 XGETTEXT_015 = /opt/local/bin/xgettext
 XGETTEXT_EXTRA_OPTIONS =  --flag=error:3:c-format --flag=error_at_line:5:c-format --flag=asprintf:2:c-format --flag=vasprintf:2:c-format
-abs_builddir = /Users/tonvoon/git/nagiosplugins/perlmods
-abs_srcdir = /Users/tonvoon/git/nagiosplugins/perlmods
-abs_top_builddir = /Users/tonvoon/git/nagiosplugins
-abs_top_srcdir = /Users/tonvoon/git/nagiosplugins
+abs_builddir = /tmp/nagiosplugins/perlmods
+abs_srcdir = /tmp/nagiosplugins/perlmods
+abs_top_builddir = /tmp/nagiosplugins
+abs_top_srcdir = /tmp/nagiosplugins
 ac_ct_CC = gcc
-ac_ct_CXX = g++
-ac_ct_F77 = 
+ac_ct_DUMPBIN = 
 am__include = include
 am__leading_dot = .
 am__quote = 
@@ -684,10 +921,11 @@ datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-gl_LIBOBJS =  asnprintf.o basename.o c-strtod.o cloexec.o creat-safer.o dirname.o dup-safer.o error.o exitfail.o fd-safer.o fsusage.o getopt.o getopt1.o mountlist.o open-safer.o pipe-safer.o printf-args.o printf-parse.o regex.o safe-read.o safe-write.o stripslash.o strndup.o strnlen.o vasnprintf.o xmalloc.o
-gl_LTLIBOBJS =  asnprintf.lo basename.lo c-strtod.lo cloexec.lo creat-safer.lo dirname.lo dup-safer.lo error.lo exitfail.lo fd-safer.lo fsusage.lo getopt.lo getopt1.lo mountlist.lo open-safer.lo pipe-safer.lo printf-args.lo printf-parse.lo regex.lo safe-read.lo safe-write.lo stripslash.lo strndup.lo strnlen.lo vasnprintf.lo xmalloc.lo
+gl_LIBOBJS =  asnprintf.o basename.o basename-lgpl.o c-strtod.o cloexec.o creat-safer.o dirname.o dirname-lgpl.o dup-safer.o error.o fcntl.o fd-safer.o fsusage.o getopt.o getopt1.o mountlist.o open.o open-safer.o pipe-safer.o printf-args.o printf-parse.o regex.o safe-read.o safe-write.o setenv.o sha1.o stat.o stripslash.o strndup.o strnlen.o vasnprintf.o xmalloc.o
+gl_LTLIBOBJS =  asnprintf.lo basename.lo basename-lgpl.lo c-strtod.lo cloexec.lo creat-safer.lo dirname.lo dirname-lgpl.lo dup-safer.lo error.lo fcntl.lo fd-safer.lo fsusage.lo getopt.lo getopt1.lo mountlist.lo open.lo open-safer.lo pipe-safer.lo printf-args.lo printf-parse.lo regex.lo safe-read.lo safe-write.lo setenv.lo sha1.lo stat.lo stripslash.lo strndup.lo strnlen.lo vasnprintf.lo xmalloc.lo
 gltests_LIBOBJS = 
 gltests_LTLIBOBJS = 
+gltests_WITNESS = IN_NAGIOS_PLUGINS_GNULIB_TESTS
 host = i386-apple-darwin9.8.0
 host_alias = 
 host_cpu = i386
@@ -696,11 +934,12 @@ host_vendor = apple
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = $(SHELL) /Users/tonvoon/git/nagiosplugins/build-aux/install-sh
+install_sh = $(SHELL) /tmp/nagiosplugins/build-aux/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
 localstatedir = ${prefix}/var
+lt_ECHO = /bin/echo
 mandir = ${datarootdir}/man
 mkdir_p = $(top_builddir)/build-aux/install-sh -c -d
 np_mysql_config = /usr/local/mysql/bin/mysql_config

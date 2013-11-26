@@ -767,12 +767,12 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
-	printf (_(UT_HOST_PORT), 'p', myport);
+	printf (UT_HOST_PORT, 'p', myport);
 
-	printf (_(UT_IPv46));
+	printf (UT_IPv46);
 
 	printf (" %s\n", "-e, --expect=STRING");
   printf (_("    String to expect in first line of server response (default: '%s')\n"), SMTP_EXPECT);
@@ -782,6 +782,8 @@ print_help (void)
   printf ("    %s\n", _("Expected response to command (may be used repeatedly)"));
   printf (" %s\n", "-f, --from=STRING");
   printf ("    %s\n", _("FROM-address to include in MAIL command, required by Exchange 2000")),
+  printf (" %s\n", "-F, --fqdn=STRING");
+  printf ("    %s\n", _("FQDN used for HELO"));
 #ifdef HAVE_SSL
   printf (" %s\n", "-D, --certificate=INTEGER");
   printf ("    %s\n", _("Minimum number of days a certificate has to be valid."));
@@ -796,11 +798,11 @@ print_help (void)
   printf (" %s\n", "-P, --authpass=STRING");
   printf ("    %s\n", _("SMTP AUTH password"));
 
-	printf (_(UT_WARN_CRIT));
+	printf (UT_WARN_CRIT);
 
-	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
-	printf (_(UT_VERBOSE));
+	printf (UT_VERBOSE);
 
 	printf("\n");
 	printf ("%s\n", _("Successul connects return STATE_OK, refusals and timeouts return"));
@@ -808,13 +810,7 @@ print_help (void)
   printf ("%s\n", _("connects, but incorrect reponse messages from the host result in"));
   printf ("%s\n", _("STATE_WARNING return values."));
 
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 
@@ -822,9 +818,9 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
-	printf ("%s -H host [-p port] [-e expect] [-C command] [-f from addr]", progname);
+  printf ("%s\n", _("Usage:"));
+  printf ("%s -H host [-p port] [-e expect] [-C command] [-f from addr]", progname);
   printf ("[-A authtype -U authuser -P authpass] [-w warn] [-c crit] [-t timeout]\n");
-  printf ("[-S] [-D days] [-v] [-4|-6]\n");
+  printf ("[-F fqdn] [-S] [-D days] [-v] [-4|-6]\n");
 }
 

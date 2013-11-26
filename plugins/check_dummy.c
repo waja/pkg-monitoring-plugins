@@ -109,9 +109,9 @@ print_help (void)
 
   print_usage ();
 
-  printf (_(UT_HELP_VRSN));
+  printf (UT_HELP_VRSN);
 
-  printf (_(UT_SUPPORT));
+  printf (UT_SUPPORT);
 }
 
 
@@ -119,6 +119,6 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf (" %s <integer state> [optional text]\n", progname);
 }

@@ -100,17 +100,20 @@ int server_url_length;
 int server_expect_yn = 0;
 char server_expect[MAX_INPUT_BUFFER] = HTTP_EXPECT;
 char string_expect[MAX_INPUT_BUFFER] = "";
+char output_string_search[30] = "";
 double warning_time = 0;
 int check_warning_time = FALSE;
 double critical_time = 0;
 int check_critical_time = FALSE;
 char user_auth[MAX_INPUT_BUFFER] = "";
+char proxy_auth[MAX_INPUT_BUFFER] = "";
 int display_html = FALSE;
 char **http_opt_headers;
 int http_opt_headers_count = 0;
 int onredirect = STATE_OK;
 int followsticky = STICKY_NONE;
 int use_ssl = FALSE;
+int use_sni = FALSE;
 int verbose = FALSE;
 int sd;
 int min_page_len = 0;
@@ -177,7 +180,8 @@ process_arguments (int argc, char **argv)
   char *p;
 
   enum {
-    INVERT_REGEX = CHAR_MAX + 1
+    INVERT_REGEX = CHAR_MAX + 1,
+    SNI_OPTION
   };
 
   int option = 0;
@@ -186,12 +190,14 @@ process_arguments (int argc, char **argv)
     {"link", no_argument, 0, 'L'},
     {"nohtml", no_argument, 0, 'n'},
     {"ssl", no_argument, 0, 'S'},
+    {"sni", no_argument, 0, SNI_OPTION},
     {"post", required_argument, 0, 'P'},
     {"method", required_argument, 0, 'j'},
     {"IP-address", required_argument, 0, 'I'},
     {"url", required_argument, 0, 'u'},
     {"port", required_argument, 0, 'p'},
     {"authorization", required_argument, 0, 'a'},
+    {"proxy_authorization", required_argument, 0, 'b'},
     {"string", required_argument, 0, 's'},
     {"expect", required_argument, 0, 'e'},
     {"regex", required_argument, 0, 'r'},
@@ -229,7 +235,7 @@ process_arguments (int argc, char **argv)
   }
 
   while (1) {
-    c = getopt_long (argc, argv, "Vvh46t:c:w:A:k:H:P:j:T:I:a:e:p:s:R:r:u:f:C:nlLSm:M:N", longopts, &option);
+    c = getopt_long (argc, argv, "Vvh46t:c:w:A:k:H:P:j:T:I:a:b:e:p:s:R:r:u:f:C:nlLSm:M:N", longopts, &option);
     if (c == -1 || c == EOF)
       break;
 
@@ -302,6 +308,9 @@ process_arguments (int argc, char **argv)
       if (specify_port == FALSE)
         server_port = HTTPS_PORT;
       break;
+    case SNI_OPTION:
+      use_sni = TRUE;
+      break;
     case 'f': /* onredirect */
       if (!strcmp (optarg, "stickyport"))
         onredirect = STATE_DEPENDENT, followsticky = STICKY_HOST|STICKY_PORT;
@@ -349,6 +358,10 @@ process_arguments (int argc, char **argv)
     case 'a': /* authorization info */
       strncpy (user_auth, optarg, MAX_INPUT_BUFFER - 1);
       user_auth[MAX_INPUT_BUFFER - 1] = 0;
+      break;
+    case 'b': /* proxy-authorization info */
+      strncpy (proxy_auth, optarg, MAX_INPUT_BUFFER - 1);
+      proxy_auth[MAX_INPUT_BUFFER - 1] = 0;
       break;
     case 'P': /* HTTP POST data in URL encoded format; ignored if settings already */
       if (! http_post_data)
@@ -721,7 +734,10 @@ get_content_length (const char *headers)
     /* Skip to the end of the header, including continuation lines. */
     while (*s && !(*s == '\n' && (s[1] != ' ' && s[1] != '\t')))
       s++;
-    s++;
+
+    /* Avoid stepping over end-of-string marker */
+    if (*s)
+      s++;
 
     /* Process this header. */
     if (value && value > field+2) {
@@ -778,6 +794,7 @@ check_http (void)
   int i = 0;
   size_t pagesize = 0;
   char *full_page;
+  char *full_page_new;
   char *buf;
   char *pos;
   long microsec;
@@ -790,7 +807,7 @@ check_http (void)
     die (STATE_CRITICAL, _("HTTP CRITICAL - Unable to open TCP socket\n"));
 #ifdef HAVE_SSL
   if (use_ssl == TRUE) {
-    np_net_ssl_init_with_hostname(sd, host_name);
+    np_net_ssl_init_with_hostname(sd, (use_sni ? host_name : NULL));
     if (check_cert == TRUE) {
       result = np_net_ssl_check_cert(days_till_exp);
       np_net_ssl_cleanup();
@@ -836,6 +853,12 @@ check_http (void)
     asprintf (&buf, "%sAuthorization: Basic %s\r\n", buf, auth);
   }
 
+  /* optionally send the proxy authentication info */
+  if (strlen(proxy_auth)) {
+    base64_encode_alloc (proxy_auth, strlen (proxy_auth), &auth);
+    asprintf (&buf, "%sProxy-Authorization: Basic %s\r\n", buf, auth);
+  }
+
   /* either send http POST data (any data, not only POST)*/
   if (http_post_data) {
     if (http_content_type) {
@@ -859,7 +882,9 @@ check_http (void)
   full_page = strdup("");
   while ((i = my_recv (buffer, MAX_INPUT_BUFFER-1)) > 0) {
     buffer[i] = '\0';
-    asprintf (&full_page, "%s%s", full_page, buffer);
+    asprintf (&full_page_new, "%s%s", full_page, buffer);
+    free (full_page);
+    full_page = full_page_new;
     pagesize += i;
 
                 if (no_body && document_headers_done (full_page)) {
@@ -1013,7 +1038,11 @@ check_http (void)
 
   if (strlen (string_expect)) {
     if (!strstr (page, string_expect)) {
-      asprintf (&msg, _("%sstring not found, "), msg);
+      strncpy(&output_string_search[0],string_expect,sizeof(output_string_search));
+      if(output_string_search[sizeof(output_string_search)-1]!='\0') {
+        bcopy("...",&output_string_search[sizeof(output_string_search)-4],4);
+      }
+      asprintf (&msg, _("%sstring '%s' not found on '%s://%s:%d%s', "), msg, output_string_search, use_ssl ? "https" : "http", host_name ? host_name : server_address, server_port, server_url);
       result = STATE_CRITICAL;
     }
   }
@@ -1291,8 +1320,8 @@ print_help (void)
 
   printf ("\n");
 
-  printf (_(UT_HELP_VRSN));
-  printf (_(UT_EXTRA_OPTS));
+  printf (UT_HELP_VRSN);
+  printf (UT_EXTRA_OPTS);
 
   printf (" %s\n", "-H, --hostname=ADDRESS");
   printf ("    %s\n", _("Host name argument for servers using host headers (virtual host)"));
@@ -1303,11 +1332,13 @@ print_help (void)
   printf ("    %s", _("Port number (default: "));
   printf ("%d)\n", HTTP_PORT);
 
-  printf (_(UT_IPv46));
+  printf (UT_IPv46);
 
 #ifdef HAVE_SSL
   printf (" %s\n", "-S, --ssl");
   printf ("   %s\n", _("Connect via SSL. Port defaults to 443"));
+  printf (" %s\n", "--sni");
+  printf ("   %s\n", _("Enable SSL/TLS hostname extension support (SNI)"));
   printf (" %s\n", "-C, --certificate=INTEGER");
   printf ("   %s\n", _("Minimum number of days a certificate has to be valid. Port defaults to 443"));
   printf ("   %s\n", _("(when this option is used the URL is not checked.)\n"));
@@ -1346,6 +1377,8 @@ print_help (void)
 
   printf (" %s\n", "-a, --authorization=AUTH_PAIR");
   printf ("    %s\n", _("Username:password on sites with basic authentication"));
+  printf (" %s\n", "-b, --proxy-authorization=AUTH_PAIR");
+  printf (" 	%s\n", _("Username:password on proxy-servers with basic authentication"));
   printf (" %s\n", "-A, --useragent=STRING");
   printf ("    %s\n", _("String to be sent in http header as \"User Agent\""));
   printf (" %s\n", "-k, --header=STRING");
@@ -1358,11 +1391,11 @@ print_help (void)
   printf (" %s\n", "-m, --pagesize=INTEGER<:INTEGER>");
   printf ("    %s\n", _("Minimum page size required (bytes) : Maximum page size required (bytes)"));
 
-  printf (_(UT_WARN_CRIT));
+  printf (UT_WARN_CRIT);
 
-  printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+  printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
-  printf (_(UT_VERBOSE));
+  printf (UT_VERBOSE);
 
   printf ("\n");
   printf ("%s\n", _("Notes:"));
@@ -1372,8 +1405,6 @@ print_help (void)
   printf (" %s\n", _("messages from the host result in STATE_WARNING return values.  If you are"));
   printf (" %s\n", _("checking a virtual server that uses 'host headers' you must supply the FQDN"));
   printf (" %s\n", _("(fully qualified domain name) as the [host_name] argument."));
-  printf ("\n");
-  printf (_(UT_EXTRA_OPTS_NOTES));
 
 #ifdef HAVE_SSL
   printf ("\n");
@@ -1395,7 +1426,7 @@ print_help (void)
   printf (" %s\n", _("the certificate is expired."));
 #endif
 
-  printf (_(UT_SUPPORT));
+  printf (UT_SUPPORT);
 
 }
 
@@ -1404,11 +1435,12 @@ print_help (void)
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf (" %s -H <vhost> | -I <IP-address> [-u <uri>] [-p <port>]\n",progname);
-  printf ("       [-w <warn time>] [-c <critical time>] [-t <timeout>] [-L]\n");
-  printf ("       [-a auth] [-f <ok | warn | critcal | follow | sticky | stickyport>]\n");
+  printf ("       [-w <warn time>] [-c <critical time>] [-t <timeout>] [-L] [-a auth]\n");
+  printf ("       [-b proxy_auth] [-f <ok|warning|critcal|follow|sticky|stickyport>]\n");
   printf ("       [-e <expect>] [-s string] [-l] [-r <regex> | -R <case-insensitive regex>]\n");
   printf ("       [-P string] [-m <min_pg_size>:<max_pg_size>] [-4|-6] [-N] [-M <age>]\n");
-  printf ("       [-A string] [-k string] [-S] [-C <age>] [-T <content-type>] [-j method]\n");
+  printf ("       [-A string] [-k string] [-S] [--sni] [-C <age>] [-T <content-type>]\n");
+  printf ("       [-j method]\n");
 }

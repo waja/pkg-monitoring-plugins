@@ -234,7 +234,7 @@ print_help(void)
 
 	printf("\n");
 	printf("%s\n", _("Options:"));
-	printf(_(UT_EXTRA_OPTS));
+	printf(UT_EXTRA_OPTS);
 	printf (" %s\n", "-s, --service");
 	printf ("    %s\n", _("Check service cluster status"));
 	printf (" %s\n", "-h, --host");
@@ -251,22 +251,19 @@ print_help(void)
 	printf ("    %s\n", _("The status codes of the hosts or services in the cluster, separated by"));
 	printf ("    %s\n", _("commas"));
 
-	printf(_(UT_VERBOSE));
+	printf(UT_VERBOSE);
 
 	printf("\n");
 	printf("%s\n", _("Notes:"));
-	printf(_(UT_THRESHOLDS_NOTES));
-#ifdef NP_EXTRA_OPTS
-	printf ("\n");
-	printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
+	printf(UT_THRESHOLDS_NOTES);
 
 	printf ("\n");
 	printf ("%s\n", _("Examples:"));
 	printf (" %s\n", "check_cluster -s -d 2,0,2,0 -c @3:");
-	printf ("    %s\n", _("Will alert critical if there are 3 or more service data points in a non-OK state") );
+	printf ("    %s\n", _("Will alert critical if there are 3 or more service data points in a non-OK") );
+	printf ("    %s\n", _("state.") );
 
-	printf(_(UT_SUPPORT));
+	printf(UT_SUPPORT);
 }
 
 
@@ -274,7 +271,7 @@ void
 print_usage(void)
 {
 
-	printf(_("Usage:"));
+	printf("%s\n", _("Usage:"));
 	printf(" %s (-s | -h) -d val1[,val2,...,valn] [-l label]\n", progname);
 	printf("[-w threshold] [-c threshold] [-v] [--help]\n");
 

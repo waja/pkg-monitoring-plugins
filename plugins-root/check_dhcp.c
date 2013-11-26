@@ -1392,10 +1392,10 @@ void print_help(void){
 
 	print_usage();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
-	printf (_(UT_VERBOSE));
+	printf (UT_VERBOSE);
 
 	printf (" %s\n", "-s, --serverip=IPADDRESS");
   printf ("    %s\n", _("IP address of DHCP server that we must hear from"));
@@ -1410,13 +1410,7 @@ void print_help(void){
   printf (" %s\n", "-u, --unicast");
   printf ("    %s\n", _("Unicast testing: mimic a DHCP relay, requires -s"));
 
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-  printf (_(UT_SUPPORT));
+  printf (UT_SUPPORT);
 	return;
 	}
 
@@ -1424,7 +1418,7 @@ void print_help(void){
 void
 print_usage(void){
 
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
   printf (" %s [-v] [-u] [-s serverip] [-r requestedip] [-t timeout]\n",progname);
   printf ("                  [-i interface] [-m mac]\n");
 

@@ -562,10 +562,10 @@ print_help (void)
 
 	print_usage ();
 
-	printf (_(UT_HELP_VRSN));
-	printf (_(UT_EXTRA_OPTS));
+	printf (UT_HELP_VRSN);
+	printf (UT_EXTRA_OPTS);
 
-	printf (_(UT_IPv46));
+	printf (UT_IPv46);
 
 	printf (" %s\n", "-H, --hostname=HOST");
   printf ("    %s\n", _("host to ping"));
@@ -579,7 +579,7 @@ print_help (void)
   printf (" %s\n", "-L, --link");
   printf ("    %s\n", _("show HTML in the plugin output (obsoleted by urlize)"));
 
-	printf (_(UT_TIMEOUT), DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
   printf ("\n");
 	printf ("%s\n", _("THRESHOLD is <rta>,<pl>% where <rta> is the round trip average travel"));
@@ -592,19 +592,13 @@ print_help (void)
   printf ("%s\n", _("linking to a traceroute CGI contributed by Ian Cass. The CGI can be found in"));
   printf ("%s\n", _("the contrib area of the downloads section at http://www.nagios.org/"));
 
-#ifdef NP_EXTRA_OPTS
-  printf ("\n");
-  printf ("%s\n", _("Notes:"));
-  printf (_(UT_EXTRA_OPTS_NOTES));
-#endif
-
-	printf (_(UT_SUPPORT));
+	printf (UT_SUPPORT);
 }
 
 void
 print_usage (void)
 {
-  printf (_("Usage:"));
+  printf ("%s\n", _("Usage:"));
 	printf ("%s -H <host_address> -w <wrta>,<wpl>%% -c <crta>,<cpl>%%\n", progname);
   printf (" [-p packets] [-t timeout] [-4|-6]\n");
 }
