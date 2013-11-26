@@ -944,9 +944,9 @@ MKDIR_P = /bin/mkdir -p
 MSGFMT = /usr/bin/msgfmt
 MSGFMT_015 = /usr/bin/msgfmt
 MSGMERGE = /usr/bin/msgmerge
-MYSQLCFLAGS = -I/usr/include/mysql -DBIG_JOINS=1  -fno-strict-aliasing  -g
+MYSQLCFLAGS = -I/usr/include/mysql -DBIG_JOINS=1  -fno-strict-aliasing -DTAOCRYPT_DISABLE_X86ASM  -g -DNDEBUG
 MYSQLINCLUDE = -I/usr/include/mysql
-MYSQLLIBS = -L/usr/lib/i386-linux-gnu -lmysqlclient -lpthread -lz -lm -lrt -ldl
+MYSQLLIBS = -L/usr/lib/i386-linux-gnu -lmysqlclient -lpthread -lz -lm -ldl
 NETINET_IN_H = 
 NEXT_ARPA_INET_H = <arpa/inet.h>
 NEXT_AS_FIRST_DIRECTIVE_ARPA_INET_H = <arpa/inet.h>
@@ -1227,8 +1227,8 @@ REPLACE_WCTOB = 0
 REPLACE_WCTOMB = 0
 REPLACE_WCWIDTH = 0
 REPLACE_WRITE = 0
-REV_DATESTAMP = 2013.09.20.11.34
-REV_TIMESTAMP = 20130920113412
+REV_DATESTAMP = 2013.09.27.16.38
+REV_TIMESTAMP = 20130927163814
 SCRIPT_TEST = t/check_disk_smb.t t/check_file_age.t t/check_ifoperstatus.t t/check_ifstatus.t t/check_rpc.t t/utils.t
 SED = /bin/sed
 SERVENT_LIB = 
