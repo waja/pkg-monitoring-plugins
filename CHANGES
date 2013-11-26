@@ -1,0 +1,37 @@
+This file documents the major additions and syntax changes between releases.
+
+1.4.4
+	New C based check_ntp. The perl version is now deprecated.
+	New check_apt plugin
+	Notice: plugins in contrib/ will start to be removed from this distribution.
+	  Please check at http://www.nagiosexchange.org for contributed plugins
+	Major bug fixes to check_disk where values were incorrectly calculated and alerted on.
+	check_udp2 removed. check_udp is now linked to check_tcp.c
+	check_mailq now errors if the sub-program run returns non-zero return code. This would appear
+	  as if mailqs were okay when the nagios user could not query the mail-queues
+	Compile problems with check_snmp fixed
+
+1.4.3
+	Setuid plugins (check_dhcp, check_icmp) separated into plugins-root/. Run make install as root to install
+	SSL plugins work with gnutls as well as OpenSSL
+	check_mysql_query added to run arbitrary SQL commands, with threshold checking
+	libtool now required for development systems
+	Notice: check_udp (compiled from check_udp.c) will be deprecated in the next release. 
+	  check_udp2 should be used instead and will be renamed to check_udp
+
+1.4.2
+	Fix for Redhat ES4 for check_dns and check_dig
+
+1.4
+	IPv6 support in check_ping, check_by_ssh, check_http, check_ldap, check_smtp, check_tcp
+	Internationalisation support
+	Performance data added to most plugins
+	check_disk now using GNU coreutils code
+	New plugins - check_dhcp, check_icmp
+	contrib/check_citrix has been replaced by contrib/check_ica* (requires packet_utils.pm in libexec)
+	check_http --min changed to --pagesize, added max so min:max in check
+	check_vsz and check_rss deprecated - functionality moved into check_procs
+	check_swap % thresholds changed to measure amount free, instead of amount used
+	check_disk syntax changes for -p, -m/-M, defaults to MB instead of kB
+	check_procs -C expects no path for the command name
+
