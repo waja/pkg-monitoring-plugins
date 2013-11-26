@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007-09-26 11:57:44 +0100 (Wed, 26 Sep 2007) $
+* Last Modified: $Date: 2007-12-10 07:52:00 +0000 (Mon, 10 Dec 2007) $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_radius.c 1800 2007-09-26 10:57:44Z hweiss $
+* $Id: check_radius.c 1859 2007-12-10 07:52:00Z dermoth $
 * 
 *******************************************************************************/
 
 const char *progname = "check_radius";
-const char *revision = "$Revision: 1800 $";
+const char *revision = "$Revision: 1859 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -287,7 +287,7 @@ process_arguments (int argc, char **argv)
 	}
 
 	if (server == NULL)
-		usage4 (_("Host not specified"));
+		usage4 (_("Hostname was not supplied"));
 	if (username == NULL)
 		usage4 (_("User not specified"));
 	if (password == NULL)

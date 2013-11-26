@@ -18,7 +18,7 @@ suite of plugins. */
 
 /* Standardize version information, termination */
 
-/* $Id: utils.h 1590 2007-01-28 21:46:41Z hweiss $ */
+/* $Id: utils.h 1829 2007-11-23 04:18:16Z dermoth $ */
 
 void support (void);
 char *clean_revstring (const char *);
@@ -76,6 +76,7 @@ char *strpcpy (char *, const char *, const char *);
 char *strpcat (char *, const char *, const char *);
 
 int max_state (int a, int b);
+int max_state_alt (int a, int b);
 
 void usage (const char *) __attribute__((noreturn));
 void usage2(const char *, const char *) __attribute__((noreturn));

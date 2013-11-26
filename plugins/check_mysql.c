@@ -7,7 +7,7 @@
 *  Copyright (c) 1999-2006 nagios-plugins team
 *  Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
 *
-* Last Modified: $Date: 2007-03-29 18:58:28 +0100 (Thu, 29 Mar 2007) $
+* Last Modified: $Date: 2007-12-10 07:52:00 +0000 (Mon, 10 Dec 2007) $
 *
 * Description:
 *
@@ -32,12 +32,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_mysql.c 1655 2007-03-29 17:58:28Z hweiss $
+* $Id: check_mysql.c 1859 2007-12-10 07:52:00Z dermoth $
 *
 ******************************************************************************/
 
 const char *progname = "check_mysql";
-const char *revision = "$Revision: 1655 $";
+const char *revision = "$Revision: 1859 $";
 const char *copyright = "1999-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -391,7 +391,7 @@ print_help (void)
   printf (" %s\n", "-S, --check-slave");
   printf ("    %s\n", _("Check if the slave thread is running properly."));
   printf (" %s\n", "-w, --warning");
-  printf ("    %s\n", _("Exit with WARNING status if slave server is more then INTEGER seconds behind master"));
+  printf ("    %s\n", _("Exit with WARNING status if slave server is more than INTEGER seconds behind master"));
   printf (" %s\n", "-c, --critical");
   printf ("    %s\n", _("Exit with CRITICAL status if slave server is more then INTEGER seconds behind master"));
   printf (" %s\n", _("There are no required arguments. By default, the local database with"));

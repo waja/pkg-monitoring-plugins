@@ -7,7 +7,7 @@
 *
 * Original Author : Andreas Ericsson <ae@op5.se>
 *
-* Last Modified: $Date: 2007-09-15 12:55:12 +0100 (Sat, 15 Sep 2007) $
+* Last Modified: $Date: 2007-12-11 05:57:35 +0000 (Tue, 11 Dec 2007) $
 *
 * Description:
 *
@@ -38,14 +38,14 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_icmp.c 1779 2007-09-15 11:55:12Z hweiss $
+* $Id: check_icmp.c 1861 2007-12-11 05:57:35Z dermoth $
 * 
 *****************************************************************************/
 
 /* progname may change */
 /* char *progname = "check_icmp"; */
 char *progname;
-const char *revision = "$Revision: 1779 $";
+const char *revision = "$Revision: 1861 $";
 const char *copyright = "2005-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -371,6 +371,10 @@ main(int argc, char **argv)
 	int icmp_sockerrno, udp_sockerrno, tcp_sockerrno;
 	int result;
 	struct rta_host *host;
+
+	setlocale (LC_ALL, "");
+	bindtextdomain (PACKAGE, LOCALEDIR);
+	textdomain (PACKAGE);
 	
 	/* print a helpful error message if geteuid != 0 */
 	np_warn_if_not_root();

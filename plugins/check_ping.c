@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 2000-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007-04-23 08:30:47 +0100 (Mon, 23 Apr 2007) $
+* Last Modified: $Date: 2007-10-25 21:43:04 +0100 (Thu, 25 Oct 2007) $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
- $Id: check_ping.c 1699 2007-04-23 07:30:47Z hweiss $
+ $Id: check_ping.c 1810 2007-10-25 20:43:04Z tonvoon $
  
 ******************************************************************************/
 
 const char *progname = "check_ping";
-const char *revision = "$Revision: 1699 $";
+const char *revision = "$Revision: 1810 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -548,7 +548,7 @@ print_help (void)
 {
 	print_revision (progname, revision);
 
-	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>");
+	printf ("Copyright (c) 1999 Ethan Galstad <nagios@nagios.org>\n");
 	printf (COPYRIGHT, copyright, email);
 
 	printf (_("Use ping to check connection statistics for a remote host."));

@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2006 nagios-plugins team
 *
-* Last Modified: $Date: 2007-09-15 15:25:56 +0100 (Sat, 15 Sep 2007) $
+* Last Modified: $Date: 2007-11-09 21:17:03 +0000 (Fri, 09 Nov 2007) $
 *
 * Description:
 *
@@ -31,12 +31,12 @@
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
 *
-* $Id: check_smtp.c 1780 2007-09-15 14:25:56Z hweiss $
+* $Id: check_smtp.c 1817 2007-11-09 21:17:03Z dermoth $
 * 
 ******************************************************************************/
 
 const char *progname = "check_smtp";
-const char *revision = "$Revision: 1780 $";
+const char *revision = "$Revision: 1817 $";
 const char *copyright = "2000-2006";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -45,6 +45,7 @@ const char *email = "nagiosplug-devel@lists.sourceforge.net";
 #include "common.h"
 #include "netutils.h"
 #include "utils.h"
+#include "base64.h"
 
 #ifdef HAVE_SSL
 int check_cert = FALSE;
@@ -122,46 +123,6 @@ enum {
   UDP_PROTOCOL = 2,
 };
 
-/* written by lauri alanko */
-static char *
-base64 (const char *bin, size_t len)
-{
-
-	char *buf = (char *) malloc ((len + 2) / 3 * 4 + 1);
-	size_t i = 0, j = 0;
-
-	char BASE64_END = '=';
-	char base64_table[64];
-	strncpy (base64_table, "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/", 64);
-
-	while (j < len - 2) {
-		buf[i++] = base64_table[bin[j] >> 2];
-		buf[i++] = base64_table[((bin[j] & 3) << 4) | (bin[j + 1] >> 4)];
-		buf[i++] = base64_table[((bin[j + 1] & 15) << 2) | (bin[j + 2] >> 6)];
-		buf[i++] = base64_table[bin[j + 2] & 63];
-		j += 3;
-	}
-
-	switch (len - j) {
-	case 1:
-		buf[i++] = base64_table[bin[j] >> 2];
-		buf[i++] = base64_table[(bin[j] & 3) << 4];
-		buf[i++] = BASE64_END;
-		buf[i++] = BASE64_END;
-		break;
-	case 2:
-		buf[i++] = base64_table[bin[j] >> 2];
-		buf[i++] = base64_table[((bin[j] & 3) << 4) | (bin[j + 1] >> 4)];
-		buf[i++] = base64_table[(bin[j + 1] & 15) << 2];
-		buf[i++] = BASE64_END;
-		break;
-	case 0:
-		break;
-	}
-
-	buf[i] = '\0';
-	return buf;
-}
 
 int
 main (int argc, char **argv)
@@ -567,6 +528,7 @@ process_arguments (int argc, char **argv)
 			break;
 		case 'A':
 			authtype = optarg;
+			use_ehlo = TRUE;
 			break;
 		case 'U':
 			authuser = optarg;

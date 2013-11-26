@@ -1,5 +1,5 @@
 Name: nagios-plugins
-Version: 1.4.10
+Version: 1.4.11
 Release: 1
 Summary: Host/service/network monitoring program plugins for Nagios
 

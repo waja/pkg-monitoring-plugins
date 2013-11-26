@@ -5,7 +5,7 @@
 * License: GPL
 * Copyright (c) 1999-2007 nagios-plugins team
 *
-* Last Modified: $Date: 2007-05-29 06:22:32 +0100 (Tue, 29 May 2007) $
+* Last Modified: $Date: 2007-12-10 07:52:00 +0000 (Mon, 10 Dec 2007) $
 *
 * Description:
 *
@@ -30,12 +30,12 @@
 * along with this program; if not, write to the Free Software
 * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-* $Id: check_snmp.c 1721 2007-05-29 05:22:32Z dermoth $
+* $Id: check_snmp.c 1859 2007-12-10 07:52:00Z dermoth $
 * 
 ******************************************************************************/
 
 const char *progname = "check_snmp";
-const char *revision = "$Revision: 1721 $";
+const char *revision = "$Revision: 1859 $";
 const char *copyright = "1999-2007";
 const char *email = "nagiosplug-devel@lists.sourceforge.net";
 
@@ -148,6 +148,7 @@ main (int argc, char **argv)
 	int result = STATE_DEPENDENT;
 	char input_buffer[MAX_INPUT_BUFFER];
 	char *command_line = NULL;
+	char *cl_hidden_auth = NULL;
 	char *response = NULL;
 	char *outbuff;
 	char *output;
@@ -186,11 +187,17 @@ main (int argc, char **argv)
 		asprintf(&command_line, "%s -t %d -r %d -m %s -v %s %s %s:%s %s",
 			PATH_TO_SNMPGETNEXT, timeout_interval, retries, miblist, proto,
 			authpriv, server_address, port, oid);
+		asprintf(&cl_hidden_auth, "%s -t %d -r %d -m %s -v %s %s %s:%s %s",
+			PATH_TO_SNMPGETNEXT, timeout_interval, retries, miblist, proto,
+			"[authpriv]", server_address, port, oid);
 	}else{
 
 		asprintf (&command_line, "%s -t %d -r %d -m %s -v %s %s %s:%s %s",
 			PATH_TO_SNMPGET, timeout_interval, retries, miblist, proto,
 			authpriv, server_address, port, oid);
+		asprintf(&cl_hidden_auth, "%s -t %d -r %d -m %s -v %s %s %s:%s %s",
+			PATH_TO_SNMPGET, timeout_interval, retries, miblist, proto,
+			"[authpriv]", server_address, port, oid);
 	}
 	
 	if (verbose)
@@ -200,14 +207,14 @@ main (int argc, char **argv)
 	/* run the command */
 	child_process = spopen (command_line);
 	if (child_process == NULL) {
-		printf (_("Could not open pipe: %s\n"), command_line);
+		printf (_("Could not open pipe: %s\n"), cl_hidden_auth);
 		exit (STATE_UNKNOWN);
 	}
 
 #if 0		/* Removed May 29, 2007 */
 	child_stderr = fdopen (child_stderr_array[fileno (child_process)], "r");
 	if (child_stderr == NULL) {
-		printf (_("Could not open stderr for %s\n"), command_line);
+		printf (_("Could not open stderr for %s\n"), cl_hidden_auth);
 	}
 #endif
 
@@ -219,12 +226,16 @@ main (int argc, char **argv)
 
 	ptr = output;
 
-	strcat(perfstr, "| ");
+	strncat(perfstr, "| ", sizeof(perfstr)-strlen(perfstr)-1);
 	while (ptr) {
 		char *foo;
+		unsigned int copylen;
 
 		foo = strstr (ptr, delimiter);
-		strncat(perfstr, ptr, foo-ptr);
+		copylen = foo-ptr;
+		if (copylen > sizeof(perfstr)-strlen(perfstr)-1)
+			copylen = sizeof(perfstr)-strlen(perfstr)-1;
+		strncat(perfstr, ptr, copylen);
 		ptr = foo; 
 
 		if (ptr == NULL)
@@ -357,11 +368,11 @@ main (int argc, char **argv)
 
 		i++;
 
-		strcat(perfstr, "=");
-		strcat(perfstr, show);
+		strncat(perfstr, "=", sizeof(perfstr)-strlen(perfstr)-1);
+		strncat(perfstr, show, sizeof(perfstr)-strlen(perfstr)-1);
 		if (type)
-			strcat(perfstr, type);
-		strcat(perfstr, " ");
+			strncat(perfstr, type, sizeof(perfstr)-strlen(perfstr)-1);
+		strncat(perfstr, " ", sizeof(perfstr)-strlen(perfstr)-1);
 
 	}	/* end while (ptr) */
 
@@ -369,7 +380,7 @@ main (int argc, char **argv)
 		die (STATE_UNKNOWN,
 			_("%s problem - No data received from host\nCMD: %s\n"),
 			label,
-			command_line);
+			cl_hidden_auth);
 
 #if 0		/* Removed May 29, 2007 */
 	/* WARNING if output found on stderr */
@@ -510,7 +521,7 @@ process_arguments (int argc, char **argv)
 	/* Test parameters */
 		case 'c':									/* critical time threshold */
 			if (strspn (optarg, "0123456789:,") < strlen (optarg))
-				usage2 (_("Invalid critical threshold: %s\n"), optarg);
+				usage2 (_("Invalid critical threshold"), optarg);
 			for (ptr = optarg; ptr && jj < MAX_OIDS; jj++) {
 				if (llu_getll (&lower_crit_lim[jj], ptr) == 1)
 					eval_method[jj] |= CRIT_LT;
@@ -521,7 +532,7 @@ process_arguments (int argc, char **argv)
 			break;
 		case 'w':									/* warning time threshold */
 			if (strspn (optarg, "0123456789:,") < strlen (optarg))
-				usage2 (_("Invalid warning threshold: %s\n"), optarg);
+				usage2 (_("Invalid warning threshold"), optarg);
 			for (ptr = optarg; ptr && ii < MAX_OIDS; ii++) {
 				if (llu_getll (&lower_warn_lim[ii], ptr) == 1)
 					eval_method[ii] |= WARN_LT;
@@ -939,14 +950,14 @@ print_help (void)
 
 	/* Authentication Tokens*/
 	printf (" %s\n", "-C, --community=STRING");
-  printf ("    %s\n", _("Optional community string for SNMP communication"));
-  printf (_("(default is \"%s\")"),DEFAULT_COMMUNITY);
+  printf ("    %s ", _("Optional community string for SNMP communication"));
+  printf ("(%s \"%s\")\n", _("default is") ,DEFAULT_COMMUNITY);
   printf (" %s\n", "-U, --secname=USERNAME");
   printf ("    %s\n", _("SNMPv3 username"));
   printf (" %s\n", "-A, --authpassword=PASSWORD");
   printf ("    %s\n", _("SNMPv3 authentication password"));
   printf (" %s\n", "-X, --privpasswd=PASSWORD");
-  printf ("    %s\n", _("SNMPv3 crypt passwd (DES)"));
+  printf ("    %s\n", _("SNMPv3 privacy password"));
 
 	/* OID Stuff */
 	printf (" %s\n", "-o, --oid=OID(s)");
