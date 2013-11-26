@@ -1749,6 +1749,9 @@
 /* Define if gettimeofday is needed */
 #undef NEED_GETTIMEOFDAY
 
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+#undef NO_MINUS_C_MINUS_O
+
 /* Enable INI file parsing. */
 #undef NP_EXTRA_OPTS
 
