@@ -1,3 +1,4 @@
 02_check_icmp_links.dpatch
 # commited upstream
 11_check_http_arguments.dpatch
+12_check_ssh_read_socket.dpatch
