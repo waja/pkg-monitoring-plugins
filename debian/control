@@ -80,5 +80,5 @@ Description: Plugins for nagios compatible monitoring systems
   check_rpc, check_snmp, check_wave
  .
  This package provides the suite of plugins that are most likely to be
- useful on a central nagios host. Some scripts needs more packages installed
+ useful on a central nagios host. Some scripts need more packages installed
  to work, which is implemented as recommends.
