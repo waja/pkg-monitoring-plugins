@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
 Build-Depends: debhelper (>= 5), dpatch (>= 2.0.9), perl, autotools-dev, libdbi-dev, libldap2-dev, libpq-dev, libmysqlclient-dev | libmysqlclient16-dev | libmysqlclient15-dev, libfreeradius-client-dev | libradiusclient-ng-dev, libkrb5-dev, libnet-snmp-perl, procps, mawk | awk, hardening-wrapper
-Homepage: https://www.nagios-plugins.org
+Homepage: https://www.monitoring-plugins.org
 Vcs-Browser: http://git.debian.org/?p=pkg-nagios/pkg-nagios-plugins.git
 Vcs-Git: git://git.debian.org/pkg-nagios/pkg-nagios-plugins.git
 Standards-Version: 3.9.4
