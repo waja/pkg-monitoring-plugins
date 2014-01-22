@@ -60,7 +60,7 @@ sub print_plugin_deps
 	my $pdir = undef;
 	my $i    = 0;
 
-	my $plugindir = "debian/nagios-plugins-standard/usr/lib/nagios/plugins/";
+	my $plugindir = "debian/monitoring-plugins-standard/usr/lib/nagios/plugins/";
 
 	if (! opendir($pdir, $plugindir)) {
 		print STDERR "Could not open directory '$plugindir': $!\n";
