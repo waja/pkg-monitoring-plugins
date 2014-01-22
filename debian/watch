@@ -1,2 +1,2 @@
 version=3
-https://www.monitoring-plugins.org/download/nagios-plugins-(\d+\.[\d\.a-z]+)\.tar\.gz
+https://www.monitoring-plugins.org/download/monitoring-plugins-(\d+\.[\d\.a-z]+)\.tar\.gz
