@@ -1,3 +1,9 @@
+monitoring-plugins (1.5+git20140123-2~1) UNRELEASED; urgency=medium
+
+  * New upstream git snapshot
+
+ -- Jan Wagner <waja@cyconet.org>  Thu, 23 Jan 2014 01:50:59 +0100
+
 nagios-plugins (1.5-2) UNRELEASED; urgency=low
 
   * Update Licensing text from upstream README
