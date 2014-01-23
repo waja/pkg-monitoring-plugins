@@ -9,7 +9,7 @@
 # enable hardnening
 export DEB_BUILD_HARDENING=1
 
-PACKAGE = nagios-plugins
+PACKAGE = monitoring-plugins
 
 include /usr/share/dpatch/dpatch.make
 
@@ -23,11 +23,11 @@ CFLAGS = -Wall -g
 
 DEBIANDIR=$(CURDIR)/debian
 NP_LIBEXEC:=/usr/lib/nagios/plugins
-NP_COMMON_DIR:=$(DEBIANDIR)/nagios-plugins-common
-NP_BASIC_DIR:=$(DEBIANDIR)/nagios-plugins-basic
-NP_BASIC_TEMPLATES:=$(NP_BASIC_DIR)/usr/share/nagios-plugins/templates-basic
-NP_STD_DIR:=$(DEBIANDIR)/nagios-plugins-standard
-NP_STD_TEMPLATES:=$(NP_STD_DIR)/usr/share/nagios-plugins/templates-standard
+NP_COMMON_DIR:=$(DEBIANDIR)/monitoring-plugins-common
+NP_BASIC_DIR:=$(DEBIANDIR)/monitoring-plugins-basic
+NP_BASIC_TEMPLATES:=$(NP_BASIC_DIR)/usr/share/monitoring-plugins/templates-basic
+NP_STD_DIR:=$(DEBIANDIR)/monitoring-plugins-standard
+NP_STD_TEMPLATES:=$(NP_STD_DIR)/usr/share/monitoring-plugins/templates-standard
 
 std_plugins:=check_breeze check_ifoperstatus check_hpjd check_ifstatus \
 	check_rpc check_snmp check_wave check_fping check_game \
@@ -72,7 +72,7 @@ config.status: configure
 	# if /proc is not mounted, check_nagios and check_procs are
 	# silently omitted from build.
 	@if ! [ -d /proc/1 ]; then \
-	  echo "nagios-plugins needs a mounted /proc to correctly build"; \
+	  echo "monitoring-plugins needs a mounted /proc to correctly build"; \
 	  exit 1; \
 	fi
 	
@@ -131,7 +131,7 @@ clean: really-clean unpatch
 really-clean:
 	dh_testdir
 	dh_testroot
-	rm -f build-stamp debian/README.Debian.plugins debian/nagios-plugins-standard.substvars.in
+	rm -f build-stamp debian/README.Debian.plugins debian/monitoring-plugins-standard.substvars.in
 
 	# Add here commands to clean up after the build process.
 	[ ! -f Makefile ] || $(MAKE) distclean
@@ -139,7 +139,7 @@ really-clean:
 	-rm -f platform.h auto-include.h
 	find -type d -name build -print0 | xargs -0 -r rm -rf \;
 	find \( -name config.sub -o -name config.guess \) -print0 | xargs -0 -r rm -f \;
-	-rm -f $(DEBIANDIR)/nagios-plugins-basic.postrm $(DEBIANDIR)/nagios-plugins-standard.postrm
+	-rm -f $(DEBIANDIR)/monitoring-plugins-basic.postrm $(DEBIANDIR)/monitoring-plugins-standard.postrm
 	dh_clean
 
 install: build
@@ -148,7 +148,7 @@ install: build
 	dh_clean -k
 	dh_installdirs
 
-	# Add here commands to install the package into debian/nagios-plugins.
+	# Add here commands to install the package into debian/monitoring-plugins.
 	$(MAKE) install DESTDIR=${NP_BASIC_DIR}
 	$(MAKE) install-root DESTDIR=${NP_BASIC_DIR}
 	chmod 644 ${NP_BASIC_DIR}/usr/lib/nagios/plugins/utils.pm
@@ -171,16 +171,16 @@ install: build
 	# dynamically create the postrm scripts using a template, so that we
 	# don't have to define the same list of plugin configs over and over.
 	sed -e 's/@BASIC_PLUGINS@/${basic_plugin_cfgs}/' \
-		< $(DEBIANDIR)/nagios-plugins-basic.postrm.in \
-		> $(DEBIANDIR)/nagios-plugins-basic.postrm
+		< $(DEBIANDIR)/monitoring-plugins-basic.postrm.in \
+		> $(DEBIANDIR)/monitoring-plugins-basic.postrm
 	sed -e 's/@STD_PLUGINS@/${std_plugin_cfgs}/' \
-		< $(DEBIANDIR)/nagios-plugins-standard.postrm.in \
-		> $(DEBIANDIR)/nagios-plugins-standard.postrm
+		< $(DEBIANDIR)/monitoring-plugins-standard.postrm.in \
+		> $(DEBIANDIR)/monitoring-plugins-standard.postrm
 	# copy our dpkg-sourced functions etc into place
-	mkdir -p ${NP_COMMON_DIR}/usr/share/nagios-plugins/dpkg
-	install -t ${NP_COMMON_DIR}/usr/share/nagios-plugins/dpkg \
+	mkdir -p ${NP_COMMON_DIR}/usr/share/monitoring-plugins/dpkg
+	install -t ${NP_COMMON_DIR}/usr/share/monitoring-plugins/dpkg \
 		$(DEBIANDIR)/functions
-	# remove /usr/include from nagios-plugins-basic (in case its empty and exists)
+	# remove /usr/include from monitoring-plugins-basic (in case its empty and exists)
 	[ ! -d ${NP_BASIC_DIR}/usr/include ] || rmdir ${NP_BASIC_DIR}/usr/include
 	# generate debian/README.Debian.plugins
 	perl ./debian/bin/gen_plugin_deps.pl
@@ -205,8 +205,8 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir -s
 	dh_testroot -s
-	dh_installchangelogs -p nagios-plugins-basic -s ChangeLog
-	dh_installchangelogs -Nnagios-plugins-basic
+	dh_installchangelogs -p monitoring-plugins-basic -s ChangeLog
+	dh_installchangelogs -Nmonitoring-plugins-basic
 	dh_installdocs -s
 	dh_link -s
 	dh_installexamples -s
@@ -215,14 +215,14 @@ binary-arch: build install
 	dh_compress -s
 	dh_fixperms -s -X utils.pm
 	dh_installdeb -s
-	dh_shlibdeps -s -Nnagios-plugins-standard
-	dpkg-shlibdeps -Tdebian/nagios-plugins-standard.substvars \
+	dh_shlibdeps -s -Nmonitoring-plugins-standard
+	dpkg-shlibdeps -Tdebian/monitoring-plugins-standard.substvars \
 		${NP_STD_DIR}/${NP_LIBEXEC}/check_dns
-	dpkg-shlibdeps -Tdebian/nagios-plugins-standard.substvars.in \
+	dpkg-shlibdeps -Tdebian/monitoring-plugins-standard.substvars.in \
 		-dSuggests ${NP_STD_DIR}/${NP_LIBEXEC}/check_*
-	grep shlibs:Suggests debian/nagios-plugins-standard.substvars.in \
+	grep shlibs:Suggests debian/monitoring-plugins-standard.substvars.in \
 		| sed -e 's/shlibs:Suggests/shlibs:Recommends/' \
-		>> debian/nagios-plugins-standard.substvars
+		>> debian/monitoring-plugins-standard.substvars
 	dh_gencontrol -s -- $(DEPSUBSTVARS)
 	dh_md5sums -s
 	dh_builddeb -s
