@@ -1,6 +1,6 @@
 monitoring-plugins (1.6-1) unstable; urgency=medium
 
-  This software project was renamed by upstream. For more informations
+  This software project was renamed by upstream. For more information
   see https://www.monitoring-plugins.org/news/new-project-name.html.
 
   We renamed the package(s) also, but we keeped the directories
