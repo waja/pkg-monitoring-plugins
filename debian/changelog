@@ -4,10 +4,24 @@ monitoring-plugins (1.5+git20140123-2~1) UNRELEASED; urgency=medium
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 23 Jan 2014 01:50:59 +0100
 
-nagios-plugins (1.5-2) UNRELEASED; urgency=low
+nagios-plugins (1.5-2) unstable; urgency=low
 
   * Update Licensing text from upstream README
-  * Updated Homepage to https://www.nagios-plugins.org/
+  * Switch over to packaging ti git-buildpackage
+  * [1a95a53] Update Vcs-headers
+  * [e0ee45e] Use check_ldap instead of check_ldaps for the check_ldaps*
+    command definitions
+  * [9bc7a29] Add 11_check_http_arguments.dpatch to fix argument processing
+    of check_http
+  * [219a55a] Add 12_check_ssh_read_socket.dpatch to fix socket read failure
+    (Closes: #734811)
+  * [0cc66f5] Fix typo in package description (Closes: #734513), thanks
+    Pascal De Vuyst
+  * [ec51a84] Just missed a typo to fix in debian/control
+  * [de62798] Changing upstream URLs to monitoring-plugins.org
+  * [1a03f82] Fix URL in the watch file
+  * [201bd0e] Adding 13_check_proc_parent_process.dpatch (Closes: 626913),
+    Thanks Anton Lofgren
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 02 Oct 2013 20:14:38 +0200
 
