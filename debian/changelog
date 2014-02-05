@@ -20,7 +20,7 @@ nagios-plugins (1.5-2) unstable; urgency=medium
     - libfreeradius-client-dev is actually not supported by upstream
     - check_radius
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 02 Oct 2013 20:14:38 +0200
+ -- Jan Wagner <waja@cyconet.org>  Thu, 02 Feb 2014 22:11:48 +0100
 
 nagios-plugins (1.5-1) unstable; urgency=medium
 
