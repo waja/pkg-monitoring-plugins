@@ -10,6 +10,8 @@ Therefor you should use the script debian/bin/repack.sh:
 
  repack.sh <upstream-tarball>
 
+ This can also be automatically done with 'uscan --force-download'
+
 Creating a sufficiant tarball from latest git snapshot:
 
 * Install 'autoconf automake' beside the build-depends
