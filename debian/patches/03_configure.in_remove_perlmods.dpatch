@@ -1,0 +1,19 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 03_configure.in_remove_perlmods.dpatch by Jan Wagner <waja@cyconet.org>
+##
+## DP: Strip perlmods out of configure.in too, since configure may regenerated
+## when automake and autoconf are installed in the buildenv
+
+@DPATCH@
+diff --git a/configure.in b/configure.in
+index 7e8c810..6c3e84c 100644
+--- a/configure.in
++++ b/configure.in
+@@ -1786,7 +1786,6 @@ AC_OUTPUT(
+   plugins-scripts/subst
+   plugins-scripts/utils.pm
+   plugins-scripts/utils.sh
+-  perlmods/Makefile
+   test.pl
+   pkg/solaris/pkginfo
+   po/Makefile.in
