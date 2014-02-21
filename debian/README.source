@@ -5,11 +5,12 @@ documentation about dpatch.
 Since Version 1.5.0 we are repackaging the upstream tarball to stop providing:
 
  * perlmods/
- * contrib/
 
 Therefor you should use the script debian/bin/repack.sh:
 
  repack.sh <upstream-tarball>
+
+ This can also be automatically done with 'uscan --force-download'
 
 Creating a sufficiant tarball from latest git snapshot:
 
