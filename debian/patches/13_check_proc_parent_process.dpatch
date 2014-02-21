@@ -1,0 +1,138 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 13_check_proc_parent_process.dpatch by Anton Lofgren <alofgren@op5.com>
+##
+## From 77fc3548ae1be360584082d771fa01696d4f4479 Mon Sep 17 00:00:00 2001
+## From: Anton Lofgren <alofgren@op5.com>
+## Date: Fri, 18 Oct 2013 11:42:46 +0200
+## Subject: [PATCH] check_procs: ignore plugin parent process
+##  Connection reset by peer
+##
+## This fix was grabbed from upstream VCS and provided by Anton Lofgren.
+## Fixes Debian Bug #626913
+
+This fixes an issue that appears when running check_procs over NRPE,
+where the default shell is configured to (for example) dash, as is the
+case on Debian.
+
+dash (and tcsh, and mksh, and probably others), when invoked with -c forks an additional process
+to execute the argument string. Contrast this with bash, which does not
+do this, provided that the argument string simply can be exec()'d as-is.
+
+To demonstrate:
+$ bash -c pstree
+init─┬ ..
+    ...
+	├─sshd─-─sshd───pstree
+
+versus
+$ dash -c pstree
+init─┬ ..
+    ...
+	├─sshd─-─sshd───dash───pstree
+
+The consequence of this fork is that the following invocation:
+    /opt/plugins/check_procs -a init
+
+will result in this output:
+
+    PROCS OK: 2 processes with args 'init' | processes=2;;;0;
+
+because the check_procs, in addition to finding the actual init process,
+finds its parent shell as well.
+
+This example is a bit contrived, but I think it illustrates the
+point.
+
+This wouldn't really be a problem, and normally isn't, if it weren't
+for the fact that NRPE uses a call to popen() which does exactly the
+above (executes '/bin/sh -c ...'), causing inconsistent behaviour
+between distributions and much confusion for end users.
+
+The argument may be made that the dash process spawned by NRPE is just a
+process like any other, and should therefore be included in the process
+count just like any other. However, this is not very intuitive, because
+of the previously mentioned inconsistencies.
+
+The argument might also well be made that we're _never_ interested in the
+immediate ancestor of the plugin, and while it is unknown how many
+installations have already made the necessary modifications to their
+setups to make up for the fact that the plugin behaves the way it does,
+it is not deemed worthwhile to entertain such workarounds.
+
+Thus, this patch ignores the parent process.
+
+See also these bug reports:
+http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=626913
+http://sourceforge.net/p/nagiosplug/bugs/512/
+https://github.com/nagios-plugins/nagios-plugins/issues/999
+https://bugs.op5.com/view.php?id=4398
+---
+ plugins/check_procs.c   | 8 ++++++++
+ plugins/t/check_procs.t | 9 ++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
+
+@DPATCH@
+
+diff --git a/plugins/check_procs.c b/plugins/check_procs.c
+index d20b027..c2239db 100644
+--- a/plugins/check_procs.c
++++ b/plugins/check_procs.c
+@@ -123,6 +123,7 @@ enum metric {
+ 	char *procprog;
+ 
+ 	pid_t mypid = 0;
++	pid_t myppid = 0;
+ 	struct stat statbuf;
+ 	dev_t mydev = 0;
+ 	ino_t myino = 0;
+@@ -172,6 +173,7 @@ enum metric {
+ 
+ 	/* find ourself */
+ 	mypid = getpid();
++	myppid = getppid();
+ 	if (usepid || stat_exe(mypid, &statbuf) == -1) {
+ 		/* usepid might have been set by -T */
+ 		usepid = 1;
+@@ -241,6 +243,12 @@ enum metric {
+ 					 printf("not considering - is myself or gone\n");
+ 				continue;
+ 			}
++			/* Ignore parent*/
++			else if (myppid == procpid) {
++				if (verbose >= 3)
++					 printf("not considering - is parent\n");
++				continue;
++			}
+ 
+ 			/* filter kernel threads (childs of KTHREAD_PARENT)*/
+ 			/* TODO adapt for other OSes than GNU/Linux
+diff --git a/plugins/t/check_procs.t b/plugins/t/check_procs.t
+index 1dea564..e0479ea 100644
+--- a/plugins/t/check_procs.t
++++ b/plugins/t/check_procs.t
+@@ -13,7 +13,7 @@ my $t;
+ if (`uname -s` eq "SunOS\n" && ! -x "/usr/local/nagios/libexec/pst3") {
+ 	plan skip_all => "Ignoring tests on solaris because of pst3";
+ } else {
+-	plan tests => 12;
++	plan tests => 14;
+ }
+ 
+ my $result;
+@@ -26,6 +26,13 @@ $result = NPTest->testCmd( "./check_procs -w 100000 -c 100000 -s Z" );
+ is( $result->return_code, 0, "Checking less than 100000 zombie processes" );
+ like( $result->output, '/^PROCS OK: [0-9]+ process(es)? with /', "Output correct" );
+ 
++SKIP: {
++	skip "No bash available", 2 unless(system("which bash > /dev/null") == 0);
++	$result = NPTest->testCmd( "bash -c './check_procs -a '/sbin/init'; true'" );
++	is( $result->return_code, 0, "Parent process is ignored" );
++	like( $result->output, '/^PROCS OK: 1 process?/', "Output correct" );
++
++}
+ $result = NPTest->testCmd( "./check_procs -w 0 -c 100000" );
+ is( $result->return_code, 1, "Checking warning if processes > 0" );
+ like( $result->output, '/^PROCS WARNING: [0-9]+ process(es)? | procs=[0-9]+;0;100000;0;$/', "Output correct" );
+-- 
+1.8.5.1
+
