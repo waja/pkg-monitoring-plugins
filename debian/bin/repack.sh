@@ -26,8 +26,10 @@ srcdir="$tdir/$distdir"
 #echo "Adjusting $srcdir/configure"
 sed -i 's/perlmods\/Makefile\ //' $srcdir/configure
 sed -i '/perlmods\/Makefile/d' $srcdir/configure
-#echo "Adjusting $srcdir/configure"
-sed -i '/perlmods\/Makefile/d' $srcdir/configure.in
+#echo "Adjusting $srcdir/configure.in"
+[ -f  $srcdir/configure.in ] && sed -i '/perlmods\/Makefile/d' $srcdir/configure.in
+#echo "Adjusting $srcdir/configure.am"
+[ -f  $srcdir/configure.am ] && sed -i '/perlmods\/Makefile/d' $srcdir/configure.am
 #echo "Adjusting $srcdir/Makefile*"
 sed -i 's/perlmods\ //' $srcdir/Makefile*
 #echo "Removing $srcdir/perlmods/
