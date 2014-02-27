@@ -5,6 +5,8 @@ before_install:
   - rm -rf .git .travis.yml
   # update package list
   - sudo apt-get update -qq
+  # remove the shiped gawk (we use mawk)
+  - sudo apt-get purge -qq gawk
   #
   - if [ "$TRAVIS_BRANCH" != "m-p" ]; then sudo apt-get install -qq --no-install-recommends devscripts libwww-perl libcrypt-ssleay-perl && uscan --force-download && sudo apt-get purge -qq libwww-perl libcrypt-ssleay-perl && sudo apt-get autoremove -qq; else sudo apt-get install -qq --no-install-recommends devscripts && VER=$(head -1 debian/changelog | awk -F'[()]' '{print $2}' | awk -F'+' '{print $1}'); wget https://gist.githubusercontent.com/waja/9142217/raw/git2release -O /tmp/git2release && sh /tmp/git2release --release-tarball https://github.com/monitoring-plugins/monitoring-plugins/archive/master.tar.gz && mv monitoring-plugins*.tar.gz .. && sh /tmp/git2release --prepare-debian ../monitoring-plugins-1.5.tar.gz && tar -xzf ../monitoring-plugins_${VER}.orig.tar.gz -C ../ && cp -a debian ../monitoring-plugins-${VER}/ && cd ../monitoring-plugins-${VER}/; fi
 #  # installneeded packages for uscan
