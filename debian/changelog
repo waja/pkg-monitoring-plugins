@@ -2,8 +2,8 @@ nagios-plugins (1.5-3) unstable; urgency=medium
 
   * [38d8f67] Fixing latest changelog timestamp
   * [7091aae] check_ssh: Drop 12_check_ssh_read_socket.dpatch
-    (Closes: #734811), this seems to make more touble in the wild as fixing
-    #739254, Thanks Jim Barber
+    (Closes: #734811, #739254), this seems to make more touble in the wild as
+    fixing #739254, Thanks Jim Barber
 
  -- Jan Wagner <waja@cyconet.org>  Mon, 17 Feb 2014 12:42:06 +0100
 
