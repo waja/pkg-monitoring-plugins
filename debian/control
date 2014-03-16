@@ -12,8 +12,8 @@ Standards-Version: 3.9.5
 Package: monitoring-plugins
 Architecture: all
 Depends: ${misc:Depends}, monitoring-plugins-basic, monitoring-plugins-standard
-Replaces: nagios-plugins (<< 1.5-2~)
-Breaks: nagios-plugins (<< 1.5-2~)
+Replaces: nagios-plugins (<< 1.6-1~)
+Breaks: nagios-plugins (<< 1.6-1~)
 Suggests: nagios3 | icinga, nagios-plugins-contrib
 Description: Plugins for nagios compatible monitoring systems (metapackage)
  Plugins for nagios compatible monitoring systems like Nagios and Icinga.
@@ -26,8 +26,8 @@ Description: Plugins for nagios compatible monitoring systems (metapackage)
 Package: monitoring-plugins-common
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, ucf
-Replaces: nagios-plugins-common (<< 1.5-2~)
-Breaks: nagios-plugins-common (<< 1.5-2~)
+Replaces: nagios-plugins-common (<< 1.6-1~)
+Breaks: nagios-plugins-common (<< 1.6-1~)
 Suggests: nagios3 | icinga
 Description: Common files for plugins for nagios compatible monitoring
  Common files for plugins for nagios compatible monitoring systems like Nagios
@@ -39,8 +39,8 @@ Package: monitoring-plugins-basic
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, procps, iputils-ping [linux-any], inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any], ucf
 Pre-Depends: monitoring-plugins-common
-Replaces: nagios-plugins-basic (<< 1.5-2~)
-Breaks: nagios-plugins-basic (<< 1.5-2~)
+Replaces: nagios-plugins-basic (<< 1.6-1~)
+Breaks: nagios-plugins-basic (<< 1.6-1~)
 Suggests: nagios3 | icinga
 Description: Plugins for nagios compatible monitoring systems
  Plugins for nagios compatible monitoring systems like Nagios and Icinga. It
@@ -66,8 +66,8 @@ Description: Plugins for nagios compatible monitoring systems
 
 Package: monitoring-plugins-standard
 Architecture: any
-Replaces: nagios-plugins-standard (<< 1.5-2~)
-Breaks: nagios-plugins-standard (<< 1.5-2~)
+Replaces: nagios-plugins-standard (<< 1.6-1~)
+Breaks: nagios-plugins-standard (<< 1.6-1~)
 Depends: ${shlibs:Depends}, ${misc:Depends}, ucf, monitoring-plugins-basic
 Recommends: ${shlibs:Recommends}, fping, snmp, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, qstat, rpcbind
 Suggests: nagios3 | icinga, postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
