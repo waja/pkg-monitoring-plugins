@@ -108,6 +108,7 @@ config.status: configure
 		--with-snmpgetnext-command="/usr/bin/snmpgetnext" \
 		--with-qstat-command="/usr/bin/quakestat" \
 		--with-fping-command="/usr/bin/fping" \
+		--with-fping6-command="/usr/bin/fping6" \
 		--with-ssh-command="/usr/bin/ssh" \
 		--with-mailq-command="/usr/bin/mailq" \
 		--with-proc-meminfo="/proc/meminfo" \
