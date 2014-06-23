@@ -1,8 +1,44 @@
-monitoring-plugins (1.5+git20140123-2~1) UNRELEASED; urgency=medium
+monitoring-plugins (1.5+git20140623-1~1.gbp803b3e) UNRELEASED; urgency=medium
 
   * New upstream git snapshot
+  * [49be365] Starting transition toward monitoring-plugins with debian/control
+  * [a90fffd] Fix install path in dependency helper
+  * [b6aca40] Fixing our debian/README.source to recent state
+  * [cca2985] Fix documentaion path in nt.cfg
+  * [243da0a] Fix URL in the watch file
+  * [ffc2ec8] Rename all debian nagios-plugins* to monitoring-plugins*
+  * [9f353b3] Fix package name in README.Debian* files
+  * [fb6d01c] Fixing pathes in debian/rules and maintainers scripts
+  * [03eb8d0] Document our move due renamed upstream
+  * [5070f23] Droping patches applied upstream
+    - 11_check_http_arguments.dpatch
+    - 12_check_ssh_read_socket.dpatch
+  * [ff3a690] Fix spelling error in debian/NEWS.Debian
+  * [e754328] Fixing dependency relation
+  * [fcf0c24] Updating standards version to 3.9.5 (no changes needed)
+  * [72f1e74] Fix watch file to match further and actual releases
+  * [85dfaeb] Repack upstream tarball on download
+  * [ab4c50f] Update README.source
+  * [5ae316e] Fixing repack.sh script
+  * [0ef43fe] Add 03_configure.in_remove_perlmods.dpatch
+  * [9b07715] Drop 13_check_proc_parent_process.dpatch
+    - Included upstream
+  * [a3145c9] Adjust repack.sh to latest upstream
+  * [ce560c9] Add travis config
+  * [b207889] Remove 03_configure.in_remove_perlmods.dpatch
+  * [4e50939] travis-ci: Add lintian checks after build
+  * [6fbf537] travis-ci: Remove gawk from buildenv
+  * [5965a35] Include correct bug report for latest close (just cosmetic change)
+  * [9939d1f] Breaks and Replaces against next upstream release
+  * [1d11720] Don't use Pre-Depends
+  * [4580974] check_fping: define fping6 command on compile time
+    (Closes: #751866), many thanks Nicolas Deefayet for bringing this up
+  * [7cb5f53] check_http: droping expect string from check_squid
+    (Closes: #742363), thanks Andreas B. Mundt
+  * [803b3e3] Add libfreeradius-client-dev as first build-dep option
+    (Closes: #721621)
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 23 Jan 2014 01:50:59 +0100
+ -- Jan Wagner <waja@cyconet.org>  Mon, 23 Jun 2014 23:14:10 +0200
 
 nagios-plugins (1.5-3) unstable; urgency=medium
 
