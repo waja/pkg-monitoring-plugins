@@ -1,4 +1,4 @@
-monitoring-plugins (1.6-1) unstable; urgency=medium
+monitoring-plugins (2.0-1) unstable; urgency=medium
 
   This software project was renamed by upstream. For more information
   see https://www.monitoring-plugins.org/news/new-project-name.html.
@@ -7,7 +7,7 @@ monitoring-plugins (1.6-1) unstable; urgency=medium
   /etc/nagios-plugins/ and /usr/lib/nagios/plugins for now, cause
   many other packages rely on them. Maybe we have to change that later.
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 23 Jan 2014 01:53:29 +0100
+ -- Jan Wagner <waja@cyconet.org>  Mon, 23 Jun 2014 08:34:45 +0200
 
 nagios-plugins (1.4.15-6) unstable; urgency=low
 
