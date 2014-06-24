@@ -1,4 +1,6 @@
-#!/bin/sh -e
+#!/bin/sh
+
+set -e
 
 STD_PLUGINS="@STD_PLUGINS@"
 

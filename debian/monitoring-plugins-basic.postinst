@@ -1,4 +1,6 @@
-#!/bin/sh -e
+#!/bin/sh
+
+set -e
 
 templdir=/usr/share/monitoring-plugins/templates-basic
 . /usr/share/monitoring-plugins/dpkg/functions
