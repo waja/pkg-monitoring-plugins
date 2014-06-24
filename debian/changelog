@@ -1,4 +1,4 @@
-monitoring-plugins (1.5+git20140623-1~1.gbp803b3e) UNRELEASED; urgency=medium
+monitoring-plugins (1.5+git20140623-1~2.gbp174251) UNRELEASED; urgency=medium
 
   * New upstream git snapshot
   * [49be365] Starting transition toward monitoring-plugins with debian/control
@@ -37,8 +37,11 @@ monitoring-plugins (1.5+git20140623-1~1.gbp803b3e) UNRELEASED; urgency=medium
     (Closes: #742363), thanks Andreas B. Mundt
   * [803b3e3] Add libfreeradius-client-dev as first build-dep option
     (Closes: #721621)
+  * [c3dd2ca] Fixing typo in changelog
+  * [4e2ccd5] NEWS.Debian: Adjust version, next stable release will be 2.0
+  * [1742518] Use canonical VCS-URIs
 
- -- Jan Wagner <waja@cyconet.org>  Mon, 23 Jun 2014 23:14:10 +0200
+ -- Jan Wagner <waja@cyconet.org>  Tue, 24 Jun 2014 10:02:10 +0200
 
 nagios-plugins (1.5-3) unstable; urgency=medium
 
