@@ -38,6 +38,7 @@ Description: Common files for plugins for nagios compatible monitoring
 Package: monitoring-plugins-basic
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}, monitoring-plugins-common, procps, iputils-ping [linux-any], inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any], ucf
+Recommends: libcap2-bin [linux-any]
 Replaces: nagios-plugins-basic (<< 1.6-1~)
 Breaks: nagios-plugins-basic (<< 1.6-1~)
 Suggests: nagios3 | icinga

@@ -65,14 +65,20 @@ example if you're installing nrpe or nsca on a remote host), try the
 monitoring-plugins-basic package.
 
 ================================================================================
-plugins needing root privilege
+plugins needing root privilege or capabilities(7) set
 ================================================================================
 
-the check_dhcp, check_icmp and maybe others plugins require root privileges to
-run, because of the low-level packet mangling that they perform.
-but, in the interest of the "safe default", these plugins will not
-be installed with the suid bit set.  there are two recommended ways
-about overriding this on your system:
+the check_dhcp, check_icmp and maybe others plugins require root privileges or
+capabilities(7) to run, because of the low-level packet mangling that they
+perform. but, in the interest of the "safe default", these plugins will not
+be installed with the suid bit set.
+if setcap is able set the necessary capabilities, you are fine. if the setcap
+binary is not installed or not able to set the capabilities, you need to
+eighter set the capabilities (cap_net_raw+ep) for your own or provide root
+privileges.
+
+there are two recommended ways about providing root privilegethis on your
+system:
 
 - set the suid bit with dpkg-statoverride:
 
