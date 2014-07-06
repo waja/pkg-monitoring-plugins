@@ -7,6 +7,16 @@ monitoring-plugins (2.0-1) unstable; urgency=medium
   /etc/nagios-plugins/ and /usr/lib/nagios/plugins for now, cause
   many other packages rely on them. Maybe we have to change that later.
 
+  We decided to set capabilities(7) for check_icmp and check_dhcp, when
+  possible. This means libcap2-bin needs to be installed and the
+  architecture (in our case this is linux) needs to support that. This
+  makes it possible to avoid suid bit set for those plugins.
+
+  We even switched over to freeradius-client to fix #721621. This makes
+  it necessary to migrate you radius credentials from
+  /etc/radiusclient-ng/servers to /etc/radiusclient/servers in case you
+  are using check_radius.
+
  -- Jan Wagner <waja@cyconet.org>  Mon, 23 Jun 2014 08:34:45 +0200
 
 nagios-plugins (1.4.15-6) unstable; urgency=low
