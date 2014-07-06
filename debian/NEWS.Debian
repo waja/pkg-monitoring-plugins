@@ -9,7 +9,7 @@ monitoring-plugins (2.0-1) unstable; urgency=medium
 
   We decided to set capabilities(7) for check_icmp and check_dhcp, when
   possible. This means libcap2-bin needs to be installed and the
-  architecture (in our case this is linux) needs to support that. This
+  kernel (in our case this is linux) needs to support that. This
   makes it possible to avoid suid bit set for those plugins.
 
   We even switched over to freeradius-client to fix #721621. This makes
