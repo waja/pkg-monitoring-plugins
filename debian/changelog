@@ -41,6 +41,14 @@ monitoring-plugins (1.5+git20140623-1~2.gbpd4ad20) UNRELEASED; urgency=medium
   * [4e2ccd5] NEWS.Debian: Adjust version, next stable release will be 2.0
   * [1742518] Use canonical VCS-URIs
   * [d4ad20c] Set -e in the body of the maintainers script
+  * [a6611b1] check_icmp/check_dhcp: Implementing setcap
+  * [90090cb] check_dhcp: Set proper capabilities
+  * [a75bd42] README.Debian: Lazy documentation how to set capabilities
+  * [6b6e127] NEWS.Debian: Adding some more details
+  * [7f2013f] NEWS.Debian: Fix wording
+  * [e7c0c6f] Adjust Break and Replace version in debian/control
+  * [aeed4b2] Adjust VCS-Headers to new pakage name
+  * [e789ea3] NEWS.Debian: Add a hint about negative values of check_snmp
 
  -- Jan Wagner <waja@cyconet.org>  Tue, 24 Jun 2014 11:47:34 +0200
 
