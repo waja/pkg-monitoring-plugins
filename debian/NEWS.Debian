@@ -17,6 +17,12 @@ monitoring-plugins (2.0-1) unstable; urgency=medium
   /etc/radiusclient-ng/servers to /etc/radiusclient/servers in case you
   are using check_radius.
 
+  check_snmp is now evaluating negative values properly, but it might be
+  returning CRITICALs where it used to return OK and was ignored, if a
+  negative value turns out to actually be a valid value.
+  If negative values are valid, this can be worked around, by adding "~:"
+  to the warning/critical threshold : 100 -> ~:100
+
  -- Jan Wagner <waja@cyconet.org>  Mon, 23 Jun 2014 08:34:45 +0200
 
 nagios-plugins (1.4.15-6) unstable; urgency=low
