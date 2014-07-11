@@ -1,9 +1,9 @@
-#!/usr/bin/perl -w
+#!@PERL@ -w
 #
 #
 # check_disk.pl <host> <share> <user> <pass> [warn] [critical] [port]
 #
-# Nagios host script to get the disk usage from a SMB share
+# Monitoring host script to get the disk usage from a SMB share
 #
 # Changes and Modifications
 # =========================
@@ -24,7 +24,9 @@ use strict;
 use Getopt::Long;
 use vars qw($opt_P $opt_V $opt_h $opt_H $opt_s $opt_W $opt_u $opt_p $opt_w $opt_c $opt_a $verbose);
 use vars qw($PROGNAME);
-use lib utils.pm ;
+use FindBin;
+use lib "$FindBin::Bin";
+use lib '@libexecdir@';
 use utils qw($TIMEOUT %ERRORS &print_revision &support &usage);
 
 sub print_help ();
@@ -32,7 +34,7 @@ sub print_usage ();
 
 $PROGNAME = "check_disk_smb";
 
-$ENV{'PATH'}='';
+$ENV{'PATH'}='@TRUSTED_PATH@';
 $ENV{'BASH_ENV'}=''; 
 $ENV{'ENV'}='';
 
@@ -171,7 +173,7 @@ my $res = undef;
 my $perfdata = "";
 my @lines = undef;
 
-# Just in case of problems, let's not hang Nagios
+# Just in case of problems, let's not hang the monitoring system
 $SIG{'ALRM'} = sub { 
 	print "No Answer from Client\n";
 	exit $ERRORS{"UNKNOWN"};
@@ -293,7 +295,7 @@ sub print_help () {
 	print_revision($PROGNAME,'@NP_VERSION@');
 	print "Copyright (c) 2000 Michael Anthon/Karl DeBisschop
 
-Perl Check SMB Disk plugin for Nagios
+Perl Check SMB Disk plugin for monitoring
 
 ";
 	print_usage();

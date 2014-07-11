@@ -1,4 +1,4 @@
-This software is brought to you by the Nagios Plugins Development Team. However,
+This software is brought to you by the Monitoring Plugins Development Team. However,
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
@@ -36,20 +36,25 @@ Guy Van Den Bergh
 Jimmy Bergman
 Jochen Bern
 Tom Bertelston
+Gunnar Beutner
 Daniel Bimschas
 Jeffery Blank
 Tom De Blende
 Eric Bollengier
 Aurelien Bompard
+Stéphane Bortzmeyer
 Alex Bradley
+Andy Brist
 Richard Brodie
 Dominique Broeglin
 Matthew Brown
 Tobias Brox
+Tilmann Bubeck
 Dick van den Burg
 Jason Burnett
 Grant Byers
 Carlos Canau
+Jethro Carr
 Jim Carroll
 Ian Cass
 Arnold Cavazos
@@ -58,10 +63,12 @@ Stephane Chazelas
 Eric Chen
 Alwyn Cherrington
 Ben Clewett
+Jean-Claude Computing
 Lionel Cons
 Garry Cook
 Charlie Cook
 Ollie Cook
+Luca Corti
 Jason Crawford
 David Croft
 Robert Dale
@@ -87,6 +94,7 @@ Ragnar Hojland Espinosa
 O'Shaughnessy Evans
 Merijn Evertse
 Karl Ewald
+Mikael Falkvidd
 Paul Farrall
 Reuben Farrelly
 Mark Favas
@@ -107,6 +115,8 @@ Matt Garrett
 Robby Giffin
 Flo Gleixner
 Florian Gleixner
+Evgeni Golov
+Joseph Gooch
 Aravind Gottipati
 Kev Green
 Steve Greenland
@@ -155,6 +165,7 @@ Marcel Kuiper
 Alexander Kulak
 Bill Kunkel
 Brian Landers
+Stephane Lapie
 Pascal Larisch
 Charles-Henri Larose
 Tim Laszlo
@@ -165,13 +176,17 @@ William Leibzon
 Pedro Leite
 Richard Leitner
 Craig Leres
+Oskar Liljeblad
 Joerg Linge
 Jan Lipphaus
+Anton Lofgren
 Larry Low
 Jacob Lundqvist
 Jason Lunn
+Davide Madrisan
 Guenther Mair
 Pawel Malachowski
+Ricardo Maraschini
 Michael Markstaller
 John Marquart
 Ernst-Dieter Martin
@@ -190,15 +205,18 @@ Emil Michles
 Christian Mies
 Jonathan Milby
 Russell Miller
+Eric J. Mislivec
 Janos Mohacsi
 Gerd Mueller
 Michael Musikhin
+Damian Myerscough
 Jan-Frode Myklebust
 Sivakumar Nellurandi
 Truongchinh Nguyen
 Simon L Nielsen
 Thomas Nilsen
 Sebastian Nohn
+Geoff Oakham
 Walbert Oberngruber
 Craig Orsinger
 Vaclav Ovsik
@@ -224,6 +242,7 @@ Olivier 'Babar' Raginel
 Phil Randal
 Abid Rasheed
 Jeremy Reed
+Spenser Reinhardt
 Marc Remy
 Alessandro Ren
 Joe Rhett
@@ -287,6 +306,7 @@ Carole Verdon
 Ludse Verhoeven
 Robert August Vincent
 Dave Viner
+Lars Vogdt
 Jan Wagner
 Dieter Van de Walle
 John Warburton
@@ -297,6 +317,7 @@ Steve Weinreich
 Erik Welch
 Torsten Werner
 Ben Whaley
+Andrew Widdersheim
 Adrian Wieczorek
 Sebastian Wiesinger
 Paul Wiggins

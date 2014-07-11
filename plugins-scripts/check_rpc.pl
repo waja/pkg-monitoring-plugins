@@ -1,6 +1,6 @@
-#!/usr/local/bin/perl -w
+#!@PERL@ -w
 #
-# check_rpc plugin for nagios
+# check_rpc plugin for monitoring
 #
 # usage:
 #    check_rpc host service
@@ -20,7 +20,9 @@
 #
 
 use strict;
-use lib utils.pm;
+use FindBin;
+use lib "$FindBin::Bin";
+use lib '@libexecdir@';
 use utils qw($TIMEOUT %ERRORS &print_revision &support);
 use vars qw($PROGNAME);
 my ($verbose,@proto,%prognum,$host,$response,$prognum,$port,$cmd,$progver,$state);
@@ -36,9 +38,9 @@ sub print_help ();
 sub print_usage ();
 sub in ($$);
 
-$ENV{'BASH_ENV'}='';
+$ENV{'PATH'}='@TRUSTED_PATH@';
+$ENV{'BASH_ENV'}=''; 
 $ENV{'ENV'}='';
-$ENV{'PATH'}='';
 $ENV{'LC_ALL'}='C';
 
 #Initialise protocol for each progname number
@@ -254,7 +256,7 @@ $proto = 't' if ($opt_t);
 $proto = 'u' if ($opt_u);
 
 
-# Just in case of problems, let's not hang Nagios
+# Just in case of problems, let's not hang the monitoring system
 $SIG{'ALRM'} = sub {
         print ("ERROR: No response from RPC server (alarm)\n");
         exit $ERRORS{"UNKNOWN"};

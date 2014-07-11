@@ -1,13 +1,13 @@
 #!/bin/sh
 
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
-
 PROGNAME=`basename $0`
 PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
 REVISION="@NP_VERSION@"
+PATH="@TRUSTED_PATH@"
+
+export PATH
 
 . $PROGPATH/utils.sh
-
 
 print_usage() {
 	echo "Usage: $PROGNAME" [--ignore-fault]

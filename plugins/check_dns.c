@@ -1,9 +1,9 @@
 /*****************************************************************************
 * 
-* Nagios check_dns plugin
+* Monitoring check_dns plugin
 * 
 * License: GPL
-* Copyright (c) 2000-2008 Nagios Plugins Development Team
+* Copyright (c) 2000-2008 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -31,7 +31,7 @@
 
 const char *progname = "check_dns";
 const char *copyright = "2000-2008";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "utils.h"
@@ -242,7 +242,23 @@ main (int argc, char **argv)
     }
     printf (ngettext("%.3f second response time", "%.3f seconds response time", elapsed_time), elapsed_time);
     printf (_(". %s returns %s"), query_address, address);
-    printf ("|%s\n", fperfdata ("time", elapsed_time, "s", FALSE, 0, FALSE, 0, TRUE, 0, FALSE, 0));
+    if ((time_thresholds->warning != NULL) && (time_thresholds->critical != NULL)) {
+      printf ("|%s\n", fperfdata ("time", elapsed_time, "s",
+                                  TRUE, time_thresholds->warning->end,
+                                  TRUE, time_thresholds->critical->end,
+                                  TRUE, 0, FALSE, 0));
+    } else if ((time_thresholds->warning == NULL) && (time_thresholds->critical != NULL)) {
+      printf ("|%s\n", fperfdata ("time", elapsed_time, "s",
+                                  FALSE, 0,
+                                  TRUE, time_thresholds->critical->end,
+                                  TRUE, 0, FALSE, 0));
+    } else if ((time_thresholds->warning != NULL) && (time_thresholds->critical == NULL)) {
+      printf ("|%s\n", fperfdata ("time", elapsed_time, "s",
+                                  TRUE, time_thresholds->warning->end,
+                                  FALSE, 0,
+                                  TRUE, 0, FALSE, 0));
+    } else
+      printf ("|%s\n", fperfdata ("time", elapsed_time, "s", FALSE, 0, FALSE, 0, TRUE, 0, FALSE, 0));
   }
   else if (result == STATE_WARNING)
     printf (_("DNS WARNING - %s\n"),
@@ -474,7 +490,7 @@ print_help (void)
   printf (" -c, --critical=seconds\n");
   printf ("    %s\n", _("Return critical if elapsed time exceeds value. Default off"));
 
-  printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+  printf (UT_CONN_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
   printf (UT_SUPPORT);
 }

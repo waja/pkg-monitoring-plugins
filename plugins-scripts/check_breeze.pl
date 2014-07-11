@@ -1,10 +1,12 @@
-#!/usr/bin/perl -wT
+#!@PERL@ -w
 
 
 use strict;
 use Getopt::Long;
 use vars qw($opt_V $opt_h $opt_w $opt_c $opt_H $opt_C $PROGNAME);
-use lib utils.pm ;
+use FindBin;
+use lib "$FindBin::Bin";
+use lib '@libexecdir@';
 use utils qw(%ERRORS &print_revision &support &usage);
 
 $PROGNAME = "check_breeze";
@@ -12,7 +14,7 @@ $PROGNAME = "check_breeze";
 sub print_help ();
 sub print_usage ();
 
-$ENV{'PATH'}='';
+$ENV{'PATH'}='@TRUSTED_PATH@';
 $ENV{'BASH_ENV'}=''; 
 $ENV{'ENV'}='';
 

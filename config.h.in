@@ -1,4 +1,4 @@
-/* config.h.in.  Generated from configure.in by autoheader.  */
+/* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define if building universal (internal helper macro) */
 #undef AC_APPLE_UNIVERSAL_BUILD
@@ -273,6 +273,10 @@
    don't. */
 #undef HAVE_DECL_STRERROR_R
 
+/* Define to 1 if you have the declaration of `strncasecmp', and to 0 if you
+   don't. */
+#undef HAVE_DECL_STRNCASECMP
+
 /* Define to 1 if you have the declaration of `strndup', and to 0 if you
    don't. */
 #undef HAVE_DECL_STRNDUP
@@ -336,6 +340,15 @@
 /* Define to 1 if you have the `fs_stat_dev' function. */
 #undef HAVE_FS_STAT_DEV
 
+/* Define to 1 if you have the 'getegid' function. */
+#undef HAVE_GETEGID
+
+/* Define to 1 if you have the 'geteuid' function. */
+#undef HAVE_GETEUID
+
+/* Define to 1 if you have the 'getgid' function. */
+#undef HAVE_GETGID
+
 /* Define to 1 if you have the `gethostbyname' function. */
 #undef HAVE_GETHOSTBYNAME
 
@@ -354,6 +367,12 @@
 /* Define to 1 if you have the `getopt_long_only' function. */
 #undef HAVE_GETOPT_LONG_ONLY
 
+/* Define to 1 if you have the 'getresgid' function. */
+#undef HAVE_GETRESGID
+
+/* Define to 1 if you have the 'getresuid' function. */
+#undef HAVE_GETRESUID
+
 /* Define to 1 if you have the `getservbyname' function. */
 #undef HAVE_GETSERVBYNAME
 
@@ -362,6 +381,9 @@
 
 /* Define if gettimeofday is found */
 #undef HAVE_GETTIMEOFDAY
+
+/* Define to 1 if you have the 'getuid' function. */
+#undef HAVE_GETUID
 
 /* Define to 1 if you have the <gnutls/openssl.h> header file. */
 #undef HAVE_GNUTLS_OPENSSL_H
@@ -435,6 +457,10 @@
 
 /* Define to 1 if you have the `dl' library (-ldl). */
 #undef HAVE_LIBDL
+
+/* Define to 1 if you have the `freeradius-client' library
+   (-lfreeradius-client). */
+#undef HAVE_LIBFREERADIUS_CLIENT
 
 /* Define to 1 if you have the <libintl.h> header file. */
 #undef HAVE_LIBINTL_H
@@ -722,6 +748,9 @@
 
 /* Define to 1 if fdatasync is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_FDATASYNC
+
+/* Define to 1 if ffs is declared even after undefining macros. */
+#undef HAVE_RAW_DECL_FFS
 
 /* Define to 1 if ffsl is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_FFSL
@@ -1152,6 +1181,9 @@
 /* Define to 1 if stpncpy is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_STPNCPY
 
+/* Define to 1 if strcasecmp is declared even after undefining macros. */
+#undef HAVE_RAW_DECL_STRCASECMP
+
 /* Define to 1 if strcasestr is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_STRCASESTR
 
@@ -1163,6 +1195,9 @@
 
 /* Define to 1 if strerror_r is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_STRERROR_R
+
+/* Define to 1 if strncasecmp is declared even after undefining macros. */
+#undef HAVE_RAW_DECL_STRNCASECMP
 
 /* Define to 1 if strncat is declared even after undefining macros. */
 #undef HAVE_RAW_DECL_STRNCAT
@@ -1371,8 +1406,26 @@
 /* Define to 1 if you have the `select' function. */
 #undef HAVE_SELECT
 
+/* Define to 1 if you have the 'setegid' function. */
+#undef HAVE_SETEGID
+
 /* Define to 1 if you have the 'setenv' function. */
 #undef HAVE_SETENV
+
+/* Define to 1 if you have the 'seteuid' function. */
+#undef HAVE_SETEUID
+
+/* Define to 1 if you have the 'setregid' function. */
+#undef HAVE_SETREGID
+
+/* Define to 1 if you have the 'setresgid' function. */
+#undef HAVE_SETRESGID
+
+/* Define to 1 if you have the 'setresuid' function. */
+#undef HAVE_SETRESUID
+
+/* Define to 1 if you have the 'setreuid' function. */
+#undef HAVE_SETREUID
 
 /* Define to 1 if you have the `shutdown' function. */
 #undef HAVE_SHUTDOWN
@@ -1422,6 +1475,9 @@
 /* Define to 1 if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
 
+/* Define to 1 if you have the `strcasecmp' function. */
+#undef HAVE_STRCASECMP
+
 /* Define to 1 if you have the `strdup' function. */
 #undef HAVE_STRDUP
 
@@ -1433,6 +1489,9 @@
 
 /* Define to 1 if you have the <string.h> header file. */
 #undef HAVE_STRING_H
+
+/* Define to 1 if you have the `strncasecmp' function. */
+#undef HAVE_STRNCASECMP
 
 /* Define to 1 if you have the 'strndup' function. */
 #undef HAVE_STRNDUP
@@ -1652,6 +1711,9 @@
 
 /* Define to 1 if you have the <ws2tcpip.h> header file. */
 #undef HAVE_WS2TCPIP_H
+
+/* Define to 1 if you have the <wtsapi32.h> header file. */
+#undef HAVE_WTSAPI32_H
 
 /* Define to 1 if you have the <x509.h> header file. */
 #undef HAVE_X509_H

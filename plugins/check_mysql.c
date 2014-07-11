@@ -1,11 +1,11 @@
 /*****************************************************************************
 * 
-* Nagios check_mysql plugin
+* Monitoring check_mysql plugin
 * 
 * License: GPL
 * Copyright (c) 1999 Didi Rieder (adrieder@sbox.tu-graz.ac.at)
 * Copyright (c) 2000 Karl DeBisschop (kdebisschop@users.sourceforge.net)
-* Copyright (c) 1999-2011 Nagios Plugins Development Team
+* Copyright (c) 1999-2011 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -32,7 +32,7 @@
 
 const char *progname = "check_mysql";
 const char *copyright = "1999-2011";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #define SLAVERESULTSIZE 70
 
@@ -475,12 +475,6 @@ validate_arguments (void)
 {
 	if (db_user == NULL)
 		db_user = strdup("");
-
-	if (opt_file == NULL)
-		opt_file = strdup("");
-
-	if (opt_group == NULL)
-		opt_group = strdup("");
 
 	if (db_host == NULL)
 		db_host = strdup("");

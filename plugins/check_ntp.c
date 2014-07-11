@@ -1,10 +1,10 @@
 /*****************************************************************************
 * 
-* Nagios check_ntp plugin
+* Monitoring check_ntp plugin
 * 
 * License: GPL
 * Copyright (c) 2006 Sean Finney <seanius@seanius.net>
-* Copyright (c) 2006-2008 Nagios Plugins Development Team
+* Copyright (c) 2006-2008 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -32,7 +32,7 @@
 
 const char *progname = "check_ntp";
 const char *copyright = "2006-2008";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "netutils.h"
@@ -54,7 +54,9 @@ void print_help (void);
 void print_usage (void);
 
 /* number of times to perform each request to get a good average. */
+#ifndef AVG_NUM
 #define AVG_NUM 4
+#endif
 
 /* max size of control message data */
 #define MAX_CM_SIZE 468
@@ -480,7 +482,7 @@ double offset_request(const char *host, int *status){
 	} else {
 		/* finally, calculate the average offset */
 		for(i=0; i<servers[best_index].num_responses;i++){
-			avg_offset+=servers[best_index].offset[j];
+			avg_offset+=servers[best_index].offset[i];
 		}
 		avg_offset/=servers[best_index].num_responses;
 	}
@@ -515,13 +517,14 @@ setup_control_request(ntp_control_message *p, uint8_t opcode, uint16_t seq){
 double jitter_request(const char *host, int *status){
 	int conn=-1, i, npeers=0, num_candidates=0, syncsource_found=0;
 	int run=0, min_peer_sel=PEER_INCLUDED, num_selected=0, num_valid=0;
-	int peers_size=0, peer_offset=0;
+	int peers_size=0, peer_offset=0, bytes_read=0;
 	ntp_assoc_status_pair *peers=NULL;
 	ntp_control_message req;
 	const char *getvar = "jitter";
 	double rval = 0.0, jitter = -1.0;
 	char *startofvalue=NULL, *nptr=NULL;
 	void *tmp;
+	int ntp_cm_ints = sizeof(uint16_t) * 5 + sizeof(uint8_t) * 2;
 
 	/* Long-winded explanation:
 	 * Getting the jitter requires a number of steps:
@@ -606,7 +609,15 @@ double jitter_request(const char *host, int *status){
 
 				req.count = htons(MAX_CM_SIZE);
 				DBG(printf("recieving READVAR response...\n"));
-				read(conn, &req, SIZEOF_NTPCM(req));
+
+				/* cov-66524 - req.data not null terminated before usage. Also covers verifying struct was returned correctly*/
+				if ((bytes_read = read(conn, &req, SIZEOF_NTPCM(req))) == -1)
+					die(STATE_UNKNOWN, _("Cannot read from socket: %s"), strerror(errno));
+				if (bytes_read != ntp_cm_ints + req.count)
+					die(STATE_UNKNOWN, _("Invalid NTP response: %d bytes read does not equal %d plus %d data segment"), bytes_read, ntp_cm_ints, req.count); 
+				/* else null terminate */
+				strncpy(req.data[req.count], "\0", 1);
+
 				DBG(print_ntp_control_message(&req));
 
 				if(req.op&REM_ERROR && strstr(getvar, "jitter")) {
@@ -858,7 +869,7 @@ void print_help(void){
 	printf ("    %s\n", _("Warning threshold for jitter"));
 	printf (" %s\n", "-k, --jcrit=THRESHOLD");
 	printf ("    %s\n", _("Critical threshold for jitter"));
-	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_CONN_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 	printf (UT_VERBOSE);
 
 	printf("\n");

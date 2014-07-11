@@ -1,9 +1,9 @@
 /*****************************************************************************
 * 
-* Nagios check_dig plugin
+* Monitoring check_dig plugin
 * 
 * License: GPL
-* Copyright (c) 2002-2008 Nagios Plugins Development Team
+* Copyright (c) 2002-2008 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -34,7 +34,7 @@
 
 const char *progname = "check_dig";
 const char *copyright = "2002-2008";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "netutils.h"
@@ -48,6 +48,7 @@ void print_usage (void);
 
 #define UNDEFINED 0
 #define DEFAULT_PORT 53
+#define DEFAULT_TRIES 3
 
 char *query_address = NULL;
 char *record_type = "A";
@@ -57,6 +58,7 @@ char *dig_args = "";
 char *query_transport = "";
 int verbose = FALSE;
 int server_port = DEFAULT_PORT;
+int number_tries = DEFAULT_TRIES;
 double warning_interval = UNDEFINED;
 double critical_interval = UNDEFINED;
 struct timeval tv;
@@ -72,6 +74,7 @@ main (int argc, char **argv)
   long microsec;
   double elapsed_time;
   int result = STATE_UNKNOWN;
+  int timeout_interval_dig;
 
   setlocale (LC_ALL, "");
   bindtextdomain (PACKAGE, LOCALEDIR);
@@ -87,9 +90,12 @@ main (int argc, char **argv)
   if (process_arguments (argc, argv) == ERROR)
     usage_va(_("Could not parse arguments"));
 
+  /* dig applies the timeout to each try, so we need to work around this */
+  timeout_interval_dig = timeout_interval / number_tries + number_tries;
+
   /* get the command to run */
-  xasprintf (&command_line, "%s @%s -p %d %s -t %s %s %s",
-            PATH_TO_DIG, dns_server, server_port, query_address, record_type, dig_args, query_transport);
+  xasprintf (&command_line, "%s @%s -p %d %s -t %s %s %s +tries=%d +time=%d",
+            PATH_TO_DIG, dns_server, server_port, query_address, record_type, dig_args, query_transport, number_tries, timeout_interval_dig);
 
   alarm (timeout_interval);
   gettimeofday (&tv, NULL);
@@ -348,7 +354,7 @@ print_help (void)
   printf (" %s\n","-A, --dig-arguments=STRING");
   printf ("    %s\n",_("Pass STRING as argument(s) to dig"));
   printf (UT_WARN_CRIT);
-  printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+  printf (UT_CONN_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
   printf (UT_VERBOSE);
 
   printf ("\n");
