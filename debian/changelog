@@ -54,6 +54,8 @@ monitoring-plugins (2.0-1~1.gbp7616f8) UNRELEASED; urgency=medium
   * [b798a92] debian/bin/repack.sh: Fixing substitution
   * [73fc1e6] travis-ci: droping m-p branch workaround
   * [9083aa4] debian/bin/repack.sh: adjust for configure.ac
+  * [1b7ece7] debian/copyright: syncing license notice from upstream README
+  * [8d8e2d4] debian/copyright: Add missing gl/m4/*.m4
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 11 Jul 2014 21:03:12 +0200
 
