@@ -1,9 +1,9 @@
 /*****************************************************************************
 *
-* Nagios check_tcp plugin
+* Monitoring check_tcp plugin
 *
 * License: GPL
-* Copyright (c) 1999-2013 Nagios Plugins Development Team
+* Copyright (c) 1999-2013 Monitoring Plugins Development Team
 *
 * Description:
 *
@@ -30,15 +30,14 @@
 /* progname "check_tcp" changes depending on symlink called */
 char *progname;
 const char *copyright = "1999-2008";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
-
-#include <ctype.h>
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "netutils.h"
 #include "utils.h"
 #include "utils_tcp.h"
 
+#include <ctype.h>
 #include <sys/select.h>
 
 #ifdef HAVE_SSL
@@ -354,8 +353,13 @@ main (int argc, char **argv)
 			printf("Unexpected response from host/socket on ");
 		else
 			printf("%.3f second response time on ", elapsed_time);
-		if(server_address[0] != '/')
-			printf("port %d", server_port);
+		if(server_address[0] != '/') {
+			if (host_specified)
+				printf("%s port %d",
+				       server_address, server_port);
+			else
+				printf("port %d", server_port);
+		}
 		else
 			printf("socket %s", server_address);
 	}
@@ -670,7 +674,7 @@ print_help (void)
 
 	printf (UT_WARN_CRIT);
 
-	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_CONN_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
 	printf (UT_VERBOSE);
 

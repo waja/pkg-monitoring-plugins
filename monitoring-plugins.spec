@@ -15,15 +15,15 @@
 %define nphome /opt/nagios
 %define npgrp nagios
 
-Name: nagios-plugins
-Version: @PACKAGE_VERSION@
-Release: @RELEASE@
-Summary: Host/service/network monitoring program plugins for Nagios
+Name: monitoring-plugins
+Version: 2.0
+Release: 1
+Summary: Host/service/network monitoring program plugins for Nagios and compatible
 
 Group: Applications/System
 License: GPL
-URL: http://nagiosplug.sourceforge.net/
-Source0: http://dl.sf.net/sourceforge/nagiosplug/%{name}-%{version}.tar.gz
+URL: https://www.monitoring-plugins.org/
+Source0: https://www.monitoring-plugins.org/download/%{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 %define npdir %{_builddir}/%{name}-%{version}
@@ -34,11 +34,11 @@ Prefix: %{_prefix}
 Prefix: %{_prefix}/lib/nagios/plugins
 %endif
 Packager: Karl DeBisschop <kdebisschop@users.sourceforge.net>
-Vendor: Nagios Plugin Development Group
-Provides: nagios-plugins
+Vendor: Monitoring Plugins Development Team
+Provides: monitoring-plugins
 
 %{!?custom:%global custom 0}
-Obsoletes: nagios-plugins-custom nagios-plugins-extras
+Obsoletes: monitoring-plugins-custom monitoring-plugins-extras
 
 
 # Requires
@@ -105,8 +105,8 @@ network, and to email or page you when a problem arises or is
 resolved. Nagios runs on a unix server as a background or daemon
 process, intermittently running checks on various services that you
 specify. The actual service checks are performed by separate "plugin"
-programs which return the status of the checks to Nagios. This package
-contains those plugins.
+programs which return the status of the checks to the monitoring
+system. This package contains those plugins.
 
 
 %prep
@@ -163,8 +163,6 @@ fi
 %install
 rm -rf $RPM_BUILD_ROOT
 make AM_INSTALL_PROGRAM_FLAGS="" DESTDIR=${RPM_BUILD_ROOT} install
-build-aux/install-sh -c  -d ${RPM_BUILD_ROOT}%{_sysconfdir}
-build-aux/install-sh -c  -m 664 command.cfg ${RPM_BUILD_ROOT}%{_sysconfdir}
 %find_lang %{name}
 echo "%defattr(755,%{npusr},%{npgrp})" >> %{name}.lang
 comm -13 %{npdir}/ls-plugins-before %{npdir}/ls-plugins-after | egrep -v "\.o$|^\." | gawk -v libexecdir=%{_libexecdir} '{printf( "%s/%s\n", libexecdir, $0);}' >> %{name}.lang
@@ -174,6 +172,10 @@ echo "%defattr(755,%{npusr},%{npgrp})" >> %{name}.lang
 comm -13 %{npdir}/ls-plugins-scripts-before %{npdir}/ls-plugins-scripts-after | egrep -v "\.o$|^\." | gawk -v libexecdir=%{_libexecdir} '{printf( "%s/%s\n", libexecdir, $0);}' >> %{name}.lang
 echo "%{_libexecdir}/utils.pm" >> %{name}.lang
 echo "%{_libexecdir}/utils.sh" >> %{name}.lang
+echo "%{_libexecdir}/check_ldaps" >> %{name}.lang
+
+sed -i '/libnpcommon/d' %{name}.lang
+sed -i '/monitoring-plugins.mo/d' %{name}.lang
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -184,8 +186,8 @@ rm -rf $RPM_BUILD_ROOT
 %doc CODING COPYING FAQ INSTALL LEGAL README REQUIREMENTS SUPPORT THANKS
 %doc ChangeLog command.cfg
 %if ! %{isaix}
-%{_datadir}/locale/de/LC_MESSAGES/nagios-plugins.mo
-%{_datadir}/locale/fr/LC_MESSAGES/nagios-plugins.mo
+%{_datadir}/locale/de/LC_MESSAGES/monitoring-plugins.mo
+%{_datadir}/locale/fr/LC_MESSAGES/monitoring-plugins.mo
 %endif
 
 %changelog

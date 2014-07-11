@@ -1,9 +1,11 @@
-#!/usr/bin/perl -wT
+#!@PERL@ -w
 #
 
 
 use strict;
-use lib utils.pm;
+use FindBin;
+use lib "$FindBin::Bin";
+use lib '@libexecdir@';
 use utils qw($TIMEOUT %ERRORS &print_revision &support);
 use vars qw($PROGNAME);
 use Getopt::Long;
@@ -15,7 +17,7 @@ $PROGNAME = "check_wave";
 sub print_help ();
 sub print_usage ();
 
-$ENV{'PATH'}='';
+$ENV{'PATH'}='@TRUSTED_PATH@';
 $ENV{'BASH_ENV'}='';
 $ENV{'ENV'}='';
 

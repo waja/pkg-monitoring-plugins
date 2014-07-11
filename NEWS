@@ -1,5 +1,55 @@
 This file documents the major additions and syntax changes between releases.
 
+2.0 11th July 2014
+	ENHANCEMENTS
+	check_mailq now supports auto detection of qmail, postfix, exim and nullmailer with
+	  fallback to sendmail
+	check_ide_smart now defaults to plugin output, original output appended with -v
+	Extra-Opts are now enabled by default, see:
+	  https://www.monitoring-plugins.org/doc/extra-opts.html
+	check_swap now supports a configurable state when there is no swap
+	check_radius now supports the FreeRADIUS Client library
+	New check_mysql_query -f option to specify a client options file
+	New check_mysql_query -g option to specify a client options group
+	Add performance data to check_mysql_query
+	New check_file_age -i/--ignore-missing option to return OK on nonexistent files
+	Make check_ping, check_users, and check_disk work on Windows
+	New check_ssh -P option to specify the expected SSH protocol version
+	check_dns now emits the warning and critical thresholds with the performance data
+
+	FIXES
+	Don't let e.g. check_http's -C option reset SSL version if e.g. -S 1 -C 5 is specified
+	Don't have check_http's -N option expect an argument
+	check_ide_smart could disable offline auto tests but could not re-enable them.
+	  For this reason all SMART command modes have been disabled.
+	check_dig: fix wrong IPv6 arguments order (Stéphane Bortzmeyer)
+	check_dig: make sure not to give up too early when a timeout is specified with -t
+	check_log: don't stumble over log lines that include a "%" character
+	check_nt: add UPTIME to perfdata
+	Handle SNMPv3 noAuthNoPriv properly with check_snmp
+	Fix compilation with GnuTLS
+
+	WARNINGS
+	New default installation prefix: /usr/local instead of /usr/local/nagios
+	check_snmp now evaluates negative values properly, which means it might return CRITICAL
+	  in cases where it used to return OK. If this is undesired, the warning/critical
+	  threshold(s) must be fixed by specifying e.g. ~:100 instead of 100
+	check_procs now ignores its parent process to avoid unexpected results when invoked via
+	  certain shells
+	utils.sh no longer defines ECH
+	check_ide_smart -q/--quiet and -n/--nagios (Nagios-compatible output) are now deprecated
+	  but accepted for backward-compatibility
+	check_ide_smart -0/--auto-off, -1/--auto-on and -i/--immediate: options have
+	  been disabled because they were broken
+	State retention: the NAGIOS_PLUGIN_STATE_DIRECTORY environment variable has been
+	  renamed MP_STATE_PATH. The old variable will continue to work in v2.0.x
+	Add the UID of the invoking user to the state retention file path. This helps solving
+	  permission issues when different users run the same plugin
+	check_swap used to allow returning OK on a system without swap when only percent thresholds
+	  were used. This is no longer the case and one must now use -n/--no-swap=<state>
+	The Perl and Shell plugins now use the PATH specified via ./configure's --trusted-path
+	  option, or "/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin" by default
+
 1.5 2nd October 2013
 	ENHANCEMENTS
 	New check_dbi plugin for checking an (SQL) database using DBI
@@ -46,6 +96,7 @@ This file documents the major additions and syntax changes between releases.
 	WARNINGS
 	check_http behaviour of -k/--header changed since it does not seperate multiple headers by semicolons anymore. Use multiple -k switches instead.
 	check_http's --proxy_authorization option is now called --proxy-authorization (it was always documented this way)
+	The contrib directory has been removed from this distribution
 
 1.4.16 27th June 2012
 	ENHANCEMENTS
@@ -287,7 +338,7 @@ This file documents the major additions and syntax changes between releases.
 	check_icmp fix for *BSD when running for long time
 	check_ping times out 1 second quicker if host is unreachable
 	Root plugins installed with world executable
-	check_sybase from contrib now maintained in NagiosExchange
+	check_sybase from contrib now maintained in MonitoringExchange
 	--with-nagios-user/group reinstated ./configure option
 	New --without-world-permissions ./configure option
 
@@ -311,7 +362,7 @@ This file documents the major additions and syntax changes between releases.
 	New C based check_ntp. The perl version is now deprecated.
 	New check_apt plugin
 	Notice: plugins in contrib/ will start to be removed from this distribution.
-	  Please check at http://www.nagiosexchange.org for contributed plugins
+	  Please check at http://www.monitoringexchange.org for contributed plugins
 	Major bug fixes to check_disk where values were incorrectly calculated and alerted on.
 	check_udp2 removed. check_udp is now linked to check_tcp.c
 	check_mailq now errors if the sub-program run returns non-zero return code. This would appear

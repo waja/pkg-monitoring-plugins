@@ -1,10 +1,10 @@
 /*****************************************************************************
 * 
-* Nagios plugins net utilities include file
+* Monitoring Plugins net utilities include file
 * 
 * License: GPL
 * Copyright (c) 1999 Ethan Galstad (nagios@nagios.org)
-* Copyright (c) 2003-2007 Nagios Plugins Development Team
+* Copyright (c) 2003-2007 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -40,8 +40,8 @@
 #ifdef HAVE_SYS_UN_H
 # include <sys/un.h>
 # ifndef UNIX_PATH_MAX
-   /* linux uses this, on sun it's hard-coded at 108 without a define */
-#  define UNIX_PATH_MAX 108
+   /* linux uses this, on sun it's hard-coded at 108 without a define, on BSD at 104 */
+#  define UNIX_PATH_MAX 104
 # endif /* UNIX_PATH_MAX */
 #endif /* HAVE_SYS_UN_H */
 

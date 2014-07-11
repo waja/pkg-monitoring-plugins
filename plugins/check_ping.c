@@ -1,9 +1,9 @@
 /*****************************************************************************
 * 
-* Nagios check_ping plugin
+* Monitoring check_ping plugin
 * 
 * License: GPL
-* Copyright (c) 2000-2007 Nagios Plugins Development Team
+* Copyright (c) 2000-2007 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -30,7 +30,7 @@
 
 const char *progname = "check_ping";
 const char *copyright = "2000-2007";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "netutils.h"
@@ -458,7 +458,8 @@ run_ping (const char *cmd, const char *addr)
 			 (sscanf(buf,"%*d packets transmitted, %*d received, %d%% loss, time%n",&pl,&match) && match) ||
 			 (sscanf(buf,"%*d packets transmitted, %*d received, %d%% packet loss, time%n",&pl,&match) && match) ||
 			 (sscanf(buf,"%*d packets transmitted, %*d received, +%*d errors, %d%% packet loss%n",&pl,&match) && match) ||
-			 (sscanf(buf,"%*d packets transmitted %*d received, +%*d errors, %d%% packet loss%n",&pl,&match) && match)
+			 (sscanf(buf,"%*d packets transmitted %*d received, +%*d errors, %d%% packet loss%n",&pl,&match) && match) ||
+			 (sscanf(buf,"%*[^(](%d%% %*[^)])%n",&pl,&match) && match)
 			 )
 			continue;
 
@@ -471,7 +472,9 @@ run_ping (const char *cmd, const char *addr)
 				 (sscanf(buf,"round-trip min/avg/max/std-dev = %*f/%f/%*f/%*f%n",&rta,&match) && match) ||
 				 (sscanf(buf,"round-trip (ms) min/avg/max = %*f/%f/%*f%n",&rta,&match) && match) ||
 				 (sscanf(buf,"round-trip (ms) min/avg/max/stddev = %*f/%f/%*f/%*f%n",&rta,&match) && match) ||
-				 (sscanf(buf,"rtt min/avg/max/mdev = %*f/%f/%*f/%*f ms%n",&rta,&match) && match))
+				 (sscanf(buf,"rtt min/avg/max/mdev = %*f/%f/%*f/%*f ms%n",&rta,&match) && match) ||
+				 (sscanf(buf, "%*[^=] = %*fms, %*[^=] = %*fms, %*[^=] = %fms%n", &rta, &match) && match)
+				 )
 			continue;
 	}
 
@@ -482,7 +485,11 @@ run_ping (const char *cmd, const char *addr)
 	/* check stderr, setting at least WARNING if there is output here */
 	/* Add warning into warn_text */
 	while (fgets (buf, MAX_INPUT_BUFFER - 1, child_stderr)) {
-		if (! strstr(buf,"WARNING - no SO_TIMESTAMP support, falling back to SIOCGSTAMP")) {
+		if (
+			! strstr(buf,"WARNING - no SO_TIMESTAMP support, falling back to SIOCGSTAMP")
+			&& ! strstr(buf,"Warning: time of day goes back")
+
+		) {
 			if (verbose >= 3) {
 				printf("Got stderr: %s", buf);
 			}
@@ -581,7 +588,7 @@ print_help (void)
   printf (" %s\n", "-L, --link");
   printf ("    %s\n", _("show HTML in the plugin output (obsoleted by urlize)"));
 
-	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_CONN_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 
   printf ("\n");
 	printf ("%s\n", _("THRESHOLD is <rta>,<pl>% where <rta> is the round trip average travel"));

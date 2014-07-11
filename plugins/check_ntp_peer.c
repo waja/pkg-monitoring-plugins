@@ -1,10 +1,10 @@
 /*****************************************************************************
 * 
-* Nagios check_ntp_peer plugin
+* Monitoring check_ntp_peer plugin
 * 
 * License: GPL
 * Copyright (c) 2006 Sean Finney <seanius@seanius.net>
-* Copyright (c) 2006-2008 Nagios Plugins Development Team
+* Copyright (c) 2006-2008 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -37,7 +37,7 @@
 
 const char *progname = "check_ntp_peer";
 const char *copyright = "2006-2008";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "netutils.h"
@@ -686,7 +686,7 @@ void print_help(void){
 	printf ("    %s\n", _("Warning threshold for number of usable time sources (\"truechimers\")"));
 	printf (" %s\n", "-n, --tcrit=THRESHOLD");
 	printf ("    %s\n", _("Critical threshold for number of usable time sources (\"truechimers\")"));
-	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_CONN_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 	printf (UT_VERBOSE);
 
 	printf("\n");

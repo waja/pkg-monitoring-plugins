@@ -1,9 +1,9 @@
 /*****************************************************************************
 * 
-* Nagios check_icmp plugin
+* Monitoring check_icmp plugin
 * 
 * License: GPL
-* Copyright (c) 2005-2008 Nagios Plugins Development Team
+* Copyright (c) 2005-2008 Monitoring Plugins Development Team
 * Original Author : Andreas Ericsson <ae@op5.se>
 * 
 * Description:
@@ -40,9 +40,9 @@
 /* char *progname = "check_icmp"; */
 char *progname;
 const char *copyright = "2005-2008";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
-/** nagios plugins basic includes */
+/** Monitoring Plugins basic includes */
 #include "common.h"
 #include "netutils.h"
 #include "utils.h"
@@ -382,9 +382,6 @@ main(int argc, char **argv)
 	setlocale (LC_ALL, "");
 	bindtextdomain (PACKAGE, LOCALEDIR);
 	textdomain (PACKAGE);
-
-	/* print a helpful error message if geteuid != 0 */
-	np_warn_if_not_root();
 
 	/* we only need to be setsuid when we get the sockets, so do
 	 * that before pointer magic (esp. on network data) */

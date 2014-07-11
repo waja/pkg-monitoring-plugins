@@ -1,10 +1,10 @@
 /*****************************************************************************
 * 
-* Nagios check_nt plugin
+* Monitoring check_nt plugin
 * 
 * License: GPL
 * Copyright (c) 2000-2002 Yves Rubin (rubiyz@yahoo.com)
-* Copyright (c) 2003-2007 Nagios Plugins Development Team
+* Copyright (c) 2003-2007 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -34,7 +34,7 @@
 
 const char *progname = "check_nt";
 const char *copyright = "2000-2007";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "netutils.h"
@@ -203,7 +203,7 @@ int main(int argc, char **argv){
 		updays = uptime / 86400;
 		uphours = (uptime % 86400) / 3600;
 		upminutes = ((uptime % 86400) % 3600) / 60;
-		xasprintf(&output_message,_("System Uptime - %u day(s) %u hour(s) %u minute(s)"),updays,uphours, upminutes);
+		xasprintf(&output_message,_("System Uptime - %u day(s) %u hour(s) %u minute(s)|uptime=%lu"), updays, uphours, upminutes, uptime);
 		if (check_critical_value==TRUE && uptime <= critical_value)
 			return_code=STATE_CRITICAL;
 		else if (check_warning_value==TRUE && uptime <= warning_value)
@@ -293,10 +293,10 @@ int main(int argc, char **argv){
 
 		/* Divisor should be 1048567, not 3044515, as we are measuring "Commit Charge" here,
 		which equals RAM + Pagefiles. */
-		xasprintf(&output_message,_("Memory usage: total:%.2f Mb - used: %.2f Mb (%.0f%%) - free: %.2f Mb (%.0f%%)"),
+		xasprintf(&output_message,_("Memory usage: total:%.2f MB - used: %.2f MB (%.0f%%) - free: %.2f MB (%.0f%%)"),
 		  mem_commitLimit / 1048567, mem_commitByte / 1048567, percent_used_space,
 		  (mem_commitLimit - mem_commitByte) / 1048567, (mem_commitLimit - mem_commitByte) / mem_commitLimit * 100);
-		xasprintf(&perfdata,_("'Memory usage'=%.2fMb;%.2f;%.2f;0.00;%.2f"), mem_commitByte / 1048567,
+		xasprintf(&perfdata,_("'Memory usage'=%.2fMB;%.2f;%.2f;0.00;%.2f"), mem_commitByte / 1048567,
 		  warning_used_space / 1048567, critical_used_space / 1048567, mem_commitLimit / 1048567);
 
 		return_code=STATE_OK;
@@ -750,7 +750,7 @@ void print_help(void)
 	printf ("  %s\n", _("The purpose of this is to be run from command line to determine what instances"));
 	printf ("  %s\n", _(" are available for monitoring without having to log onto the Windows server"));
 	printf ("  %s\n", _("  to run Perfmon directly."));
-	printf ("  %s\n", _("It can also be used in scripts that automatically create Nagios service"));
+	printf ("  %s\n", _("It can also be used in scripts that automatically create the monitoring service"));
 	printf ("  %s\n", _(" configuration files."));
 	printf ("  %s\n", _("Some examples:"));
 	printf ("  %s\n\n", _("check_nt -H 192.168.1.1 -p 1248 -v INSTANCES -l Process"));

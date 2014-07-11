@@ -83,6 +83,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
 	$(top_srcdir)/gl/m4/gnulib-common.m4 \
 	$(top_srcdir)/gl/m4/gnulib-comp.m4 \
 	$(top_srcdir)/gl/m4/hostent.m4 $(top_srcdir)/gl/m4/iconv.m4 \
+	$(top_srcdir)/gl/m4/idpriv.m4 \
 	$(top_srcdir)/gl/m4/include_next.m4 \
 	$(top_srcdir)/gl/m4/inet_ntop.m4 \
 	$(top_srcdir)/gl/m4/intlmacosx.m4 \
@@ -132,11 +133,12 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
 	$(top_srcdir)/gl/m4/stdalign.m4 $(top_srcdir)/gl/m4/stdbool.m4 \
 	$(top_srcdir)/gl/m4/stddef_h.m4 $(top_srcdir)/gl/m4/stdint.m4 \
 	$(top_srcdir)/gl/m4/stdint_h.m4 $(top_srcdir)/gl/m4/stdio_h.m4 \
-	$(top_srcdir)/gl/m4/stdlib_h.m4 \
+	$(top_srcdir)/gl/m4/stdlib_h.m4 $(top_srcdir)/gl/m4/strcase.m4 \
 	$(top_srcdir)/gl/m4/strerror.m4 \
-	$(top_srcdir)/gl/m4/string_h.m4 $(top_srcdir)/gl/m4/strndup.m4 \
-	$(top_srcdir)/gl/m4/strnlen.m4 $(top_srcdir)/gl/m4/strsep.m4 \
-	$(top_srcdir)/gl/m4/strstr.m4 \
+	$(top_srcdir)/gl/m4/string_h.m4 \
+	$(top_srcdir)/gl/m4/strings_h.m4 \
+	$(top_srcdir)/gl/m4/strndup.m4 $(top_srcdir)/gl/m4/strnlen.m4 \
+	$(top_srcdir)/gl/m4/strsep.m4 $(top_srcdir)/gl/m4/strstr.m4 \
 	$(top_srcdir)/gl/m4/sys_socket_h.m4 \
 	$(top_srcdir)/gl/m4/sys_types_h.m4 \
 	$(top_srcdir)/gl/m4/sys_uio_h.m4 \
@@ -151,7 +153,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
 	$(top_srcdir)/gl/m4/wcrtomb.m4 $(top_srcdir)/gl/m4/wctype_h.m4 \
 	$(top_srcdir)/gl/m4/wint_t.m4 $(top_srcdir)/gl/m4/xalloc.m4 \
 	$(top_srcdir)/gl/m4/xsize.m4 $(top_srcdir)/gl/m4/xstrndup.m4 \
-	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.in
+	$(top_srcdir)/acinclude.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
@@ -329,6 +331,7 @@ GNULIB_FCLOSE = @GNULIB_FCLOSE@
 GNULIB_FDATASYNC = @GNULIB_FDATASYNC@
 GNULIB_FDOPEN = @GNULIB_FDOPEN@
 GNULIB_FFLUSH = @GNULIB_FFLUSH@
+GNULIB_FFS = @GNULIB_FFS@
 GNULIB_FFSL = @GNULIB_FFSL@
 GNULIB_FFSLL = @GNULIB_FFSLL@
 GNULIB_FGETC = @GNULIB_FGETC@
@@ -694,6 +697,7 @@ HAVE_DECL_SNPRINTF = @HAVE_DECL_SNPRINTF@
 HAVE_DECL_SQRTL = @HAVE_DECL_SQRTL@
 HAVE_DECL_STRDUP = @HAVE_DECL_STRDUP@
 HAVE_DECL_STRERROR_R = @HAVE_DECL_STRERROR_R@
+HAVE_DECL_STRNCASECMP = @HAVE_DECL_STRNCASECMP@
 HAVE_DECL_STRNDUP = @HAVE_DECL_STRNDUP@
 HAVE_DECL_STRNLEN = @HAVE_DECL_STRNLEN@
 HAVE_DECL_STRSIGNAL = @HAVE_DECL_STRSIGNAL@
@@ -723,6 +727,7 @@ HAVE_FCHDIR = @HAVE_FCHDIR@
 HAVE_FCHOWNAT = @HAVE_FCHOWNAT@
 HAVE_FDATASYNC = @HAVE_FDATASYNC@
 HAVE_FEATURES_H = @HAVE_FEATURES_H@
+HAVE_FFS = @HAVE_FFS@
 HAVE_FFSL = @HAVE_FFSL@
 HAVE_FFSLL = @HAVE_FFSLL@
 HAVE_FMA = @HAVE_FMA@
@@ -834,8 +839,10 @@ HAVE_SQRTL = @HAVE_SQRTL@
 HAVE_STDINT_H = @HAVE_STDINT_H@
 HAVE_STPCPY = @HAVE_STPCPY@
 HAVE_STPNCPY = @HAVE_STPNCPY@
+HAVE_STRCASECMP = @HAVE_STRCASECMP@
 HAVE_STRCASESTR = @HAVE_STRCASESTR@
 HAVE_STRCHRNUL = @HAVE_STRCHRNUL@
+HAVE_STRINGS_H = @HAVE_STRINGS_H@
 HAVE_STRPBRK = @HAVE_STRPBRK@
 HAVE_STRPTIME = @HAVE_STRPTIME@
 HAVE_STRSEP = @HAVE_STRSEP@
@@ -926,7 +933,6 @@ LD = @LD@
 LDAPINCLUDE = @LDAPINCLUDE@
 LDAPLIBS = @LDAPLIBS@
 LDFLAGS = @LDFLAGS@
-LIBGNUTLS_CONFIG = @LIBGNUTLS_CONFIG@
 LIBGNU_LIBDEPS = @LIBGNU_LIBDEPS@
 LIBGNU_LTLIBDEPS = @LIBGNU_LTLIBDEPS@
 LIBICONV = @LIBICONV@
@@ -952,6 +958,7 @@ LTLIBMULTITHREAD = @LTLIBMULTITHREAD@
 LTLIBOBJS = @LTLIBOBJS@
 LTLIBPTH = @LTLIBPTH@
 LTLIBTHREAD = @LTLIBTHREAD@
+MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MATHLIBS = @MATHLIBS@
@@ -977,6 +984,7 @@ NEXT_AS_FIRST_DIRECTIVE_STDDEF_H = @NEXT_AS_FIRST_DIRECTIVE_STDDEF_H@
 NEXT_AS_FIRST_DIRECTIVE_STDINT_H = @NEXT_AS_FIRST_DIRECTIVE_STDINT_H@
 NEXT_AS_FIRST_DIRECTIVE_STDIO_H = @NEXT_AS_FIRST_DIRECTIVE_STDIO_H@
 NEXT_AS_FIRST_DIRECTIVE_STDLIB_H = @NEXT_AS_FIRST_DIRECTIVE_STDLIB_H@
+NEXT_AS_FIRST_DIRECTIVE_STRINGS_H = @NEXT_AS_FIRST_DIRECTIVE_STRINGS_H@
 NEXT_AS_FIRST_DIRECTIVE_STRING_H = @NEXT_AS_FIRST_DIRECTIVE_STRING_H@
 NEXT_AS_FIRST_DIRECTIVE_SYS_SOCKET_H = @NEXT_AS_FIRST_DIRECTIVE_SYS_SOCKET_H@
 NEXT_AS_FIRST_DIRECTIVE_SYS_TYPES_H = @NEXT_AS_FIRST_DIRECTIVE_SYS_TYPES_H@
@@ -997,6 +1005,7 @@ NEXT_STDDEF_H = @NEXT_STDDEF_H@
 NEXT_STDINT_H = @NEXT_STDINT_H@
 NEXT_STDIO_H = @NEXT_STDIO_H@
 NEXT_STDLIB_H = @NEXT_STDLIB_H@
+NEXT_STRINGS_H = @NEXT_STRINGS_H@
 NEXT_STRING_H = @NEXT_STRING_H@
 NEXT_SYS_SOCKET_H = @NEXT_SYS_SOCKET_H@
 NEXT_SYS_TYPES_H = @NEXT_SYS_TYPES_H@
@@ -1056,7 +1065,6 @@ PRAGMA_SYSTEM_HEADER = @PRAGMA_SYSTEM_HEADER@
 PST3CFLAGS = @PST3CFLAGS@
 PTHREAD_H_DEFINES_STRUCT_TIMESPEC = @PTHREAD_H_DEFINES_STRUCT_TIMESPEC@
 PTRDIFF_T_SUFFIX = @PTRDIFF_T_SUFFIX@
-PYTHON = @PYTHON@
 RADIUSLIBS = @RADIUSLIBS@
 RANLIB = @RANLIB@
 RELEASE = @RELEASE@
@@ -1248,7 +1256,6 @@ SCRIPT_TEST = @SCRIPT_TEST@
 SED = @SED@
 SERVENT_LIB = @SERVENT_LIB@
 SET_MAKE = @SET_MAKE@
-SH = @SH@
 SHELL = @SHELL@
 SIG_ATOMIC_T_SUFFIX = @SIG_ATOMIC_T_SUFFIX@
 SIZE_T_SUFFIX = @SIZE_T_SUFFIX@
@@ -1272,6 +1279,7 @@ WARRANTY = @WARRANTY@
 WCHAR_T_SUFFIX = @WCHAR_T_SUFFIX@
 WINDOWS_64_BIT_OFF_T = @WINDOWS_64_BIT_OFF_T@
 WINT_T_SUFFIX = @WINT_T_SUFFIX@
+WTSAPI32LIBS = @WTSAPI32LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
@@ -1343,7 +1351,7 @@ all: all-am
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+$(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ $(srcdir)/Makefile.am  $(am__configure_deps)
 	@for dep in $?; do \
 	  case '$(am__configure_deps)' in \
 	    *$$dep*) \
@@ -1368,9 +1376,9 @@ Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 $(top_builddir)/config.status: $(top_srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 
-$(top_srcdir)/configure:  $(am__configure_deps)
+$(top_srcdir)/configure: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
-$(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+$(ACLOCAL_M4): @MAINTAINER_MODE_TRUE@ $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
 

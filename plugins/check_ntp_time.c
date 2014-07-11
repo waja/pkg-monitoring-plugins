@@ -1,10 +1,10 @@
 /*****************************************************************************
 * 
-* Nagios check_ntp_time plugin
+* Monitoring check_ntp_time plugin
 * 
 * License: GPL
 * Copyright (c) 2006 Sean Finney <seanius@seanius.net>
-* Copyright (c) 2006-2008 Nagios Plugins Development Team
+* Copyright (c) 2006-2008 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -36,7 +36,7 @@
 
 const char *progname = "check_ntp_time";
 const char *copyright = "2006-2008";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "netutils.h"
@@ -55,7 +55,9 @@ void print_help (void);
 void print_usage (void);
 
 /* number of times to perform each request to get a good average. */
+#ifndef AVG_NUM
 #define AVG_NUM 4
+#endif
 
 /* max size of control message data */
 #define MAX_CM_SIZE 468
@@ -426,7 +428,7 @@ double offset_request(const char *host, int *status){
 	} else {
 		/* finally, calculate the average offset */
 		for(i=0; i<servers[best_index].num_responses;i++){
-			avg_offset+=servers[best_index].offset[j];
+			avg_offset+=servers[best_index].offset[i];
 		}
 		avg_offset/=servers[best_index].num_responses;
 	}
@@ -614,7 +616,7 @@ void print_help(void){
 	printf ("    %s\n", _("Offset to result in warning status (seconds)"));
 	printf (" %s\n", "-c, --critical=THRESHOLD");
 	printf ("    %s\n", _("Offset to result in critical status (seconds)"));
-	printf (UT_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+	printf (UT_CONN_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
 	printf (UT_VERBOSE);
 
 	printf("\n");

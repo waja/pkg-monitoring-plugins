@@ -7,7 +7,7 @@
 # Country Name (2 letter code) [AU]:UK
 # State or Province Name (full name) [Some-State]:Derbyshire
 # Locality Name (eg, city) []:Belper
-# Organization Name (eg, company) [Internet Widgits Pty Ltd]:Nagios Plugins
+# Organization Name (eg, company) [Internet Widgits Pty Ltd]:Monitoring Plugins
 # Organizational Unit Name (eg, section) []:
 # Common Name (eg, YOUR name) []:Ton Voon
 # Email Address []:tonvoon@mac.com
@@ -20,8 +20,9 @@ use FindBin qw($Bin);
 my $common_tests = 70;
 my $ssl_only_tests = 8;
 # Check that all dependent modules are available
+eval "use HTTP::Daemon 6.01;";
+plan skip_all => 'HTTP::Daemon >= 6.01 required' if $@;
 eval {
-	require HTTP::Daemon;
 	require HTTP::Status;
 	require HTTP::Response;
 };
@@ -392,27 +393,21 @@ sub run_common_tests {
 		skip "This doesn't seems to work all the time", 1 unless ($ENV{HTTP_EXTERNAL});
 		$cmd = "$command -f follow -u /redir_external -t 5";
 		eval {
-			local $SIG{ALRM} = sub { die "alarm\n" };
-			alarm(2);
-			$result = NPTest->testCmd( $cmd );
-			alarm(0); };
-		is( $@, "alarm\n", $cmd );
+			$result = NPTest->testCmd( $cmd, 2 );
+		};
+		like( $@, "/timeout in command: $cmd/", $cmd );
 	}
 
 	$cmd = "$command -u /timeout -t 5";
 	eval {
-		local $SIG{ALRM} = sub { die "alarm\n" };
-		alarm(2);
-		$result = NPTest->testCmd( $cmd );
-		alarm(0); };
-	is( $@, "alarm\n", $cmd );
+		$result = NPTest->testCmd( $cmd, 2 );
+	};
+	like( $@, "/timeout in command: $cmd/", $cmd );
 
 	$cmd = "$command -f follow -u /redir_timeout -t 2";
 	eval {
-		local $SIG{ALRM} = sub { die "alarm\n" };
-		alarm(5);
-		$result = NPTest->testCmd( $cmd );
-		alarm(0); };
-	isnt( $@, "alarm\n", $cmd );
+		$result = NPTest->testCmd( $cmd, 5 );
+	};
+	is( $@, "", $cmd );
 
 }

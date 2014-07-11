@@ -1,10 +1,10 @@
 /*****************************************************************************
 * 
-* Nagios check_dhcp plugin
+* Monitoring check_dhcp plugin
 * 
 * License: GPL
 * Copyright (c) 2001-2004 Ethan Galstad (nagios@nagios.org)
-* Copyright (c) 2001-2007 Nagios Plugin Development Team
+* Copyright (c) 2001-2007 Monitoring Plugins Development Team
 * 
 * Description:
 * 
@@ -35,7 +35,7 @@
 
 const char *progname = "check_dhcp";
 const char *copyright = "2001-2007";
-const char *email = "nagiosplug-devel@lists.sourceforge.net";
+const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "netutils.h"
@@ -269,9 +269,6 @@ int main(int argc, char **argv){
 	if(process_arguments(argc,argv)!=OK){
 		usage4 (_("Could not parse arguments"));
 		}
-
-	/* this plugin almost certainly needs root permissions. */
-	np_warn_if_not_root();
 
 	/* create socket for DHCP communications */
 	dhcp_socket=create_dhcp_socket();
@@ -837,7 +834,7 @@ int add_dhcp_offer(struct in_addr source,dhcp_packet *offer_packet){
 		return ERROR;
 
 	/* process all DHCP options present in the packet */
-	for(x=4;x<MAX_DHCP_OPTIONS_LENGTH;){
+	for(x=4;x<MAX_DHCP_OPTIONS_LENGTH-1;){
 
 		if((int)offer_packet->options[x]==-1)
 			break;
