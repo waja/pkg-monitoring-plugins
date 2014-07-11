@@ -1,4 +1,4 @@
-monitoring-plugins (2.0-1~1.gbp7616f8) UNRELEASED; urgency=medium
+monitoring-plugins (2.0-1) unstable; urgency=medium
 
   * [0841b5c] Imported Upstream version 2.0
     (Closes: #496307, #489974, #489974, #738042)
@@ -57,7 +57,7 @@ monitoring-plugins (2.0-1~1.gbp7616f8) UNRELEASED; urgency=medium
   * [1b7ece7] debian/copyright: syncing license notice from upstream README
   * [8d8e2d4] debian/copyright: Add missing gl/m4/*.m4
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 11 Jul 2014 21:03:12 +0200
+ -- Jan Wagner <waja@cyconet.org>  Fri, 11 Jul 2014 23:40:41 +0200
 
 nagios-plugins (1.5-3) unstable; urgency=medium
 
