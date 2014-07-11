@@ -1,6 +1,6 @@
-monitoring-plugins (1.5+git20140623-1~2.gbpd4ad20) UNRELEASED; urgency=medium
+monitoring-plugins (2.0-1~1.gbp7616f8) UNRELEASED; urgency=medium
 
-  * New upstream git snapshot
+  * [0841b5c] Imported Upstream version 2.0
     (Closes: #496307, #489974, #489974, #738042)
   * [49be365] Starting transition toward monitoring-plugins with debian/control
   * [a90fffd] Fix install path in dependency helper
@@ -51,8 +51,11 @@ monitoring-plugins (1.5+git20140623-1~2.gbpd4ad20) UNRELEASED; urgency=medium
   * [e7c0c6f] Adjust Break and Replace version in debian/control
   * [aeed4b2] Adjust VCS-Headers to new package name
   * [e789ea3] NEWS.Debian: Add a hint about negative values of check_snmp
+  * [b798a92] debian/bin/repack.sh: Fixing substitution
+  * [73fc1e6] travis-ci: droping m-p branch workaround
+  * [9083aa4] debian/bin/repack.sh: adjust for configure.ac
 
- -- Jan Wagner <waja@cyconet.org>  Tue, 24 Jun 2014 11:47:34 +0200
+ -- Jan Wagner <waja@cyconet.org>  Fri, 11 Jul 2014 21:03:12 +0200
 
 nagios-plugins (1.5-3) unstable; urgency=medium
 
