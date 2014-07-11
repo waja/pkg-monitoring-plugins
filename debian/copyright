@@ -176,6 +176,7 @@ Files with different Licenses:
 
 	Makefile.in
 	gl/Makefile.in
+	gl/m4/*.m4
 	lib/Makefile.in
 	lib/tests/Makefile.in
 	plugins/Makefile.in
