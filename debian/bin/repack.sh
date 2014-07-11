@@ -35,6 +35,5 @@ sed -i 's/perlmods\ //' $srcdir/Makefile*
 #echo "Removing $srcdir/perlmods/
 rm -rf $srcdir/perlmods/
 
-#tarball=$(echo $tarball|sed 's/\.orig\.tar\.gz/+dfsg.orig.tar.gz/')
-tar -cof "${tarball/.gz}" -C $tdir/ $distdir
-gzip -f9 "${tarball/.gz}"
+tar -cof "${tarball%.*}" -C $tdir/ $distdir
+gzip -f9 "${tarball%.*}"
