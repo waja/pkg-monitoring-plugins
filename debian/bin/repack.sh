@@ -29,7 +29,7 @@ sed -i '/perlmods\/Makefile/d' $srcdir/configure
 #echo "Adjusting $srcdir/configure.in"
 [ -f  $srcdir/configure.in ] && sed -i '/perlmods\/Makefile/d' $srcdir/configure.in
 #echo "Adjusting $srcdir/configure.am"
-[ -f  $srcdir/configure.am ] && sed -i '/perlmods\/Makefile/d' $srcdir/configure.am
+[ -f  $srcdir/configure.ac ] && sed -i '/perlmods\/Makefile/d' $srcdir/configure.ac
 #echo "Adjusting $srcdir/Makefile*"
 sed -i 's/perlmods\ //' $srcdir/Makefile*
 #echo "Removing $srcdir/perlmods/
