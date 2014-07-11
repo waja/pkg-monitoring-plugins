@@ -54,9 +54,15 @@ Copyright (C) 1985, 2013 Free Software Foundation, Inc.
 
 From upstream README:
 
-    This software is released under the GNU General Public License, Version 3,
-    with the additional exemption that compiling, linking and/or using OpenSSL
-    is allowed.
+    You can redistribute and/or modify this software under the terms of the GNU
+    General Public License as published by the Free Software Foundation; either
+    version 3 of the License, or (at your option) any later version; with the
+    additional exemption that compiling, linking, and/or using OpenSSL is
+    allowed.
+
+    This software is distributed in the hope that it will be useful, but WITHOUT
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+    FITNESS FOR A PARTICULAR PURPOSE.
 
 Files with different Licenses:
 
