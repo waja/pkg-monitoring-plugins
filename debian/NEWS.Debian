@@ -3,7 +3,7 @@ monitoring-plugins (2.0-1) unstable; urgency=medium
   This software project was renamed by upstream. For more information
   see https://www.monitoring-plugins.org/news/new-project-name.html.
 
-  We renamed the package(s) also, but we keeped the directories
+  We renamed the package(s) also, but we kept the directories
   /etc/nagios-plugins/ and /usr/lib/nagios/plugins for now, cause
   many other packages rely on them. Maybe we have to change that later.
 
