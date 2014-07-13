@@ -16,12 +16,13 @@ Replaces: nagios-plugins (<< 1.5-4~)
 Breaks: nagios-plugins (<< 1.5-4~)
 Suggests: nagios3 | icinga, nagios-plugins-contrib
 Description: Plugins for nagios compatible monitoring systems (metapackage)
- Plugins for nagios compatible monitoring systems like Nagios and Icinga.
+ Plugins for nagios compatible monitoring systems like Naemon and Icinga.
  .
- This metapackage will install the entire suite of plugins for nagios.
- If you are installing nagios plugins on a remote "satellite" server
+ This metapackage will install the entire suite of plugins for nagios
+ compatible monitoring systems.
+ If you are installing monitoring plugins on a remote "satellite" server
  (using nagios-nrpe-server or nsca), you may be interested in the
- nagios-plugins-basic package.
+ monitoring-plugins-basic package.
 
 Package: monitoring-plugins-common
 Architecture: any
@@ -30,7 +31,7 @@ Replaces: nagios-plugins-common (<< 1.5-4~)
 Breaks: nagios-plugins-common (<< 1.5-4~)
 Suggests: nagios3 | icinga
 Description: Common files for plugins for nagios compatible monitoring
- Common files for plugins for nagios compatible monitoring systems like Nagios
+ Common files for plugins for nagios compatible monitoring systems like Naemon
  and Icinga.
  .
  This package contains common files which maybe needed for plugins.
@@ -42,8 +43,8 @@ Recommends: libcap2-bin [linux-any]
 Replaces: nagios-plugins-basic (<< 1.5-4~)
 Breaks: nagios-plugins-basic (<< 1.5-4~)
 Suggests: nagios3 | icinga
-Description: Plugins for nagios compatible monitoring systems
- Plugins for nagios compatible monitoring systems like Nagios and Icinga. It
+Description: Plugins for nagios compatible monitoring systems (basic)
+ Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
  contains the following plugins:
  .
   check_apt, check_by_ssh, check_clamd, check_cluster,
@@ -71,8 +72,8 @@ Breaks: nagios-plugins-standard (<< 1.5-4~)
 Depends: ${shlibs:Depends}, ${misc:Depends}, ucf, monitoring-plugins-basic
 Recommends: ${shlibs:Recommends}, fping, snmp, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, qstat, rpcbind
 Suggests: nagios3 | icinga, postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
-Description: Plugins for nagios compatible monitoring systems
- Plugins for nagios compatible monitoring systems like Nagios and Icinga. It
+Description: Plugins for nagios compatible monitoring systems (standard)
+ Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
  contains the following plugins:
  .
   check_bgpstate, check_breeze, check_dbi, check_dig, check_disk_smb,
@@ -83,7 +84,7 @@ Description: Plugins for nagios compatible monitoring systems
   check_rpc, check_snmp, check_wave
  .
  This package provides the suite of plugins that are most likely to be
- useful on a central nagios host. Some scripts need more packages installed
+ useful on a central monitoring host. Some scripts need more packages installed
  to work, which is implemented as recommends.
 
 Package: nagios-plugins
