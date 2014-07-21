@@ -20,8 +20,11 @@ before_install:
 install:
   # install implicit build dependencies
   - sudo apt-get install -qq --no-install-recommends build-essential fakeroot devscripts
+  # add ppa for libfreeradius-client-dev and newer lintian
+  - sudo add-apt-repository -y ppa:waja/precise-backports
+  - sudo apt-get update -qq
   # install explicit build dependencies
-  - sudo apt-get install -qq --no-install-recommends debhelper dpatch perl autotools-dev libdbi-dev libldap2-dev libpq-dev libmysqlclient-dev libradiusclient-ng-dev libkrb5-dev libnet-snmp-perl procps mawk dpatch hardening-wrapper
+  - sudo apt-get install -qq --no-install-recommends debhelper dpatch perl autotools-dev libdbi-dev libldap2-dev libpq-dev libmysqlclient-dev libfreeradius-client-dev libkrb5-dev libnet-snmp-perl procps mawk dpatch hardening-wrapper
 
 script:
     # build the debian package
