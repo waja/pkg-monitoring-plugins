@@ -1,8 +1,12 @@
-monitoring-plugins (2.0-2) UNRELEASED; urgency=medium
+monitoring-plugins (2.0-2) unstable; urgency=medium
 
-  * 
+  * [1a9106e] debian/control: Fixing and generalizing descriptions
+  * [3f5ec75] Updating debian/changelog
+  * [ec235b0] travis-ci: use libfreeradius-client-dev as build-dep
+  * [b2a2999] check_oracle: Fix --tns bad string matching
+    - Adding 10_check_oracle_tns_bad_string.dpatch
 
- -- Jan Wagner <waja@cyconet.org>  Sun, 13 Jul 2014 22:32:25 +0200
+ -- Jan Wagner <waja@cyconet.org>  Mon, 11 Aug 2014 15:22:59 +0200
 
 monitoring-plugins (2.0-1) unstable; urgency=medium
 
