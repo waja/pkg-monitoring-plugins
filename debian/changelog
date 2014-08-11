@@ -1,3 +1,9 @@
+monitoring-plugins (2.0-3) UNRELEASED; urgency=medium
+
+  * 
+
+ -- Jan Wagner <waja@cyconet.org>  Mon, 11 Aug 2014 15:39:56 +0200
+
 monitoring-plugins (2.0-2) unstable; urgency=medium
 
   * [1a9106e] debian/control: Fixing and generalizing descriptions
