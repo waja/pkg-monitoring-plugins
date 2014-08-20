@@ -1,0 +1,75 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 12_PATH_in_scripts_first.dpatch by Jan Wagner <waja@cyconet.org>
+##
+## DP: Set PATH at first in shell scripts
+
+From 3a668c0f87f3ad31f28997ed43b374edf78f6227 Mon Sep 17 00:00:00 2001
+From: Jan Wagner <waja@cyconet.org>
+Date: Wed, 20 Aug 2014 20:32:09 +0200
+Subject: [PATCH] Setting PATH at first
+
+Origin: upstream, https://github.com/monitoring-plugins/monitoring-plugins/commit/3a668c0f87f3ad31f28997ed43b374edf78f6227.patch
+---
+ plugins-scripts/check_log.sh     | 5 ++---
+ plugins-scripts/check_oracle.sh  | 3 ++-
+ plugins-scripts/check_sensors.sh | 5 ++---
+ 3 files changed, 6 insertions(+), 7 deletions(-)
+
+@DPATCH@
+diff --git a/plugins-scripts/check_log.sh b/plugins-scripts/check_log.sh
+index f67eff6..d28c8d0 100755
+--- a/plugins-scripts/check_log.sh
++++ b/plugins-scripts/check_log.sh
+@@ -58,12 +58,11 @@
+ # Paths to commands used in this script.  These
+ # may have to be modified to match your system setup.
+ 
++PATH="@TRUSTED_PATH@"
++export PATH
+ PROGNAME=`basename $0`
+ PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
+ REVISION="@NP_VERSION@"
+-PATH="@TRUSTED_PATH@"
+-
+-export PATH
+ 
+ . $PROGPATH/utils.sh
+ 
+diff --git a/plugins-scripts/check_oracle.sh b/plugins-scripts/check_oracle.sh
+index 1873a3c..96078ac 100755
+--- a/plugins-scripts/check_oracle.sh
++++ b/plugins-scripts/check_oracle.sh
+@@ -6,10 +6,11 @@
+ #  This Monitoring plugin was created to check Oracle status
+ #
+ 
++PATH="@TRUSTED_PATH@"
++export PATH
+ PROGNAME=`basename $0`
+ PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
+ REVISION="@NP_VERSION@"
+-PATH="@TRUSTED_PATH@"
+ 
+ . $PROGPATH/utils.sh
+ 
+diff --git a/plugins-scripts/check_sensors.sh b/plugins-scripts/check_sensors.sh
+index 05c64c4..f742830 100755
+--- a/plugins-scripts/check_sensors.sh
++++ b/plugins-scripts/check_sensors.sh
+@@ -1,11 +1,10 @@
+ #!/bin/sh
+ 
++PATH="@TRUSTED_PATH@"
++export PATH
+ PROGNAME=`basename $0`
+ PROGPATH=`echo $0 | sed -e 's,[\\/][^\\/][^\\/]*$,,'`
+ REVISION="@NP_VERSION@"
+-PATH="@TRUSTED_PATH@"
+-
+-export PATH
+ 
+ . $PROGPATH/utils.sh
+ 
+-- 
+2.0.4
+

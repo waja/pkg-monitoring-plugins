@@ -2,3 +2,4 @@
 # commited upstream
 10_check_oracle_tns_bad_string.dpatch
 11_check_log_fix_basename_path.dpatch
+12_PATH_in_scripts_first.dpatch
