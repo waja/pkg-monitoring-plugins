@@ -1,0 +1,38 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 13_check_jabber_openfire.dpatch by Jan Wagner <waja@cyconet.org>
+##
+## DP: Fix check_jabber to work with Openfire servers
+
+From 013ca2c508386c548ec145832ab8be1e8306cca0 Mon Sep 17 00:00:00 2001
+From: Holger Weiss <holger@zedat.fu-berlin.de>
+Date: Tue, 16 Sep 2014 12:28:51 +0200
+Subject: [PATCH] Fix check_jabber to work with Openfire servers
+
+The plugin expected:
+
+        <?xml version='1.0'?>
+
+But Openfire sends:
+
+        <?xml version='1.0' encoding='UTF-8'?>
+
+Origin: upstream, https://github.com/monitoring-plugins/monitoring-plugins/commit/013ca2c508386c548ec145832ab8be1e8306cca0.patch
+---
+
+ plugins/check_tcp.c | 2 +-
+ 1 file changed, 1 insertions(+), 1 deletion(-)
+
+@DPATCH@
+diff --git a/plugins/check_tcp.c b/plugins/check_tcp.c
+index bd7736b..fc0adba 100644
+--- a/plugins/check_tcp.c
++++ b/plugins/check_tcp.c
+@@ -172,7 +172,7 @@ main (int argc, char **argv)
+ 	}
+ 	else if (!strncmp(SERVICE, "JABBER", 6)) {
+ 		SEND = "<stream:stream to=\'host\' xmlns=\'jabber:client\' xmlns:stream=\'http://etherx.jabber.org/streams\'>\n";
+-		EXPECT = "<?xml version=\'1.0\'?><stream:stream xmlns=\'jabber:client\' xmlns:stream=\'http://etherx.jabber.org/streams\'";
++		EXPECT = "<?xml version=\'1.0\'";
+ 		QUIT = "</stream:stream>\n";
+ 		flags |= FLAG_HIDE_OUTPUT;
+ 		PORT = 5222;
