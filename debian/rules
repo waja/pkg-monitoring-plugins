@@ -84,6 +84,7 @@ config.status: configure
 	PGINCLUDE="-I`pg_config --includedir`" PGLIBS="-lpq -lcrypt" \
 	CFLAGS="$(CFLAGS)" \
 	./configure \
+		--disable-maintainer-mode \
 		--host=$(DEB_HOST_GNU_TYPE) \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr \
