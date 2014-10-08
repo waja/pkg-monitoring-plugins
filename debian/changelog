@@ -1,8 +1,18 @@
 monitoring-plugins (2.0-3) UNRELEASED; urgency=medium
 
-  * 
+  * [5255a96] Add icinga2 as another Suggests option
+  * [94ec5a9] check_log: Fixing basename path (Closes #758662)
+    - Adding 11_check_log_fix_basename_path.dpatch taken from upstream
+  * [96647a0] Adding 12_PATH_in_scripts_first.dpatch from upstream maint branch
+  * [9a7840a] Add 13_check_jabber_openfire.dpatch from upstream
+  * [88b130b] Add --disable-maintainer-mode to configure, for not running autotools foo
+  * [72a77cb] Drop patches applied upstream
+    - 10_check_oracle_tns_bad_string.dpatch
+    - 11_check_log_fix_basename_path.dpatch
+    - 12_PATH_in_scripts_first.dpatch
+    - 13_check_jabber_openfire.dpatc
 
- -- Jan Wagner <waja@cyconet.org>  Mon, 11 Aug 2014 15:39:56 +0200
+ -- Jan Wagner <waja@cyconet.org>  Wed, 08 Oct 2014 13:42:56 +0200
 
 monitoring-plugins (2.0-2) unstable; urgency=medium
 
