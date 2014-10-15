@@ -1,3 +1,464 @@
+2014-10-15  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* NEWS, NP-VERSION-GEN, configure.ac: Prepare for the 2.1 release
+
+	* THANKS.in: Add new authors
+
+	Update the THANKS.in file with the new Git commit authors.
+
+	* FAQ: Remove outdated (RPM/DEB-related) questions
+
+	* NEWS: Mention that we dropped the spec file
+
+2014-10-15  Jan Wagner  <waja@cyconet.org>
+
+	* Makefile.am, configure.ac, monitoring-plugins.spec.in: Removing the
+	spec file, as it's broken
+	Even we have none feedback in PR #1283
+
+2014-10-08  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* plugins-scripts/check_ifstatus.pl: check_ifstatus: Fix "-n" and "-u"
+	options
+
+	Ignore interface if it's specified via "-n" OR "-u", not just when it's
+	specified via "-n" AND "-u".
+
+2014-10-06  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* lib/utils_base.c: Revert "Make use of xasprintf instead of asprintf"
+
+	This reverts commit a143739ed286cf9ae003792dbb1ce26ce43f3312.
+
+	Our current setup doesn't allow lib/*.c files to call functions defined
+	in plugins/utils.[ch].
+
+2014-09-23  Jonas Genannt  <jonas@brachium-system.net>
+
+	* NEWS, plugins-scripts/check_file_age.pl,
+	plugins-scripts/t/check_file_age.t: check_file_age: Provide performance
+	data
+
+2014-10-06  Jan Wagner  <waja@cyconet.org>
+
+	* NEWS: Adding missing informations to NEWS
+
+2014-09-29  Jan Wagner  <waja@cyconet.org>
+
+	* THANKS.in: Adding Simon to Thanks file
+
+2014-09-01  Simon Meggle  <simon.meggle@consol.de>
+
+	* plugins-scripts/check_mailq.pl: check_mailq: fixed mailer names
+
+	(Closes #1289)
+
+2014-09-16  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* NEWS, plugins/check_tcp.c: Fix check_jabber to work with Openfire
+	servers
+
+	The plugin expected:
+
+		<?xml version='1.0'?>
+
+	But Openfire sends:
+
+		<?xml version='1.0' encoding='UTF-8'?>
+
+2014-09-10  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* NEWS: Mention new check_ifstatus option
+
+2013-05-13  Nick Peelman  <nick@peelman.us>
+
+	* plugins-scripts/check_ifstatus.pl: Add check_ifstatus option to ignore
+	interfaces by name
+
+	Ignoring by index is not always an option, as the index can change on
+	chassis switches as blade configurations change.
+
+2014-07-30  Jan Wagner  <waja@cyconet.org>
+
+	* .travis.yml: travis-ci: create MySQL database 'test'
+
+2014-07-21  Jan Wagner  <waja@cyconet.org>
+
+	* .travis.yml: travis-ci: Installing libhttp-daemon-ssl-perl to make
+	plugins/tests/check_http.t possible to run
+
+	* .travis.yml: travis-ci: Using libfreeradius-client-dev as build-dep
+
+2014-08-20  Jan Wagner  <waja@cyconet.org>
+
+	* plugins-scripts/check_log.sh, plugins-scripts/check_oracle.sh,
+	plugins-scripts/check_sensors.sh: Setting PATH at first
+
+	* plugins-scripts/check_log.sh: check_log.sh: droping path from basename
+	while evaluating PROGNAME (Closes Debian Bug #758662)
+
+2014-08-06  Sven Nierlein  <sven@nierlein.de>
+
+	* plugins/check_by_ssh.c: check_by_ssh: added --hostname support
+
+	just like the guidelines and the help already suggests.
+
+2014-07-31  Sven Nierlein  <Sven.Nierlein@consol.de>
+
+	* plugins/tests/check_snmp.t: tests: skip extented snmp tests if snmpd
+	has no perl support
+
+	solaris snmpd has no perl support by default, so this test will fail.
+
+	* plugins/t/negate.t: tests: negate test fails when not run from plugins
+	folder
+
+	* plugins/t/negate.t: tests: get current directory the perl way
+
+	instead of hoping to have it in the environment. This at
+	least broke tests on solaris.
+
+	* plugins/check_dns.c: check_dns: unified check output
+
+	this also allows us to make tests against "critical" in the output.
+
+	* plugins-scripts/t/check_disk_smb.t: tests: check_disk_smb may exit
+	with critical for unresponsive hosts too
+
+	Unknown (ex. debian 7)
+	%> ./check_disk_smb -H 1.1.1.1 -s np_foobar -vvv
+	/usr/bin/smbclient //1.1.1.1/np_foobar -U guest% -c du
+	No Answer from Client
+
+	Critical (ex. debian 8)
+	%> ./check_disk_smb -H 1.1.1.1 -s np_foobar -vvv
+	/usr/bin/smbclient //1.1.1.1/np_foobar -U guest% -c du
+	Connection to 1.1.1.1 failed
+	CRITICAL
+
+2014-07-31  Sven Nierlein  <sven@nierlein.de>
+
+	* plugins/check_ntp_peer.c: check_ntp_peer: do not use uninitialized
+	results for max state
+
+	s/t/jresult are not initialized if there is no corresponding threshold
+	supplied. So we shouldn't use them for calculating our result.
+
+2014-07-31  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* NEWS: Mention --with-qmail-qstat-command option
+
+2013-10-21  awiddersheim  <awiddersheim@hotmail.com>
+
+	* configure.ac: Fix PATH_TO_QMAIL_QSTAT in configure
+
+	When configuring PATH_TO_QMAIL_QSTAT the PATH_TO_MAILQ would get applied
+	instead after tests had passed. Also made --with-qmail-qstat-command a
+	configuration option.
+
+2013-09-30  Jan Wagner  <waja@cyconet.org>
+
+	* THANKS.in: adding to THANKS
+
+2014-07-30  Jan Wagner  <waja@cyconet.org>
+
+	* plugins/check_dns.c: check_dns: Use strchr instead of index
+
+	* THANKS.in: Adding Alexander Wittig to THANKS.in
+	---
+	Closes #1218
+	Closes #1281
+
+2013-12-16  Alexander Wittig  <abgandar@gmail.com>
+
+	* plugins/check_dig.c: check_dig: takes into account the -4 and -6
+	switch
+
+	Fix automatic DNS server name detection to honor -4 and -6 switches
+	(default to 127.0.0.1 or ::1 respectively, i.e. if -6 is given ::1
+	is used instead of 127.0.0.1)
+
+	* plugins/check_dig.c: check_dig: Fix to work with dig and drill tool
+
+	FreeBSD starting with version 10 is shipped with ldns instead of bind as
+	resolver. Consequently the dig tool in base is replaced by drill. While dig can
+	still be installed as a third party application, it would be nice to make do
+	with the tools available in the system already.
+	This patch rearranges the command line used to invoke dig slightly so that it
+	can be used with both dig and drill (tested with dig 9.8.3-P1 and 9.9.4 as well
+	as drill 1.6.16). It would be really neat if the configure script could be
+	changed to automatically pick up drill when dig is not available (or the other
+	way around), but my autotools-foo is not good enough for that.
+	This part of the patch is an extended version of the locally maintained patch
+	currently deployed in the FreeBSD ports tree by Dmitry Sivachenko.
+
+2014-07-30  Sven Nierlein  <Sven.Nierlein@consol.de>
+
+	* tools/generate-change-log: workaround for broken Text::Wrap
+
+	workaround for broken Text::Wrap:
+	"This shouldn't happen at /usr/share/perl/5.18/Text/Wrap.pm line 84."
+	changing huge to overflow make generating changelogs work again at
+	the price of not having changelog strictly cut of at 80 columns
+	anymore. Words longer than 80 characters will now printed in one
+	line. This mainly affects old sf.net urls.
+
+	* tools/generate-change-log: no need for the signed off messages in our
+	changelog
+
+2014-07-30  Jan Wagner  <waja@cyconet.org>
+
+	* lib/utils_base.c: Make use of xasprintf instead of asprintf
+	---
+	Closes #1278
+
+2014-01-22  Ricardo Maraschini  <ricardo.maraschini@gmail.com>
+
+	* lib/utils_base.c: if asprintf fails, string is undefined
+
+	if asprintf fails, string content becomes invalid. we need
+	to check if it ran OK by checking the returned value.
+
+	in case of fail, asprintf returns -1, otherwise the number
+	of writen bytes is returned.
+
+	also, on ubuntu 13.10 i've receiving a lot of warnings:
+
+	"warning: ignoring return value of ‘asprintf’"
+
+	this patches fixes some of them
+
+2013-09-29  Jan Wagner  <waja@cyconet.org>
+
+	* plugins/check_dns.c: check_dns: returns incorrect state when
+	specifying server
+
+	This patch verifies if the response is returned by the dns server we
+	are trying to check
+	---
+	Closes #981
+	Closes #982
+	Closes #1164
+
+2014-07-30  Jan Wagner  <waja@cyconet.org>
+
+	* .travis.yml: travis-ci: create MySQL database 'test'
+
+2014-07-30  Sven Nierlein  <sven@nierlein.de>
+
+	* plugins/t/check_dns.t: check_dns: added test for nonresponsive dns
+	server (#982)
+
+2014-07-29  Jan Wagner  <waja@cyconet.org>
+
+	* THANKS.in: Adding Jason Benguerel
+
+2013-10-01  Jan Wagner  <waja@cyconet.org>
+
+	* plugins/check_disk.c: check_disk: show troubled partition in verbose
+	mode
+
+	I'm submitting a small patch to check_disk that will show which partitions are
+	actually causing the error state. This helps the human operator to quickly
+	identify the exact issue. I made it so a single -v flag is required so it
+	doesn't harm legacy code that may be parsing the original style of output.
+
+	Thanks to Jason Benguerel.
+	---
+	Closes #984
+	Closes #1182
+
+2014-02-05  abrist  <abrist@nagios.com>
+
+	* plugins/check_ntp_time.c: check_ntp_time.c - Cleaned up usage and
+	added a note
+
+	Closes #907
+	Closes #1184
+
+2014-07-21  Jan Wagner  <waja@cyconet.org>
+
+	* THANKS.in: Adding Patrick McAndrew to THANKS.in
+
+2013-10-01  Jan Wagner  <waja@cyconet.org>
+
+	* plugins/check_ntp_time.c: check_ntp_time: adding offset option
+
+	Not sure if this is of use or not - we have a strange requirement to run
+	certain servers 5 minutes fast. I've added a switch to the check_ntp_time
+	to allow for this offset.
+
+	Thanks to Patrick McAndrew.
+
+2014-05-19  abrist  <abrist@nagios.com>
+
+	* plugins/netutils.c: netutils.c - A few more changes
+
+	Changed bool to short.
+
+	Removed first instance of is_socket to avoid
+	redeclaration error.
+
+	Changed 'socket' to 'file socket' for verbosity.
+
+2014-05-07  Davide Madrisan  <davide.madrisan@gmail.com>
+
+	* plugins/netutils.c: This patch will add the IP and port, or socket
+	name, to the error message and
+	thus simplify the problem debugging: no need to check for this information in
+	the Nagios configuration.
+	This function is only used by 'check_tcp.c'.
+
+	Without the patch:
+
+	$ ./plugins/check_tcp -H 127.0.0.1 -p 21
+	Connection refused
+	$ ./plugins/check_tcp -H /var/spool/nagios/cmd/nagios.cmd
+	Permission denied
+
+	With the patch:
+
+	$ ./plugins/check_tcp -H 127.0.0.1 -p 21
+	connect to address 127.0.0.1 and port 21: Connection refused
+	$ ./plugins/check_tcp -H /var/spool/nagios/cmd/nagios.cmd
+	connect to socket /var/spool/nagios/cmd/nagios.cmd: Permission denied
+
+	Thanks to Davide Madrisan.
+	---
+	Closes  #1277
+
+2013-10-01  Jan Wagner  <waja@cyconet.org>
+
+	* THANKS.in, plugins/check_mysql.c: check_mysql: ignore authentication
+	failure
+
+	This patch allows checking if MySQL server is running without providing valid
+	username and password. Similar to check_ssh plugin it returns MySQL server
+	version string and protocol number.
+
+	Example:
+	check_mysql -n -H aaa.bbb.ccc.ddd
+	MySQL OK - Version: 5.0.51a-24+lenny5 (protocol 10)
+
+	This is useful for monitoring servers where one does not have administrator
+	privileges or does not want to grant any privileges for the monitoring station.
+
+	To enable this functionality new option --ignore-auth (-n) is added to
+	check_mysql plugin.
+
+	Thanks to Julius Kriukas
+
+	Closes #1020
+	Closes #1178
+
+2014-07-21  Jan Wagner  <waja@cyconet.org>
+
+	* .travis.yml: travis-ci: Installing libhttp-daemon-ssl-perl to make
+	plugins/tests/check_http.t possible to run
+
+2014-07-21  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* test.pl.in: Use "C" locale when running test suite
+
+	Some of our tests check locale-dependent plugin output, so let's make
+	sure "make test" is always using the "C" locale.
+
+	* plugins/tests/check_http.t: Adjust date strings
+
+	Adjust the expected date strings to the now-localized output produced by
+	plugins/sslutils.c.
+
+	Closes #1275.
+
+2014-07-21  Jan Wagner  <waja@cyconet.org>
+
+	* .travis.yml: travis-ci: Using libfreeradius-client-dev as build-dep
+
+2014-07-21  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* plugins/t/check_dns.t: Fix Perl warning
+
+	Perl said: "Unrecognized escape \d passed through at ./t/check_dns.t
+	line 57."
+
+2013-10-01  Jan Wagner  <waja@cyconet.org>
+
+	* THANKS.in, plugins/sslutils.c: sslutils: expire time in local timezone
+	format
+
+	sshutils prints the expiry time of certificates in US format
+	this patch uses the strftime %c, I don't know how portable that is
+
+	Thanks to Neil Prockter.
+
+	Closes #1188
+	Closes #1161
+	Closes #977
+	Closes #976
+	Closes #975
+	Closes #840
+	Closes #382
+
+2013-09-30  Jan Wagner  <waja@cyconet.org>
+
+	* THANKS.in, plugins-scripts/check_ifstatus.pl: check_ifstatus: perfdata
+	bug
+
+	The perfdata output violates the current Nagios Plugin Development Guidelines
+	(http://nagiosplug.sourceforge.net/developer-guidelines.html#AEN202 :
+	"space separated list of label/value pairs").
+
+	Thus the Addon PNP did not read the perdata correctly.
+
+	The patch replaces the commas with spaces in the perfdata output.
+
+	Many thanks to Patric Wust.
+	---
+	Closes #1169 and #721.
+
+2014-07-20  Jan Wagner  <waja@cyconet.org>
+
+	* plugins/t/NPTest.cache.travis: travis-ci: Adding ports for check_hpjd
+
+2014-01-27  abrist  <abrist@nagios.com>
+
+	* plugins/t/check_hpjd.t: added tests for check_hpjd port options
+	---
+	Closes #1160 and #973
+
+2014-01-24  abrist  <abrist@nagios.com>
+
+	* NEWS, plugins/check_hpjd.c: Added check_hpjd port option to news and
+	clarified the port usage error.
+
+	* plugins/check_hpjd.c: check_hpjd - Added a switch for port
+	specification. Defaults to 161.
+
+2014-03-03  abrist  <abrist@nagios.com>
+
+	* plugins/t/check_ntp.t: check_ntp.t - fixed tests for new status output
+	closes #1236 and #1239
+
+2014-02-14  abrist  <abrist@nagios.com>
+
+	* plugins/check_ntp_peer.c: check_ntp_peer - Added specific state output
+	for each metric. It now should be easy to see which check caused the
+	alert.
+
+2013-10-01  Jan Wagner  <waja@cyconet.org>
+
+	* THANKS.in, plugins-scripts/check_oracle.sh: check_oracle: --tns bad
+	string matching
+
+	check_oracle in the 1.4.15 release doesn't correctly parse the output gotten
+	from at least Oracle 11 (with german locales). I guess it's probably more.
+	Also it completely needlessly uses sed where basic bash string parsing actually
+	does more than suffice (and does not run into possible problems with locales
+	like sed ;)).
+	--
+	Just turning attached patch of github issue #1015 into a push request.
+	(Closes #1015 and #1191)
+
 2014-07-11  Holger Weiss  <holger@zedat.fu-berlin.de>
 
 	* NEWS: Fix typo
@@ -28,8 +489,6 @@
 
 	In our build environment, the build failed 3 of 4 times before
 	this patch. After the patch it failed 0 of 7 times.
-
-	Signed-off-by: Mikael Falkvidd <mfalkvidd@op5.com>
 
 2014-07-07  Holger Weiss  <holger@zedat.fu-berlin.de>
 
@@ -93,8 +552,6 @@
 
 	* plugins/t/check_dns.t: tests: added check_dns performance data test
 
-	Signed-off-by: Sven Nierlein <sven@nierlein.de>
-
 2014-02-26  abrist  <abrist@nagios.com>
 
 	* plugins/check_dns.c: check_dns.c Added a bit more logic to thresholds
@@ -115,8 +572,6 @@
 	* plugins/check_tcp.c: check_tcp: also display the server addr when
 	host_specified is set. This will help the admins when multiple checks
 	are configured
-
-	Signed-off-by: Davide Madrisan <davide.madrisan@gmail.com>
 
 2014-05-19  abrist  <abrist@nagios.com>
 
@@ -176,8 +631,6 @@
 	test on travis
 
 	also make test is now working on travis-ci
-
-	Signed-off-by: Sven Nierlein <sven@nierlein.de>
 
 2014-06-23  Jan Wagner  <waja@cyconet.org>
 
@@ -329,21 +782,15 @@
 	when returning syscontact. So make them optional since we want to test
 	check_snmp and not the snmpd.
 
-	Signed-off-by: Sven Nierlein <Sven.Nierlein@consol.de>
-
 	* plugins/tests/check_procs.t: tests: check_proc tests fail if uid -2
 	does not map to nobody
 
 	so make sure our tests only run if -2 maps to nobody
 
-	Signed-off-by: Sven Nierlein <Sven.Nierlein@consol.de>
-
 	* NPTest.pm, plugins/t/check_fping.t: tests: fping checks require being
 	root or setuid root
 
 	on the fping binary. Check this before running the test.
-
-	Signed-off-by: Sven Nierlein <Sven.Nierlein@consol.de>
 
 	* plugins/tests/check_http.t: require at least HTTP::Daemon 6.01
 
@@ -357,14 +804,10 @@
 
 	so add configurable/optional timeout to testCmd.
 
-	Signed-off-by: Sven Nierlein <Sven.Nierlein@consol.de>
-
 	* plugins/tests/check_procs.t: tests: parts of the check_procs test only
 	work when uid -2 exists
 
 	skip those tests if the uid does not exist
-
-	Signed-off-by: Sven Nierlein <Sven.Nierlein@consol.de>
 
 2014-06-12  Holger Weiss  <holger@zedat.fu-berlin.de>
 
@@ -409,8 +852,6 @@
 	See also:
 	https:://bugs.op5.com/view.php?id=8385.
 
-	Signed-off-by: Anton Lofgren <alofgren@op5.com>
-
 2014-04-03  Sam Kottler  <shk@redhat.com>
 
 	* plugins/check_apt.c: Remove the suggestion to run check_apt with
@@ -445,8 +886,6 @@
 
 	* lib/Makefile.am, lib/tests/Makefile.am, plugins/Makefile.am: build -
 	avoid deprecated INCLUDES
-
-	Signed-off-by: Davide Madrisan <davide.madrisan@gmail.com>
 
 2014-02-28  Holger Weiss  <holger@zedat.fu-berlin.de>
 
@@ -582,8 +1021,6 @@
 	* plugins/check_swap.c: check_swap: Fix the plugin name that appears in
 	the comment
 
-	Signed-off-by: Davide Madrisan <davide.madrisan@gmail.com>
-
 2014-02-20  Holger Weiss  <holger@zedat.fu-berlin.de>
 
 	* .travis.yml: travis-ci: Don't use Clang
@@ -606,8 +1043,6 @@
 	thats because check_procs verifys there is a user for a
 	given uid filter. So even we use sample data for this
 	test, we still need a real user.
-
-	Signed-off-by: Sven Nierlein <Sven.Nierlein@consol.de>
 
 2014-02-17  Jan Wagner  <waja@cyconet.org>
 
@@ -979,8 +1414,6 @@
 
 	using an unorthodox method to remove them
 
-	Signed-off-by: Ricardo Maraschini <ricardo.maraschini@gmail.com>
-
 2014-01-22  Lars Vogdt  <lrupp@suse.de>
 
 	* plugins-scripts/check_file_age.pl,
@@ -1060,8 +1493,6 @@
 
 	* perlmods/Monitoring-Plugin-0.37.tar.gz,
 	perlmods/Nagios-Plugin-0.36.tar.gz: updated perldod with a renamed pkg
-
-	Signed-off-by: Sven Nierlein <sven@nierlein.de>
 
 2014-01-20  Holger Weiss  <holger@zedat.fu-berlin.de>
 
@@ -2531,8 +2962,6 @@
 	This was reported by clang, and in order for it to understand attributes
 	properly, I had to modify the macro that checks for non-gcc compilers.
 
-	Signed-off-by: Robin Sonefors <robin.sonefors@op5.com>
-
 	* plugins/check_snmp.c: check_snmp: Dynamically grow all data structures
 
 	Before this patch, there was a constant, MAX_OIDS, that determined the
@@ -2545,8 +2974,6 @@
 	support an infinite amount of oids - or at least as many as the
 	packetsize on the SNMP server allows, which is usually significantly
 	smaller than infinity, yet often larger than 8.
-
-	Signed-off-by: Robin Sonefors <robin.sonefors@op5.com>
 
 2013-01-24  Daniël van Eeden  <git@myname.nl>
 
@@ -2600,8 +3027,6 @@
 	           -o '' -l '' -o '' -l '' -o '' -l '' -o '' -l ''
 
 	This patch allocates the proper amount of memory, to fix the issue.
-
-	Signed-off-by: Robin Sonefors <robin.sonefors@op5.com>
 
 2012-12-28  Jonathan Milby  <jon@uky.edu>
 
@@ -2723,8 +3148,6 @@
 	While at it, we fix the string offset so the output we're interested
 	in doesn't keep the equal sign that snmpget prints.
 
-	Signed-off-by: Andreas Ericsson <ae@op5.se>
-
 	* lib/utils_base.c: Stop dumping core on bad args to check_snmp
 
 	Since the state patch introduction, we've been freeing uninitialized
@@ -2742,8 +3165,6 @@
 	we get the memory from the kernel (which alread does that) and almost
 	always desirable everywhere else.
 
-	Signed-off-by: Andreas Ericsson <ae@op5.se>
-
 	* plugins/check_snmp.c: Make check_snmp backwards compatible in how it
 	parses thresholds
 
@@ -2756,8 +3177,6 @@
 	fix the situation so that the old-style ranges continues to mean
 	exactly what the once did and people with lots of snmp checks can
 	avoid a bazillion false positives from their environments.
-
-	Signed-off-by: Andreas Ericsson <ae@op5.se>
 
 2012-10-12  chl  <dev+github@bugness.org>
 
@@ -3019,8 +3438,6 @@
 
 	* plugins/check_smtp.c: check_smtp: Fix strcat overflows
 
-	Signed-off-by: Anders Kaseorg <andersk@mit.edu>
-
 	* contrib/check_http-with-client-certificate.c, plugins/check_by_ssh.c,
 	plugins/check_dig.c, plugins/check_disk.c, plugins/check_dns.c,
 	plugins/check_fping.c, plugins/check_game.c, plugins/check_hpjd.c,
@@ -3039,8 +3456,6 @@
 	Fixes many instances of
 	warning: ignoring return value of 'asprintf', declared with attribute warn_unused_result [-Wunused-result]
 
-	Signed-off-by: Anders Kaseorg <andersk@mit.edu>
-
 	* plugins/check_smtp.c: check_smtp: Strip angle brackets from -f
 	argument, if provided
 
@@ -3050,8 +3465,6 @@
 	MTAs, so let's continue to support this syntax now that we generate
 	RFC-compliant commands.
 
-	Signed-off-by: Anders Kaseorg <andersk@mit.edu>
-
 2012-06-28  Anders Kaseorg  <andersk@mit.edu>
 
 	* plugins/check_smtp.c: check_smtp: Change MAIL FROM: command to comply
@@ -3060,8 +3473,6 @@
 	Every version of the SMTP standard (from RFC 821 to the current RFC
 	5321) requires the address following MAIL FROM: to follow the colon
 	immediately (with no space) and to be surrounded by angle brackets.
-
-	Signed-off-by: Anders Kaseorg <andersk@mit.edu>
 
 2012-06-28  Holger Weiss  <holger@zedat.fu-berlin.de>
 
@@ -4067,8 +4478,6 @@
 	gl/xalloc-die.c, gl/xalloc.h, gl/xmalloc.c, gl/xsize.h, gl/xstrndup.c,
 	gl/xstrndup.h, tools/setup: Sync with the latest Gnulib code (177f525)
 
-	Signed-off-by: Thomas Guyot-Sionnest <dermoth@aei.ca>
-
 2010-04-13  Holger Weiss  <holger@zedat.fu-berlin.de>
 
 	* plugins/check_ntp_peer.c: Fix typo
@@ -4904,15 +5313,11 @@
 	when using its "-S" option on FreeBSD/amd64 (as reported and analyzed by
 	Nikita Kalabukhov - 2797757).
 
-	Signed-off-by: Holger Weiss <holger@zedat.fu-berlin.de>
-
 	* plugins-root/check_icmp.c: Don't use the plain char type for data
 	buffers
 
 	Buffers which are used for holding arbitrary data should be referenced
 	using pointers to void and accessed using pointers to unsigned char.
-
-	Signed-off-by: Holger Weiss <holger@zedat.fu-berlin.de>
 
 2009-06-01  Matthias Eble  <psychotrahe@gmx.de>
 
@@ -5013,13 +5418,9 @@
 	gl/unistd.in.h, gl/vasnprintf.c, gl/wchar.in.h, gl/xmalloc.c: Sync with
 	the latest Gnulib code (cb75dc5)
 
-	Signed-off-by: Holger Weiss <holger@zedat.fu-berlin.de>
-
 2009-05-19  Chris Pepper  <pepper@reppep.com>
 
 	* plugins/check_ups.c, plugins/urlize.c: Fix a few minor typos
-
-	Signed-off-by: Holger Weiss <holger@zedat.fu-berlin.de>
 
 2009-05-19  Holger Weiss  <holger@zedat.fu-berlin.de>
 
@@ -5031,8 +5432,6 @@
 
 	While at it, apply another few minor cleanups.
 
-	Signed-off-by: Holger Weiss <holger@zedat.fu-berlin.de>
-
 	* doc/developer-guidelines.sgml: Remove comments regarding former
 	requirements
 
@@ -5040,8 +5439,6 @@
 	actually is a requirement, as (at least) the M4 macros provided by
 	Libtool are needed for our Autotools setup.  And the fact that Gettext
 	is no longer needed probably isn't that interesting for new developers.
-
-	Signed-off-by: Holger Weiss <holger@zedat.fu-berlin.de>
 
 2009-05-07  Ton Voon  <tonvoon@macbook-2.local>
 
@@ -14099,16 +14496,14 @@
 	git-svn-id: https://nagiosplug.svn.sourceforge.net/svnroot/nagiosplug/nagiosplug/trunk@841 f882894a-f735-0410-b71e-b25c423dba1c
 
 	* contrib/check_pop3.pl: fix loop and \r\n (Jason Burnett -
-	http://sourceforge.net/tracker/index.php?func=detail&aid=895677&group_id
-	=29880&atid=397599)
+	http://sourceforge.net/tracker/index.php?func=detail&aid=895677&group_id=29880&atid=397599)
 
 
 	git-svn-id: https://nagiosplug.svn.sourceforge.net/svnroot/nagiosplug/nagiosplug/trunk@840 f882894a-f735-0410-b71e-b25c423dba1c
 
 	* plugins/check_disk.c: check_disk was getting blocks instead of bytes
 	(Michael Musikhin -
-	http://sourceforge.net/tracker/index.php?func=detail&aid=900215&group_id
-	=29880&atid=397599)
+	http://sourceforge.net/tracker/index.php?func=detail&aid=900215&group_id=29880&atid=397599)
 
 
 	git-svn-id: https://nagiosplug.svn.sourceforge.net/svnroot/nagiosplug/nagiosplug/trunk@839 f882894a-f735-0410-b71e-b25c423dba1c
@@ -15934,15 +16329,13 @@
 2003-06-10  Karl DeBisschop  <kdebisschop@users.sourceforge.net>
 
 	* contrib/urlize.pl: add comment about shell quote removal to address
-	https://sourceforge.net/tracker/index.php?func=detail&aid=661916&group_i
-	d=29880&atid=397597
+	https://sourceforge.net/tracker/index.php?func=detail&aid=661916&group_id=29880&atid=397597
 
 
 	git-svn-id: https://nagiosplug.svn.sourceforge.net/svnroot/nagiosplug/nagiosplug/trunk@544 f882894a-f735-0410-b71e-b25c423dba1c
 
 	* plugins/urlize.c: add note about shell quote removal to address
-	https://sourceforge.net/tracker/index.php?func=detail&aid=661916&group_i
-	d=29880&atid=397597
+	https://sourceforge.net/tracker/index.php?func=detail&aid=661916&group_id=29880&atid=397597
 
 
 	git-svn-id: https://nagiosplug.svn.sourceforge.net/svnroot/nagiosplug/nagiosplug/trunk@543 f882894a-f735-0410-b71e-b25c423dba1c

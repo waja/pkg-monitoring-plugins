@@ -1,5 +1,33 @@
 This file documents the major additions and syntax changes between releases.
 
+2.1 15th October 2014
+	ENHANCEMENTS
+	New check_hpjd -p option for port specification (abrist)
+	New ./configure --with-qmail-qstat-command option to specify the path to
+	  qmail-qstat(8)
+	New check_ifstatus -n option to ignore interfaces by name
+	check_ntp_peer has now specific state output for each metric
+	New check_mysql -n option to ignore authentication failures
+	Added IP and port or socket name to error messages
+	New check_ntp_time -o option to add expected offset
+	check_disk shows now troubled partions in verbose mode
+	check_dig has now support for drill and dig
+	check_dig has now support for -6 option
+	Add performance data to check_file_age
+
+	FIXES
+	Fix check_jabber to work with Openfire servers
+	Fix check_oracle bad string matching when testing TNS server
+	Fixed check_ifstatus performance data output
+        Fixed expire time output for sslutils
+	check_dns now verifies if the answer is returning from the queried
+	  server
+	Fix check_by_ssh to accept --hostname as argument
+
+	WARNINGS
+	This release doesn't ship with an RPM spec file, please contribute to
+	  PR #1283 if you are interested in it
+
 2.0 11th July 2014
 	ENHANCEMENTS
 	check_mailq now supports auto detection of qmail, postfix, exim and nullmailer with

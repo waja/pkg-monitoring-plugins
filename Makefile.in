@@ -52,13 +52,13 @@ host_triplet = @host@
 subdir = .
 DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
-	$(srcdir)/monitoring-plugins.spec.in $(srcdir)/test.pl.in \
-	$(top_srcdir)/configure $(top_srcdir)/pkg/solaris/pkginfo.in \
-	ABOUT-NLS AUTHORS COPYING ChangeLog INSTALL NEWS THANKS \
-	build-aux/compile build-aux/config.guess \
-	build-aux/config.rpath build-aux/config.sub build-aux/depcomp \
-	build-aux/install-sh build-aux/ltmain.sh build-aux/missing \
-	build-aux/mkinstalldirs config.rpath mkinstalldirs
+	$(srcdir)/test.pl.in $(top_srcdir)/configure \
+	$(top_srcdir)/pkg/solaris/pkginfo.in ABOUT-NLS AUTHORS COPYING \
+	ChangeLog INSTALL NEWS THANKS build-aux/compile \
+	build-aux/config.guess build-aux/config.rpath \
+	build-aux/config.sub build-aux/depcomp build-aux/install-sh \
+	build-aux/ltmain.sh build-aux/missing build-aux/mkinstalldirs \
+	config.rpath mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
 	$(top_srcdir)/gl/m4/00gnulib.m4 $(top_srcdir)/gl/m4/alloca.m4 \
@@ -162,8 +162,7 @@ am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
  configure.lineno config.status.lineno
 mkinstalldirs = $(SHELL) $(top_srcdir)/build-aux/mkinstalldirs
 CONFIG_HEADER = config.h
-CONFIG_CLEAN_FILES = monitoring-plugins.spec test.pl \
-	pkg/solaris/pkginfo
+CONFIG_CLEAN_FILES = test.pl pkg/solaris/pkginfo
 CONFIG_CLEAN_VPATH_FILES =
 SOURCES =
 DIST_SOURCES =
@@ -1356,7 +1355,7 @@ SUBDIRS = gl tap lib plugins plugins-scripts plugins-root po @PERLMODS_DIR@
 EXTRA_DIST = config.rpath \
 	ABOUT-NLS ACKNOWLEDGEMENTS AUTHORS CODING ChangeLog FAQ LEGAL NEWS \
 	NP-VERSION-GEN REQUIREMENTS SUPPORT THANKS \
-	NPTest.pm pkg monitoring-plugins.spec \
+	NPTest.pm pkg \
 	config_test/Makefile config_test/run_tests config_test/child_test.c \
 	tools/build_perl_modules \
 	tools/tinderbox_build
@@ -1420,8 +1419,6 @@ $(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@ $(am__configure_deps)
 
 distclean-hdr:
 	-rm -f config.h stamp-h1
-monitoring-plugins.spec: $(top_builddir)/config.status $(srcdir)/monitoring-plugins.spec.in
-	cd $(top_builddir) && $(SHELL) ./config.status $@
 test.pl: $(top_builddir)/config.status $(srcdir)/test.pl.in
 	cd $(top_builddir) && $(SHELL) ./config.status $@
 pkg/solaris/pkginfo: $(top_builddir)/config.status $(top_srcdir)/pkg/solaris/pkginfo.in
