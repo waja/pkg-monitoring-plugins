@@ -1,11 +1,12 @@
-monitoring-plugins (2.1-1.gbpcb61dd) UNRELEASED; urgency=medium
+monitoring-plugins (2.1-1) unstable; urgency=medium
 
   * [060ec72] Imported Upstream version 2.1 (Closes: #758662)
   * [5255a96] Add icinga2 as another Suggests option
   * [88b130b] Add --disable-maintainer-mode to configure, for not running
     autotools foo
+  * [8f70394] Bump Standards-Version to 3.9.6, no changes needed
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 15 Oct 2014 16:11:23 +0200
+ -- Jan Wagner <waja@cyconet.org>  Wed, 15 Oct 2014 23:26:24 +0200
 
 monitoring-plugins (2.0-2) unstable; urgency=medium
 
