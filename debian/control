@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 5), dpatch (>= 2.0.9), perl, autotools-dev, libdbi-
 Homepage: https://www.monitoring-plugins.org
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-nagios/pkg-monitoring-plugins.git
 Vcs-Git: git://anonscm.debian.org/pkg-nagios/pkg-monitoring-plugins.git
-Standards-Version: 3.9.5
+Standards-Version: 3.9.6
 
 Package: monitoring-plugins
 Architecture: all
