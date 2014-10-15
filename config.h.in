@@ -1859,8 +1859,11 @@
 /* path to lmstat */
 #undef PATH_TO_LMSTAT
 
-/* path to qmail-qstat */
+/* path to mailq */
 #undef PATH_TO_MAILQ
+
+/* path to qmail-qstat */
+#undef PATH_TO_QMAIL_QSTAT
 
 /* path to qstat/quakestat */
 #undef PATH_TO_QSTAT
