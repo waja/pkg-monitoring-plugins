@@ -1,0 +1,29 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_check_ntp_null_termination.dpatch by Jan Wagner <waja@cyconet.org>
+
+From a4a1b37be0ff96492d13e87ce59c82482d961f56 Mon Sep 17 00:00:00 2001
+From: Sebastian Herbszt <herbszt@gmx.de>
+Date: Wed, 26 Nov 2014 23:54:49 +0100
+Subject: [PATCH] check_ntp: fix null termination
+Origin: upstream, https://github.com/monitoring-plugins/monitoring-plugins/commit/a4a1b37be0ff96492d13e87ce59c82482d961f56.patch
+
+Fix null termination introduced by commit a04df3e ("plugins/check_ntp.c - Verify struct from response").
+
+Signed-off-by: Sebastian Herbszt <herbszt@gmx.de>
+---
+ plugins/check_ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/check_ntp.c b/plugins/check_ntp.c
+index 09a923e..546802a 100644
+--- a/plugins/check_ntp.c
++++ b/plugins/check_ntp.c
+@@ -616,7 +616,7 @@ double jitter_request(const char *host, int *status){
+ 				if (bytes_read != ntp_cm_ints + req.count)
+ 					die(STATE_UNKNOWN, _("Invalid NTP response: %d bytes read does not equal %d plus %d data segment"), bytes_read, ntp_cm_ints, req.count); 
+ 				/* else null terminate */
+-				strncpy(req.data[req.count], "\0", 1);
++				req.data[req.count] = '\0';
+ 
+ 				DBG(print_ntp_control_message(&req));
+ 

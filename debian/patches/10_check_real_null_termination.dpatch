@@ -1,0 +1,29 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_check_real_null_termination.dpatch by Jan Wagner <waja@cyconet.org>
+
+From 30f0eeed578a1606eb53e135c1c5417d61d56295 Mon Sep 17 00:00:00 2001
+From: Sebastian Herbszt <herbszt@gmx.de>
+Date: Thu, 27 Nov 2014 00:03:23 +0100
+Subject: [PATCH] check_real: fix null termination
+Origin: upstream, https://github.com/monitoring-plugins/monitoring-plugins/commit/30f0eeed578a1606eb53e135c1c5417d61d56295.patch
+
+Fix null termination introduced by commit b61f51a ("plugins/check_real.c - recv string null terminate").
+
+Signed-off-by: Sebastian Herbszt <herbszt@gmx.de>
+---
+ plugins/check_real.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/check_real.c b/plugins/check_real.c
+index 36f6413..1816bf5 100644
+--- a/plugins/check_real.c
++++ b/plugins/check_real.c
+@@ -178,7 +178,7 @@ main (int argc, char **argv)
+ 
+ 		/* watch for the REAL connection string */
+ 		result = recv (sd, buffer, MAX_INPUT_BUFFER - 1, 0);
+-		buffer[result] = "\0"; /* null terminate recieved buffer */
++		buffer[result] = '\0'; /* null terminate recieved buffer */
+ 
+ 		/* return a CRITICAL status if we couldn't read any data */
+ 		if (result == -1) {

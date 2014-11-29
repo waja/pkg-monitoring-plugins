@@ -1,0 +1,31 @@
+#! /bin/sh /usr/share/dpatch/dpatch-run
+## 10_check_apt_fix_memset.dpatch by Jan Wagner <waja@cyconet.org>
+
+From b7fc2eb15aa02da234e9fd2f4ab021bfff6c00c2 Mon Sep 17 00:00:00 2001
+From: Sebastian Herbszt <herbszt@gmx.de>
+Date: Wed, 26 Nov 2014 23:51:00 +0100
+Subject: [PATCH] check_apt: fix memset
+Origin: upstream, https://github.com/monitoring-plugins/monitoring-plugins/commit/b7fc2eb15aa02da234e9fd2f4ab021bfff6c00c2.patch
+
+Fix memset introduced by commit 9ce7369 ("plugins/check_apt.c - Print uninitialized ereg").
+
+@DPATCH@
+
+Signed-off-by: Sebastian Herbszt <herbszt@gmx.de>
+---
+ plugins/check_apt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/check_apt.c b/plugins/check_apt.c
+index 07622c2..8747f90 100644
+--- a/plugins/check_apt.c
++++ b/plugins/check_apt.c
+@@ -224,7 +224,7 @@ int run_upgrade(int *pkgcount, int *secpkgcount){
+ 	char *cmdline=NULL, rerrbuf[64];
+ 
+ 	/* initialize ereg as it is possible it is printed while uninitialized */
+-	memset(&ereg, "\0", sizeof(ereg.buffer));
++	memset(&ereg, '\0', sizeof(ereg.buffer));
+ 
+ 	if(upgrade==NO_UPGRADE) return STATE_OK;
+ 
