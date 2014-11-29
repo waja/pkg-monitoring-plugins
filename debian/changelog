@@ -1,8 +1,12 @@
-monitoring-plugins (2.1-2) UNRELEASED; urgency=medium
+monitoring-plugins (2.1-2) unstable; urgency=high
 
-  * 
+  * [d4bbd4c] Applying patches from upstream 'maint' branch
+    fixing grave coding errors
+    - 10_check_apt_fix_memset.dpatch
+    - 10_check_ntp_null_termination.dpatch
+    - 10_check_real_null_termination.dpatch
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 16 Oct 2014 09:04:47 +0200
+ -- Jan Wagner <waja@cyconet.org>  Sat, 29 Nov 2014 11:12:58 +0100
 
 monitoring-plugins (2.1-1) unstable; urgency=medium
 
