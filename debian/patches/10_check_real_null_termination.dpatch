@@ -9,6 +9,8 @@ Origin: upstream, https://github.com/monitoring-plugins/monitoring-plugins/commi
 
 Fix null termination introduced by commit b61f51a ("plugins/check_real.c - recv string null terminate").
 
+@DPATCH@
+
 Signed-off-by: Sebastian Herbszt <herbszt@gmx.de>
 ---
  plugins/check_real.c | 2 +-

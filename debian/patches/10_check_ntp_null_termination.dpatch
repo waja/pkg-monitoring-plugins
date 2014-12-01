@@ -9,6 +9,8 @@ Origin: upstream, https://github.com/monitoring-plugins/monitoring-plugins/commi
 
 Fix null termination introduced by commit a04df3e ("plugins/check_ntp.c - Verify struct from response").
 
+@DPATCH@
+
 Signed-off-by: Sebastian Herbszt <herbszt@gmx.de>
 ---
  plugins/check_ntp.c | 2 +-
