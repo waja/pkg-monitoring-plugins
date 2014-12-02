@@ -1,9 +1,2 @@
 02_check_icmp_links.dpatch
 # commited upstream
-10_check_apt_fix_memset.dpatch
-10_check_tcp_fix_help_escape.dpatch
-10_check_real_null_termination.dpatch
-10_check_ntp_null_termination.dpatch
-11_check_ntp_revert_n-p_coverty_fix.dpatch
-12_check_ntp_null_termination_jitter.dpatch
-
