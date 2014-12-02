@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: devel@monitoring-plugins.org\n"
-"POT-Creation-Date: 2014-10-15 14:32+0200\n"
+"POT-Creation-Date: 2014-12-02 00:46+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: plugins/check_fping.c:93 plugins/check_game.c:82 plugins/check_hpjd.c:104
 #: plugins/check_http.c:167 plugins/check_ldap.c:109 plugins/check_load.c:122
 #: plugins/check_mrtgtraf.c:83 plugins/check_mysql.c:124
-#: plugins/check_nagios.c:91 plugins/check_nt.c:127 plugins/check_ntp.c:781
+#: plugins/check_nagios.c:91 plugins/check_nt.c:127 plugins/check_ntp.c:782
 #: plugins/check_ntp_peer.c:575 plugins/check_ntp_time.c:559
 #: plugins/check_nwstat.c:173 plugins/check_overcr.c:102
 #: plugins/check_pgsql.c:172 plugins/check_ping.c:95 plugins/check_procs.c:172
@@ -217,7 +217,7 @@ msgstr ""
 
 #: plugins/check_by_ssh.c:446 plugins/check_cluster.c:261
 #: plugins/check_dig.c:364 plugins/check_disk.c:945 plugins/check_http.c:1562
-#: plugins/check_nagios.c:312 plugins/check_ntp.c:880
+#: plugins/check_nagios.c:312 plugins/check_ntp.c:881
 #: plugins/check_ntp_peer.c:733 plugins/check_ntp_time.c:644
 #: plugins/check_procs.c:763 plugins/negate.c:251 plugins/urlize.c:179
 msgid "Examples:"
@@ -229,7 +229,7 @@ msgstr ""
 #: plugins/check_game.c:331 plugins/check_hpjd.c:432 plugins/check_http.c:1592
 #: plugins/check_ldap.c:451 plugins/check_load.c:334 plugins/check_mrtg.c:382
 #: plugins/check_mysql.c:581 plugins/check_nagios.c:323 plugins/check_nt.c:774
-#: plugins/check_ntp.c:899 plugins/check_ntp_peer.c:753
+#: plugins/check_ntp.c:900 plugins/check_ntp_peer.c:753
 #: plugins/check_ntp_time.c:653 plugins/check_nwstat.c:1685
 #: plugins/check_overcr.c:467 plugins/check_pgsql.c:578
 #: plugins/check_ping.c:610 plugins/check_procs.c:781
@@ -286,7 +286,7 @@ msgstr ""
 #: plugins/check_cluster.c:257 plugins/check_game.c:318
 #: plugins/check_http.c:1544 plugins/check_ldap.c:438 plugins/check_mrtg.c:363
 #: plugins/check_mrtgtraf.c:361 plugins/check_mysql.c:570
-#: plugins/check_nt.c:758 plugins/check_ntp.c:876 plugins/check_ntp_peer.c:724
+#: plugins/check_nt.c:758 plugins/check_ntp.c:877 plugins/check_ntp_peer.c:724
 #: plugins/check_ntp_time.c:635 plugins/check_nwstat.c:1670
 #: plugins/check_overcr.c:456 plugins/check_snmp.c:1180
 #: plugins/check_swap.c:558 plugins/check_ups.c:642
@@ -884,7 +884,7 @@ msgstr ""
 
 #: plugins/check_fping.c:326 plugins/check_fping.c:332
 #: plugins/check_hpjd.c:339 plugins/check_hpjd.c:368 plugins/check_mysql.c:383
-#: plugins/check_mysql.c:470 plugins/check_ntp.c:720
+#: plugins/check_mysql.c:470 plugins/check_ntp.c:721
 #: plugins/check_ntp_peer.c:497 plugins/check_ntp_time.c:500
 #: plugins/check_pgsql.c:335 plugins/check_ping.c:295 plugins/check_ping.c:418
 #: plugins/check_radius.c:271 plugins/check_real.c:315
@@ -914,7 +914,7 @@ msgstr ""
 msgid "Interval must be a positive integer"
 msgstr ""
 
-#: plugins/check_fping.c:402 plugins/check_ntp.c:744
+#: plugins/check_fping.c:402 plugins/check_ntp.c:745
 #: plugins/check_ntp_peer.c:524 plugins/check_ntp_time.c:530
 #: plugins/check_radius.c:321 plugins/check_time.c:319
 msgid "Hostname was not supplied"
@@ -1168,7 +1168,7 @@ msgstr ""
 msgid "Could Not Compile Regular Expression: %s"
 msgstr ""
 
-#: plugins/check_http.c:464 plugins/check_ntp.c:733
+#: plugins/check_http.c:464 plugins/check_ntp.c:734
 #: plugins/check_ntp_peer.c:513 plugins/check_ntp_time.c:519
 #: plugins/check_smtp.c:621 plugins/check_ssh.c:151 plugins/check_tcp.c:481
 msgid "IPv6 support not available"
@@ -2660,88 +2660,82 @@ msgstr ""
 msgid "and on the client service it's connecting to."
 msgstr ""
 
-#: plugins/check_ntp.c:615
+#: plugins/check_ntp.c:631
 #, c-format
-msgid "Cannot read from socket: %s"
+msgid "jitter response too large (%lu bytes)\n"
 msgstr ""
 
-#: plugins/check_ntp.c:617
-#, c-format
-msgid ""
-"Invalid NTP response: %d bytes read does not equal %d plus %d data segment"
-msgstr ""
-
-#: plugins/check_ntp.c:818 plugins/check_ntp_peer.c:619
+#: plugins/check_ntp.c:819 plugins/check_ntp_peer.c:619
 #: plugins/check_ntp_time.c:578
 msgid "NTP CRITICAL:"
 msgstr ""
 
-#: plugins/check_ntp.c:821 plugins/check_ntp_peer.c:622
+#: plugins/check_ntp.c:822 plugins/check_ntp_peer.c:622
 #: plugins/check_ntp_time.c:581
 msgid "NTP WARNING:"
 msgstr ""
 
-#: plugins/check_ntp.c:824 plugins/check_ntp_peer.c:625
+#: plugins/check_ntp.c:825 plugins/check_ntp_peer.c:625
 #: plugins/check_ntp_time.c:584
 msgid "NTP OK:"
 msgstr ""
 
-#: plugins/check_ntp.c:827 plugins/check_ntp_peer.c:628
+#: plugins/check_ntp.c:828 plugins/check_ntp_peer.c:628
 #: plugins/check_ntp_time.c:587
 msgid "NTP UNKNOWN:"
 msgstr ""
 
-#: plugins/check_ntp.c:831 plugins/check_ntp_peer.c:637
+#: plugins/check_ntp.c:832 plugins/check_ntp_peer.c:637
 #: plugins/check_ntp_time.c:591
 msgid "Offset unknown"
 msgstr ""
 
-#: plugins/check_ntp.c:834 plugins/check_ntp_peer.c:640
+#: plugins/check_ntp.c:835 plugins/check_ntp_peer.c:640
 #: plugins/check_ntp_peer.c:642 plugins/check_ntp_peer.c:644
 #: plugins/check_ntp_time.c:594
 msgid "Offset"
 msgstr ""
 
-#: plugins/check_ntp.c:855 plugins/check_ntp_peer.c:690
+#: plugins/check_ntp.c:856 plugins/check_ntp_peer.c:690
 msgid "This plugin checks the selected ntp server"
 msgstr ""
 
-#: plugins/check_ntp.c:865 plugins/check_ntp_peer.c:702
+#: plugins/check_ntp.c:866 plugins/check_ntp_peer.c:702
 #: plugins/check_ntp_time.c:621
 msgid "Offset to result in warning status (seconds)"
 msgstr ""
 
-#: plugins/check_ntp.c:867 plugins/check_ntp_peer.c:704
+#: plugins/check_ntp.c:868 plugins/check_ntp_peer.c:704
 #: plugins/check_ntp_time.c:623
 msgid "Offset to result in critical status (seconds)"
 msgstr ""
 
-#: plugins/check_ntp.c:869 plugins/check_ntp_peer.c:710
+#: plugins/check_ntp.c:870 plugins/check_ntp_peer.c:710
 msgid "Warning threshold for jitter"
 msgstr ""
 
-#: plugins/check_ntp.c:871 plugins/check_ntp_peer.c:712
+#: plugins/check_ntp.c:872 plugins/check_ntp_peer.c:712
 msgid "Critical threshold for jitter"
 msgstr ""
 
-#: plugins/check_ntp.c:881
+#: plugins/check_ntp.c:882
 msgid "Normal offset check:"
 msgstr ""
 
-#: plugins/check_ntp.c:884 plugins/check_ntp_peer.c:737
+#: plugins/check_ntp.c:885 plugins/check_ntp_peer.c:737
 msgid ""
 "Check jitter too, avoiding critical notifications if jitter isn't available"
 msgstr ""
 
-#: plugins/check_ntp.c:885 plugins/check_ntp_peer.c:738
+#: plugins/check_ntp.c:886 plugins/check_ntp_peer.c:738
 msgid "(See Notes above for more details on thresholds formats):"
 msgstr ""
 
-#: plugins/check_ntp.c:890 plugins/check_ntp.c:897
+#: plugins/check_ntp.c:891 plugins/check_ntp.c:898
 msgid "WARNING: check_ntp is deprecated. Please use check_ntp_peer or"
 msgstr ""
 
-#: plugins/check_ntp.c:891 plugins/check_ntp.c:898
+#: plugins/check_ntp.c:892 plugins/check_ntp.c:899
 msgid "check_ntp_time instead."
 msgstr ""
 
@@ -4949,8 +4943,8 @@ msgstr ""
 
 #: plugins/check_tcp.c:646
 msgid ""
-"Can use \\n, \\r, \\t or \\ in send or quit string. Must come before send or "
-"quit option"
+"Can use \\n, \\r, \\t or \\\\ in send or quit string. Must come before send "
+"or quit option"
 msgstr ""
 
 #: plugins/check_tcp.c:647

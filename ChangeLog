@@ -1,3 +1,58 @@
+2014-12-02  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* NEWS: Modify list of changes for 2.1.1 release
+
+	Make the list of changes slightly more descriptive.
+
+2014-12-01  Jan Wagner  <waja@cyconet.org>
+
+	* NP-VERSION-GEN, configure.ac: Prepare release
+
+	* THANKS.in: Add new authors
+
+	* NEWS: Updating all the fixes
+
+2014-11-30  Sebastian Herbszt  <herbszt@gmx.de>
+
+	* plugins/check_tcp.c: check_tcp: fix help description regarding escape
+	option
+
+	The help description should print '\\' for backslash not just '\'.
+
+2014-12-01  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* plugins/check_ntp.c: check_ntp: Nul-terminate jitter data
+
+	Make sure the jitter response is nul-terminated before parsing the data
+	using string functions.
+
+2014-11-30  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* plugins/check_ntp.c: Revert "plugins/check_ntp.c - Verify struct from
+	response"
+
+	This reverts commit a04df3e1b67dc5eab3adc202cc89901f801cdeaa.  The "fix"
+	was bogus in many ways and broke jitter checking.
+
+	Conflicts:
+		plugins/check_ntp.c
+
+2014-11-27  Sebastian Herbszt  <herbszt@gmx.de>
+
+	* plugins/check_real.c: check_real: fix null termination
+
+	Fix null termination introduced by commit b61f51a ("plugins/check_real.c - recv string null terminate").
+
+2014-11-26  Sebastian Herbszt  <herbszt@gmx.de>
+
+	* plugins/check_ntp.c: check_ntp: fix null termination
+
+	Fix null termination introduced by commit a04df3e ("plugins/check_ntp.c - Verify struct from response").
+
+	* plugins/check_apt.c: check_apt: fix memset
+
+	Fix memset introduced by commit 9ce7369 ("plugins/check_apt.c - Print uninitialized ereg").
+
 2014-10-15  Holger Weiss  <holger@zedat.fu-berlin.de>
 
 	* NEWS, NP-VERSION-GEN, configure.ac: Prepare for the 2.1 release
