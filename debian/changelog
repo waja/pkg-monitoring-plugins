@@ -1,8 +1,14 @@
-monitoring-plugins (2.1.1-2) UNRELEASED; urgency=medium
+monitoring-plugins (2.1.1-2~1.gbp1314f7) UNRELEASED; urgency=medium
 
-  * 
+  ** SNAPSHOT build @1314f7b5fdbd040d0d9d2c8073d2f32b2a7a1c75 **
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 03 Dec 2014 16:59:57 +0100
+  * [b8377a8] travis-ci: don't install build-deps manual
+  * [3fda51b] travis-ci: build package with dpkg-buildpackage
+  * [e6de6c2] travis-ci: cosmetical changes
+  * [1314f7b] Drop libmysqlclient16-dev and libmysqlclient15-dev as build-dep
+    alternatives (Closes: #790468)
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 19 Aug 2015 20:03:55 +0200
 
 monitoring-plugins (2.1.1-1) unstable; urgency=high
 
