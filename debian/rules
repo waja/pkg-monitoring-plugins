@@ -11,8 +11,6 @@ export DEB_BUILD_HARDENING=1
 
 PACKAGE = monitoring-plugins
 
-include /usr/share/dpatch/dpatch.make
-
 # These are used for cross-compiling and for saving the configure script
 # from having to guess our platform (since we know it already)
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
@@ -120,15 +118,15 @@ config.status: configure
 
 
 build: build-arch build-indep
-build-arch: patch-stamp build-stamp
-build-indep: patch-stamp build-stamp
+build-arch: build-stamp
+build-indep: build-stamp
 
 build-stamp:  config.status
 	dh_testdir
 	$(MAKE)
 	touch build-stamp
 
-clean: really-clean unpatch
+clean: really-clean
 
 really-clean:
 	dh_testdir
