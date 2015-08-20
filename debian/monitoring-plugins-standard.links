@@ -1,10 +1,10 @@
-usr/share/doc/monitoring-plugins-common/NEWS.Debian.gz usr/share/doc/monitoring-plugins-standard/NEWS.Debian.gz
-usr/share/doc/monitoring-plugins-common/README.Debian.gz usr/share/doc/monitoring-plugins-standard/README.Debian.gz
-usr/share/doc/monitoring-plugins-common/changelog.gz usr/share/doc/monitoring-plugins-standard/changelog.gz
-usr/share/doc/monitoring-plugins-common/examples usr/share/doc/monitoring-plugins-standard/examples
 usr/share/doc/monitoring-plugins-common/FAQ usr/share/doc/monitoring-plugins-standard/FAQ
+usr/share/doc/monitoring-plugins-common/LEGAL usr/share/doc/monitoring-plugins-standard/LEGAL
+usr/share/doc/monitoring-plugins-common/NEWS.Debian.gz usr/share/doc/monitoring-plugins-standard/NEWS.Debian.gz
 usr/share/doc/monitoring-plugins-common/NEWS.gz usr/share/doc/monitoring-plugins-standard/NEWS.gz
 usr/share/doc/monitoring-plugins-common/README usr/share/doc/monitoring-plugins-standard/README
-usr/share/doc/monitoring-plugins-common/LEGAL usr/share/doc/monitoring-plugins-standard/LEGAL
+usr/share/doc/monitoring-plugins-common/README.Debian.gz usr/share/doc/monitoring-plugins-standard/README.Debian.gz
 usr/share/doc/monitoring-plugins-common/REQUIREMENTS usr/share/doc/monitoring-plugins-standard/REQUIREMENTS
 usr/share/doc/monitoring-plugins-common/SUPPORT usr/share/doc/monitoring-plugins-standard/SUPPORT
+usr/share/doc/monitoring-plugins-common/changelog.gz usr/share/doc/monitoring-plugins-standard/changelog.gz
+usr/share/doc/monitoring-plugins-common/examples usr/share/doc/monitoring-plugins-standard/examples
