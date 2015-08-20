@@ -3,7 +3,19 @@ Section: net
 Priority: extra
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
-Build-Depends: debhelper (>= 5), perl, autotools-dev, libdbi-dev, libldap2-dev, libpq-dev, libmysqlclient-dev, libfreeradius-client-dev | libradiusclient-ng-dev, libkrb5-dev, libnet-snmp-perl, procps, mawk | awk, hardening-wrapper
+Build-Depends: autotools-dev,
+               debhelper (>= 5),
+               hardening-wrapper,
+               libdbi-dev,
+               libfreeradius-client-dev | libradiusclient-ng-dev,
+               libkrb5-dev,
+               libldap2-dev,
+               libmysqlclient-dev,
+               libnet-snmp-perl,
+               libpq-dev,
+               mawk | awk,
+               perl,
+               procps
 Homepage: https://www.monitoring-plugins.org
 Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-nagios/pkg-monitoring-plugins.git
 Vcs-Git: git://anonscm.debian.org/pkg-nagios/pkg-monitoring-plugins.git
@@ -11,7 +23,7 @@ Standards-Version: 3.9.6
 
 Package: monitoring-plugins
 Architecture: all
-Depends: ${misc:Depends}, monitoring-plugins-basic, monitoring-plugins-standard
+Depends: monitoring-plugins-basic, monitoring-plugins-standard, ${misc:Depends}
 Replaces: nagios-plugins (<< 1.5-4~)
 Breaks: nagios-plugins (<< 1.5-4~)
 Suggests: icinga | icinga | nagios3, nagios-plugins-contrib
@@ -26,7 +38,7 @@ Description: Plugins for nagios compatible monitoring systems (metapackage)
 
 Package: monitoring-plugins-common
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, ucf
+Depends: ucf, ${misc:Depends}, ${shlibs:Depends}
 Replaces: nagios-plugins-common (<< 1.5-4~)
 Breaks: nagios-plugins-common (<< 1.5-4~)
 Suggests: icinga | icinga | nagios3
@@ -38,7 +50,13 @@ Description: Common files for plugins for nagios compatible monitoring
 
 Package: monitoring-plugins-basic
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, monitoring-plugins-common, procps, iputils-ping [linux-any], inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any], ucf
+Depends: inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any],
+         iputils-ping [linux-any],
+         monitoring-plugins-common,
+         procps,
+         ucf,
+         ${misc:Depends},
+         ${shlibs:Depends}
 Recommends: libcap2-bin [linux-any]
 Replaces: nagios-plugins-basic (<< 1.5-4~)
 Breaks: nagios-plugins-basic (<< 1.5-4~)
@@ -69,9 +87,18 @@ Package: monitoring-plugins-standard
 Architecture: any
 Replaces: nagios-plugins-standard (<< 1.5-4~)
 Breaks: nagios-plugins-standard (<< 1.5-4~)
-Depends: ${shlibs:Depends}, ${misc:Depends}, ucf, monitoring-plugins-basic
-Recommends: ${shlibs:Recommends}, fping, snmp, libnet-snmp-perl, dnsutils, bind9-host | host, smbclient, qstat, rpcbind
-Suggests: icinga | icinga | nagios3, postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
+Depends: monitoring-plugins-basic, ucf, ${misc:Depends}, ${shlibs:Depends}
+Recommends: bind9-host | host,
+            dnsutils,
+            fping,
+            libnet-snmp-perl,
+            qstat,
+            rpcbind,
+            smbclient,
+            snmp,
+            ${shlibs:Recommends}
+Suggests: icinga | icinga | nagios3,
+          postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
 Description: Plugins for nagios compatible monitoring systems (standard)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
  contains the following plugins:
