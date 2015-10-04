@@ -3,3 +3,4 @@
 10_sslutils_checksslv3
 11_check_dhcp_parsing_option
 12_check_ups_perf_data_hresholds
+13_check_snmp_timeout
