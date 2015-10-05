@@ -1,0 +1,49 @@
+From 0a406d8dcec816a94d283b872755b28f219bea2e Mon Sep 17 00:00:00 2001
+From: Sebastian Herbszt <herbszt@gmx.de>
+Date: Sat, 20 Dec 2014 20:58:22 +0100
+Subject: [PATCH 1/2] sslutils: remove superfluous parenthesis
+
+Remove superfluous parenthesis.
+
+Signed-off-by: Sebastian Herbszt <herbszt@gmx.de>
+---
+ plugins/sslutils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/sslutils.c b/plugins/sslutils.c
+index 4933dd0..494a1ec 100644
+--- a/plugins/sslutils.c
++++ b/plugins/sslutils.c
+@@ -59,7 +59,7 @@ int np_net_ssl_init_with_hostname_version_and_cert(int sd, char *host_name, int
+ 		break;
+ 	case 2: /* SSLv2 protocol */
+ #if defined(USE_GNUTLS) || defined(OPENSSL_NO_SSL2)
+-		printf(("%s\n", _("CRITICAL - SSL protocol version 2 is not supported by your SSL library.")));
++		printf("%s\n", _("CRITICAL - SSL protocol version 2 is not supported by your SSL library."));
+ 		return STATE_CRITICAL;
+ #else
+ 		method = SSLv2_client_method();
+
+From 8e661a3bd6c6892ed4db926eab769c167b0e9091 Mon Sep 17 00:00:00 2001
+From: Jan Wagner <waja@cyconet.org>
+Date: Sun, 4 Oct 2015 15:11:40 +0200
+Subject: [PATCH 2/2] sslutils: Remove superfluous parenthesis for sslv3
+ function too
+
+---
+ plugins/sslutils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/sslutils.c b/plugins/sslutils.c
+index 494a1ec..f34c3d7 100644
+--- a/plugins/sslutils.c
++++ b/plugins/sslutils.c
+@@ -67,7 +67,7 @@ int np_net_ssl_init_with_hostname_version_and_cert(int sd, char *host_name, int
+ 		break;
+ 	case 3: /* SSLv3 protocol */
+ #if defined(OPENSSL_NO_SSL3)
+-		printf(("%s\n", _("CRITICAL - SSL protocol version 3 is not supported by your SSL library.")));
++		printf("%s\n", _("CRITICAL - SSL protocol version 3 is not supported by your SSL library."));
+ 		return STATE_CRITICAL;
+ #else
+ 		method = SSLv3_client_method();
