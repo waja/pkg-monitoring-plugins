@@ -6,3 +6,4 @@
 13_check_snmp_timeout
 14_sslutils_superfluous_parenthesis
 15_check_smtp_expect
+16_check_smtp_quit
