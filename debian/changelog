@@ -1,4 +1,4 @@
-monitoring-plugins (2.1.1-2~1.gbp1314f7) UNRELEASED; urgency=medium
+monitoring-plugins (2.1.1+git20151012-1~1.gbp1314f7) UNRELEASED; urgency=medium
 
   ** SNAPSHOT build @1314f7b5fdbd040d0d9d2c8073d2f32b2a7a1c75 **
 
