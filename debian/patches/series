@@ -1,10 +1,10 @@
 02_check_icmp_links
 # commited upstream
-10_sslutils_checksslv3
-11_check_dhcp_parsing_option
-12_check_ups_perf_data_hresholds
-13_check_snmp_timeout
-14_sslutils_superfluous_parenthesis
+#10_sslutils_checksslv3
+#11_check_dhcp_parsing_option
+#12_check_ups_perf_data_hresholds
+#13_check_snmp_timeout
+#14_sslutils_superfluous_parenthesis
 15_check_smtp_expect
 16_check_smtp_quit
 17_check_smtp_forcetls_on_cert
