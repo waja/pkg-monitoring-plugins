@@ -1,3 +1,78 @@
+2015-10-12  Jan Wagner  <waja@cyconet.org>
+
+	* NEWS: Updating NEWS file
+
+2015-10-04  Jan Wagner  <waja@cyconet.org>
+
+	* plugins/sslutils.c: sslutils: Remove superfluous parenthesis for sslv3
+	function too
+
+2014-12-20  Sebastian Herbszt  <herbszt@gmx.de>
+
+	* plugins/sslutils.c: sslutils: remove superfluous parenthesis
+
+	Remove superfluous parenthesis.
+
+2015-03-06  Oliver Skibbe  <oliskibbe@gmail.com>
+
+	* plugins/t/check_snmp.t: check_snmp: modified tests
+
+	(Closes #1325)
+
+	* plugins/check_snmp.c: check_snmp.c: switched DEFAULT_TIMEOUT to
+	DEFAULT_SOCKET_TIMEOUT (provided by utils.h), already used by help
+	description, see issue #1318
+
+2015-04-12  Sven Nierlein  <Sven.Nierlein@consol.de>
+
+	* .travis.yml: install snmpd on travis tests
+
+	because its required for ./plugins/tests/check_snmp.t
+
+	* .travis.yml: enable libtab on travis builds
+
+	to enable some more tests
+
+	* .travis.yml: add perl snmp to travis dependencies
+
+	it is required for the check_snmp tests
+
+2015-10-02  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* NEWS: Mention check_ups performance data fix
+
+2015-03-27  Louis Sautier  <sautier.louis@gmail.com>
+
+	* plugins/check_ups.c: Fix incorrect performance data thresholds
+
+	Closes #1330
+
+2015-10-02  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* plugins-root/check_dhcp.c: check_dhcp: Fix option parsing
+
+	The call_getopt() function didn't always return the correct number of
+	processed arguments.  However, since check_dhcp doesn't support
+	non-option arguments, the caller doesn't need this number anyway.
+
+	Closes #1345.
+
+2015-05-05  Jan Wagner  <waja@cyconet.org>
+
+	* plugins-root/check_dhcp.c: Fixes segfaults when running via monitoring
+	worker
+	(off-by-one)
+
+	Grabed from https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=198318
+
+2015-10-01  Sven Nierlein  <sven@nierlein.de>
+
+	* plugins/t/NPTest.cache.travis: travis: fix http test host
+
+2015-07-25  Jérémie Courrèges-Anglas  <jca@wxcvbn.org>
+
+	* plugins/sslutils.c: sslutils: Check if OpenSSL supports SSLv3.
+
 2014-12-02  Holger Weiss  <holger@zedat.fu-berlin.de>
 
 	* NEWS: Modify list of changes for 2.1.1 release
