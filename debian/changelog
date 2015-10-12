@@ -1,14 +1,32 @@
-monitoring-plugins (2.1.1+git20151012-1~1.gbp1314f7) UNRELEASED; urgency=medium
-
-  ** SNAPSHOT build @1314f7b5fdbd040d0d9d2c8073d2f32b2a7a1c75 **
+monitoring-plugins (2.1.1+git20151012-1) unstable; urgency=medium
 
   * [b8377a8] travis-ci: don't install build-deps manual
   * [3fda51b] travis-ci: build package with dpkg-buildpackage
   * [e6de6c2] travis-ci: cosmetical changes
   * [1314f7b] Drop libmysqlclient16-dev and libmysqlclient15-dev as build-dep
     alternatives (Closes: #790468)
+  * [f412e4a] Convert the package to source format 3.0 (quilt)
+  * [25a6df7] debian/copyright: Deleting empty last line
+  * [96ed330] debian/control: reformating with warp-and-sort
+  * [1353afa] Reformating with warp-and-sort the rest of debian/
+  * [5dbc8cb] travis-ci: grab actual used upstream version
+  * [608ba75] Add patches/10_sslutils_checksslv3 from upstream maint branch
+  * [8e98d7f] Add patches/11_check_dhcp_parsing_option from upstream maint
+    branch
+  * [0d48744] Add patches/12_check_ups_perf_data_hresholds from upstream maint
+    branch
+  * [fad70ed] Add patches/13_check_snmp_timeout from upstream maint branch
+  * [a9d2a52] Add patches/14_sslutils_superfluous_parenthesis from upstream
+    maint branch
+  * [f69aba4] Add patches/15_check_smtp_expect from upstream master branch
+  * [0c7f9bf] Add patches/16_check_smtp_quit from upstream master branch
+  * [5d8b296] Add patches/17_check_smtp_forcetls_on_cert from upstream master
+    branch
+  * [494a834] Imported Upstream version 2.1.1+git20151012 (Closes: #784319)
+  * [9e076d8] Droping patches imported from upstream maint branch
+  * [605543c] Update version
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 19 Aug 2015 20:03:55 +0200
+ -- Jan Wagner <waja@cyconet.org>  Mon, 12 Oct 2015 16:12:30 +0200
 
 monitoring-plugins (2.1.1-1) unstable; urgency=high
 
