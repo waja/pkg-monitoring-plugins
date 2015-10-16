@@ -1,3 +1,9 @@
+monitoring-plugins (2.1.2-1) unstable; urgency=medium
+
+  * [710c8df] Imported Upstream version 2.1.2
+
+ -- Jan Wagner <waja@cyconet.org>  Fri, 16 Oct 2015 15:00:57 +0200
+
 monitoring-plugins (2.1.1+git20151012-1) unstable; urgency=medium
 
   * [b8377a8] travis-ci: don't install build-deps manual
