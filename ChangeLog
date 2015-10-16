@@ -1,3 +1,31 @@
+2015-10-16  Holger Weiss  <holger@zedat.fu-berlin.de>
+
+	* NEWS, NP-VERSION-GEN, configure.ac: Prepare for the 2.1.2 release
+
+	* THANKS.in: Add new authors
+
+	Update the THANKS.in file with the new Git commit authors.
+
+2015-10-13  Jan Wagner  <waja@cyconet.org>
+
+	* NEWS: Updating NEWS
+
+2015-07-28  abrist  <abrist@nagios.com>
+
+	* plugins-root/pst3.c: Fix for unclosed filehandle in pst3 on Solaris
+
+	On Solaris, check_procs uses pst3 instead of /bin/ps (see
+	http://monitoring-plugins.org/doc/faq/ps-on-solaris.html for background). There's
+	a small bug in pst3 which causes it to NOT report some processes that are at
+	the end of the process table, at least on very busy systems (we noticed this
+	on a CoolThreads T5240 with load averages up to 90).
+
+	The bug is that a filehandle is not properly closed.
+
+	Thanks to jwinkle01 for finding and patching the bug.
+
+	(Closes #1203)
+
 2015-10-12  Jan Wagner  <waja@cyconet.org>
 
 	* NEWS: Updating NEWS file
