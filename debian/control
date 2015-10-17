@@ -103,12 +103,11 @@ Description: Plugins for nagios compatible monitoring systems (standard)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
  contains the following plugins:
  .
-  check_bgpstate, check_breeze, check_dbi, check_dig, check_disk_smb,
-  check_dns, check_flexlm, check_fping, check_game,
-  check_hpjd, check_ifoperstatus, check_ifstatus, check_ldap,
-  check_ldaps, check_linux_raid, check_mailq, check_mysql,
-  check_mysql_query, check_oracle, check_pgsql, check_radius,
-  check_rpc, check_snmp, check_wave
+  check_breeze, check_dbi, check_dig, check_disk_smb, check_dns,
+  check_flexlm, check_fping, check_game, check_hpjd, check_ifoperstatus,
+  check_ifstatus, check_ldap, check_ldaps, check_mailq, check_mysql,
+  check_mysql_query, check_oracle, check_pgsql, check_radius, check_rpc,
+  check_snmp, check_wave
  .
  This package provides the suite of plugins that are most likely to be
  useful on a central monitoring host. Some scripts need more packages installed
