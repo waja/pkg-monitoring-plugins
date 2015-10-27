@@ -69,7 +69,7 @@ config.status: configure
 	
 	# if /proc is not mounted, check_nagios and check_procs are
 	# silently omitted from build.
-	@if ! [ -d /proc/1 ]; then \
+	@if ! [ -d /proc/$$$$ ]; then \
 	  echo "monitoring-plugins needs a mounted /proc to correctly build"; \
 	  exit 1; \
 	fi
