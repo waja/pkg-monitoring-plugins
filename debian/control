@@ -90,15 +90,15 @@ Breaks: nagios-plugins-standard (<< 1.5-4~)
 Depends: monitoring-plugins-basic, ucf, ${misc:Depends}, ${shlibs:Depends}
 Recommends: bind9-host | host,
             dnsutils,
-            fping,
             libnet-snmp-perl,
-            qstat,
             rpcbind,
             smbclient,
             snmp,
             ${shlibs:Recommends}
-Suggests: icinga | icinga | nagios3,
-          postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light
+Suggests: fping,
+          icinga | icinga | nagios3,
+          postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light,
+          qstat
 Description: Plugins for nagios compatible monitoring systems (standard)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
  contains the following plugins:
