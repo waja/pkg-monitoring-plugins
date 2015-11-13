@@ -223,7 +223,7 @@ binary-arch: build install
 	grep shlibs:Suggests debian/monitoring-plugins-standard.substvars.in \
 		| sed -e 's/shlibs:Suggests/shlibs:Recommends/' \
 		>> debian/monitoring-plugins-standard.substvars
-	dh_gencontrol -s -- $(DEPSUBSTVARS)
+	dh_gencontrol -s
 	dh_md5sums -s
 	dh_builddeb -s
 
