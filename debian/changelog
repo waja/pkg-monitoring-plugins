@@ -1,9 +1,25 @@
-monitoring-plugins (2.1.2-2) UNRELEASED; urgency=medium
+monitoring-plugins (2.1.2-2) unstable; urgency=medium
 
+  [ Jan Wagner ]
   * [6bcfb6c] Remove check_bgpstate and check_linux_raid from package
     description (LP: #1473229)
+  * [93b217d] travis-ci: Adding required arguments for trusty
+  * [af23094] travis-ci: Droping backports
+  * [3fd4e78] travis-ci: automatically install dependencies
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 16 Oct 2015 16:42:34 +0200
+  [ Klaus Ethgen ]
+  * [52ead1a] Fix /proc check on systems that have hardened system
+    (Closes: #803154)
+
+  [ Robie Basak ]
+  * [db38432] Drop fping and qstat from Recommends to Suggests
+  * [877f48a] Drop $(DEPSUBSTVARS) from dh_gencontrol call
+
+  [ Jan Wagner ]
+  * [8401f27] Use dh_prep instead of dh_clean -k
+  * [093d9a4] Drop hardening-wrapper, use dpkg-buildflags instead
+
+ -- Jan Wagner <waja@cyconet.org>  Mon, 16 Nov 2015 20:06:31 +0100
 
 monitoring-plugins (2.1.2-1) unstable; urgency=medium
 
