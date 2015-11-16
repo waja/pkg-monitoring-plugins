@@ -6,8 +6,9 @@
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
 
-# enable hardnening
-export DEB_BUILD_HARDENING=1
+# for hardening
+DPKG_EXPORT_BUILDFLAGS = 1
+include /usr/share/dpkg/buildflags.mk
 
 PACKAGE = monitoring-plugins
 
@@ -79,8 +80,9 @@ config.status: configure
 	rm -f config.cache
 	
 	# Add here commands to configure the package.
+	# Append 'All warnings', 'Immediate binding' and dpkg-buildflags flags
+	CFLAGS="$$(DEB_CFLAGS_MAINT_APPEND='-Wall -Wl,-z,now' dpkg-buildflags --get CFLAGS)" \
 	PGINCLUDE="-I`pg_config --includedir`" PGLIBS="-lpq -lcrypt" \
-	CFLAGS="$(CFLAGS)" \
 	./configure \
 		--disable-maintainer-mode \
 		--host=$(DEB_HOST_GNU_TYPE) \
