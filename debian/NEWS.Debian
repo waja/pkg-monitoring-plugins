@@ -1,3 +1,12 @@
+monitoring-plugins (2.1.2-3) unstable; urgency=medium
+
+  We switched again over to another radius library. This time radcli
+  to fix #822337. This makes it again necessary to migrate you radius
+  credentials from /etc/radiusclient/servers to /etc/radcli/servers
+  in case you are using check_radius.
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 02 Nov 2016 23:59:10 +0100
+
 monitoring-plugins (2.0-1) unstable; urgency=medium
 
   This software project was renamed by upstream. For more information

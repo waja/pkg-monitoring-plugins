@@ -6,7 +6,7 @@ Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
 Build-Depends: autotools-dev,
                debhelper (>= 5),
                libdbi-dev,
-               libfreeradius-client-dev | libradiusclient-ng-dev,
+               libradcli-dev | libfreeradius-client-dev | libradiusclient-ng-dev,
                libkrb5-dev,
                libldap2-dev,
                default-libmysqlclient-dev | libmysqlclient-dev,
