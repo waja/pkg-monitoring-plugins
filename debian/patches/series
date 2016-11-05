@@ -8,3 +8,4 @@
 15_check_smtp_expect
 16_check_smtp_quit
 17_check_smtp_forcetls_on_cert
+20_check_radius_radcli
