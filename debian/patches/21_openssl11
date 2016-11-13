@@ -1,0 +1,204 @@
+From fe1c4bb0e5ea3632d608a6b8b7e51d580856d833 Mon Sep 17 00:00:00 2001
+From: vagrant <vagrant@debiantesting-64>
+Date: Sun, 13 Nov 2016 19:39:46 +0000
+Subject: [PATCH] add openssl 1.1 support
+
+changes:
+  - CRYPTO_lock detection replaced in configure.ac. We don't use that
+    function anywhere, so just replace it with the suggested one from
+    https://wiki.openssl.org/index.php/Library_Initialization#Autoconf
+  - OPENSSL_NO_SSL2 is no longer defined while ssl2 is not included.
+    Set it ourself using the suggested openssl 1.1 version check from
+    https://wiki.openssl.org/index.php/1.1_API_Changes#Backward_compatibility
+  - openssl 1.1 sends a sigpipe if the connection is still open when
+    calling SSL_shutdown(), so move the close before the shutdown.
+
+Signed-off-by: Sven Nierlein <sven@nierlein.de>
+---
+ configure.ac         | 6 +++---
+ plugins/check_http.c | 4 ++--
+ plugins/check_smtp.c | 8 +++++---
+ plugins/check_tcp.c  | 4 ++--
+ plugins/common.h     | 7 +++++++
+ 5 files changed, 19 insertions(+), 10 deletions(-)
+
+--- a/configure.ac
++++ b/configure.ac
+@@ -493,15 +493,15 @@
+ 	dnl Check for crypto lib
+ 	_SAVEDLIBS="$LIBS"
+ 	LIBS="-L${with_openssl}/lib"
+-	AC_CHECK_LIB(crypto,CRYPTO_lock)
+-	if test "$ac_cv_lib_crypto_CRYPTO_lock" = "yes"; then
++	AC_CHECK_LIB(crypto,CRYPTO_new_ex_data)
++	if test "$ac_cv_lib_crypto_CRYPTO_new_ex_data" = "yes"; then
+ 		dnl Check for SSL lib
+ 		AC_CHECK_LIB(ssl,main, SSLLIBS="-lssl -lcrypto",,-lcrypto)
+ 	fi
+ 	LIBS="$_SAVEDLIBS"
+ 
+ 	dnl test headers and libs to decide whether check_http should use SSL
+-	if test "$ac_cv_lib_crypto_CRYPTO_lock" = "yes"; then
++	if test "$ac_cv_lib_crypto_CRYPTO_new_ex_data" = "yes"; then
+ 		if test "$ac_cv_lib_ssl_main" = "yes"; then
+ 			if test "$FOUNDINCLUDE" = "yes"; then
+ 				FOUNDOPENSSL="yes"
+--- a/plugins/check_http.c
++++ b/plugins/check_http.c
+@@ -886,8 +886,8 @@
+     elapsed_time_ssl = (double)microsec_ssl / 1.0e6;
+     if (check_cert == TRUE) {
+       result = np_net_ssl_check_cert(days_till_exp_warn, days_till_exp_crit);
+-      np_net_ssl_cleanup();
+       if (sd) close(sd);
++      np_net_ssl_cleanup();
+       return result;
+     }
+   }
+@@ -1005,10 +1005,10 @@
+     die (STATE_CRITICAL, _("HTTP CRITICAL - No data received from host\n"));
+ 
+   /* close the connection */
++  if (sd) close(sd);
+ #ifdef HAVE_SSL
+   np_net_ssl_cleanup();
+ #endif
+-  if (sd) close(sd);
+ 
+   /* Save check time */
+   microsec = deltime (tv);
+--- a/plugins/check_smtp.c
++++ b/plugins/check_smtp.c
+@@ -239,8 +239,8 @@
+ 		  result = np_net_ssl_init(sd);
+ 		  if(result != STATE_OK) {
+ 		    printf (_("CRITICAL - Cannot create SSL context.\n"));
+-		    np_net_ssl_cleanup();
+ 		    close(sd);
++		    np_net_ssl_cleanup();
+ 		    return STATE_CRITICAL;
+ 		  } else {
+ 			ssl_established = 1;
+@@ -764,10 +764,12 @@
+ int
+ my_close (void)
+ {
++	int result;
++	result = close(sd);
+ #ifdef HAVE_SSL
+-  np_net_ssl_cleanup();
++	np_net_ssl_cleanup();
+ #endif
+-  return close(sd);
++	return result;
+ }
+ 
+ 
+--- a/plugins/check_tcp.c
++++ b/plugins/check_tcp.c
+@@ -247,8 +247,8 @@
+ 		}
+ 	}
+ 	if(result != STATE_OK){
+-		np_net_ssl_cleanup();
+ 		if(sd) close(sd);
++		np_net_ssl_cleanup();
+ 		return result;
+ 	}
+ #endif /* HAVE_SSL */
+@@ -321,10 +321,10 @@
+ 	if (server_quit != NULL) {
+ 		my_send(server_quit, strlen(server_quit));
+ 	}
++	if (sd) close (sd);
+ #ifdef HAVE_SSL
+ 	np_net_ssl_cleanup();
+ #endif
+-	if (sd) close (sd);
+ 
+ 	microsec = deltime (tv);
+ 	elapsed_time = (double)microsec / 1.0e6;
+--- a/plugins/common.h
++++ b/plugins/common.h
+@@ -161,6 +161,13 @@
+ #  endif
+ #endif
+ 
++/* openssl 1.1 does not set OPENSSL_NO_SSL2 by default but ships without ssl2 */
++#ifdef OPENSSL_VERSION_NUMBER
++#  if OPENSSL_VERSION_NUMBER >= 0x10100000
++#   define OPENSSL_NO_SSL2
++#  endif
++#endif
++
+ /*
+  *
+  * Standard Values
+--- a/configure
++++ b/configure
+@@ -15775,9 +15775,9 @@
+ 
+ 		_SAVEDLIBS="$LIBS"
+ 	LIBS="-L${with_openssl}/lib"
+-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for CRYPTO_lock in -lcrypto" >&5
+-$as_echo_n "checking for CRYPTO_lock in -lcrypto... " >&6; }
+-if ${ac_cv_lib_crypto_CRYPTO_lock+:} false; then :
++	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for CRYPTO_new_ex_data in -lcrypto" >&5
++$as_echo_n "checking for CRYPTO_new_ex_data in -lcrypto... " >&6; }
++if ${ac_cv_lib_crypto_CRYPTO_new_ex_data+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+@@ -15791,27 +15791,27 @@
+ #ifdef __cplusplus
+ extern "C"
+ #endif
+-char CRYPTO_lock ();
++char CRYPTO_new_ex_data ();
+ int
+ main ()
+ {
+-return CRYPTO_lock ();
++return CRYPTO_new_ex_data ();
+   ;
+   return 0;
+ }
+ _ACEOF
+ if ac_fn_c_try_link "$LINENO"; then :
+-  ac_cv_lib_crypto_CRYPTO_lock=yes
++  ac_cv_lib_crypto_CRYPTO_new_ex_data=yes
+ else
+-  ac_cv_lib_crypto_CRYPTO_lock=no
++  ac_cv_lib_crypto_CRYPTO_new_ex_data=no
+ fi
+ rm -f core conftest.err conftest.$ac_objext \
+     conftest$ac_exeext conftest.$ac_ext
+ LIBS=$ac_check_lib_save_LIBS
+ fi
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypto_CRYPTO_lock" >&5
+-$as_echo "$ac_cv_lib_crypto_CRYPTO_lock" >&6; }
+-if test "x$ac_cv_lib_crypto_CRYPTO_lock" = xyes; then :
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_crypto_CRYPTO_new_ex_data" >&5
++$as_echo "$ac_cv_lib_crypto_CRYPTO_new_ex_data" >&6; }
++if test "x$ac_cv_lib_crypto_CRYPTO_new_ex_data" = xyes; then :
+   cat >>confdefs.h <<_ACEOF
+ #define HAVE_LIBCRYPTO 1
+ _ACEOF
+@@ -15820,7 +15820,7 @@
+ 
+ fi
+ 
+-	if test "$ac_cv_lib_crypto_CRYPTO_lock" = "yes"; then
++	if test "$ac_cv_lib_crypto_CRYPTO_new_ex_data" = "yes"; then
+ 				{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for main in -lssl" >&5
+ $as_echo_n "checking for main in -lssl... " >&6; }
+ if ${ac_cv_lib_ssl_main+:} false; then :
+@@ -15858,7 +15858,7 @@
+ 	fi
+ 	LIBS="$_SAVEDLIBS"
+ 
+-		if test "$ac_cv_lib_crypto_CRYPTO_lock" = "yes"; then
++		if test "$ac_cv_lib_crypto_CRYPTO_new_ex_data" = "yes"; then
+ 		if test "$ac_cv_lib_ssl_main" = "yes"; then
+ 			if test "$FOUNDINCLUDE" = "yes"; then
+ 				FOUNDOPENSSL="yes"
