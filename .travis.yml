@@ -20,6 +20,9 @@ before_install:
 #  - sudo apt-get autoremove -qq
 
 install:
+  # add ppa for libfreeradius-client-dev and newer lintian
+  - sudo add-apt-repository -y ppa:waja/trusty-backports
+  - sudo apt-get update -qq
   # install packages needed for mk-build-deps
   - sudo apt-get install -qq --no-install-recommends devscripts equivs
   # pull build deps from debian/control
