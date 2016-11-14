@@ -7,5 +7,4 @@ usr/share/doc/monitoring-plugins-common/README.Debian.gz usr/share/doc/monitorin
 usr/share/doc/monitoring-plugins-common/REQUIREMENTS usr/share/doc/monitoring-plugins/REQUIREMENTS
 usr/share/doc/monitoring-plugins-common/SUPPORT usr/share/doc/monitoring-plugins/SUPPORT
 usr/share/doc/monitoring-plugins-common/changelog.gz usr/share/doc/monitoring-plugins/changelog.gz
-usr/share/doc/monitoring-plugins-common/examples usr/share/doc/monitoring-plugins/examples
 usr/share/doc/monitoring-plugins-standard/README.Debian.plugins usr/share/doc/monitoring-plugins/README.Debian.plugins
