@@ -8,6 +8,10 @@ env:
 services:
   - docker
 
+before_script:
+  # fetch all tags (not done due travis cloning with depth=50)
+  - git fetch --tags
+
 script:
   # build the debian package
   - wget -O- http://travis.debian.net/script.sh | sh -
