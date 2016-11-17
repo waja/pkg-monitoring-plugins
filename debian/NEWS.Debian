@@ -4,6 +4,9 @@ monitoring-plugins (2.1.2-3) unstable; urgency=medium
   to fix #822337. This makes it again necessary to migrate you radius
   credentials from /etc/radiusclient/servers to /etc/radcli/servers
   in case you are using check_radius.
+  Please install the new dependencies in this case if you don't install
+  Recommends by default. Those dependencies can be found in
+  /usr/share/doc/monitoring-plugins-standard/README.Debian.plugins.
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 02 Nov 2016 23:59:10 +0100
 
