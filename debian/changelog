@@ -1,3 +1,9 @@
+monitoring-plugins (2.1.2-4) UNRELEASED; urgency=medium
+
+  * 
+
+ -- Jan Wagner <waja@cyconet.org>  Fri, 18 Nov 2016 12:47:06 +0100
+
 monitoring-plugins (2.1.2-3) unstable; urgency=medium
 
   * [8bab78d] d/control: Replacing build-dep libmysqlclient-dev with
