@@ -1,8 +1,31 @@
-monitoring-plugins (2.1.2-3) UNRELEASED; urgency=medium
+monitoring-plugins (2.1.2-3) unstable; urgency=medium
 
-  * 
+  * [8bab78d] d/control: Replacing build-dep libmysqlclient-dev with
+    default-libmysqlclient-dev
+  * [c40925b] d/control: Bump Standards-Version to 3.9.8, no changes needed
+  * [2499442] travis-ci: Do not autoremove packages
+  * [c272a5f] travis-ci: Add trusty-backports
+  * [c15dfcc] Remove dangling links for removed examples (Closes: #824599)
+  * [767714f] d/control: Build-depend on libssl1.0-dev
+  * [775a4db] d/control: Add libssl-dev (<< 1.1.0) as Build-depend alternative
+    for backporting
+  * [0ee6998] travis-ci: Make use of travis.d.n
+  * [a4b8d68] travis-ci: Adding jessie repo
+  * [7a42fe2] travis-ci: Also fetching all tags
+  * [a3c46e3] travis-ci: Using httpredir.debian.org as mirror
+  * [51e0ade] travis-ci: Builds on testing are allowed to fail
+  * [11ce4ed] d/control: Add libmysqlclient-dev as Build-depend alternative for
+    backporting
+  * [cccb5e2] travis-ci: Add stable to travis env
+  * [c614108] d/control: Adding libradcli-dev as first radius build-dep
+    (Closes: #822337)
+  * [1b1c5e9] Adding d/p/20_check_radius_radcli to add support for radcli
+    (Closes: #822337)
+  * [bbb8528] d/NEWS.Debian: Add a note about dependencies for check_radius
+  * [438149a] Adjust check_radius command definition to use the correct
+    radiusclient config file
 
- -- Jan Wagner <waja@cyconet.org>  Mon, 16 Nov 2015 22:06:42 +0100
+ -- Jan Wagner <waja@cyconet.org>  Fri, 18 Nov 2016 12:22:37 +0100
 
 monitoring-plugins (2.1.2-2) unstable; urgency=medium
 
@@ -620,7 +643,7 @@ nagios-plugins (1.4.14-1) unstable; urgency=low
   * Fix check-switch-alive* check commands by adding "-H" at the appropriate
     place
   * Add lintian fixes
-    - Add ${misc:Depends} to nagios-plugins depencies
+    - Add ${misc:Depends} to nagios-plugins dependencies
     - Fix two spelling errors in README.Debian
 
  -- Jan Wagner <waja@cyconet.org>  Sat, 23 Jan 2010 01:07:49 +0100
