@@ -137,6 +137,9 @@
 /* Define to 1 when the gnulib module snprintf should be tested. */
 #undef GNULIB_TEST_SNPRINTF
 
+/* Define to 1 when the gnulib module strcasestr should be tested. */
+#undef GNULIB_TEST_STRCASESTR
+
 /* Define to 1 when the gnulib module strerror should be tested. */
 #undef GNULIB_TEST_STRERROR
 
@@ -482,6 +485,9 @@
 
 /* Define to 1 if you have the `pthread' library (-lpthread). */
 #undef HAVE_LIBPTHREAD
+
+/* Define to 1 if you have the `radcli' library (-lradcli). */
+#undef HAVE_LIBRADCLI
 
 /* Define to 1 if you have the `radiusclient' library (-lradiusclient). */
 #undef HAVE_LIBRADIUSCLIENT
@@ -1478,6 +1484,9 @@
 /* Define to 1 if you have the `strcasecmp' function. */
 #undef HAVE_STRCASECMP
 
+/* Define to 1 if you have the `strcasestr' function. */
+#undef HAVE_STRCASESTR
+
 /* Define to 1 if you have the `strdup' function. */
 #undef HAVE_STRDUP
 
@@ -1879,6 +1888,9 @@
 
 /* path to snmpgetnext binary */
 #undef PATH_TO_SNMPGETNEXT
+
+/* path to sudo */
+#undef PATH_TO_SUDO
 
 /* path to uptime binary */
 #undef PATH_TO_UPTIME

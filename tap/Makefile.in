@@ -134,6 +134,7 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
 	$(top_srcdir)/gl/m4/stddef_h.m4 $(top_srcdir)/gl/m4/stdint.m4 \
 	$(top_srcdir)/gl/m4/stdint_h.m4 $(top_srcdir)/gl/m4/stdio_h.m4 \
 	$(top_srcdir)/gl/m4/stdlib_h.m4 $(top_srcdir)/gl/m4/strcase.m4 \
+	$(top_srcdir)/gl/m4/strcasestr.m4 \
 	$(top_srcdir)/gl/m4/strerror.m4 \
 	$(top_srcdir)/gl/m4/string_h.m4 \
 	$(top_srcdir)/gl/m4/strings_h.m4 \
@@ -1031,6 +1032,7 @@ PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
 PATH_TO_APTGET = @PATH_TO_APTGET@
 PATH_TO_DIG = @PATH_TO_DIG@
+PATH_TO_ENV = @PATH_TO_ENV@
 PATH_TO_FPING = @PATH_TO_FPING@
 PATH_TO_FPING6 = @PATH_TO_FPING6@
 PATH_TO_LMSTAT = @PATH_TO_LMSTAT@
@@ -1048,6 +1050,7 @@ PATH_TO_SMBCLIENT = @PATH_TO_SMBCLIENT@
 PATH_TO_SNMPGET = @PATH_TO_SNMPGET@
 PATH_TO_SNMPGETNEXT = @PATH_TO_SNMPGETNEXT@
 PATH_TO_SSH = @PATH_TO_SSH@
+PATH_TO_SUDO = @PATH_TO_SUDO@
 PATH_TO_SWAP = @PATH_TO_SWAP@
 PATH_TO_SWAPINFO = @PATH_TO_SWAPINFO@
 PATH_TO_UPTIME = @PATH_TO_UPTIME@

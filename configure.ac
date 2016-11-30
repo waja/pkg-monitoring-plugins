@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT(monitoring-plugins,2.1.2)
+AC_INIT(monitoring-plugins,2.2)
 AC_CONFIG_SRCDIR(NPTest.pm)
 AC_CONFIG_FILES([gl/Makefile])
 AC_CONFIG_AUX_DIR(build-aux)
@@ -273,26 +273,33 @@ AC_ARG_WITH([radius], [AS_HELP_STRING([--without-radius], [Skips the radius plug
 dnl Check for radius libraries
 AS_IF([test "x$with_radius" != "xno"], [
   _SAVEDLIBS="$LIBS"
-  AC_CHECK_LIB(freeradius-client,rc_read_config)
-  if test "$ac_cv_lib_freeradius_client_rc_read_config" = "yes"; then
+  AC_CHECK_LIB(radcli,rc_read_config)
+  if test "$ac_cv_lib_radcli_rc_read_config" = "yes"; then
     EXTRAS="$EXTRAS check_radius\$(EXEEXT)"
-    RADIUSLIBS="-lfreeradius-client"
+    RADIUSLIBS="-lradcli"
     AC_SUBST(RADIUSLIBS)
   else
-    AC_CHECK_LIB(radiusclient-ng,rc_read_config)
-    if test "$ac_cv_lib_radiusclient_ng_rc_read_config" = "yes"; then
+    AC_CHECK_LIB(freeradius-client,rc_read_config)
+    if test "$ac_cv_lib_freeradius_client_rc_read_config" = "yes"; then
       EXTRAS="$EXTRAS check_radius\$(EXEEXT)"
-      RADIUSLIBS="-lradiusclient-ng"
+      RADIUSLIBS="-lfreeradius-client"
       AC_SUBST(RADIUSLIBS)
     else
-      AC_CHECK_LIB(radiusclient,rc_read_config)
-      if test "$ac_cv_lib_radiusclient_rc_read_config" = "yes"; then
+      AC_CHECK_LIB(radiusclient-ng,rc_read_config)
+      if test "$ac_cv_lib_radiusclient_ng_rc_read_config" = "yes"; then
         EXTRAS="$EXTRAS check_radius\$(EXEEXT)"
-        RADIUSLIBS="-lradiusclient"
+        RADIUSLIBS="-lradiusclient-ng"
         AC_SUBST(RADIUSLIBS)
       else
-        AC_MSG_WARN([Skipping radius plugin])
-        AC_MSG_WARN([install radius libs to compile this plugin (see REQUIREMENTS).])
+        AC_CHECK_LIB(radiusclient,rc_read_config)
+        if test "$ac_cv_lib_radiusclient_rc_read_config" = "yes"; then
+          EXTRAS="$EXTRAS check_radius\$(EXEEXT)"
+          RADIUSLIBS="-lradiusclient"
+          AC_SUBST(RADIUSLIBS)
+        else
+          AC_MSG_WARN([Skipping radius plugin])
+          AC_MSG_WARN([install radius libs to compile this plugin (see REQUIREMENTS).])
+        fi
       fi
     fi
   fi
@@ -493,15 +500,15 @@ if ! test x"$with_openssl" = x"no"; then
 	dnl Check for crypto lib
 	_SAVEDLIBS="$LIBS"
 	LIBS="-L${with_openssl}/lib"
-	AC_CHECK_LIB(crypto,CRYPTO_lock)
-	if test "$ac_cv_lib_crypto_CRYPTO_lock" = "yes"; then
+	AC_CHECK_LIB(crypto,CRYPTO_new_ex_data)
+	if test "$ac_cv_lib_crypto_CRYPTO_new_ex_data" = "yes"; then
 		dnl Check for SSL lib
 		AC_CHECK_LIB(ssl,main, SSLLIBS="-lssl -lcrypto",,-lcrypto)
 	fi
 	LIBS="$_SAVEDLIBS"
 
 	dnl test headers and libs to decide whether check_http should use SSL
-	if test "$ac_cv_lib_crypto_CRYPTO_lock" = "yes"; then
+	if test "$ac_cv_lib_crypto_CRYPTO_new_ex_data" = "yes"; then
 		if test "$ac_cv_lib_ssl_main" = "yes"; then
 			if test "$FOUNDINCLUDE" = "yes"; then
 				FOUNDOPENSSL="yes"
@@ -610,6 +617,7 @@ AC_DEFINE_UNQUOTED(SOCKET_SIZE_TYPE, $ac_cv_socket_size_type ,
 dnl #### Process table test
 
 AC_PATH_PROG(PATH_TO_PS,ps)
+AC_PATH_PROG(PATH_TO_ENV,env)
 
 AC_MSG_CHECKING(for ps syntax)
 AC_ARG_WITH(ps_command,
@@ -930,6 +938,19 @@ then
 	ac_cv_ps_format="%*s %s %d %d %d %*s %*s %*s %*s %*s %*s %*s %*s %*s %*s %n%s"
 	ac_cv_ps_cols=6
 	AC_MSG_RESULT([$ac_cv_ps_command])
+
+dnl HP-UX:
+dnl S        UID       RUID USER     RUSER      PID  PPID     VSZ  %CPU COMMAND         COMMAND
+dnl S          0        400 root     oracle    2805     1   12904  0.00 ora_dism_SEA1X  ora_dism_SEA1X
+dnl S        400        400 oracle   oracle   19261     1  126488  0.00 tnslsnr         /u01/app/oracle/product/db/11.2.0.3/bin/tnslsnr LISTENER -inherit
+elif env UNIX95=1 ps -eo 'state uid ruid user ruser pid ppid vsz pcpu comm args' 2>/dev/null | head -n 1 | \
+    egrep -i ["^ *S +UID +RUID +USER +RUSER +PID +PPID +VSZ +%CPU +COMMAND +COMMAND"] >/dev/null
+then
+    ac_cv_ps_varlist="[procstat,&procuid,&procpid,&procppid,&procvsz,&procpcpu,procprog,&pos]"
+    ac_cv_ps_command="$PATH_TO_ENV UNIX95=1 $PATH_TO_PS -eo 'state uid pid ppid vsz pcpu comm args'"
+    ac_cv_ps_format="%s %d %d %d %d %f %s %n"
+    ac_cv_ps_cols=8
+    AC_MSG_RESULT([$ac_cv_ps_command])
 
 dnl AIX 4.1:
 dnl     F S      UID   PID  PPID   C PRI NI ADDR  SZ  RSS   WCHAN    TTY  TIME CMD
@@ -1464,6 +1485,16 @@ else
 	AC_MSG_WARN([Get ssh in order to make check_by_ssh plugin])
 fi
 
+AC_PATH_PROG(PATH_TO_SUDO,sudo)
+AC_ARG_WITH(sudo_command,
+            ACX_HELP_STRING([--with-sudo-command=PATH],
+                            [sets path to sudo]), PATH_TO_SUDO=$withval)
+if test -n "$PATH_TO_SUDO"
+then
+	AC_DEFINE_UNQUOTED(PATH_TO_SUDO,"$PATH_TO_SUDO",[path to sudo])
+else
+	AC_MSG_WARN([Could not find sudo or eqivalent])
+fi
 
 AC_PATH_PROG(PATH_TO_MAILQ,mailq)
 AC_ARG_WITH(mailq_command,
