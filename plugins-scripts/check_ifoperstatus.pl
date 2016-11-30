@@ -37,7 +37,6 @@ use POSIX;
 use strict;
 use FindBin;
 use lib "$FindBin::Bin";
-use lib '@libexecdir@';
 use utils qw($TIMEOUT %ERRORS &print_revision &support);
 
 use Net::SNMP;
@@ -326,7 +325,7 @@ sub print_help() {
 	printf "                     (Implies the use of -I)\n";
 	printf "   -w (--warn =i|w|c) ignore|warn|crit if the interface is dormant (default critical)\n";
 	printf "   -D (--admin-down =i|w|c) same for administratively down interfaces (default warning)\n";
-	printf "   -M (--maxmsgsize) Max message size - usefull only for v1 or v2c\n";
+	printf "   -M (--maxmsgsize) Max message size - useful only for v1 or v2c\n";
 	printf "   -t (--timeout)    seconds before the plugin times out (default=$TIMEOUT)\n";
 	printf "   -V (--version)    Plugin version\n";
 	printf "   -h (--help)       usage help \n\n";
@@ -368,17 +367,17 @@ sub process_arguments() {
 
 	if ($status == 0){
 		print_help();
-		exit $ERRORS{'OK'};
+		exit $ERRORS{'UNKNOWN'};
 	}
 
 	if ($opt_V) {
 		print_revision($PROGNAME,'@NP_VERSION@');
-		exit $ERRORS{'OK'};
+		exit $ERRORS{'UNKNOWN'};
 	}
 
 	if ($opt_h) {
 		print_help();
-		exit $ERRORS{'OK'};
+		exit $ERRORS{'UNKNOWN'};
 	}
 
 	if (! utils::is_hostname($hostname)){

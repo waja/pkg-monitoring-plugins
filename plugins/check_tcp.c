@@ -237,7 +237,7 @@ main (int argc, char **argv)
 	gettimeofday (&tv, NULL);
 
 	result = np_net_connect (server_address, server_port, &sd, PROTOCOL);
-	if (result == STATE_CRITICAL) return STATE_CRITICAL;
+	if (result == STATE_CRITICAL) return econn_refuse_state;
 
 #ifdef HAVE_SSL
 	if (flags & FLAG_SSL){
@@ -247,8 +247,8 @@ main (int argc, char **argv)
 		}
 	}
 	if(result != STATE_OK){
-		np_net_ssl_cleanup();
 		if(sd) close(sd);
+		np_net_ssl_cleanup();
 		return result;
 	}
 #endif /* HAVE_SSL */
@@ -321,10 +321,10 @@ main (int argc, char **argv)
 	if (server_quit != NULL) {
 		my_send(server_quit, strlen(server_quit));
 	}
+	if (sd) close (sd);
 #ifdef HAVE_SSL
 	np_net_ssl_cleanup();
 #endif
-	if (sd) close (sd);
 
 	microsec = deltime (tv);
 	elapsed_time = (double)microsec / 1.0e6;
@@ -463,10 +463,10 @@ process_arguments (int argc, char **argv)
 			usage5 ();
 		case 'h':                 /* help */
 			print_help ();
-			exit (STATE_OK);
+			exit (STATE_UNKNOWN);
 		case 'V':                 /* version */
 			print_revision (progname, NP_VERSION);
-			exit (STATE_OK);
+			exit (STATE_UNKNOWN);
 		case 'v':                 /* verbose mode */
 			flags |= FLAG_VERBOSE;
 			match_flags |= NP_MATCH_VERBOSE;
@@ -577,7 +577,8 @@ process_arguments (int argc, char **argv)
 			if ((temp=strchr(optarg,','))!=NULL) {
 			    *temp='\0';
 			    if (!is_intnonneg (optarg))
-                               usage2 (_("Invalid certificate expiration period"), optarg);				 days_till_exp_warn = atoi(optarg);
+                               usage2 (_("Invalid certificate expiration period"), optarg);
+			    days_till_exp_warn = atoi (optarg);
 			    *temp=',';
 			    temp++;
 			    if (!is_intnonneg (temp))

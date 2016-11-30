@@ -2,10 +2,11 @@ This software is brought to you by the Monitoring Plugins Development Team. Howe
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-Jérémie Courrèges-Anglas
 Diego Elio Pettenò
 fabiodds
+Elan Ruusamäe
 dag rob?le
+Matthias Hähnel
 Randy O'Meara
 Oskar Ahner
 Lance Albertson
@@ -16,6 +17,7 @@ Patrick Allen
 Felipe Gustavo de Almeida
 Michael Almond
 Michael Anthon
+Bernd Apfel
 Paula Arnold
 Kondoros Attila
 Daniel Austin
@@ -35,6 +37,7 @@ Jason Benguerel
 Allan Bennett
 Booker C. Bense
 Guy Van Den Bergh
+Andrew Berglund
 Jimmy Bergman
 Jochen Bern
 Tom Bertelston
@@ -61,6 +64,7 @@ Jim Carroll
 Ian Cass
 Arnold Cavazos
 Alex Chaffee
+Yannick Charton
 Stephane Chazelas
 Eric Chen
 Alwyn Cherrington
@@ -71,6 +75,7 @@ Garry Cook
 Charlie Cook
 Ollie Cook
 Luca Corti
+Greg Cox
 Jason Crawford
 David Croft
 Robert Dale
@@ -88,6 +93,7 @@ Edwin Eefting
 Jason Ellison
 Andrew Elwell
 Mike Emigh
+Johannes Engel
 Hans Engelen
 Matthew Ericson
 Andreas Ericsson
@@ -113,7 +119,9 @@ Martin Foster
 Felix Frank
 Dann Frazier
 Rick Frey
+John C. Frickson
 Matt Garrett
+Sven Geggus
 Jonas Genannt
 Robby Giffin
 Flo Gleixner
@@ -123,6 +131,7 @@ Joseph Gooch
 Aravind Gottipati
 Kev Green
 Steve Greenland
+Roberto Greiner
 Olaf Greis
 Alex Griffin
 Chris Grim
@@ -158,6 +167,7 @@ Jason Kau
 Mark Keisler
 Ryan Kelly
 Matthew Kent
+Matthieu Kermagoret
 Bo Kersey
 Konstantin Khomoutov
 Serhan Kiymaz
@@ -169,8 +179,10 @@ Julius Kriukas
 Christoph Kron
 Frederic Krueger
 Marcel Kuiper
+Christian Kujau
 Alexander Kulak
 Bill Kunkel
+Thomas Kurschel
 Brian Landers
 Stephane Lapie
 Pascal Larisch
@@ -183,6 +195,7 @@ William Leibzon
 Pedro Leite
 Richard Leitner
 Craig Leres
+Laurent Licour
 Oskar Liljeblad
 Joerg Linge
 Jan Lipphaus
@@ -208,6 +221,7 @@ Patrick McCormick
 Mike McHenry
 Simon Meggle
 Stefan Meier
+Michael Melcher
 Jan-Piet Mens
 Sven Meyer
 Emil Michles
@@ -217,6 +231,7 @@ Russell Miller
 Eric J. Mislivec
 Janos Mohacsi
 Gerd Mueller
+Adrian Murphy
 Michael Musikhin
 Damian Myerscough
 Jan-Frode Myklebust
@@ -227,6 +242,7 @@ Thomas Nilsen
 Sebastian Nohn
 Geoff Oakham
 Walbert Oberngruber
+Christopher Odenbach
 Craig Orsinger
 Vaclav Ovsik
 Remi Paulmier
@@ -247,6 +263,7 @@ Joe Presbrey
 Will Preston
 Arnaud Quette
 Darian Rackham
+Peter Radcliffe
 Steve Rader
 Olivier 'Babar' Raginel
 Phil Randal
@@ -270,7 +287,6 @@ Sascha Runschke
 Dietmar Ruzicka
 Ralph Rye
 Alen Salamun
-Louis Sautier
 Sven Schaffranneck
 Christoph Schell
 Thomas Schimpke
@@ -281,8 +297,10 @@ Christian Schneemann
 Cove Schneider
 Enrico Scholz
 Sebastian Schubert
+Christopher Schultz
 Russell Scibetti
 Noel Sebastien
+Andreas Seemueller
 Lonny Selinger
 Nathan Shafer
 Tom Shields
@@ -290,11 +308,11 @@ Sean Shore
 Pall Sigurdsson
 Antony Simmonds
 John Sivak
-Oliver Skibbe
 Nik Soggia
 Robin Sonefors
 Erwan Ben Souiden
 Lars Stavholm
+Daniel Stirnimann
 Nikolay Sturm
 David Sullivan
 Kjell Sundtjonn
