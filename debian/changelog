@@ -1,6 +1,12 @@
-monitoring-plugins (2.1.2-4) UNRELEASED; urgency=medium
+monitoring-plugins (2.2-1~1.gbp79b42f) UNRELEASED; urgency=medium
 
-  * 
+  * [6f99654] Adding OpenSSL support by d/p/21_openssl11 (Closes: #844031),
+    still build against openssl 1.0
+  * [3978de2] travis-ci: Add my own trusty ppa for newer lintian
+  * [fc1e752] travis-ci: use distribution trusty
+  * [0bf4153] travis-ci: Use include build matrix
+  * [c845af0] New upstream version 2.2
+  * [79b42f5] Drop patches integrated upstream
 
  -- Jan Wagner <waja@cyconet.org>  Fri, 18 Nov 2016 12:47:06 +0100
 
