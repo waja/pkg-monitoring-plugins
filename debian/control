@@ -26,7 +26,7 @@ Architecture: all
 Depends: monitoring-plugins-basic, monitoring-plugins-standard, ${misc:Depends}
 Replaces: nagios-plugins (<< 1.5-4~)
 Breaks: nagios-plugins (<< 1.5-4~)
-Suggests: icinga | icinga | nagios3, nagios-plugins-contrib
+Suggests: icinga | icinga, nagios-plugins-contrib
 Description: Plugins for nagios compatible monitoring systems (metapackage)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga.
  .
@@ -41,7 +41,7 @@ Architecture: any
 Depends: ucf, ${misc:Depends}, ${shlibs:Depends}
 Replaces: nagios-plugins-common (<< 1.5-4~)
 Breaks: nagios-plugins-common (<< 1.5-4~)
-Suggests: icinga | icinga | nagios3
+Suggests: icinga | icinga
 Description: Common files for plugins for nagios compatible monitoring
  Common files for plugins for nagios compatible monitoring systems like Naemon
  and Icinga.
@@ -60,7 +60,7 @@ Depends: inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any],
 Recommends: libcap2-bin [linux-any]
 Replaces: nagios-plugins-basic (<< 1.5-4~)
 Breaks: nagios-plugins-basic (<< 1.5-4~)
-Suggests: icinga | icinga | nagios3
+Suggests: icinga | icinga
 Description: Plugins for nagios compatible monitoring systems (basic)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
  contains the following plugins:
@@ -96,7 +96,7 @@ Recommends: bind9-host | host,
             snmp,
             ${shlibs:Recommends}
 Suggests: fping,
-          icinga | icinga | nagios3,
+          icinga | icinga
           postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light,
           qstat
 Description: Plugins for nagios compatible monitoring systems (standard)
