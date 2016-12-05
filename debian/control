@@ -17,7 +17,7 @@ Build-Depends: autotools-dev,
                perl,
                procps
 Homepage: https://www.monitoring-plugins.org
-Vcs-Browser: http://anonscm.debian.org/gitweb/?p=pkg-nagios/pkg-monitoring-plugins.git
+Vcs-Browser: https://anonscm.debian.org/gitweb/?p=pkg-nagios/pkg-monitoring-plugins.git
 Vcs-Git: git://anonscm.debian.org/pkg-nagios/pkg-monitoring-plugins.git
 Standards-Version: 3.9.8
 
