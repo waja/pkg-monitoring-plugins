@@ -12,7 +12,6 @@ Build-Depends: autotools-dev,
                default-libmysqlclient-dev | libmysqlclient-dev,
                libnet-snmp-perl,
                libpq-dev,
-               libssl1.0-dev | libssl-dev (<< 1.1.0),
                mawk | awk,
                perl,
                procps
