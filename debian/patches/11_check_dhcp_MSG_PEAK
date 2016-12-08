@@ -1,0 +1,22 @@
+From c7f7959dd90e2b82bb1904a02e11f4b5e0f35709 Mon Sep 17 00:00:00 2001
+From: Harald Koch <chk@anemone.chk.cfrq.net>
+Date: Wed, 7 Dec 2016 13:11:40 -0500
+Subject: [PATCH] properly remove MSG_PEEK in check_dhcp.c. Fixes #1450.
+
+---
+ plugins-root/check_dhcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins-root/check_dhcp.c b/plugins-root/check_dhcp.c
+index 88b7ca1..f4c2daf 100644
+--- a/plugins-root/check_dhcp.c
++++ b/plugins-root/check_dhcp.c
+@@ -693,7 +693,7 @@ int receive_dhcp_packet(void *buffer, int buffer_size, int sock, int timeout, st
+         else{
+ 		bzero(&source_address,sizeof(source_address));
+ 		address_size=sizeof(source_address);
+-                recv_result=recvfrom(sock,(char *)buffer,buffer_size,MSG_PEEK,(struct sockaddr *)&source_address,&address_size);
++                recv_result=recvfrom(sock,(char *)buffer,buffer_size,0,(struct sockaddr *)&source_address,&address_size);
+ 		if(verbose)
+ 			printf("recv_result: %d\n",recv_result);
+ 
