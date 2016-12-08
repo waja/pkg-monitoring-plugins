@@ -1,4 +1,5 @@
-monitoring-plugins (2.2-1~1.gbp79b42f) UNRELEASED; urgency=medium
+monitoring-plugins (2.2-1) unstable; urgency=medium
+
 
   * [6f99654] Adding OpenSSL support by d/p/21_openssl11 (Closes: #844031),
     still build against openssl 1.0
@@ -7,8 +8,16 @@ monitoring-plugins (2.2-1~1.gbp79b42f) UNRELEASED; urgency=medium
   * [0bf4153] travis-ci: Use include build matrix
   * [c845af0] New upstream version 2.2
   * [79b42f5] Drop patches integrated upstream
+  * [be431d8] Don't ship removed LEGAL file anymore
+  * [38c2cff] Apply d/p/10_spell_fixes
+  * [abb379d] d/control: Remove nagios3 from Suggests (Closes: #846874)
+  * [2857592] d/control: Add icinga2 as suggests alternative
+  * [7fe2363] d/control: Update Vcs-Browser URL to HTTPS
+  * [670b052] d/control: Update VCS-URLs to https and cgit
+  * [ed0d010] Apply d/p/11_check_dhcp_MSG_PEAK
+  * [4e87f4c] d/control: Remove explicit dependency on libssl-dev
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 18 Nov 2016 12:47:06 +0100
+ -- Jan Wagner <waja@cyconet.org>  Thu, 08 Dec 2016 15:13:41 +0100
 
 monitoring-plugins (2.1.2-3) unstable; urgency=medium
 
