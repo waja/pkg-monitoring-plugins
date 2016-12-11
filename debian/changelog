@@ -1,3 +1,9 @@
+monitoring-plugins (2.2-3~1.gbp5ae607) UNRELEASED; urgency=medium
+
+  * UNRELEASED
+
+ -- Jan Wagner <waja@cyconet.org>  Sun, 11 Dec 2016 16:27:50 +0100
+
 monitoring-plugins (2.2-2) unstable; urgency=medium
 
   * [627d88a] d/control: Explicit build-dep on libssl-dev or libssl1.0-dev
