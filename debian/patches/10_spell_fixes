@@ -352,3 +352,25 @@ Subject: [PATCH] Spelling fixes suggested by lintian
  msgstr ""
  
  #: plugins/check_smtp.c:839
+From 89d00d1c009dd3d4d1c5a6c3769a27704ca3a154 Mon Sep 17 00:00:00 2001
+From: Holger Weiss <holger@zedat.fu-berlin.de>
+Date: Tue, 10 Jan 2017 21:34:58 +0100
+Subject: [PATCH] Apply another spelling fix
+
+---
+ plugins-root/check_icmp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins-root/check_icmp.c b/plugins-root/check_icmp.c
+index b722f80..4098874 100644
+--- a/plugins-root/check_icmp.c
++++ b/plugins-root/check_icmp.c
+@@ -608,7 +608,7 @@ main(int argc, char **argv)
+ 		if(max_completion_time > (u_int)timeout * 1000000) {
+ 			printf("max_completion_time: %llu  timeout: %u\n",
+ 				   max_completion_time, timeout);
+-			printf("Timeout must be at lest %llu\n",
++			printf("Timeout must be at least %llu\n",
+ 				   max_completion_time / 1000000 + 1);
+ 		}
+ 	}
