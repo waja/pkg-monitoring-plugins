@@ -3,29 +3,18 @@ dist: trusty
 
 matrix:
   include:
-  - env: TRAVIS_DEBIAN_DISTRIBUTION=unstable TRAVIS_DEBIAN_MIRROR="http://httpredir.debian.org/debian/" TRAVIS_DEBIAN_EXTRA_REPOSITORY="http://httpredir.debian.org/debian/ jessie main" TRAVIS_DEBIAN_SECURITY_UPDATES=false
-  - env: TRAVIS_DEBIAN_DISTRIBUTION=testing TRAVIS_DEBIAN_MIRROR="http://httpredir.debian.org/debian/" TRAVIS_DEBIAN_EXTRA_REPOSITORY="http://httpredir.debian.org/debian/ jessie main"
-  - env: TRAVIS_DEBIAN_DISTRIBUTION=stable TRAVIS_DEBIAN_MIRROR="http://httpredir.debian.org/debian/"
+  - env: TRAVIS_DEBIAN_DISTRIBUTION=unstable
+  - env: TRAVIS_DEBIAN_DISTRIBUTION=testing
+  - env: TRAVIS_DEBIAN_DISTRIBUTION=stable
   allow_failures:
   - env: TRAVIS_DEBIAN_DISTRIBUTION=stable
 
 services:
   - docker
 
-before_script:
-  # fetch all tags (not done due travis cloning with depth=50)
-  - git fetch --tags
-
 script:
   # build the debian package
   - wget -O- http://travis.debian.net/script.sh | sh -
-
-after_script:
-  # run lintian after build
-  - sudo add-apt-repository -y ppa:waja/trusty-backports
-  - sudo apt-get update -qq
-  - sudo apt-get install -qq --no-install-recommends lintian
-  - lintian --info --display-info --display-experimental --pedantic --show-overrides ../*.deb && lintian --info --display-info --display-experimental --pedantic --show-overrides ../*.dsc
 
 #notifications:
 #  email: false
