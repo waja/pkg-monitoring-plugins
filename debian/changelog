@@ -1,8 +1,12 @@
-monitoring-plugins (2.2-3~1.gbp5ae607) UNRELEASED; urgency=medium
+monitoring-plugins (2.2-3) unstable; urgency=medium
 
-  * UNRELEASED
+  * [760496b] d/control: Drop useless libssl1.0-dev build depend alternative
+  * [e5adc23] Update d/p/10_spell_fixes
+  * [094efe4] Adding d/p/12_check_apt_only_crit and
+    d/p/13_check_apt_list_packages
+  * [e4d7fd6] travis-ci: Reduce complexity
 
- -- Jan Wagner <waja@cyconet.org>  Sun, 11 Dec 2016 16:27:50 +0100
+ -- Jan Wagner <waja@cyconet.org>  Thu, 19 Jan 2017 08:14:21 +0100
 
 monitoring-plugins (2.2-2) unstable; urgency=medium
 
