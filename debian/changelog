@@ -1,3 +1,9 @@
+monitoring-plugins (2.2-4~1.gbpcdc254) UNRELEASED; urgency=medium
+
+  * UNRELEASED
+
+ -- Jan Wagner <waja@cyconet.org>  Thu, 19 Jan 2017 08:59:46 +0100
+
 monitoring-plugins (2.2-3) unstable; urgency=medium
 
   * [760496b] d/control: Drop useless libssl1.0-dev build depend alternative
