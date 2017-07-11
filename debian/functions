@@ -6,10 +6,8 @@ npconfdir=/etc/nagios-plugins/config
 register_cfgs(){
 		# do this in a subshell so we don't screw up cwd
 		( 
-			cd $templdir
 			for f in *cfg; do
-				dest=${npconfdir}/$f
-				ucf $f $dest
+				ucf ${templdir}/$f ${npconfdir}/$f
 			done 
 		);
 }
