@@ -1,6 +1,6 @@
 Source: monitoring-plugins
 Section: net
-Priority: extra
+Priority: optional
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
 Build-Depends: autotools-dev,
