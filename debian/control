@@ -24,8 +24,6 @@ Standards-Version: 3.9.8
 Package: monitoring-plugins
 Architecture: all
 Depends: monitoring-plugins-basic, monitoring-plugins-standard, ${misc:Depends}
-Replaces: nagios-plugins (<< 1.5-4~)
-Breaks: nagios-plugins (<< 1.5-4~)
 Suggests: icinga | icinga2, nagios-plugins-contrib
 Description: Plugins for nagios compatible monitoring systems (metapackage)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga.
@@ -39,8 +37,6 @@ Description: Plugins for nagios compatible monitoring systems (metapackage)
 Package: monitoring-plugins-common
 Architecture: any
 Depends: ucf, ${misc:Depends}, ${shlibs:Depends}
-Replaces: nagios-plugins-common (<< 1.5-4~)
-Breaks: nagios-plugins-common (<< 1.5-4~)
 Suggests: icinga | icinga2
 Description: Common files for plugins for nagios compatible monitoring
  Common files for plugins for nagios compatible monitoring systems like Naemon
@@ -58,8 +54,6 @@ Depends: inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any],
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: libcap2-bin [linux-any]
-Replaces: nagios-plugins-basic (<< 1.5-4~)
-Breaks: nagios-plugins-basic (<< 1.5-4~)
 Suggests: icinga | icinga2
 Description: Plugins for nagios compatible monitoring systems (basic)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
@@ -85,8 +79,6 @@ Description: Plugins for nagios compatible monitoring systems (basic)
 
 Package: monitoring-plugins-standard
 Architecture: any
-Replaces: nagios-plugins-standard (<< 1.5-4~)
-Breaks: nagios-plugins-standard (<< 1.5-4~)
 Depends: monitoring-plugins-basic, ucf, ${misc:Depends}, ${shlibs:Depends}
 Recommends: bind9-host | host,
             dnsutils,
@@ -112,43 +104,3 @@ Description: Plugins for nagios compatible monitoring systems (standard)
  This package provides the suite of plugins that are most likely to be
  useful on a central monitoring host. Some scripts need more packages installed
  to work, which is implemented as recommends.
-
-Package: nagios-plugins
-Depends: monitoring-plugins, ${misc:Depends}
-Architecture: all
-Section: oldlibs
-Description: transitional dummy package (nagios-plugins to monitoring-plugins)
- This dummy package is provided to support the transition from
- nagios-plugins to monitoring-plugins and should be removed afterwards.
-
-Package: nagios-plugins-common
-Architecture: all
-Section: oldlibs
-Depends: monitoring-plugins-common, ${misc:Depends}
-Replaces: nagios-plugins-basic (<= 1.4.15-5)
-Description: transitional dummy package
- This dummy package is provided to support the transition from
- nagios-plugins-common to monitoring-plugins-common and should be removed
- afterwards.
-
-Package: nagios-plugins-basic
-Depends: monitoring-plugins-basic, ${misc:Depends}
-Architecture: all
-Section: oldlibs
-Conflicts: nagios-plugins (<= 1.4.2-3)
-Replaces: nagios-plugins, nagios-plugins-standard
-Description: transitional dummy package
- This dummy package is provided to support the transition from
- nagios-plugins-basic to monitoring-plugins-basic and should be removed
- afterwards.
-
-Package: nagios-plugins-standard
-Depends: monitoring-plugins-standard, ${misc:Depends}
-Architecture: all
-Section: oldlibs
-Conflicts: nagios-plugins (<= 1.4.2-3)
-Replaces: nagios-plugins
-Description: transitional dummy package
- This dummy package is provided to support the transition from
- nagios-plugins-standard to monitoring-plugins-standard and should be removed
- afterwards.
