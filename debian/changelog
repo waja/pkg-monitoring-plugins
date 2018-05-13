@@ -1,3 +1,9 @@
+monitoring-plugins (2.2-5) UNRELEASED; urgency=medium
+
+  * 
+
+ -- Jan Wagner <waja@cyconet.org>  Sun, 13 May 2018 19:18:00 +0200
+
 monitoring-plugins (2.2-4) unstable; urgency=medium
 
   * [97cb3c4] Drop symlinks to removed LEGAL file. (Closes: #856676)
