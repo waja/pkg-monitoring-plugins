@@ -1,4 +1,4 @@
-monitoring-plugins (2.2-4~2.gbp6956bc) UNRELEASED; urgency=medium
+monitoring-plugins (2.2-4) unstable; urgency=medium
 
   * [97cb3c4] Drop symlinks to removed LEGAL file. (Closes: #856676)
   * [878ceb9] Using absolut paths when using ucf, debconf 1.5.62 changed it's
@@ -8,8 +8,9 @@ monitoring-plugins (2.2-4~2.gbp6956bc) UNRELEASED; urgency=medium
   * [9095923] d/control: Drop old nagios-plugins* transitional packages
     (Closes: #878769)
   * [6956bcc] d/control: Bump Standards-Version to 4.1.4.0, no changes needed
+  * [d634e5a] d/functions: Fixing ucf register function
 
- -- Jan Wagner <waja@cyconet.org>  Sun, 13 May 2018 11:27:43 +0200
+ -- Jan Wagner <waja@cyconet.org>  Sun, 13 May 2018 14:04:35 +0200
 
 monitoring-plugins (2.2-3) unstable; urgency=medium
 
