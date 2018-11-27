@@ -25,6 +25,7 @@ Package: monitoring-plugins
 Architecture: all
 Depends: monitoring-plugins-basic, monitoring-plugins-standard, ${misc:Depends}
 Suggests: icinga | icinga2, nagios-plugins-contrib
+Provides: nagios-plugins
 Description: Plugins for nagios compatible monitoring systems (metapackage)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga.
  .
@@ -55,6 +56,7 @@ Depends: inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any],
          ${shlibs:Depends}
 Recommends: libcap2-bin [linux-any]
 Suggests: icinga | icinga2
+Provides: nagios-plugins-basic
 Description: Plugins for nagios compatible monitoring systems (basic)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
  contains the following plugins:
@@ -91,6 +93,7 @@ Suggests: fping,
           icinga | icinga2,
           postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light,
           qstat
+Provides: nagios-plugins-standard
 Description: Plugins for nagios compatible monitoring systems (standard)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
  contains the following plugins:
