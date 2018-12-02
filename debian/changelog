@@ -1,6 +1,13 @@
 monitoring-plugins (2.2-5) UNRELEASED; urgency=medium
 
+  [ Bas Couwenberg ]
   * Bump Standards-Version to 4.2.1, no changes.
+
+  [ Andreas Henriksson ]
+  * Pass PATH_TO_APTGET=/usr/bin/apt-get to configure
+    - fixes reproducible build on merged-usr vs non-merged systems.
+    (closes: #914092)
+
   * 
 
  -- Jan Wagner <waja@cyconet.org>  Sun, 13 May 2018 19:18:00 +0200

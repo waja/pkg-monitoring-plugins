@@ -82,6 +82,7 @@ config.status: configure
 	# Add here commands to configure the package.
 	# Append 'All warnings', 'Immediate binding' and dpkg-buildflags flags
 	CFLAGS="$$(DEB_CFLAGS_MAINT_APPEND='-Wall -Wl,-z,now' dpkg-buildflags --get CFLAGS)" \
+	PATH_TO_APTGET=/usr/bin/apt-get \
 	PGINCLUDE="-I`pg_config --includedir`" PGLIBS="-lpq -lcrypt" \
 	./configure \
 		--disable-maintainer-mode \
