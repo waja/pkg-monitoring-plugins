@@ -1,6 +1,7 @@
 Description: Add support for MariaDB 10.3.
 Author: Bas Couwenberg <sebastic@debian.org>
 Bug-Debian: https://bugs.debian.org/919395
+Forwarded: https://github.com/monitoring-plugins/monitoring-plugins/pull/1571
 
 --- a/plugins/check_mysql.c
 +++ b/plugins/check_mysql.c
