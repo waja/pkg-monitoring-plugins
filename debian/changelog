@@ -2,6 +2,8 @@ monitoring-plugins (2.2-5) UNRELEASED; urgency=medium
 
   [ Bas Couwenberg ]
   * Bump Standards-Version to 4.3.0, no changes.
+  * Add patch to fix FTBFS with MariaDB 10.3.
+    (closes: #919375)
 
   [ Andreas Henriksson ]
   * Pass PATH_TO_APTGET=/usr/bin/apt-get to configure

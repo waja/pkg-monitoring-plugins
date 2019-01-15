@@ -1,0 +1,30 @@
+Description: Add support for MariaDB 10.3.
+Author: Bas Couwenberg <sebastic@debian.org>
+Bug-Debian: https://bugs.debian.org/919395
+
+--- a/plugins/check_mysql.c
++++ b/plugins/check_mysql.c
+@@ -45,6 +45,10 @@ const char *email = "devel@monitoring-pl
+ #include <mysqld_error.h>
+ #include <errmsg.h>
+ 
++#ifndef MYSQL_PORT
++#define MYSQL_PORT 3306
++#endif
++
+ char *db_user = NULL;
+ char *db_host = NULL;
+ char *db_socket = NULL;
+--- a/plugins/check_mysql_query.c
++++ b/plugins/check_mysql_query.c
+@@ -41,6 +41,10 @@ const char *email = "devel@monitoring-pl
+ #include <mysql.h>
+ #include <errmsg.h>
+ 
++#ifndef MYSQL_PORT
++#define MYSQL_PORT 3306
++#endif
++
+ char *db_user = NULL;
+ char *db_host = NULL;
+ char *db_socket = NULL;
