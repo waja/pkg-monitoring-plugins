@@ -5,3 +5,4 @@
 12_check_apt_only_crit
 13_check_apt_list_packages
 14_mariadb
+15_check_smtp_initialize
