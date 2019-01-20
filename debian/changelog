@@ -1,16 +1,30 @@
-monitoring-plugins (2.2-5) UNRELEASED; urgency=medium
+monitoring-plugins (2.2-5) unstable; urgency=medium
 
   [ Bas Couwenberg ]
-  * Bump Standards-Version to 4.3.0, no changes.
+  * [890cd8c] Bump Standards-Version to 4.1.5, no changes.
+  * [59073f6] Bump Standards-Version to 4.2.0, no changes.
+  * [e07a06c] Bump Standards-Version to 4.2.1, no changes.
 
-  [ Andreas Henriksson ]
-  * Pass PATH_TO_APTGET=/usr/bin/apt-get to configure
-    - fixes reproducible build on merged-usr vs non-merged systems.
+  [ Jan Wagner ]
+  * [40b9004] travis-ci: Use xenial image
+  * [56443b1] d/control: Add Provides for 'old' nagios-plugins
+
+  [ Bas Couwenberg ]
+  * [c70710f] Apply path by Andreas Henriksson to fix usrmerge issue.
     (closes: #914092)
+  * [377eec3] Bump Standards-Version to 4.3.0, no changes.
 
-  * 
+  [ Jan Wagner ]
+  * [73f2273] Add d/p/14_mariad to fix FTBFS with MariaDB 10.3.
+    (Closes: #919375)
+  * [4f75b28] Add d/p/15_check_smtp_initialize to fix check_smtp with custom
+    commands and SSL
+  * [61315ee] d/rules: Configure with sudo (Closes: 905318)
+  * [d8a134e] d/control: Add sudo to Recommends
+  * [1fe1cd2] Symlink /usr/lib/nagios/plugins/utils.* to /usr/lib/icinga/
+    (Closes: #879084, #907484)
 
- -- Jan Wagner <waja@cyconet.org>  Sun, 13 May 2018 19:18:00 +0200
+ -- Jan Wagner <waja@cyconet.org>  Sun, 20 Jan 2019 19:40:25 +0100
 
 monitoring-plugins (2.2-4) unstable; urgency=medium
 
