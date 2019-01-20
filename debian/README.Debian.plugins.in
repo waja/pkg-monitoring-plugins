@@ -47,6 +47,7 @@ check_mailq:
     - sendmail-bin
     - exim4-daemon-heavy
     - exim4-daemon-light
+  * sudo
 
 check_oracle:
   * procps

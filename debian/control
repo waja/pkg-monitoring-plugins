@@ -88,6 +88,7 @@ Recommends: bind9-host | host,
             rpcbind,
             smbclient,
             snmp,
+            sudo,
             ${shlibs:Recommends}
 Suggests: fping,
           icinga | icinga2,
