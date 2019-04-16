@@ -1,8 +1,10 @@
-monitoring-plugins (2.2-6) UNRELEASED; urgency=medium
+monitoring-plugins (2.2-6) unstable; urgency=medium
 
-  * 
+  * [697d611] travis-ci: Remove trusty from definition
+  * [7b5d419] d/rules: Explicitly call ping with -4 and -6 on linux arch
+    (Closes: #863981)
 
- -- Jan Wagner <waja@cyconet.org>  Sun, 20 Jan 2019 22:06:44 +0100
+ -- Jan Wagner <waja@cyconet.org>  Tue, 16 Apr 2019 19:14:10 +0200
 
 monitoring-plugins (2.2-5) unstable; urgency=medium
 
