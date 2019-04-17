@@ -1,3 +1,9 @@
+monitoring-plugins (2.2-7~1.gbp30673c) UNRELEASED; urgency=medium
+
+  * UNRELEASED
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 17 Apr 2019 08:17:55 +0200
+
 monitoring-plugins (2.2-6) unstable; urgency=medium
 
   * [697d611] travis-ci: Remove trusty from definition
