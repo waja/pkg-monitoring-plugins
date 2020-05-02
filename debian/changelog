@@ -11,6 +11,7 @@ monitoring-plugins (2.2-7~1.gbp30673c) UNRELEASED; urgency=medium
     ./configure), Repository, Repository-Browse.
   * Rely on pre-initialized dpkg-architecture variables.
   * Fix day-of-week for changelog entry 1.5-2.
+  * Update standards version to 4.5.0, no changes needed.
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 17 Apr 2019 08:17:55 +0200
 
