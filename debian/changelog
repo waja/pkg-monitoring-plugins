@@ -5,6 +5,7 @@ monitoring-plugins (2.2-7~1.gbp30673c) UNRELEASED; urgency=medium
 
   [ Debian Janitor ]
   * Trim trailing whitespace.
+  * Wrap long lines in changelog entries: 1.4-1.
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 17 Apr 2019 08:17:55 +0200
 
@@ -1380,7 +1381,8 @@ nagios-plugins (1.4-1) unstable; urgency=low
   * Add check_dig command (closes: #281020)
   * Add check_breeze command (closes: #281019)
   * Add dummy commands (closes: #281018)
-  * Add check_mailq_<MTA> commands for all supported mtas (closes: #281016, #282015)
+  * Add check_mailq_<MTA> commands for all supported mtas (closes: #281016,
+    #282015)
   * Add check_spop and check_simap commands (closes: #280700)
   * Add check_nt command (closes: #294299)
   * Fix check_load command (closes: #294298)
