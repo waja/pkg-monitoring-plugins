@@ -6,6 +6,7 @@ monitoring-plugins (2.2-7~1.gbp30673c) UNRELEASED; urgency=medium
   [ Debian Janitor ]
   * Trim trailing whitespace.
   * Wrap long lines in changelog entries: 1.4-1.
+  * Bump debhelper from deprecated 5 to 10.
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 17 Apr 2019 08:17:55 +0200
 

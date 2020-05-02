@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
 Build-Depends: autotools-dev,
-               debhelper (>= 5),
+               debhelper (>= 10~),
                libdbi-dev,
                libradcli-dev | libfreeradius-client-dev | libradiusclient-ng-dev,
                libkrb5-dev,
