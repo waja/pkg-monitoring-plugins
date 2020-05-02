@@ -10,6 +10,7 @@ monitoring-plugins (2.2-7~1.gbp30673c) UNRELEASED; urgency=medium
   * Set upstream metadata fields: Bug-Database, Bug-Submit, Name (from
     ./configure), Repository, Repository-Browse.
   * Rely on pre-initialized dpkg-architecture variables.
+  * Fix day-of-week for changelog entry 1.5-2.
 
  -- Jan Wagner <waja@cyconet.org>  Wed, 17 Apr 2019 08:17:55 +0200
 
@@ -337,7 +338,7 @@ nagios-plugins (1.5-2) unstable; urgency=medium
     - libfreeradius-client-dev is actually not supported by upstream
     - check_radius
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 02 Feb 2014 22:11:48 +0100
+ -- Jan Wagner <waja@cyconet.org>  Sun, 02 Feb 2014 22:11:48 +0100
 
 nagios-plugins (1.5-1) unstable; urgency=medium
 
