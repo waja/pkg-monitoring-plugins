@@ -1,3 +1,3 @@
-version=3
+version=4
 https://www.monitoring-plugins.org/download/.*-plugins-(\d+\.[\d\.a-z]+)\.tar\.gz \
   debian debian/bin/repack.sh
