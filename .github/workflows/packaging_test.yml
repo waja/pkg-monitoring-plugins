@@ -30,6 +30,3 @@ jobs:
       uses: pi-top/action-debian-package@v4
       with:
         artifacts_directory: debian/build/release/
-    - name: Debug
-      run: |
-        ls -la
