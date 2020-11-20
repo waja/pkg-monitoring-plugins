@@ -16,8 +16,6 @@ PACKAGE = monitoring-plugins
 # from having to guess our platform (since we know it already)
 include /usr/share/dpkg/architecture.mk
 
-CFLAGS = -Wall -g
-
 DEBIANDIR=$(CURDIR)/debian
 NP_LIBEXEC:=/usr/lib/nagios/plugins
 NP_COMMON_DIR:=$(DEBIANDIR)/monitoring-plugins-common
