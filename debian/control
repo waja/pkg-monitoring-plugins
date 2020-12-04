@@ -3,13 +3,12 @@ Section: net
 Priority: optional
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
-Build-Depends: autotools-dev,
-               debhelper (>= 5),
+Build-Depends: debhelper (>= 10~),
                libdbi-dev,
                libradcli-dev | libfreeradius-client-dev | libradiusclient-ng-dev,
                libkrb5-dev,
                libldap2-dev,
-               default-libmysqlclient-dev | libmysqlclient-dev,
+               default-libmysqlclient-dev,
                libnet-snmp-perl,
                libpq-dev,
                libssl-dev,
@@ -19,12 +18,12 @@ Build-Depends: autotools-dev,
 Homepage: https://www.monitoring-plugins.org
 Vcs-Browser: https://salsa.debian.org/nagios-team/pkg-monitoring-plugins
 Vcs-Git: https://salsa.debian.org/nagios-team/pkg-monitoring-plugins.git
-Standards-Version: 4.3.0
+Standards-Version: 4.5.1
 
 Package: monitoring-plugins
 Architecture: all
 Depends: monitoring-plugins-basic, monitoring-plugins-standard, ${misc:Depends}
-Suggests: icinga | icinga2, nagios-plugins-contrib
+Suggests: icinga2, nagios-plugins-contrib
 Provides: nagios-plugins
 Description: Plugins for nagios compatible monitoring systems (metapackage)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga.
@@ -38,7 +37,7 @@ Description: Plugins for nagios compatible monitoring systems (metapackage)
 Package: monitoring-plugins-common
 Architecture: any
 Depends: ucf, ${misc:Depends}, ${shlibs:Depends}
-Suggests: icinga | icinga2
+Suggests: icinga2
 Description: Common files for plugins for nagios compatible monitoring
  Common files for plugins for nagios compatible monitoring systems like Naemon
  and Icinga.
@@ -55,7 +54,7 @@ Depends: inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any],
          ${misc:Depends},
          ${shlibs:Depends}
 Recommends: libcap2-bin [linux-any]
-Suggests: icinga | icinga2
+Suggests: icinga2
 Provides: nagios-plugins-basic
 Description: Plugins for nagios compatible monitoring systems (basic)
  Plugins for nagios compatible monitoring systems like Naemon and Icinga. It
@@ -91,7 +90,7 @@ Recommends: bind9-host | host,
             sudo,
             ${shlibs:Recommends}
 Suggests: fping,
-          icinga | icinga2,
+          icinga2,
           postfix | sendmail-bin | exim4-daemon-heavy | exim4-daemon-light,
           qstat
 Provides: nagios-plugins-standard
