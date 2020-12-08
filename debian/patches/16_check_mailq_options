@@ -1,0 +1,39 @@
+From aa79ab278ffc9bf3d41207d97bdfb04be35b5c74 Mon Sep 17 00:00:00 2001
+From: Sven Nierlein <sven@nierlein.de>
+Date: Tue, 8 Dec 2020 16:24:10 +0100
+Subject: [PATCH] check_mailq: restore accidentially removed options
+
+with https://github.com/monitoring-plugins/monitoring-plugins/issues/381 -W and -C have been removed. It
+would have been sufficient to only remove the long options. Restoring short options..
+
+ - fixes https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=954961
+---
+ plugins-scripts/check_mailq.pl | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/plugins-scripts/check_mailq.pl b/plugins-scripts/check_mailq.pl
+index 32f498d3..aac1310e 100755
+--- a/plugins-scripts/check_mailq.pl
++++ b/plugins-scripts/check_mailq.pl
+@@ -568,7 +568,9 @@ ()
+ 		 "w=i" => \$opt_w, "warning=i"  => \$opt_w,   # warning if above this number
+ 		 "c=i" => \$opt_c, "critical=i" => \$opt_c,	  # critical if above this number
+ 		 "t=i" => \$opt_t, "timeout=i"  => \$opt_t,
+-		 "s"   => \$opt_s, "sudo"       => \$opt_s
++		 "s"   => \$opt_s, "sudo"       => \$opt_s,
++		 "W=i" => \$opt_W,                            # warning if above this number
++		 "C=i" => \$opt_C,                            # critical if above this number
+ 		 );
+ 
+ 	if ($opt_V) {
+@@ -662,8 +664,8 @@ ()
+ 	print "   Feedback/patches to support non-sendmail mailqueue welcome\n\n";
+ 	print "-w (--warning)   = Min. number of messages in queue to generate warning\n";
+ 	print "-c (--critical)  = Min. number of messages in queue to generate critical alert ( w < c )\n";
+-	print "-W (--Warning)   = Min. number of messages for same domain in queue to generate warning\n";
+-	print "-C (--Critical)  = Min. number of messages for same domain in queue to generate critical alert ( W < C )\n";
++	print "-W               = Min. number of messages for same domain in queue to generate warning\n";
++	print "-C               = Min. number of messages for same domain in queue to generate critical alert ( W < C )\n";
+ 	print "-t (--timeout)   = Plugin timeout in seconds (default = $utils::TIMEOUT)\n";
+ 	print "-M (--mailserver) = [ sendmail | qmail | postfix | exim | nullmailer ] (default = autodetect)\n";
+ 	print "-s (--sudo)      = Use sudo to call the mailq command\n";
