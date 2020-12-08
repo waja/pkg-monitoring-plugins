@@ -1,19 +1,45 @@
-monitoring-plugins (2.2-7~1.gbp30673c) UNRELEASED; urgency=medium
+monitoring-plugins (2.2-7) unstable; urgency=medium
 
-  [ Jan Wagner ]
-  * UNRELEASED
+  [ Bas Couwenberg ]
+  * [643c792] Drop icinga from Suggests.
+
+  [ Christopher Huhn ]
+  * [ab5d5b97] Fix OID for snmp_users check
 
   [ Debian Janitor ]
   * Trim trailing whitespace.
   * Wrap long lines in changelog entries: 1.4-1.
-  * Bump debhelper from deprecated 5 to 10.
+  * Bump debhelper from deprecated 5 to 10. (Closes: #965726)
   * Set upstream metadata fields: Bug-Database, Bug-Submit, Name (from
     ./configure), Repository, Repository-Browse.
   * Rely on pre-initialized dpkg-architecture variables.
   * Fix day-of-week for changelog entry 1.5-2.
   * Update standards version to 4.5.0, no changes needed.
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 17 Apr 2019 08:17:55 +0200
+  [ Bas Couwenberg ]
+  * [122d9b7] Bump watch file version to 4.
+
+  [ Jan Wagner ]
+  * [e44da07] Adding CI
+  * [7065705] Removing .travis.yml
+  * [23a92bf] Remove debugging in ci workflow
+
+  [ Bas Couwenberg ]
+  * [3c97246] Update gbp.conf to use --source-only-changes by default.
+  * [ed92830] Update gbp.conf for deprecated section.
+  * [4890f23] Drop obsolete symlinks for icinga 1.x.
+  * [6086187] Drop obsolete autotools-dev build dependency.
+  * [1407082] Don't set CFLAGS from noopt.
+  * [94db0e3] Drop obsolete ORed build dependency.
+  * [4ddc077] Bump Standards-Version to 4.5.1, no changes.
+
+  [ Jan Wagner ]
+  * [bb8ed44] d/s/option: drop travis and add github ignore
+  * [52473e9] Rename debian/NEWS.Debian to debian/NEWS to make lintian happy
+  * [45b13cf] debian/monitoring-plugins-common.docs: Fixing NEWS filename
+  * [6ffbf14] Adding d/p/16_check_mailq_options from upstream (Closes: #954961)
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 08 Dec 2020 19:45:04 +0100
 
 monitoring-plugins (2.2-6) unstable; urgency=medium
 
