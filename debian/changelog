@@ -1,8 +1,10 @@
 monitoring-plugins (2.3-1) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
+  * [3031044] New upstream version 2.3
+  * [61ef2d7] Droping all patches commited upstream and beeing obsolete with 2.3
 
- -- Jan Wagner <waja@cyconet.org>  Tue, 08 Dec 2020 21:11:10 +0100
+ -- Jan Wagner <waja@cyconet.org>  Thu, 10 Dec 2020 21:32:48 +0100
 
 monitoring-plugins (2.2-7) unstable; urgency=medium
 
