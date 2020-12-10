@@ -5,6 +5,8 @@ raising bug reports, creating patches or contributing new plugins.
 Diego Elio Pettenò
 fabiodds
 Elan Ruusamäe
+Nicolai Søborg
+Marc Sánchez
 dag rob?le
 Matthias Hähnel
 Randy O'Meara
@@ -18,16 +20,20 @@ Felipe Gustavo de Almeida
 Michael Almond
 Michael Anthon
 Bernd Apfel
+Bernd Arnold
 Paula Arnold
 Kondoros Attila
 Daniel Austin
+Karol Babioch
 Markus Baertschi
 Bradley Baetz
 Michael Bakker
 Nobuhiro Ban
 John Barbuto
+Andreas Baumann
 Jeremy Baumgartner
 Marco Beck
+Rolf Eike Beer
 Andreas Behal
 Lutz Behnke
 Marlo Bell
@@ -42,6 +48,7 @@ Jimmy Bergman
 Jochen Bern
 Tom Bertelston
 Gunnar Beutner
+Prathamesh Bhanuse
 Daniel Bimschas
 Jeffery Blank
 Tom De Blende
@@ -57,6 +64,7 @@ Tobias Brox
 Tilmann Bubeck
 Dick van den Burg
 Jason Burnett
+Lucas Bussey
 Grant Byers
 Carlos Canau
 Jethro Carr
@@ -79,6 +87,7 @@ Greg Cox
 Jason Crawford
 David Croft
 Robert Dale
+Vincent Danjean
 Rok Debevc
 Marcos Della
 Phil Dibowitz
@@ -103,6 +112,7 @@ O'Shaughnessy Evans
 Merijn Evertse
 Karl Ewald
 Mikael Falkvidd
+Guido Falsi
 Paul Farrall
 Reuben Farrelly
 Mark Favas
@@ -120,6 +130,7 @@ Felix Frank
 Dann Frazier
 Rick Frey
 John C. Frickson
+Markus Frosch
 Matt Garrett
 Sven Geggus
 Jonas Genannt
@@ -139,6 +150,7 @@ Steven Grimm
 Sebastien Guay
 Jon Hallett
 Steve Hanselman
+Jacob Hansen
 Ask Bjoern Hansen
 Sebastian Harl
 Michael Haro
@@ -152,6 +164,7 @@ Jason Hoos
 Richard Edward Horner
 Chester Hosey
 Marc Huffnagle
+Kostyantyn Hushchyn
 Bob Ingraham
 Cire Iriarte
 Bryan Irvine
@@ -171,9 +184,12 @@ Matthieu Kermagoret
 Bo Kersey
 Konstantin Khomoutov
 Serhan Kiymaz
+Alexander A. Klimov
 Denis Knauf
+Harald Koch
 Tilman Koschnick
 John Koyle
+Michael Kraus
 Steven Kreuzer
 Julius Kriukas
 Christoph Kron
@@ -224,6 +240,7 @@ Stefan Meier
 Michael Melcher
 Jan-Piet Mens
 Sven Meyer
+Lars Michelsen
 Emil Michles
 Christian Mies
 Jonathan Milby
@@ -256,6 +273,7 @@ William Pietri
 Tomasz Pilat
 Myke Place
 Ari Pollak
+Iustin Pop
 Marc Poulin
 Matt Pounsett
 Peter Pramberger
@@ -266,8 +284,10 @@ Darian Rackham
 Peter Radcliffe
 Steve Rader
 Olivier 'Babar' Raginel
+Jean-François Rameau
 Phil Randal
 Abid Rasheed
+Patrick Rauscher
 Jeremy Reed
 Spenser Reinhardt
 Marc Remy
@@ -291,6 +311,7 @@ Sven Schaffranneck
 Christoph Schell
 Thomas Schimpke
 Benjamin Schmid
+Christian Schmidt
 Sebastian Schmidt
 Henning Schmiedehausen
 Christian Schneemann
@@ -311,12 +332,14 @@ John Sivak
 Nik Soggia
 Robin Sonefors
 Erwan Ben Souiden
+Bernard Spil
 Lars Stavholm
 Daniel Stirnimann
 Nikolay Sturm
 David Sullivan
 Kjell Sundtjonn
 Ziya Suzen
+Christian Tacke
 Michael Tiernan
 Ben Timby
 Ronald Tin
@@ -334,6 +357,7 @@ Laurent Vaslin
 Matej Vela
 Carole Verdon
 Ludse Verhoeven
+Valentin Vidic
 Robert August Vincent
 Dave Viner
 Lars Vogdt
@@ -356,6 +380,8 @@ Shawn Wills
 Rob Windsor
 Mario Witte
 Alexander Wittig
+Tobias Wolf
 Brian De Wolf
 Patric Wust
 Jamie Zawinski
+Vadim Zhukov

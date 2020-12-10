@@ -323,7 +323,8 @@ int get_hardware_address(int sock,char *interface_name){
 #elif defined(__bsd__)
 						/* King 2004	see ACKNOWLEDGEMENTS */
 
-        int                     mib[6], len;
+        size_t                  len;
+        int                     mib[6];
         char                    *buf;
         unsigned char           *ptr;
         struct if_msghdr        *ifm;
@@ -693,7 +694,7 @@ int receive_dhcp_packet(void *buffer, int buffer_size, int sock, int timeout, st
         else{
 		bzero(&source_address,sizeof(source_address));
 		address_size=sizeof(source_address);
-                recv_result=recvfrom(sock,(char *)buffer,buffer_size,MSG_PEEK,(struct sockaddr *)&source_address,&address_size);
+                recv_result=recvfrom(sock,(char *)buffer,buffer_size,0,(struct sockaddr *)&source_address,&address_size);
 		if(verbose)
 			printf("recv_result: %d\n",recv_result);
 

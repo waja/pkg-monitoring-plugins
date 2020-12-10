@@ -37,6 +37,9 @@
 
 monitoring_plugin *this_monitoring_plugin=NULL;
 
+unsigned int timeout_state = STATE_CRITICAL;
+unsigned int timeout_interval = DEFAULT_SOCKET_TIMEOUT;
+
 int _np_state_read_file(FILE *);
 
 void np_init( char *plugin_name, int argc, char **argv ) {
@@ -87,10 +90,13 @@ void _get_monitoring_plugin( monitoring_plugin **pointer ){
 void
 die (int result, const char *fmt, ...)
 {
-	va_list ap;
-	va_start (ap, fmt);
-	vprintf (fmt, ap);
-	va_end (ap);
+	if(fmt!=NULL) {
+		va_list ap;
+		va_start (ap, fmt);
+		vprintf (fmt, ap);
+		va_end (ap);
+	}
+
 	if(this_monitoring_plugin!=NULL) {
 		np_cleanup();
 	}
@@ -356,6 +362,22 @@ char *np_extract_value(const char *varlist, const char *name, char sep) {
 	return value;
 }
 
+const char *
+state_text (int result)
+{
+	switch (result) {
+	case STATE_OK:
+		return "OK";
+	case STATE_WARNING:
+		return "WARNING";
+	case STATE_CRITICAL:
+		return "CRITICAL";
+	case STATE_DEPENDENT:
+		return "DEPENDENT";
+	default:
+		return "UNKNOWN";
+	}
+}
 
 /*
  * Read a string representing a state (ok, warning... or numeric: 0, 1) and

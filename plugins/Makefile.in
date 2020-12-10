@@ -66,13 +66,15 @@ EXTRA_PROGRAMS = check_mysql$(EXEEXT) check_radius$(EXEEXT) \
 	check_by_ssh$(EXEEXT) check_dns$(EXEEXT) check_nt$(EXEEXT) \
 	check_ide_smart$(EXEEXT) check_procs$(EXEEXT) \
 	check_mysql_query$(EXEEXT) check_apt$(EXEEXT) \
-	check_dbi$(EXEEXT)
+	check_dbi$(EXEEXT) check_curl$(EXEEXT)
 @HAVE_UTMPX_FALSE@am__append_1 = popen.o
 subdir = plugins
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
-	$(top_srcdir)/gl/m4/00gnulib.m4 $(top_srcdir)/gl/m4/alloca.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/libcurl.m4 \
+	$(top_srcdir)/m4/np_mysqlclient.m4 \
+	$(top_srcdir)/m4/uriparser.m4 $(top_srcdir)/gl/m4/00gnulib.m4 \
+	$(top_srcdir)/gl/m4/alloca.m4 \
 	$(top_srcdir)/gl/m4/arpa_inet_h.m4 \
 	$(top_srcdir)/gl/m4/base64.m4 $(top_srcdir)/gl/m4/btowc.m4 \
 	$(top_srcdir)/gl/m4/codeset.m4 \
@@ -194,9 +196,19 @@ check_by_ssh_DEPENDENCIES = $(am__DEPENDENCIES_2)
 check_cluster_SOURCES = check_cluster.c
 check_cluster_OBJECTS = check_cluster.$(OBJEXT)
 check_cluster_DEPENDENCIES = $(BASEOBJS)
+check_curl_SOURCES = check_curl.c
+check_curl_OBJECTS = check_curl-check_curl.$(OBJEXT)
+am__DEPENDENCIES_3 = $(check_cluster_LDADD) $(am__DEPENDENCIES_1)
+am__DEPENDENCIES_4 = $(BASEOBJS) $(am__DEPENDENCIES_3) \
+	$(am__DEPENDENCIES_1)
+check_curl_DEPENDENCIES = $(am__DEPENDENCIES_3) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_4) $(am__DEPENDENCIES_1) \
+	picohttpparser/libpicohttpparser.a
+check_curl_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(check_curl_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 check_dbi_SOURCES = check_dbi.c
 check_dbi_OBJECTS = check_dbi.$(OBJEXT)
-am__DEPENDENCIES_3 = $(check_cluster_LDADD) $(am__DEPENDENCIES_1)
 check_dbi_DEPENDENCIES = $(am__DEPENDENCIES_3) $(am__DEPENDENCIES_1)
 check_dig_SOURCES = check_dig.c
 check_dig_OBJECTS = check_dig.$(OBJEXT)
@@ -206,34 +218,34 @@ check_disk_OBJECTS = check_disk.$(OBJEXT)
 check_disk_DEPENDENCIES = $(BASEOBJS)
 check_dns_SOURCES = check_dns.c
 check_dns_OBJECTS = check_dns.$(OBJEXT)
-am__DEPENDENCIES_4 = $(check_disk_LDADD) $(am__DEPENDENCIES_1)
-check_dns_DEPENDENCIES = $(am__DEPENDENCIES_4)
+am__DEPENDENCIES_5 = $(check_disk_LDADD) $(am__DEPENDENCIES_1)
+check_dns_DEPENDENCIES = $(am__DEPENDENCIES_5)
 check_dummy_SOURCES = check_dummy.c
 check_dummy_OBJECTS = check_dummy.$(OBJEXT)
 check_dummy_DEPENDENCIES = $(BASEOBJS)
 check_fping_SOURCES = check_fping.c
 check_fping_OBJECTS = check_fping.$(OBJEXT)
-am__DEPENDENCIES_5 = $(check_dummy_LDADD) $(am__DEPENDENCIES_1)
-check_fping_DEPENDENCIES = $(am__DEPENDENCIES_5)
+am__DEPENDENCIES_6 = $(check_dummy_LDADD) $(am__DEPENDENCIES_1)
+check_fping_DEPENDENCIES = $(am__DEPENDENCIES_6)
 check_game_SOURCES = check_game.c
 check_game_OBJECTS = check_game.$(OBJEXT)
 check_game_DEPENDENCIES = $(BASEOBJS)
 check_hpjd_SOURCES = check_hpjd.c
 check_hpjd_OBJECTS = check_hpjd.$(OBJEXT)
-am__DEPENDENCIES_6 = $(check_game_LDADD) $(am__DEPENDENCIES_1)
-check_hpjd_DEPENDENCIES = $(am__DEPENDENCIES_6)
+am__DEPENDENCIES_7 = $(check_game_LDADD) $(am__DEPENDENCIES_1)
+check_hpjd_DEPENDENCIES = $(am__DEPENDENCIES_7)
 check_http_SOURCES = check_http.c
 check_http_OBJECTS = check_http.$(OBJEXT)
-am__DEPENDENCIES_7 = $(BASEOBJS) $(am__DEPENDENCIES_6) \
+am__DEPENDENCIES_8 = $(BASEOBJS) $(am__DEPENDENCIES_7) \
 	$(am__DEPENDENCIES_1)
-check_http_DEPENDENCIES = $(am__DEPENDENCIES_7)
+check_http_DEPENDENCIES = $(am__DEPENDENCIES_8)
 check_ide_smart_SOURCES = check_ide_smart.c
 check_ide_smart_OBJECTS = check_ide_smart.$(OBJEXT)
 check_ide_smart_DEPENDENCIES = $(BASEOBJS)
 check_ldap_SOURCES = check_ldap.c
 check_ldap_OBJECTS = check_ldap.$(OBJEXT)
-am__DEPENDENCIES_8 = $(check_ide_smart_LDADD) $(am__DEPENDENCIES_1)
-check_ldap_DEPENDENCIES = $(am__DEPENDENCIES_8) $(am__DEPENDENCIES_1)
+am__DEPENDENCIES_9 = $(check_ide_smart_LDADD) $(am__DEPENDENCIES_1)
+check_ldap_DEPENDENCIES = $(am__DEPENDENCIES_9) $(am__DEPENDENCIES_1)
 check_load_SOURCES = check_load.c
 check_load_OBJECTS = check_load.$(OBJEXT)
 check_load_DEPENDENCIES = $(BASEOBJS)
@@ -245,15 +257,16 @@ check_mrtgtraf_OBJECTS = check_mrtgtraf.$(OBJEXT)
 check_mrtgtraf_DEPENDENCIES = $(BASEOBJS)
 check_mysql_SOURCES = check_mysql.c
 check_mysql_OBJECTS = check_mysql-check_mysql.$(OBJEXT)
-am__DEPENDENCIES_9 = $(check_mrtgtraf_LDADD) $(am__DEPENDENCIES_1)
-check_mysql_DEPENDENCIES = $(am__DEPENDENCIES_9) $(am__DEPENDENCIES_1)
+am__DEPENDENCIES_10 = $(check_mrtgtraf_LDADD) $(am__DEPENDENCIES_1)
+check_mysql_DEPENDENCIES = $(am__DEPENDENCIES_10) \
+	$(am__DEPENDENCIES_1)
 check_mysql_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(check_mysql_CFLAGS) \
 	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 check_mysql_query_SOURCES = check_mysql_query.c
 check_mysql_query_OBJECTS =  \
 	check_mysql_query-check_mysql_query.$(OBJEXT)
-check_mysql_query_DEPENDENCIES = $(am__DEPENDENCIES_9) \
+check_mysql_query_DEPENDENCIES = $(am__DEPENDENCIES_10) \
 	$(am__DEPENDENCIES_1)
 check_mysql_query_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CCLD) \
@@ -264,69 +277,69 @@ check_nagios_OBJECTS = check_nagios.$(OBJEXT)
 check_nagios_DEPENDENCIES = $(BASEOBJS)
 check_nt_SOURCES = check_nt.c
 check_nt_OBJECTS = check_nt.$(OBJEXT)
-am__DEPENDENCIES_10 = $(check_nagios_LDADD) $(am__DEPENDENCIES_1)
-check_nt_DEPENDENCIES = $(am__DEPENDENCIES_10)
+am__DEPENDENCIES_11 = $(check_nagios_LDADD) $(am__DEPENDENCIES_1)
+check_nt_DEPENDENCIES = $(am__DEPENDENCIES_11)
 check_ntp_SOURCES = check_ntp.c
 check_ntp_OBJECTS = check_ntp.$(OBJEXT)
-check_ntp_DEPENDENCIES = $(am__DEPENDENCIES_10) $(am__DEPENDENCIES_1)
+check_ntp_DEPENDENCIES = $(am__DEPENDENCIES_11) $(am__DEPENDENCIES_1)
 check_ntp_peer_SOURCES = check_ntp_peer.c
 check_ntp_peer_OBJECTS = check_ntp_peer.$(OBJEXT)
-check_ntp_peer_DEPENDENCIES = $(am__DEPENDENCIES_10) \
+check_ntp_peer_DEPENDENCIES = $(am__DEPENDENCIES_11) \
 	$(am__DEPENDENCIES_1)
 check_ntp_time_SOURCES = check_ntp_time.c
 check_ntp_time_OBJECTS = check_ntp_time.$(OBJEXT)
-check_ntp_time_DEPENDENCIES = $(am__DEPENDENCIES_10) \
+check_ntp_time_DEPENDENCIES = $(am__DEPENDENCIES_11) \
 	$(am__DEPENDENCIES_1)
 check_nwstat_SOURCES = check_nwstat.c
 check_nwstat_OBJECTS = check_nwstat.$(OBJEXT)
-check_nwstat_DEPENDENCIES = $(am__DEPENDENCIES_10)
+check_nwstat_DEPENDENCIES = $(am__DEPENDENCIES_11)
 check_overcr_SOURCES = check_overcr.c
 check_overcr_OBJECTS = check_overcr.$(OBJEXT)
-check_overcr_DEPENDENCIES = $(am__DEPENDENCIES_10)
+check_overcr_DEPENDENCIES = $(am__DEPENDENCIES_11)
 check_pgsql_SOURCES = check_pgsql.c
 check_pgsql_OBJECTS = check_pgsql.$(OBJEXT)
-check_pgsql_DEPENDENCIES = $(am__DEPENDENCIES_10) \
+check_pgsql_DEPENDENCIES = $(am__DEPENDENCIES_11) \
 	$(am__DEPENDENCIES_1)
 check_ping_SOURCES = check_ping.c
 check_ping_OBJECTS = check_ping.$(OBJEXT)
-check_ping_DEPENDENCIES = $(am__DEPENDENCIES_10)
+check_ping_DEPENDENCIES = $(am__DEPENDENCIES_11)
 check_procs_SOURCES = check_procs.c
 check_procs_OBJECTS = check_procs.$(OBJEXT)
 check_procs_DEPENDENCIES = $(BASEOBJS)
 check_radius_SOURCES = check_radius.c
 check_radius_OBJECTS = check_radius.$(OBJEXT)
-am__DEPENDENCIES_11 = $(check_procs_LDADD) $(am__DEPENDENCIES_1)
-check_radius_DEPENDENCIES = $(am__DEPENDENCIES_11) \
+am__DEPENDENCIES_12 = $(check_procs_LDADD) $(am__DEPENDENCIES_1)
+check_radius_DEPENDENCIES = $(am__DEPENDENCIES_12) \
 	$(am__DEPENDENCIES_1)
 check_real_SOURCES = check_real.c
 check_real_OBJECTS = check_real.$(OBJEXT)
-check_real_DEPENDENCIES = $(am__DEPENDENCIES_11)
+check_real_DEPENDENCIES = $(am__DEPENDENCIES_12)
 check_smtp_SOURCES = check_smtp.c
 check_smtp_OBJECTS = check_smtp.$(OBJEXT)
-am__DEPENDENCIES_12 = $(BASEOBJS) $(am__DEPENDENCIES_11) \
+am__DEPENDENCIES_13 = $(BASEOBJS) $(am__DEPENDENCIES_12) \
 	$(am__DEPENDENCIES_1)
-check_smtp_DEPENDENCIES = $(am__DEPENDENCIES_12)
+check_smtp_DEPENDENCIES = $(am__DEPENDENCIES_13)
 check_snmp_SOURCES = check_snmp.c
 check_snmp_OBJECTS = check_snmp.$(OBJEXT)
 check_snmp_DEPENDENCIES = $(BASEOBJS)
 check_ssh_SOURCES = check_ssh.c
 check_ssh_OBJECTS = check_ssh.$(OBJEXT)
-am__DEPENDENCIES_13 = $(check_snmp_LDADD) $(am__DEPENDENCIES_1)
-check_ssh_DEPENDENCIES = $(am__DEPENDENCIES_13)
+am__DEPENDENCIES_14 = $(check_snmp_LDADD) $(am__DEPENDENCIES_1)
+check_ssh_DEPENDENCIES = $(am__DEPENDENCIES_14)
 check_swap_SOURCES = check_swap.c
 check_swap_OBJECTS = check_swap.$(OBJEXT)
 check_swap_DEPENDENCIES = $(am__DEPENDENCIES_1) $(BASEOBJS)
 check_tcp_SOURCES = check_tcp.c
 check_tcp_OBJECTS = check_tcp.$(OBJEXT)
-am__DEPENDENCIES_14 = $(BASEOBJS) $(am__DEPENDENCIES_13) \
+am__DEPENDENCIES_15 = $(BASEOBJS) $(am__DEPENDENCIES_14) \
 	$(am__DEPENDENCIES_1)
-check_tcp_DEPENDENCIES = $(am__DEPENDENCIES_14)
+check_tcp_DEPENDENCIES = $(am__DEPENDENCIES_15)
 check_time_SOURCES = check_time.c
 check_time_OBJECTS = check_time.$(OBJEXT)
-check_time_DEPENDENCIES = $(am__DEPENDENCIES_13)
+check_time_DEPENDENCIES = $(am__DEPENDENCIES_14)
 check_ups_SOURCES = check_ups.c
 check_ups_OBJECTS = check_ups.$(OBJEXT)
-check_ups_DEPENDENCIES = $(am__DEPENDENCIES_13)
+check_ups_DEPENDENCIES = $(am__DEPENDENCIES_14)
 check_users_SOURCES = check_users.c
 check_users_OBJECTS = check_users.$(OBJEXT)
 check_users_DEPENDENCIES = $(BASEOBJS) $(am__DEPENDENCIES_1) \
@@ -351,37 +364,75 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
 	$(LDFLAGS) -o $@
 SOURCES = $(libnpcommon_a_SOURCES) check_apt.c check_by_ssh.c \
-	check_cluster.c check_dbi.c check_dig.c check_disk.c \
-	check_dns.c check_dummy.c check_fping.c check_game.c \
-	check_hpjd.c check_http.c check_ide_smart.c check_ldap.c \
-	check_load.c check_mrtg.c check_mrtgtraf.c check_mysql.c \
-	check_mysql_query.c check_nagios.c check_nt.c check_ntp.c \
-	check_ntp_peer.c check_ntp_time.c check_nwstat.c \
+	check_cluster.c check_curl.c check_dbi.c check_dig.c \
+	check_disk.c check_dns.c check_dummy.c check_fping.c \
+	check_game.c check_hpjd.c check_http.c check_ide_smart.c \
+	check_ldap.c check_load.c check_mrtg.c check_mrtgtraf.c \
+	check_mysql.c check_mysql_query.c check_nagios.c check_nt.c \
+	check_ntp.c check_ntp_peer.c check_ntp_time.c check_nwstat.c \
 	check_overcr.c check_pgsql.c check_ping.c check_procs.c \
 	check_radius.c check_real.c check_smtp.c check_snmp.c \
 	check_ssh.c check_swap.c check_tcp.c check_time.c check_ups.c \
 	check_users.c negate.c urlize.c
 DIST_SOURCES = $(libnpcommon_a_SOURCES) check_apt.c check_by_ssh.c \
-	check_cluster.c check_dbi.c check_dig.c check_disk.c \
-	check_dns.c check_dummy.c check_fping.c check_game.c \
-	check_hpjd.c check_http.c check_ide_smart.c check_ldap.c \
-	check_load.c check_mrtg.c check_mrtgtraf.c check_mysql.c \
-	check_mysql_query.c check_nagios.c check_nt.c check_ntp.c \
-	check_ntp_peer.c check_ntp_time.c check_nwstat.c \
+	check_cluster.c check_curl.c check_dbi.c check_dig.c \
+	check_disk.c check_dns.c check_dummy.c check_fping.c \
+	check_game.c check_hpjd.c check_http.c check_ide_smart.c \
+	check_ldap.c check_load.c check_mrtg.c check_mrtgtraf.c \
+	check_mysql.c check_mysql_query.c check_nagios.c check_nt.c \
+	check_ntp.c check_ntp_peer.c check_ntp_time.c check_nwstat.c \
 	check_overcr.c check_pgsql.c check_ping.c check_procs.c \
 	check_radius.c check_real.c check_smtp.c check_snmp.c \
 	check_ssh.c check_swap.c check_tcp.c check_time.c check_ups.c \
 	check_users.c negate.c urlize.c
+RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+	html-recursive info-recursive install-data-recursive \
+	install-dvi-recursive install-exec-recursive \
+	install-html-recursive install-info-recursive \
+	install-pdf-recursive install-ps-recursive install-recursive \
+	installcheck-recursive installdirs-recursive pdf-recursive \
+	ps-recursive uninstall-recursive
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+  distclean-recursive maintainer-clean-recursive
+AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
+	$(RECURSIVE_CLEAN_TARGETS:-recursive=) tags TAGS ctags CTAGS \
+	distdir
 ETAGS = etags
 CTAGS = ctags
 am__tty_colors = \
 red=; grn=; lgn=; blu=; std=
+DIST_SUBDIRS = $(SUBDIRS)
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+am__relativize = \
+  dir0=`pwd`; \
+  sed_first='s,^\([^/]*\)/.*$$,\1,'; \
+  sed_rest='s,^[^/]*/*,,'; \
+  sed_last='s,^.*/\([^/]*\)$$,\1,'; \
+  sed_butlast='s,/*[^/]*$$,,'; \
+  while test -n "$$dir1"; do \
+    first=`echo "$$dir1" | sed -e "$$sed_first"`; \
+    if test "$$first" != "."; then \
+      if test "$$first" = ".."; then \
+        dir2=`echo "$$dir0" | sed -e "$$sed_last"`/"$$dir2"; \
+        dir0=`echo "$$dir0" | sed -e "$$sed_butlast"`; \
+      else \
+        first2=`echo "$$dir2" | sed -e "$$sed_first"`; \
+        if test "$$first2" = "$$first"; then \
+          dir2=`echo "$$dir2" | sed -e "$$sed_rest"`; \
+        else \
+          dir2="../$$dir2"; \
+        fi; \
+        dir0="$$dir0"/"$$first"; \
+      fi; \
+    fi; \
+    dir1=`echo "$$dir1" | sed -e "$$sed_rest"`; \
+  done; \
+  reldir="$$dir2"
 VPATH = $(top_srcdir) $(top_srcdir)/lib $(top_srcdir)/plugins $(top_srcdir)/plugins/t
 pkglibexecdir = @pkglibexecdir@
 ACLOCAL = @ACLOCAL@
@@ -1098,6 +1149,11 @@ LD = @LD@
 LDAPINCLUDE = @LDAPINCLUDE@
 LDAPLIBS = @LDAPLIBS@
 LDFLAGS = @LDFLAGS@
+LIBCURL = @LIBCURL@
+LIBCURLCFLAGS = @LIBCURLCFLAGS@
+LIBCURLINCLUDE = @LIBCURLINCLUDE@
+LIBCURLLIBS = @LIBCURLLIBS@
+LIBCURL_CPPFLAGS = @LIBCURL_CPPFLAGS@
 LIBGNU_LIBDEPS = @LIBGNU_LIBDEPS@
 LIBGNU_LTLIBDEPS = @LIBGNU_LTLIBDEPS@
 LIBICONV = @LIBICONV@
@@ -1224,6 +1280,7 @@ PERL = @PERL@
 PERLMODS_DIR = @PERLMODS_DIR@
 PGINCLUDE = @PGINCLUDE@
 PGLIBS = @PGLIBS@
+PKGCONFIG = @PKGCONFIG@
 PKG_ARCH = @PKG_ARCH@
 PLUGIN_TEST = @PLUGIN_TEST@
 POSUB = @POSUB@
@@ -1441,6 +1498,11 @@ TIME_H_DEFINES_STRUCT_TIMESPEC = @TIME_H_DEFINES_STRUCT_TIMESPEC@
 UNDEFINE_STRTOK_R = @UNDEFINE_STRTOK_R@
 UNISTD_H_HAVE_WINSOCK2_H = @UNISTD_H_HAVE_WINSOCK2_H@
 UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS = @UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS@
+URIPARSER = @URIPARSER@
+URIPARSERCFLAGS = @URIPARSERCFLAGS@
+URIPARSERINCLUDE = @URIPARSERINCLUDE@
+URIPARSERLIBS = @URIPARSERLIBS@
+URIPARSER_CPPFLAGS = @URIPARSER_CPPFLAGS@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 WARRANTY = @WARRANTY@
@@ -1451,6 +1513,7 @@ WTSAPI32LIBS = @WTSAPI32LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
+_libcurl_config = @_libcurl_config@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -1520,6 +1583,7 @@ AM_CPPFLAGS = -I.. -I$(top_srcdir)/lib -I$(top_srcdir)/gl -I$(top_srcdir)/intl \
 check_tcp_programs = check_ftp check_imap check_nntp check_pop \
 	check_udp check_clamd @check_tcp_ssl@
 
+SUBDIRS = picohttpparser
 EXTRA_DIST = t tests
 PLUGINHDRS = common.h
 noinst_LIBRARIES = libnpcommon.a
@@ -1537,6 +1601,9 @@ TESTS = @PLUGIN_TEST@
 # the actual targets
 check_apt_LDADD = $(BASEOBJS)
 check_cluster_LDADD = $(BASEOBJS)
+check_curl_CFLAGS = $(AM_CFLAGS) $(LIBCURLCFLAGS) $(URIPARSERCFLAGS) $(LIBCURLINCLUDE) $(URIPARSERINCLUDE) -Ipicohttpparser
+check_curl_CPPFLAGS = $(AM_CPPFLAGS) $(LIBCURLCFLAGS) $(URIPARSERCFLAGS) $(LIBCURLINCLUDE) $(URIPARSERINCLUDE) -Ipicohttpparser
+check_curl_LDADD = $(NETLIBS) $(LIBCURLLIBS) $(SSLOBJS) $(URIPARSERLIBS) picohttpparser/libpicohttpparser.a
 check_dbi_LDADD = $(NETLIBS) $(DBILIBS)
 check_dig_LDADD = $(NETLIBS)
 check_disk_LDADD = $(BASEOBJS)
@@ -1557,7 +1624,7 @@ check_mysql_query_CFLAGS = $(AM_CFLAGS) $(MYSQLCFLAGS)
 check_mysql_query_CPPFLAGS = $(AM_CPPFLAGS) $(MYSQLINCLUDE)
 check_mysql_query_LDADD = $(NETLIBS) $(MYSQLLIBS)
 check_nagios_LDADD = $(BASEOBJS)
-check_nt_LDADD = $(NETLIBS) 
+check_nt_LDADD = $(NETLIBS)
 check_ntp_LDADD = $(NETLIBS) $(MATHLIBS)
 check_ntp_peer_LDADD = $(NETLIBS) $(MATHLIBS)
 check_nwstat_LDADD = $(NETLIBS)
@@ -1580,7 +1647,7 @@ check_by_ssh_LDADD = $(NETLIBS)
 check_ide_smart_LDADD = $(BASEOBJS)
 negate_LDADD = $(BASEOBJS)
 urlize_LDADD = $(BASEOBJS)
-all: all-am
+all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
@@ -1676,6 +1743,9 @@ check_by_ssh$(EXEEXT): $(check_by_ssh_OBJECTS) $(check_by_ssh_DEPENDENCIES) $(EX
 check_cluster$(EXEEXT): $(check_cluster_OBJECTS) $(check_cluster_DEPENDENCIES) $(EXTRA_check_cluster_DEPENDENCIES) 
 	@rm -f check_cluster$(EXEEXT)
 	$(LINK) $(check_cluster_OBJECTS) $(check_cluster_LDADD) $(LIBS)
+check_curl$(EXEEXT): $(check_curl_OBJECTS) $(check_curl_DEPENDENCIES) $(EXTRA_check_curl_DEPENDENCIES) 
+	@rm -f check_curl$(EXEEXT)
+	$(check_curl_LINK) $(check_curl_OBJECTS) $(check_curl_LDADD) $(LIBS)
 check_dbi$(EXEEXT): $(check_dbi_OBJECTS) $(check_dbi_DEPENDENCIES) $(EXTRA_check_dbi_DEPENDENCIES) 
 	@rm -f check_dbi$(EXEEXT)
 	$(LINK) $(check_dbi_OBJECTS) $(check_dbi_LDADD) $(LIBS)
@@ -1800,6 +1870,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_apt.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_by_ssh.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_cluster.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_curl-check_curl.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_dbi.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_dig.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/check_disk.Po@am__quote@
@@ -1865,6 +1936,20 @@ distclean-compile:
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
 
+check_curl-check_curl.o: check_curl.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_curl_CPPFLAGS) $(CPPFLAGS) $(check_curl_CFLAGS) $(CFLAGS) -MT check_curl-check_curl.o -MD -MP -MF $(DEPDIR)/check_curl-check_curl.Tpo -c -o check_curl-check_curl.o `test -f 'check_curl.c' || echo '$(srcdir)/'`check_curl.c
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/check_curl-check_curl.Tpo $(DEPDIR)/check_curl-check_curl.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='check_curl.c' object='check_curl-check_curl.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_curl_CPPFLAGS) $(CPPFLAGS) $(check_curl_CFLAGS) $(CFLAGS) -c -o check_curl-check_curl.o `test -f 'check_curl.c' || echo '$(srcdir)/'`check_curl.c
+
+check_curl-check_curl.obj: check_curl.c
+@am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_curl_CPPFLAGS) $(CPPFLAGS) $(check_curl_CFLAGS) $(CFLAGS) -MT check_curl-check_curl.obj -MD -MP -MF $(DEPDIR)/check_curl-check_curl.Tpo -c -o check_curl-check_curl.obj `if test -f 'check_curl.c'; then $(CYGPATH_W) 'check_curl.c'; else $(CYGPATH_W) '$(srcdir)/check_curl.c'; fi`
+@am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/check_curl-check_curl.Tpo $(DEPDIR)/check_curl-check_curl.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='check_curl.c' object='check_curl-check_curl.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_curl_CPPFLAGS) $(CPPFLAGS) $(check_curl_CFLAGS) $(CFLAGS) -c -o check_curl-check_curl.obj `if test -f 'check_curl.c'; then $(CYGPATH_W) 'check_curl.c'; else $(CYGPATH_W) '$(srcdir)/check_curl.c'; fi`
+
 check_mysql-check_mysql.o: check_mysql.c
 @am__fastdepCC_TRUE@	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(check_mysql_CPPFLAGS) $(CPPFLAGS) $(check_mysql_CFLAGS) $(CFLAGS) -MT check_mysql-check_mysql.o -MD -MP -MF $(DEPDIR)/check_mysql-check_mysql.Tpo -c -o check_mysql-check_mysql.o `test -f 'check_mysql.c' || echo '$(srcdir)/'`check_mysql.c
 @am__fastdepCC_TRUE@	$(am__mv) $(DEPDIR)/check_mysql-check_mysql.Tpo $(DEPDIR)/check_mysql-check_mysql.Po
@@ -1899,6 +1984,76 @@ mostlyclean-libtool:
 clean-libtool:
 	-rm -rf .libs _libs
 
+# This directory's subdirectories are mostly independent; you can cd
+# into them and run `make' without going through this Makefile.
+# To change the values of `make' variables: instead of editing Makefiles,
+# (1) if the variable is set in `config.status', edit `config.status'
+#     (which will cause the Makefiles to be regenerated when you run `make');
+# (2) otherwise, pass the desired values on the `make' command line.
+$(RECURSIVE_TARGETS):
+	@fail= failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	target=`echo $@ | sed s/-recursive//`; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    dot_seen=yes; \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done; \
+	if test "$$dot_seen" = "no"; then \
+	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+	fi; test -z "$$fail"
+
+$(RECURSIVE_CLEAN_TARGETS):
+	@fail= failcom='exit 1'; \
+	for f in x $$MAKEFLAGS; do \
+	  case $$f in \
+	    *=* | --[!k]*);; \
+	    *k*) failcom='fail=yes';; \
+	  esac; \
+	done; \
+	dot_seen=no; \
+	case "$@" in \
+	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+	  *) list='$(SUBDIRS)' ;; \
+	esac; \
+	rev=''; for subdir in $$list; do \
+	  if test "$$subdir" = "."; then :; else \
+	    rev="$$subdir $$rev"; \
+	  fi; \
+	done; \
+	rev="$$rev ."; \
+	target=`echo $@ | sed s/-recursive//`; \
+	for subdir in $$rev; do \
+	  echo "Making $$target in $$subdir"; \
+	  if test "$$subdir" = "."; then \
+	    local_target="$$target-am"; \
+	  else \
+	    local_target="$$target"; \
+	  fi; \
+	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+	  || eval $$failcom; \
+	done && test -z "$$fail"
+tags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+	done
+ctags-recursive:
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+	done
+
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
@@ -1909,10 +2064,23 @@ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
 	mkid -fID $$unique
 tags: TAGS
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	set x; \
 	here=`pwd`; \
+	if ($(ETAGS) --etags-include --version) >/dev/null 2>&1; then \
+	  include_option=--etags-include; \
+	  empty_fix=.; \
+	else \
+	  include_option=--include; \
+	  empty_fix=; \
+	fi; \
+	list='$(SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    test ! -f $$subdir/TAGS || \
+	      set "$$@" "$$include_option=$$here/$$subdir/TAGS"; \
+	  fi; \
+	done; \
 	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
@@ -1931,7 +2099,7 @@ TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	  fi; \
 	fi
 ctags: CTAGS
-CTAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+CTAGS: ctags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 		$(TAGS_FILES) $(LISP)
 	list='$(SOURCES) $(HEADERS)  $(LISP) $(TAGS_FILES)'; \
 	unique=`for i in $$list; do \
@@ -2074,23 +2242,49 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
+	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+	  if test "$$subdir" = .; then :; else \
+	    $(am__make_dryrun) \
+	      || test -d "$(distdir)/$$subdir" \
+	      || $(MKDIR_P) "$(distdir)/$$subdir" \
+	      || exit 1; \
+	    dir1=$$subdir; dir2="$(distdir)/$$subdir"; \
+	    $(am__relativize); \
+	    new_distdir=$$reldir; \
+	    dir1=$$subdir; dir2="$(top_distdir)"; \
+	    $(am__relativize); \
+	    new_top_distdir=$$reldir; \
+	    echo " (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir="$$new_top_distdir" distdir="$$new_distdir" \\"; \
+	    echo "     am__remove_distdir=: am__skip_length_check=: am__skip_mode_fix=: distdir)"; \
+	    ($(am__cd) $$subdir && \
+	      $(MAKE) $(AM_MAKEFLAGS) \
+	        top_distdir="$$new_top_distdir" \
+	        distdir="$$new_distdir" \
+		am__remove_distdir=: \
+		am__skip_length_check=: \
+		am__skip_mode_fix=: \
+	        distdir) \
+	      || exit 1; \
+	  fi; \
+	done
 check-am: all-am
 	$(MAKE) $(AM_MAKEFLAGS) check-TESTS
-check: check-am
+check: check-recursive
 all-am: Makefile $(LIBRARIES) $(PROGRAMS) all-local
-installdirs:
+installdirs: installdirs-recursive
+installdirs-am:
 	for dir in "$(DESTDIR)$(libexecdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
-install: install-am
-install-exec: install-exec-am
-install-data: install-data-am
-uninstall: uninstall-am
+install: install-recursive
+install-exec: install-exec-recursive
+install-data: install-data-recursive
+uninstall: uninstall-recursive
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
-installcheck: installcheck-am
+installcheck: installcheck-recursive
 install-strip:
 	if test -z '$(STRIP)'; then \
 	  $(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
@@ -2112,83 +2306,86 @@ distclean-generic:
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-clean: clean-am
+clean: clean-recursive
 
 clean-am: clean-generic clean-libexecPROGRAMS clean-libtool \
 	clean-local clean-noinstLIBRARIES mostlyclean-am
 
-distclean: distclean-am
+distclean: distclean-recursive
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 distclean-am: clean-am distclean-compile distclean-generic \
 	distclean-tags
 
-dvi: dvi-am
+dvi: dvi-recursive
 
 dvi-am:
 
-html: html-am
+html: html-recursive
 
 html-am:
 
-info: info-am
+info: info-recursive
 
 info-am:
 
 install-data-am:
 
-install-dvi: install-dvi-am
+install-dvi: install-dvi-recursive
 
 install-dvi-am:
 
 install-exec-am: install-libexecPROGRAMS
 	@$(NORMAL_INSTALL)
 	$(MAKE) $(AM_MAKEFLAGS) install-exec-hook
-install-html: install-html-am
+install-html: install-html-recursive
 
 install-html-am:
 
-install-info: install-info-am
+install-info: install-info-recursive
 
 install-info-am:
 
 install-man:
 
-install-pdf: install-pdf-am
+install-pdf: install-pdf-recursive
 
 install-pdf-am:
 
-install-ps: install-ps-am
+install-ps: install-ps-recursive
 
 install-ps-am:
 
 installcheck-am:
 
-maintainer-clean: maintainer-clean-am
+maintainer-clean: maintainer-clean-recursive
 	-rm -rf ./$(DEPDIR)
 	-rm -f Makefile
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
-mostlyclean: mostlyclean-am
+mostlyclean: mostlyclean-recursive
 
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-pdf: pdf-am
+pdf: pdf-recursive
 
 pdf-am:
 
-ps: ps-am
+ps: ps-recursive
 
 ps-am:
 
 uninstall-am: uninstall-libexecPROGRAMS uninstall-local
 
-.MAKE: check-am install-am install-exec-am install-strip
+.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) check-am \
+	ctags-recursive install-am install-exec-am install-strip \
+	tags-recursive
 
-.PHONY: CTAGS GTAGS all all-am all-local check check-TESTS check-am \
-	clean clean-generic clean-libexecPROGRAMS clean-libtool \
-	clean-local clean-noinstLIBRARIES ctags distclean \
+.PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
+	all all-am all-local check check-TESTS check-am clean \
+	clean-generic clean-libexecPROGRAMS clean-libtool clean-local \
+	clean-noinstLIBRARIES ctags ctags-recursive distclean \
 	distclean-compile distclean-generic distclean-libtool \
 	distclean-tags distdir dvi dvi-am html html-am info info-am \
 	install install-am install-data install-data-am install-dvi \
@@ -2196,11 +2393,11 @@ uninstall-am: uninstall-libexecPROGRAMS uninstall-local
 	install-html install-html-am install-info install-info-am \
 	install-libexecPROGRAMS install-man install-pdf install-pdf-am \
 	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	installcheck-am installdirs installdirs-am maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags uninstall uninstall-am uninstall-libexecPROGRAMS \
-	uninstall-local
+	tags tags-recursive uninstall uninstall-am \
+	uninstall-libexecPROGRAMS uninstall-local
 
 @RELEASE_PRESENT_FALSE@NP-VERSION-FILE: .FORCE-NP-VERSION-FILE
 @RELEASE_PRESENT_FALSE@	@$(SHELL_PATH) $(top_srcdir)/NP-VERSION-GEN
