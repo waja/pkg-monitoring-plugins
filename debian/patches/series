@@ -1,9 +1,2 @@
 02_check_icmp_links
 # commited upstream
-10_spell_fixes
-11_check_dhcp_MSG_PEAK
-12_check_apt_only_crit
-13_check_apt_list_packages
-14_mariadb
-15_check_smtp_initialize
-16_check_mailq_options
