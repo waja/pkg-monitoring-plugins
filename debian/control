@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
 Build-Depends: debhelper (>= 10~),
+               libcurl4-openssl-dev | libcurl4-nss-dev (>= 7.34) | libcurl4-gnutls-dev (>= 7.42),
                libdbi-dev,
                libradcli-dev | libfreeradius-client-dev | libradiusclient-ng-dev,
                libkrb5-dev,
@@ -12,6 +13,7 @@ Build-Depends: debhelper (>= 10~),
                libnet-snmp-perl,
                libpq-dev,
                libssl-dev,
+               liburiparser-dev,
                mawk | awk,
                perl,
                procps
