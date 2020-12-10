@@ -36,7 +36,7 @@ common_files:=negate urlize utils.pm utils.sh
 
 basic_plugin_cfgs:=apt dhcp disk dummy ftp http load mail news ntp ping procs \
 	real ssh tcp_udp telnet users
-std_plugin_cfgs:=breeze disk-smb dns flexlm fping games hppjd ifstatus ldap \
+std_plugin_cfgs:=breeze curl-http disk-smb dns flexlm fping games hppjd ifstatus ldap \
 	mailq mrtg mysql netware nt pgsql radius rpc-nfs snmp
 
 PATH = /bin:/sbin:/usr/bin:/usr/sbin
