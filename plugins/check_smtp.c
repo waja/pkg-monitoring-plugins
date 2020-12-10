@@ -293,6 +293,7 @@ main (int argc, char **argv)
 		    printf("%s", buffer);
 		}
 
+		n = 0;
 		while (n < ncommands) {
 			xasprintf (&cmd_str, "%s%s", commands[n], "\r\n");
 			my_send(cmd_str, strlen(cmd_str));
@@ -835,7 +836,7 @@ print_help (void)
 	printf("\n");
 	printf ("%s\n", _("Successul connects return STATE_OK, refusals and timeouts return"));
   printf ("%s\n", _("STATE_CRITICAL, other errors return STATE_UNKNOWN.  Successful"));
-  printf ("%s\n", _("connects, but incorrect reponse messages from the host result in"));
+  printf ("%s\n", _("connects, but incorrect response messages from the host result in"));
   printf ("%s\n", _("STATE_WARNING return values."));
 
 	printf (UT_SUPPORT);

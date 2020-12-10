@@ -29,13 +29,6 @@ suite of plugins. */
 void support (void);
 void print_revision (const char *, const char *);
 
-/* Handle timeouts */
-
-extern unsigned int timeout_state;
-extern unsigned int timeout_interval;
-
-RETSIGTYPE timeout_alarm_handler (int);
-
 extern time_t start_time, end_time;
 
 /* Test input types */
@@ -89,8 +82,6 @@ void usage4(const char *) __attribute__((noreturn));
 void usage5(void) __attribute__((noreturn));
 void usage_va(const char *fmt, ...) __attribute__((noreturn));
 
-const char *state_text (int);
-
 #define max(a,b) (((a)>(b))?(a):(b))
 #define min(a,b) (((a)<(b))?(a):(b))
 
@@ -105,6 +96,8 @@ char *sperfdata (const char *, double, const char *, char *, char *,
 
 char *sperfdata_int (const char *, int, const char *, char *, char *,
                      int, int, int, int);
+
+int open_max (void);
 
 /* The idea here is that, although not every plugin will use all of these, 
    most will or should.  Therefore, for consistency, these very common 

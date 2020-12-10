@@ -60,8 +60,10 @@ DIST_COMMON = README $(am__configure_deps) $(srcdir)/Makefile.am \
 	build-aux/ltmain.sh build-aux/missing build-aux/mkinstalldirs \
 	config.rpath mkinstalldirs
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/np_mysqlclient.m4 \
-	$(top_srcdir)/gl/m4/00gnulib.m4 $(top_srcdir)/gl/m4/alloca.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/libcurl.m4 \
+	$(top_srcdir)/m4/np_mysqlclient.m4 \
+	$(top_srcdir)/m4/uriparser.m4 $(top_srcdir)/gl/m4/00gnulib.m4 \
+	$(top_srcdir)/gl/m4/alloca.m4 \
 	$(top_srcdir)/gl/m4/arpa_inet_h.m4 \
 	$(top_srcdir)/gl/m4/base64.m4 $(top_srcdir)/gl/m4/btowc.m4 \
 	$(top_srcdir)/gl/m4/codeset.m4 \
@@ -941,6 +943,11 @@ LD = @LD@
 LDAPINCLUDE = @LDAPINCLUDE@
 LDAPLIBS = @LDAPLIBS@
 LDFLAGS = @LDFLAGS@
+LIBCURL = @LIBCURL@
+LIBCURLCFLAGS = @LIBCURLCFLAGS@
+LIBCURLINCLUDE = @LIBCURLINCLUDE@
+LIBCURLLIBS = @LIBCURLLIBS@
+LIBCURL_CPPFLAGS = @LIBCURL_CPPFLAGS@
 LIBGNU_LIBDEPS = @LIBGNU_LIBDEPS@
 LIBGNU_LTLIBDEPS = @LIBGNU_LTLIBDEPS@
 LIBICONV = @LIBICONV@
@@ -1066,6 +1073,7 @@ PERL = @PERL@
 PERLMODS_DIR = @PERLMODS_DIR@
 PGINCLUDE = @PGINCLUDE@
 PGLIBS = @PGLIBS@
+PKGCONFIG = @PKGCONFIG@
 PKG_ARCH = @PKG_ARCH@
 PLUGIN_TEST = @PLUGIN_TEST@
 POSUB = @POSUB@
@@ -1283,6 +1291,11 @@ TIME_H_DEFINES_STRUCT_TIMESPEC = @TIME_H_DEFINES_STRUCT_TIMESPEC@
 UNDEFINE_STRTOK_R = @UNDEFINE_STRTOK_R@
 UNISTD_H_HAVE_WINSOCK2_H = @UNISTD_H_HAVE_WINSOCK2_H@
 UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS = @UNISTD_H_HAVE_WINSOCK2_H_AND_USE_SOCKETS@
+URIPARSER = @URIPARSER@
+URIPARSERCFLAGS = @URIPARSERCFLAGS@
+URIPARSERINCLUDE = @URIPARSERINCLUDE@
+URIPARSERLIBS = @URIPARSERLIBS@
+URIPARSER_CPPFLAGS = @URIPARSER_CPPFLAGS@
 USE_NLS = @USE_NLS@
 VERSION = @VERSION@
 WARRANTY = @WARRANTY@
@@ -1293,6 +1306,7 @@ WTSAPI32LIBS = @WTSAPI32LIBS@
 XGETTEXT = @XGETTEXT@
 XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
+_libcurl_config = @_libcurl_config@
 abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
@@ -1360,7 +1374,7 @@ EXTRA_DIST = config.rpath \
 	NP-VERSION-GEN REQUIREMENTS SUPPORT THANKS \
 	NPTest.pm pkg \
 	config_test/Makefile config_test/run_tests config_test/child_test.c \
-	tools/build_perl_modules \
+	perlmods tools/build_perl_modules \
 	tools/tinderbox_build
 
 ACLOCAL_AMFLAGS = -I gl/m4 -I m4
@@ -1903,9 +1917,10 @@ install-root:
 
 test test-debug:
 	cd lib && $(MAKE) $@
-	if test "$(PERLMODS_DIR)" != ""; then cd && $(MAKE) $@; fi
+	if test "$(PERLMODS_DIR)" != ""; then cd perlmods && $(MAKE) $@; fi
 	cd plugins && $(MAKE) $@
 	cd plugins-scripts && $(MAKE) $@
+	cd plugins-root && $(MAKE) $@
 
 solpkg:
 	if [ ! -d $(BUILDDIR) ] ; then mkdir $(BUILDDIR); fi

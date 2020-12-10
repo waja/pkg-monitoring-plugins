@@ -7,7 +7,7 @@ EXTRA_DIST = config.rpath \
 	NP-VERSION-GEN REQUIREMENTS SUPPORT THANKS \
 	NPTest.pm pkg \
 	config_test/Makefile config_test/run_tests config_test/child_test.c \
-	tools/build_perl_modules \
+	perlmods tools/build_perl_modules \
 	tools/tinderbox_build
 
 ACLOCAL_AMFLAGS = -I gl/m4 -I m4
@@ -31,9 +31,10 @@ install-root:
 
 test test-debug:
 	cd lib && $(MAKE) $@
-	if test "$(PERLMODS_DIR)" != ""; then cd && $(MAKE) $@; fi
+	if test "$(PERLMODS_DIR)" != ""; then cd perlmods && $(MAKE) $@; fi
 	cd plugins && $(MAKE) $@
 	cd plugins-scripts && $(MAKE) $@
+	cd plugins-root && $(MAKE) $@
 
 # Solaris pkgmk
 BUILDDIR = build-solaris

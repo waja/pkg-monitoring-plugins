@@ -34,6 +34,7 @@ const char *email = "devel@monitoring-plugins.org";
 
 #include "common.h"
 #include "utils.h"
+#include "utils_cmd.h"
 
 #include "netutils.h"
 #include <libpq-fe.h>
@@ -565,7 +566,7 @@ print_help (void)
 
 	printf (" %s\n", _("Typically, the monitoring user (unless the --logname option is used) should be"));
 	printf (" %s\n", _("able to connect to the database without a password. The plugin can also send"));
-	printf (" %s\n", _("a password, but no effort is made to obsure or encrypt the password."));
+	printf (" %s\n", _("a password, but no effort is made to obscure or encrypt the password."));
 
 	printf (UT_SUPPORT);
 }

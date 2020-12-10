@@ -36,9 +36,6 @@ extern const char *progname;
 #define STRLEN 64
 #define TXTBLK 128
 
-unsigned int timeout_state = STATE_CRITICAL;
-unsigned int timeout_interval = DEFAULT_SOCKET_TIMEOUT;
-
 time_t start_time, end_time;
 
 /* **************************************************************************
@@ -146,33 +143,6 @@ print_revision (const char *command_name, const char *revision)
 {
 	printf ("%s v%s (%s %s)\n",
 	         command_name, revision, PACKAGE, VERSION);
-}
-
-const char *
-state_text (int result)
-{
-	switch (result) {
-	case STATE_OK:
-		return "OK";
-	case STATE_WARNING:
-		return "WARNING";
-	case STATE_CRITICAL:
-		return "CRITICAL";
-	case STATE_DEPENDENT:
-		return "DEPENDENT";
-	default:
-		return "UNKNOWN";
-	}
-}
-
-void
-timeout_alarm_handler (int signo)
-{
-	if (signo == SIGALRM) {
-		printf (_("%s - Plugin timed out after %d seconds\n"),
-						state_text(timeout_state), timeout_interval);
-		exit (timeout_state);
-	}
 }
 
 int
@@ -709,3 +679,18 @@ char *sperfdata_int (const char *label,
 	return data;
 }
 
+int
+open_max (void)
+{
+	errno = 0;
+	if (maxfd > 0)
+		return(maxfd);
+
+	if ((maxfd = sysconf (_SC_OPEN_MAX)) < 0) {
+		if (errno == 0)
+			maxfd = DEFAULT_MAXFD;   /* it's indeterminate */
+	else
+		die (STATE_UNKNOWN, _("sysconf error for _SC_OPEN_MAX\n"));
+	}
+	return(maxfd);
+}
