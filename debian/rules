@@ -160,6 +160,8 @@ install: build
 	for p in ${common_files}; do \
 		mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/$$p ${NP_COMMON_DIR}/${NP_LIBEXEC}; \
 	done
+	# remove check_uptime for now (conflicting with check_uptime from n-p-c)
+	rm ${NP_BASIC_DIR}/${NP_LIBEXEC}/check_uptime
 	# now do the same for their configs, copying them into seperate
 	# "template" directories outside of /usr/share/doc for ucf to use.
 	for c in ${basic_plugin_cfgs}; do \
