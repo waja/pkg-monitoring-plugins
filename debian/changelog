@@ -1,10 +1,14 @@
-monitoring-plugins (2.3-1) UNRELEASED; urgency=medium
+monitoring-plugins (2.3-1~exp1) experimental; urgency=medium
 
-  * NOT RELEASED YET
   * [3031044] New upstream version 2.3
   * [61ef2d7] Droping all patches commited upstream and beeing obsolete with 2.3
+  * [66c44c4] d/control: adding new build-deps fir check_curl
+  * [59b52dd] d/rules: Adding check_curl to std_plugins
+  * [5e59ca1] Adding check_curl check commands
+  * [6cbfc78] check_uptime: Don't ship for now, check_uptime also exist in
+    nagios-plugins-contrib
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 10 Dec 2020 21:32:48 +0100
+ -- Jan Wagner <waja@cyconet.org>  Mon, 14 Dec 2020 14:51:49 +0100
 
 monitoring-plugins (2.2-7) unstable; urgency=medium
 
