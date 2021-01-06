@@ -1,3 +1,9 @@
+monitoring-plugins (2.3-1) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 06 Jan 2021 22:10:18 +0100
+
 monitoring-plugins (2.3-1~exp1) experimental; urgency=medium
 
   * [3031044] New upstream version 2.3
