@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_PREREQ(2.59)
-AC_INIT(monitoring-plugins,2.3)
+AC_INIT(monitoring-plugins,2.3.1)
 AC_CONFIG_SRCDIR(NPTest.pm)
 AC_CONFIG_FILES([gl/Makefile])
 AC_CONFIG_AUX_DIR(build-aux)
@@ -1888,7 +1888,6 @@ AC_OUTPUT(
   plugins-scripts/Makefile
   plugins-scripts/utils.pm
   plugins-scripts/utils.sh
-  perlmods/Makefile
   test.pl
   pkg/solaris/pkginfo
   po/Makefile.in
