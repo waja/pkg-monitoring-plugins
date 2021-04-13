@@ -1,0 +1,8 @@
+--- a/plugins-scripts/check_disk_smb.pl
++++ b/plugins-scripts/check_disk_smb.pl
+@@ -1,4 +1,5 @@
+ #!@PERL@ -w
++# nagios: -epn
+ #
+ #
+ # check_disk.pl <host> <share> <user> <pass> [warn] [critical] [port]
