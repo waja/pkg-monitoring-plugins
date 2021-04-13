@@ -1,3 +1,10 @@
+monitoring-plugins (2.3.1-1~exp2) experimental; urgency=medium
+
+  * [eb7432c] Adding d/p/10_check_curl_header fixing HTTP_ heqders
+  * [363955f] Adding d/p/03_epn disable epn in check_disk_smb
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 13 Apr 2021 13:05:28 +0200
+
 monitoring-plugins (2.3.1-1~exp1) experimental; urgency=medium
 
   * [09f4277] New upstream version 2.3.1 (Closes: #982847, #886888, #950921)
