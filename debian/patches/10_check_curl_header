@@ -1,0 +1,23 @@
+From f0ac7fcc7c40fab04c00fbbc8c091e89e77b0f74 Mon Sep 17 00:00:00 2001
+From: Barak Shohat <barak@bazzisoft.com>
+Date: Mon, 12 Apr 2021 19:06:27 +0300
+Subject: [PATCH] check_curl: Fix bug where headers beginning with HTTP_ cause
+ the status line parsing to fail.
+
+---
+ plugins/check_curl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/check_curl.c b/plugins/check_curl.c
+index 99833f6f..3e0a6f94 100644
+--- a/plugins/check_curl.c
++++ b/plugins/check_curl.c
+@@ -1995,7 +1995,7 @@ curlhelp_parse_statusline (const char *buf, curlhelp_statusline *status_line)
+   char *first_line_buf;
+ 
+   /* find last start of a new header */
+-  start = strrstr2 (buf, "\r\nHTTP");
++  start = strrstr2 (buf, "\r\nHTTP/");
+   if (start != NULL) {
+     start += 2;
+     buf = start;
