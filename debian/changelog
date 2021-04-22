@@ -1,3 +1,9 @@
+monitoring-plugins (2.3.1-1) unstable; urgency=medium
+
+  * Upload to unstable
+
+ -- Jan Wagner <waja@cyconet.org>  Thu, 22 Apr 2021 12:41:33 +0200
+
 monitoring-plugins (2.3.1-1~exp2) experimental; urgency=medium
 
   * [eb7432c] Adding d/p/10_check_curl_header fixing HTTP_ heqders
