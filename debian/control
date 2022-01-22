@@ -6,7 +6,7 @@ Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
 Build-Depends: debhelper-compat (= 12),
                libcurl4-openssl-dev | libcurl4-nss-dev (>= 7.34) | libcurl4-gnutls-dev (>= 7.42),
                libdbi-dev,
-               libradcli-dev | libfreeradius-client-dev | libradiusclient-ng-dev,
+               libradcli-dev | libfreeradius-client-dev,
                libkrb5-dev,
                libldap2-dev,
                default-libmysqlclient-dev,
