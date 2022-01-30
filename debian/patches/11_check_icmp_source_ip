@@ -1,0 +1,64 @@
+From 72c51d367e851dc7b6e2f66d89fc118ab72dc356 Mon Sep 17 00:00:00 2001
+From: ghciv6 <ghciv6@localhost>
+Date: Mon, 20 Dec 2021 22:39:57 +0000
+Subject: [PATCH] - delay set_source_ip() until address_family is detected -
+ add a test to check '-s'
+
+---
+ plugins-root/check_icmp.c   | 5 ++++-
+ plugins-root/t/check_icmp.t | 8 +++++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/plugins-root/check_icmp.c b/plugins-root/check_icmp.c
+index 01ae174ad..f97b0ed7e 100644
+--- a/plugins-root/check_icmp.c
++++ b/plugins-root/check_icmp.c
+@@ -410,6 +410,7 @@ main(int argc, char **argv)
+ #ifdef SO_TIMESTAMP
+ 	int on = 1;
+ #endif
++	char *source_ip = NULL;
+ 	char * opts_str = "vhVw:c:n:p:t:H:s:i:b:I:l:m:64";
+ 
+ 	setlocale (LC_ALL, "");
+@@ -542,7 +543,7 @@ main(int argc, char **argv)
+ 				}
+ 				break;
+ 			case 's': /* specify source IP address */
+-				set_source_ip(optarg);
++				source_ip = optarg;
+ 				break;
+ 			case 'V': /* version */
+ 				print_revision (progname, NP_VERSION);
+@@ -597,6 +598,8 @@ main(int argc, char **argv)
+ 		sockets |= HAVE_ICMP;
+ 	else icmp_sockerrno = errno;
+ 
++	if( source_ip )
++		set_source_ip(source_ip);
+ 
+ #ifdef SO_TIMESTAMP
+ 	if(setsockopt(icmp_sock, SOL_SOCKET, SO_TIMESTAMP, &on, sizeof(on)))
+diff --git a/plugins-root/t/check_icmp.t b/plugins-root/t/check_icmp.t
+index e043d4edd..55edc31b3 100644
+--- a/plugins-root/t/check_icmp.t
++++ b/plugins-root/t/check_icmp.t
+@@ -12,7 +12,7 @@ my $allow_sudo = getTestParameter( "NP_ALLOW_SUDO",
+ 	"no" );
+ 
+ if ($allow_sudo eq "yes" or $> == 0) {
+-	plan tests => 16;
++	plan tests => 18;
+ } else {
+ 	plan skip_all => "Need sudo to test check_icmp";
+ }
+@@ -83,3 +83,9 @@ $res = NPTest->testCmd(
+ is( $res->return_code, 2, "One of two host nonresponsive - two required" );
+ like( $res->output, $failureOutput, "Output OK" );
+ 
++$res = NPTest->testCmd(
++	"$sudo ./check_icmp -H $host_responsive -s 127.0.15.15 -w 10000ms,100% -c 10000ms,100% -n 1 -m 2"
++	);
++is( $res->return_code, 0, "IPv4 source_ip accepted" );
++like( $res->output, $successOutput, "Output OK" );
++
