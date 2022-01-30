@@ -1,0 +1,32 @@
+From 8543f8e2cd72cbdd3aa8469c86ead50824fd88a6 Mon Sep 17 00:00:00 2001
+From: rincewind <rincewind@vulgrim.de>
+Date: Tue, 20 Apr 2021 12:15:27 +0200
+Subject: [PATCH] Remove superflous CRLF in HTTP-Requests in check_http
+
+---
+ plugins/check_http.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/plugins/check_http.c b/plugins/check_http.c
+index 0b712665a..676cf6445 100644
+--- a/plugins/check_http.c
++++ b/plugins/check_http.c
+@@ -948,8 +948,7 @@ check_http (void)
+     }
+     asprintf (&buf, "%sProxy-Connection: keep-alive\r\n", buf);
+     asprintf (&buf, "%sHost: %s\r\n", buf, host_name);
+-    /* we finished our request, send empty line with CRLF */
+-    asprintf (&buf, "%s%s", buf, CRLF);
++
+     if (verbose) printf ("%s\n", buf);
+     send(sd, buf, strlen (buf), 0);
+     buf[0]='\0';
+@@ -1050,7 +1049,7 @@ check_http (void)
+     }
+ 
+     xasprintf (&buf, "%sContent-Length: %i\r\n\r\n", buf, (int)strlen (http_post_data));
+-    xasprintf (&buf, "%s%s%s", buf, http_post_data, CRLF);
++    xasprintf (&buf, "%s%s", buf, http_post_data);
+   }
+   else {
+     /* or just a newline so the server knows we're done with the request */
