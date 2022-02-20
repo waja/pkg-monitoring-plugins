@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
 Build-Depends: debhelper-compat (= 12),
-               libcurl4-openssl-dev | libcurl4-nss-dev (>= 7.34) | libcurl4-gnutls-dev (>= 7.42),
+               libcurl4-openssl-dev | libcurl4-nss-dev | libcurl4-gnutls-dev,
                libdbi-dev,
                libradcli-dev | libfreeradius-client-dev,
                libkrb5-dev,
@@ -48,7 +48,7 @@ Description: Common files for plugins for nagios compatible monitoring
 
 Package: monitoring-plugins-basic
 Architecture: any
-Depends: inetutils-ping (>= 2:1.9-1~) [kfreebsd-any hurd-any],
+Depends: inetutils-ping [kfreebsd-any hurd-any],
          iputils-ping [linux-any],
          monitoring-plugins-common,
          procps,
