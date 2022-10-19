@@ -1,7 +1,4 @@
 02_check_icmp_links
 03_epn
 # commited upstream
-10_check_curl_header
-11_check_icmp_source_ip
-12_check_disk_fix_btrfs
 13_check_http_fix_superflous_crlf
