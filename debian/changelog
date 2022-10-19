@@ -2,14 +2,13 @@ monitoring-plugins (2.3.2-1) UNRELEASED; urgency=medium
 
   * NOT RELEASED YET
   * [1fe8724] d/control: remove deprecated libradiusclient-ng-dev from build-deps
-  * [3ac1baa] Adding d/p/11_check_icmp_source_ip (Closes: #997849)
   * [9e92541] d/rules: Fix debhelper compat 12 by using '-a' instead '-s'
-  * [8b63362] Adding debian/patches/12_check_disk_fix_btrfs (Closes: #800345)
   * [eb27aa7] Adding d/p/13_check_http_fix_superflous_crlf (Closes: #913142)
   * [6cf0b31] Remove constraints unnecessary since buster
-  * [21323d2] New upstream version 2.3.2
+  * [21323d2] New upstream version 2.3.2 (Closes: #800345, #997849)
+  * [91105f7] Drop patches integrated upstream
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 19 Oct 2022 17:27:31 +0200
+ -- Jan Wagner <waja@cyconet.org>  Wed, 19 Oct 2022 20:53:25 +0200
 
 monitoring-plugins (2.3.1-1) unstable; urgency=medium
 
