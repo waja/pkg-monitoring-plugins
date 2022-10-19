@@ -2,14 +2,16 @@ This software is brought to you by the Monitoring Plugins Development Team. Howe
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-Diego Elio Pettenò
-fabiodds
-Elan Ruusamäe
-Nicolai Søborg
-Marc Sánchez
 dag rob?le
-Matthias Hähnel
+Aksel Sjögren
+Marc Sánchez
+Wolfgang Karall-Ahlborn
 Randy O'Meara
+Elan Ruusamäe
+Matthias Hähnel
+Nicolai Søborg
+fabiodds
+Diego Elio Pettenò
 Oskar Ahner
 Lance Albertson
 David Alden
@@ -20,8 +22,8 @@ Felipe Gustavo de Almeida
 Michael Almond
 Michael Anthon
 Bernd Apfel
-Bernd Arnold
 Paula Arnold
+Bernd Arnold
 Kondoros Attila
 Daniel Austin
 Karol Babioch
@@ -77,16 +79,18 @@ Yannick Charton
 Stephane Chazelas
 Eric Chen
 Alwyn Cherrington
+Lee Clemens
 Ben Clewett
 Jean-Claude Computing
 Lionel Cons
-Garry Cook
-Charlie Cook
 Ollie Cook
+Charlie Cook
+Garry Cook
 Luca Corti
 Greg Cox
 Jason Crawford
 David Croft
+Ken D
 Robert Dale
 Vincent Danjean
 Rok Debevc
@@ -109,6 +113,7 @@ Matthew Ericson
 Andreas Ericsson
 Heiti Ernits
 Ragnar Hojland Espinosa
+Klaus Ethgen
 O'Shaughnessy Evans
 Merijn Evertse
 Karl Ewald
@@ -119,9 +124,10 @@ Reuben Farrelly
 Mark Favas
 Duncan Ferguson
 Juan Carlos Fernandez
-Paulo Fessel
 Paulo Afonso Graner Fessel
+Paulo Fessel
 James Fidell
+Tobias Fiebig
 Roman Fiedler
 Johan Fischer
 Bernhard Fischer
@@ -137,8 +143,8 @@ Tim Gates
 Sven Geggus
 Jonas Genannt
 Robby Giffin
-Flo Gleixner
 Florian Gleixner
+Flo Gleixner
 Evgeni Golov
 Joseph Gooch
 Aravind Gottipati
@@ -150,6 +156,7 @@ Alex Griffin
 Chris Grim
 Steven Grimm
 Sebastien Guay
+Linda Guo
 Jon Hallett
 Steve Hanselman
 Jacob Hansen
@@ -158,6 +165,7 @@ Sebastian Harl
 Michael Haro
 Olli Hauer
 Gunnar Hellekson
+Geert Hendrickx
 Sebastian Herbszt
 Johannes Herlitz
 Ian Holsman
@@ -196,6 +204,7 @@ Steven Kreuzer
 Julius Kriukas
 Christoph Kron
 Frederic Krueger
+Claudio Kuenzler
 Marcel Kuiper
 Christian Kujau
 Alexander Kulak
@@ -228,8 +237,8 @@ Pawel Malachowski
 Ricardo Maraschini
 Michael Markstaller
 John Marquart
-Ernst-Dieter Martin
 Jason Martin
+Ernst-Dieter Martin
 Christopher Maser
 Mathieu Masseboeuf
 Alexander Matey
@@ -250,6 +259,7 @@ Jonathan Milby
 Russell Miller
 Eric J. Mislivec
 Janos Mohacsi
+Andreas Motl
 Tomas Mozes
 Gerd Mueller
 Adrian Murphy
@@ -257,6 +267,7 @@ Michael Musikhin
 Damian Myerscough
 Jan-Frode Myklebust
 Sivakumar Nellurandi
+Peter Newman
 Truongchinh Nguyen
 Simon L Nielsen
 Thomas Nilsen
@@ -353,6 +364,7 @@ Julien Touche
 Gabriele Tozzi
 Kyle Tucker
 Jerome Tytgat
+Daniel Uhlmann
 Stéphane Urbanovski
 Matthias Urlichs
 Matteo HCE Valsasna
@@ -378,6 +390,7 @@ Torsten Werner
 Ben Whaley
 Andrew Widdersheim
 Adrian Wieczorek
+Tobias Wiese
 Sebastian Wiesinger
 Paul Wiggins
 Howard Wilkinson
@@ -387,6 +400,7 @@ Mario Witte
 Alexander Wittig
 Tobias Wolf
 Brian De Wolf
+Eric Wunderlin
 Patric Wust
 Jamie Zawinski
 Vadim Zhukov
