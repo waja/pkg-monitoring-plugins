@@ -30,6 +30,7 @@ jobs:
       uses: dawidd6/action-debian-package@v1.4.0
       with:
         artifacts_directory: debian/build/release/
+        os_distribution: testing
     - name: Debug
       run: |
         ls -la

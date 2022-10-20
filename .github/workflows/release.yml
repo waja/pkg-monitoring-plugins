@@ -56,6 +56,7 @@ jobs:
       uses: dawidd6/action-debian-package@v1.4.0
       with:
         artifacts_directory: debian/build/release/
+        os_distribution: testing
 #    - name: Build Debian package
 #      uses: pi-top/action-debian-package@v0.2.0
 #      with:
