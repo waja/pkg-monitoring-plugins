@@ -1,6 +1,5 @@
-monitoring-plugins (2.3.2-1) UNRELEASED; urgency=medium
+monitoring-plugins (2.3.2-1) unstable; urgency=medium
 
-  * NOT RELEASED YET
   * [1fe8724] d/control: remove deprecated libradiusclient-ng-dev from build-deps
   * [9e92541] d/rules: Fix debhelper compat 12 by using '-a' instead '-s'
   * [eb27aa7] Adding d/p/13_check_http_fix_superflous_crlf (Closes: #913142)
@@ -8,7 +7,7 @@ monitoring-plugins (2.3.2-1) UNRELEASED; urgency=medium
   * [21323d2] New upstream version 2.3.2 (Closes: #800345, #997849)
   * [91105f7] Drop patches integrated upstream
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 19 Oct 2022 20:53:25 +0200
+ -- Jan Wagner <waja@cyconet.org>  Fri, 21 Oct 2022 11:41:42 +0200
 
 monitoring-plugins (2.3.1-1) unstable; urgency=medium
 
