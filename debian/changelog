@@ -1,3 +1,10 @@
+monitoring-plugins (2.3.2-2) UNRELEASED; urgency=medium
+
+  [ Bas Couwenberg ]
+  * [32fba01] Bump Standards-Version to 4.6.1, no changes.
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 01 Nov 2022 20:20:32 +0000
+
 monitoring-plugins (2.3.2-1) unstable; urgency=medium
 
   * [1fe8724] d/control: remove deprecated libradiusclient-ng-dev from build-deps
