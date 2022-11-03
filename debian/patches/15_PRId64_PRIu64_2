@@ -1,0 +1,25 @@
+From eb2dfdd5c24b87198b66397b224d6406c468a0bc Mon Sep 17 00:00:00 2001
+From: Andreas Baumann <202930+andreasbaumann@users.noreply.github.com>
+Date: Thu, 27 Oct 2022 22:48:18 +0200
+Subject: [PATCH] fixed two PRId64 to PRIu64 in perfdata_uint64 (#1802)
+
+---
+ plugins/utils.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/utils.c b/plugins/utils.c
+index f75cf03b..b4214c61 100644
+--- a/plugins/utils.c
++++ b/plugins/utils.c
+@@ -615,9 +615,9 @@ char *perfdata_uint64 (const char *label,
+ 	char *data = NULL;
+ 
+ 	if (strpbrk (label, "'= "))
+-		xasprintf (&data, "'%s'=%" PRId64 "%s;", label, val, uom);
++		xasprintf (&data, "'%s'=%" PRIu64 "%s;", label, val, uom);
+ 	else
+-		xasprintf (&data, "%s=%" PRId64 "%s;", label, val, uom);
++		xasprintf (&data, "%s=%" PRIu64 "%s;", label, val, uom);
+ 
+ 	if (warnp)
+ 		xasprintf (&data, "%s%" PRIu64 ";", data, warn);
