@@ -1,0 +1,88 @@
+From 508f8e875210ec140457d58463589626a761bb2e Mon Sep 17 00:00:00 2001
+From: Florian Lohoff <f@zz.de>
+Date: Mon, 15 Feb 2021 15:26:33 +0100
+Subject: [PATCH] Removing is_pg_dbname alltogether,using postgres API.
+ (Closes: #1660)
+
+The problem is that check_pgsql validates the Database name and has different assumptions
+that postgres itself.
+
+I fail to see a reason to validate the database name here. Postgres'es API should
+do this - So i would suggest a fix like this by removing is_pg_dbname alltogether.
+---
+ plugins/check_pgsql.c | 48 ++++---------------------------------------
+ 1 file changed, 4 insertions(+), 44 deletions(-)
+
+diff --git a/plugins/check_pgsql.c b/plugins/check_pgsql.c
+index c893386cb..c26cd439c 100644
+--- a/plugins/check_pgsql.c
++++ b/plugins/check_pgsql.c
+@@ -69,7 +69,6 @@ int process_arguments (int, char **);
+ int validate_arguments (void);
+ void print_usage (void);
+ void print_help (void);
+-int is_pg_dbname (char *);
+ int is_pg_logname (char *);
+ int do_query (PGconn *, char *);
+ 
+@@ -347,10 +346,10 @@ process_arguments (int argc, char **argv)
+ 				pgport = optarg;
+ 			break;
+ 		case 'd':     /* database name */
+-			if (!is_pg_dbname (optarg)) /* checks length and valid chars */
+-				usage2 (_("Database name is not valid"), optarg);
+-			else /* we know length, and know optarg is terminated, so us strcpy */
+-				snprintf(dbName, NAMEDATALEN, "%s", optarg);
++			if (strlen(optarg) >= NAMEDATALEN) {
++				usage2 (_("Database name exceeds the maximum length"), optarg);
++			}
++			snprintf(dbName, NAMEDATALEN, "%s", optarg);
+ 			break;
+ 		case 'l':     /* login name */
+ 			if (!is_pg_logname (optarg))
+@@ -414,45 +413,6 @@ validate_arguments ()
+ 	return OK;
+ }
+ 
+-
+-/******************************************************************************
+-
+-@@-
+-<sect3>
+-<title>is_pg_dbname</title>
+-
+-<para>&PROTO_is_pg_dbname;</para>
+-
+-<para>Given a database name, this function returns TRUE if the string
+-is a valid PostgreSQL database name, and returns false if it is
+-not.</para>
+-
+-<para>Valid PostgreSQL database names are less than &NAMEDATALEN;
+-characters long and consist of letters, numbers, and underscores. The
+-first character cannot be a number, however.</para>
+-
+-</sect3>
+--@@
+-******************************************************************************/
+-
+-
+-
+-int
+-is_pg_dbname (char *dbname)
+-{
+-	char txt[NAMEDATALEN];
+-	char tmp[NAMEDATALEN];
+-	if (strlen (dbname) > NAMEDATALEN - 1)
+-		return (FALSE);
+-	strncpy (txt, dbname, NAMEDATALEN - 1);
+-	txt[NAMEDATALEN - 1] = 0;
+-	if (sscanf (txt, "%[_a-zA-Z]%[^_a-zA-Z0-9-]", tmp, tmp) == 1)
+-		return (TRUE);
+-	if (sscanf (txt, "%[_a-zA-Z]%[_a-zA-Z0-9-]%[^_a-zA-Z0-9-]", tmp, tmp, tmp) ==
+-			2) return (TRUE);
+-	return (FALSE);
+-}
+-
+ /**
+ 
+ the tango program should eventually create an entity here based on the
