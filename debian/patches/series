@@ -5,3 +5,4 @@
 14_PRId64_PRIu64_1
 15_PRId64_PRIu64_2
 16_check_pgsql_dbname_too_strict
+17_check_curl_detect_ipv6
