@@ -10,3 +10,4 @@
 19_check_disk_fs_usage
 20_check_apt_unknown_escape_sequence
 21_check_http_faster_with_large_files
+22_check_curl_faster_with_large_files

@@ -1,0 +1,36 @@
+From 765b29f09bd3bc2a938260caa5f263343aafadb7 Mon Sep 17 00:00:00 2001
+From: Sven Nierlein <sven@nierlein.de>
+Date: Thu, 22 Dec 2022 12:51:18 +0100
+Subject: [PATCH] check_curl: fix checking large bodys (#1823)
+
+check_curl fails on large pages:
+
+  HTTP CRITICAL - Invalid HTTP response received from host on port 5080: cURL returned 23 - Failure writing output to destination
+
+for example trying to run check_curl on the test from #1822
+
+I guess the idea is to double the buffer size each time it is to small. But the code
+exponentially grows the buffer size which works well 2-3 times, but then fails.
+---
+ plugins/check_curl.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/check_curl.c b/plugins/check_curl.c
+index 2ad373c05..55de22fd2 100644
+--- a/plugins/check_curl.c
++++ b/plugins/check_curl.c
+@@ -2024,9 +2024,12 @@ curlhelp_buffer_write_callback (void *buffer, size_t size, size_t nmemb, void *s
+   curlhelp_write_curlbuf *buf = (curlhelp_write_curlbuf *)stream;
+ 
+   while (buf->bufsize < buf->buflen + size * nmemb + 1) {
+-    buf->bufsize *= buf->bufsize * 2;
++    buf->bufsize = buf->bufsize * 2;
+     buf->buf = (char *)realloc (buf->buf, buf->bufsize);
+-    if (buf->buf == NULL) return -1;
++    if (buf->buf == NULL) {
++      fprintf(stderr, "malloc failed (%d) %s\n", errno, strerror(errno));
++      return -1;
++    }
+   }
+ 
+   memcpy (buf->buf + buf->buflen, buffer, size * nmemb);
