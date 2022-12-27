@@ -8,3 +8,4 @@
 17_check_curl_detect_ipv6
 18_check_icmp_help
 19_check_disk_fs_usage
+20_check_apt_unknown_escape_sequence
