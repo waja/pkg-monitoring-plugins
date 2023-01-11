@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: Debian Nagios Maintainer Group <pkg-nagios-devel@lists.alioth.debian.org>
 Uploaders: Jan Wagner <waja@cyconet.org>, Alexander Wirt <formorer@debian.org>
-Build-Depends: debhelper-compat (= 12),
+Build-Depends: debhelper-compat (= 13),
                libcurl4-openssl-dev | libcurl4-nss-dev | libcurl4-gnutls-dev,
                libdbi-dev,
                libradcli-dev | libfreeradius-client-dev,
