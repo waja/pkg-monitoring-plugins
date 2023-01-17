@@ -74,7 +74,7 @@ perform. but, in the interest of the "safe default", these plugins will not
 be installed with the suid bit set.
 if setcap is able set the necessary capabilities, you are fine. if the setcap
 binary is not installed or not able to set the capabilities, you need to
-eighter set the capabilities (eg. cap_net_raw+ep) for your own or provide root
+either set the capabilities (eg. cap_net_raw+ep) for your own or provide root
 privileges. You could go the lazy way and install libcap2-bin and run the
 following afterwards:
 
