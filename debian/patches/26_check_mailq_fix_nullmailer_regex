@@ -1,0 +1,28 @@
+From 7ae8456e7a89faf0d9a10c0e2720910cbe0317b8 Mon Sep 17 00:00:00 2001
+From: andrew bezella <abezella@archive.org>
+Date: Wed, 19 Oct 2022 21:33:18 +0200
+Subject: [PATCH] Fixing nullmailer regex
+
+attached is a patch that updates the format expected in the nullmailer
+mailq output.  the regex is a little more flexible and less specific
+than the previous version.
+---
+ plugins-scripts/check_mailq.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/plugins-scripts/check_mailq.pl b/plugins-scripts/check_mailq.pl
+index 4c72332a5..27073d3cc 100755
+--- a/plugins-scripts/check_mailq.pl
++++ b/plugins-scripts/check_mailq.pl
+@@ -537,9 +537,9 @@
+ 	}
+ 
+ 	while (<MAILQ>) {
+-	    #2006-06-22 16:00:00  282 bytes
++	    #2022-08-25 01:30:40 502 bytes from <user@example.com>
+ 
+-	    if (/^[1-9][0-9]*-[01][0-9]-[0-3][0-9]\s[0-2][0-9]\:[0-5][0-9]\:[0-5][0-9]\s+[0-9]+\sbytes/) {
++	    if (/^\d{4}-\d{2}-\d{2}\s+\d{2}\:\d{2}\:\d{2}\s+\d+\sbytes/) {
+ 		$msg_q++ ;
+ 	    }
+ 	}
