@@ -1,0 +1,50 @@
+From dcb1a53f969da6f53d5b64a96b7988a8975bcc84 Mon Sep 17 00:00:00 2001
+From: Jan Wagner <waja@cyconet.org>
+Date: Tue, 17 Jan 2023 13:55:05 +0000
+Subject: [PATCH] Fixing spelling errors
+
+---
+ plugins/check_apt.c   | 2 +-
+ plugins/check_curl.c  | 2 +-
+ plugins/check_fping.c | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/plugins/check_apt.c b/plugins/check_apt.c
+index 312909b7f..fa982ae34 100644
+--- a/plugins/check_apt.c
++++ b/plugins/check_apt.c
+@@ -528,7 +528,7 @@ print_help (void)
+   printf ("    %s\n", _("of upgrades will be printed, but any non-critical upgrades will not cause"));
+   printf ("    %s\n", _("the plugin to return WARNING status."));
+   printf (" %s\n", "-w, --packages-warning");
+-  printf ("    %s\n", _("Minumum number of packages available for upgrade to return WARNING status."));
++  printf ("    %s\n", _("Minimum number of packages available for upgrade to return WARNING status."));
+   printf ("    %s\n\n", _("Default is 1 package."));
+ 
+   printf ("%s\n\n", _("The following options require root privileges and should be used with care:"));
+diff --git a/plugins/check_curl.c b/plugins/check_curl.c
+index 55de22fd2..c6593df1a 100644
+--- a/plugins/check_curl.c
++++ b/plugins/check_curl.c
+@@ -1680,7 +1680,7 @@ process_arguments (int argc, char **argv)
+         curl_http_version = CURL_HTTP_VERSION_NONE;
+ #endif /* LIBCURL_VERSION_NUM >= MAKE_LIBCURL_VERSION(7, 33, 0) */
+       } else {
+-        fprintf (stderr, "unkown http-version parameter: %s\n", optarg);
++        fprintf (stderr, "unknown http-version parameter: %s\n", optarg);
+         exit (STATE_WARNING);
+       }
+       break;
+diff --git a/plugins/check_fping.c b/plugins/check_fping.c
+index be9362ad5..db4331624 100644
+--- a/plugins/check_fping.c
++++ b/plugins/check_fping.c
+@@ -492,7 +492,7 @@ void print_help (void) {
+   printf (" %s\n", "-c, --critical=THRESHOLD");
+   printf ("    %s\n", _("critical threshold pair"));
+   printf (" %s\n", "-a, --alive");
+-  printf ("    %s\n", _("Return OK after first successfull reply"));
++  printf ("    %s\n", _("Return OK after first successful reply"));
+   printf (" %s\n", "-b, --bytes=INTEGER");
+   printf ("    %s (default: %d)\n", _("size of ICMP packet"),PACKET_SIZE);
+   printf (" %s\n", "-n, --number=INTEGER");
