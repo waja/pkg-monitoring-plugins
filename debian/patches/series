@@ -17,3 +17,4 @@
 26_check_mailq_fix_nullmailer_regex
 27_check_snmp_add_multiplier
 28_check_snmp_fix_regex_matches
+29_check_log_polish
