@@ -15,3 +15,4 @@
 24_check_apt_usage
 25_spell_fixes
 26_check_mailq_fix_nullmailer_regex
+27_check_snmp_add_multiplier
