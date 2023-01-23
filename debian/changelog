@@ -1,9 +1,43 @@
-monitoring-plugins (2.3.2-2) UNRELEASED; urgency=medium
+monitoring-plugins (2.3.2-2) unstable; urgency=medium
 
   [ Bas Couwenberg ]
   * [32fba01] Bump Standards-Version to 4.6.1, no changes.
 
- -- Jan Wagner <waja@cyconet.org>  Tue, 01 Nov 2022 20:20:32 +0000
+  [ Jan Wagner ]
+  * [5a11a70] Adding upstream patches fixing (u)int64_t on 32-bit machines (Closes: #1023280)
+  * [2a90f45] Adding github actions
+  * [7d0e34a] Use testing, since unstable has large transition ongoing
+  * [0543e43] only removing github stuff
+  * [1e0e230] Adding d/patches/16_check_pgsql_dbname_too_strict (Closes: ##982847)
+  * [b61a8ea] Update d/patch/13_check_http_fix_superflous_crlf
+  * [73bd381] Adding d/p/17_check_curl_detect_ipv6
+
+  [ Bas Couwenberg ]
+  * [d6b03fd] Add Rules-Requires-Root to control file.
+
+  [ Jan Wagner ]
+  * [08ddb1e] d/control: Drop 'pkg-' from Vcs-Headers
+  * [76475e9] Adding d/p/18_check_icmp_help from upstream
+  * [f625b1e] Adding d/p/19_check_disk_fs_usage from upstream
+  * [f9e79de] Adding d/p/20_check_apt_unknown_escape_sequence
+  * [f95110e] Adding d/p/21_check_http_faster_with_large_files from upstream
+  * [d4c9e0b] Adding d/p/22_check_curl_faster_with_large_files from upstream
+  * [c662b29] Adding gitlab CI
+  * [95eeed8] Adding d/p/24_check_apt_usage from upstream
+  * [298c20a] Bump debhelper from old 12 to 13.
+  * [ab165de] Update standards version to 4.6.2, no changes needed.
+  * [f064e9b] Adding d/p/23_check_http_chunked_encoding from upstream
+  * [f503139] d/README.Debian: Fix typo
+  * [ccc552b] Adding d/p/25_spell_fixes from upstream
+  * [405406d] d/rules: Set DH_VERBOSE=1
+  * [ff160b6] Adding d/p/26_check_mailq_fix_nullmailer_regex from upstream
+    (Closes: #1019406)
+  * [e99bd7b] Adding d/p/27_check_snmp_add_multiplier
+  * [73742e9] Adding d/p/28_check_snmp_fix_regex_matches from upstream
+  * [4f70a9d] Adding d/p/29_check_log_polish from upstream
+  * [4f7eea1] Adding d/p/30_check_disk_clarify_usage_possibilites from upstream
+
+ -- Jan Wagner <waja@cyconet.org>  Mon, 23 Jan 2023 14:40:09 +0000
 
 monitoring-plugins (2.3.2-1) unstable; urgency=medium
 
