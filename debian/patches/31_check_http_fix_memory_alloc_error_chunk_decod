@@ -1,0 +1,91 @@
+From d9528c265b96a5a0f0c2e43ac74ab3921a2987e1 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?=
+ <12514511+RincewindsHat@users.noreply.github.com>
+Date: Mon, 30 Jan 2023 12:45:20 +0100
+Subject: [PATCH 1/2] check_http: Fix memory reallocation error in chunk
+ decoding logic
+
+This patch should fix an error with the way memory reallocation was
+used, which resulted in "realloc(): invalid next size".
+It is not completely clear to me as to what caused this problem, but
+apparently one can not depend handing a pointer to "realloc(3)" and
+expect that it still works afterwards, but one should/must use the one
+returned by the function.
+
+Also this patch replaces a variable which was used to remember the
+position in the array by just computing that from the current values.
+---
+ plugins/check_http.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/plugins/check_http.c b/plugins/check_http.c
+index a9c22389e..c23625e9b 100644
+--- a/plugins/check_http.c
++++ b/plugins/check_http.c
+@@ -1399,7 +1399,6 @@ char *unchunk_content(const char *content) {
+   char *endptr;
+   long length_of_chunk = 0;
+   size_t overall_size = 0;
+-  char *result_ptr;
+ 
+   while (true) {
+     size_of_chunk = strtol(pointer, &endptr, 16);
+@@ -1446,7 +1445,6 @@ char *unchunk_content(const char *content) {
+         }
+         return NULL;
+       }
+-      result_ptr = result;
+     } else {
+       void *tmp = realloc(result, overall_size);
+       if (tmp == NULL) {
+@@ -1454,11 +1452,12 @@ char *unchunk_content(const char *content) {
+           printf("Failed to allocate memory for unchunked body\n");
+         }
+         return NULL;
++      } else {
++        result = tmp;
+       }
+     }
+ 
+-    memcpy(result_ptr, start_of_chunk, size_of_chunk);
+-    result_ptr = result_ptr + size_of_chunk;
++    memcpy(result + (overall_size - size_of_chunk), start_of_chunk, size_of_chunk);
+   }
+ 
+   result[overall_size] = '\0';
+
+From d3fbcd122012af7733de3b80a692f79ad69057b2 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?=
+ <12514511+RincewindsHat@users.noreply.github.com>
+Date: Mon, 30 Jan 2023 13:33:46 +0100
+Subject: [PATCH 2/2] check_http: Add space for ending NULL byte in array for
+ chunked encoding
+
+---
+ plugins/check_http.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/check_http.c b/plugins/check_http.c
+index c23625e9b..5fa310f5d 100644
+--- a/plugins/check_http.c
++++ b/plugins/check_http.c
+@@ -1438,7 +1438,8 @@ char *unchunk_content(const char *content) {
+     overall_size += length_of_chunk;
+ 
+     if (result == NULL) {
+-      result = (char *)calloc(length_of_chunk, sizeof(char));
++      // Size of the chunk plus the ending NULL byte
++      result = (char *)malloc(length_of_chunk +1);
+       if (result == NULL) {
+         if (verbose) {
+           printf("Failed to allocate memory for unchunked body\n");
+@@ -1446,7 +1447,8 @@ char *unchunk_content(const char *content) {
+         return NULL;
+       }
+     } else {
+-      void *tmp = realloc(result, overall_size);
++      // Enlarge memory to the new size plus the ending NULL byte
++      void *tmp = realloc(result, overall_size +1);
+       if (tmp == NULL) {
+         if (verbose) {
+           printf("Failed to allocate memory for unchunked body\n");

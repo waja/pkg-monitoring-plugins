@@ -19,3 +19,4 @@
 28_check_snmp_fix_regex_matches
 29_check_log_polish
 30_check_disk_clarify_usage_possibilites
+31_check_http_fix_memory_alloc_error_chunk_decod
