@@ -1,3 +1,9 @@
+monitoring-plugins (2.3.2-4) UNRELEASED; urgency=medium
+
+  * 
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 31 Jan 2023 13:29:27 +0000
+
 monitoring-plugins (2.3.2-3) unstable; urgency=high
 
   * [62a3be0] Adding d/p/31_check_http_fix_memory_alloc_error_chunk_decod from
