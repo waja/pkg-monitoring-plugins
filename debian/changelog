@@ -1,14 +1,23 @@
+monitoring-plugins (2.3.2-3) unstable; urgency=high
+
+  * [62a3be0] Adding d/p/31_check_http_fix_memory_alloc_error_chunk_decod from
+    upstream (Closes: #1029934)
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 31 Jan 2023 13:13:58 +0000
+
 monitoring-plugins (2.3.2-2) unstable; urgency=medium
 
   [ Bas Couwenberg ]
   * [32fba01] Bump Standards-Version to 4.6.1, no changes.
 
   [ Jan Wagner ]
-  * [5a11a70] Adding upstream patches fixing (u)int64_t on 32-bit machines (Closes: #1023280)
+  * [5a11a70] Adding upstream patches fixing (u)int64_t on 32-bit machines
+    (Closes: #1023280)
   * [2a90f45] Adding github actions
   * [7d0e34a] Use testing, since unstable has large transition ongoing
   * [0543e43] only removing github stuff
-  * [1e0e230] Adding d/patches/16_check_pgsql_dbname_too_strict (Closes: ##982847)
+  * [1e0e230] Adding d/patches/16_check_pgsql_dbname_too_strict
+    (Closes: ##982847)
   * [b61a8ea] Update d/patch/13_check_http_fix_superflous_crlf
   * [73bd381] Adding d/p/17_check_curl_detect_ipv6
 
