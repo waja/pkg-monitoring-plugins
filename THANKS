@@ -2,28 +2,28 @@ This software is brought to you by the Monitoring Plugins Development Team. Howe
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-dag rob?le
-Aksel Sjögren
-Marc Sánchez
-Wolfgang Karall-Ahlborn
-Randy O'Meara
 Elan Ruusamäe
-Matthias Hähnel
+Randy O'Meara
+Wolfgang Karall-Ahlborn
 Nicolai Søborg
-fabiodds
+dag rob?le
 Diego Elio Pettenò
+Matthias Hähnel
+Marc Sánchez
+Aksel Sjögren
+fabiodds
 Oskar Ahner
 Lance Albertson
 David Alden
+Patrick Allen
 Rodger Allen
 Paul Allen
-Patrick Allen
 Felipe Gustavo de Almeida
 Michael Almond
 Michael Anthon
 Bernd Apfel
-Paula Arnold
 Bernd Arnold
+Paula Arnold
 Kondoros Attila
 Daniel Austin
 Karol Babioch
@@ -55,6 +55,7 @@ Prathamesh Bhanuse
 Daniel Bimschas
 Jeffery Blank
 Tom De Blende
+Robert Bohne
 Eric Bollengier
 Aurelien Bompard
 Stéphane Bortzmeyer
@@ -83,9 +84,9 @@ Lee Clemens
 Ben Clewett
 Jean-Claude Computing
 Lionel Cons
-Ollie Cook
-Charlie Cook
 Garry Cook
+Charlie Cook
+Ollie Cook
 Luca Corti
 Greg Cox
 Jason Crawford
@@ -155,12 +156,13 @@ Olaf Greis
 Alex Griffin
 Chris Grim
 Steven Grimm
+Lorenz Gruenwald
 Sebastien Guay
 Linda Guo
 Jon Hallett
 Steve Hanselman
-Jacob Hansen
 Ask Bjoern Hansen
+Jacob Hansen
 Sebastian Harl
 Michael Haro
 Olli Hauer
@@ -237,8 +239,8 @@ Pawel Malachowski
 Ricardo Maraschini
 Michael Markstaller
 John Marquart
-Jason Martin
 Ernst-Dieter Martin
+Jason Martin
 Christopher Maser
 Mathieu Masseboeuf
 Alexander Matey
@@ -269,6 +271,7 @@ Jan-Frode Myklebust
 Sivakumar Nellurandi
 Peter Newman
 Truongchinh Nguyen
+Wolfgang Nieder
 Simon L Nielsen
 Thomas Nilsen
 Sebastian Nohn
@@ -326,8 +329,8 @@ Sven Schaffranneck
 Christoph Schell
 Thomas Schimpke
 Benjamin Schmid
-Christian Schmidt
 Sebastian Schmidt
+Christian Schmidt
 Henning Schmiedehausen
 Christian Schneemann
 Cove Schneider
@@ -356,6 +359,7 @@ David Sullivan
 Kjell Sundtjonn
 Ziya Suzen
 Christian Tacke
+Danijel Tasov
 Michael Tiernan
 Ben Timby
 Ronald Tin
@@ -398,9 +402,10 @@ Shawn Wills
 Rob Windsor
 Mario Witte
 Alexander Wittig
-Tobias Wolf
 Brian De Wolf
+Tobias Wolf
 Eric Wunderlin
 Patric Wust
 Jamie Zawinski
 Vadim Zhukov
+andrew bezella
