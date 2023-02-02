@@ -1,8 +1,9 @@
-monitoring-plugins (2.3.2-4) UNRELEASED; urgency=medium
+monitoring-plugins (2.3.3-1) unstable; urgency=medium
 
-  * 
+  * [e7bdd1c] New upstream version 2.3.3
+  * [c31ba97] Drop patches applied upstream
 
- -- Jan Wagner <waja@cyconet.org>  Tue, 31 Jan 2023 13:29:27 +0000
+ -- Jan Wagner <waja@cyconet.org>  Thu, 02 Feb 2023 09:36:44 +0000
 
 monitoring-plugins (2.3.2-3) unstable; urgency=high
 
