@@ -6,7 +6,6 @@ monitoring-plugins (2.3.3-3) UNRELEASED; urgency=medium
 
 monitoring-plugins (2.3.3-2) unstable; urgency=high
 
-  *  
   * [01c9312] Adding d/p/10_check_http_chunked_wo_actual_content from upstream
   * [c1f3ca7] Adding d/p/11_fallback_for_gnutls from upstream
 
