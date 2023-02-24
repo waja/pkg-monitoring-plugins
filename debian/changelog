@@ -1,8 +1,8 @@
-monitoring-plugins (2.3.3-3) UNRELEASED; urgency=medium
+monitoring-plugins (2.3.3-3) unstable; urgency=medium
 
-  *
+  * [15d0c56] Adding d/p/12_check_curl_improvements from upstream
 
- -- Jan Wagner <waja@cyconet.org>  Fri, 10 Feb 2023 11:25:52 +0000
+ -- Jan Wagner <waja@cyconet.org>  Fri, 24 Feb 2023 12:55:11 +0000
 
 monitoring-plugins (2.3.3-2) unstable; urgency=high
 
