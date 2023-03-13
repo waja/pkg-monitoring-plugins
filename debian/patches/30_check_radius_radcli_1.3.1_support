@@ -1,0 +1,26 @@
+From 6bbe0b7b0f609ecab831dec9be7690842bf0a0fc Mon Sep 17 00:00:00 2001
+From: Stuart Henderson <sthen@users.noreply.github.com>
+Date: Wed, 8 Feb 2023 16:35:22 +0000
+Subject: [PATCH] cope with radcli-1.3.1 RC_BUFFER_LEN
+
+radcli 1.3.1 now uses RC_BUFFER_LEN instead of BUFFER_LEN. Add an #ifdef to allow working with either.
+---
+ plugins/check_radius.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/plugins/check_radius.c b/plugins/check_radius.c
+index be1001b4d..96a955536 100644
+--- a/plugins/check_radius.c
++++ b/plugins/check_radius.c
+@@ -155,7 +155,11 @@ main (int argc, char **argv)
+ {
+ 	struct sockaddr_storage ss;
+ 	char name[HOST_NAME_MAX];
++#ifdef RC_BUFFER_LEN
++	char msg[RC_BUFFER_LEN];
++#else
+ 	char msg[BUFFER_LEN];
++#endif
+ 	SEND_DATA data;
+ 	int result = STATE_UNKNOWN;
+ 	uint32_t client_id, service;
