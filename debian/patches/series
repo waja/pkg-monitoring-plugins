@@ -5,3 +5,4 @@
 11_fallback_for_gnutls
 12_check_curl_improvements
 13_check_icmp_improvements
+14_check_curl_fix_SSL_with_multiple_IPs
