@@ -6,6 +6,7 @@
 12_check_curl_improvements
 13_check_icmp_improvements
 14_check_curl_fix_SSL_with_multiple_IPs
+15_check_swap_remove_includes
 # feature patches
 30_check_radius_radcli_1.3.1_support
 31_checl_mailq_separate_submission_queue
