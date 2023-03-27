@@ -12,3 +12,4 @@
 31_checl_mailq_separate_submission_queue
 32_check_disk_add_ignore_missing
 33_check_procs_exclude-process
+34_check_curl_fix_compare_warning
