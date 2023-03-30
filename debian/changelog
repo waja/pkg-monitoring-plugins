@@ -1,8 +1,10 @@
-monitoring-plugins (2.3.3-5) UNRELEASED; urgency=medium
+monitoring-plugins (2.3.3-5) unstable; urgency=medium
 
-  * 
+  * [6fb8e25] Adding d/p/14_check_curl_fix_SSL_with_multiple_IPs from upstream
+  * [eab1e1d] Adding d/p/15_check_swap_remove_includes from upstream
+  * [3ede347] Adding d/p/16_check_snmp_disable_multiplier_when_unused from upstream
 
- -- Jan Wagner <waja@cyconet.org>  Tue, 07 Mar 2023 14:17:14 +0000
+ -- Jan Wagner <waja@cyconet.org>  Thu, 30 Mar 2023 08:51:53 +0000
 
 monitoring-plugins (2.3.3-4) unstable; urgency=medium
 
