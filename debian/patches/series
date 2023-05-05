@@ -9,6 +9,7 @@
 15_check_swap_remove_includes
 16_check_snmp_disable_multiplier_when_unused
 17_fix_exit_codes
+18_check_mysql_fix_typo
 # feature patches
 30_check_radius_radcli_1.3.1_support
 31_checl_mailq_separate_submission_queue

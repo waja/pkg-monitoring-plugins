@@ -1,0 +1,22 @@
+From d10ee31d89c2c599ee4c502e82d632aef8554020 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?= <lorenz.kaestle@netways.de>
+Date: Fri, 28 Apr 2023 16:51:39 +0200
+Subject: [PATCH] Typo in check_mysql
+
+---
+ plugins/check_mysql.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/check_mysql.c b/plugins/check_mysql.c
+index 0cba50e6d..6cfa70edb 100644
+--- a/plugins/check_mysql.c
++++ b/plugins/check_mysql.c
+@@ -551,7 +551,7 @@ print_help (void)
+   printf ("    %s\n", _("Exit with CRITICAL status if slave server is more then INTEGER seconds"));
+   printf ("    %s\n", _("behind master"));
+   printf (" %s\n", "-l, --ssl");
+-  printf ("    %s\n", _("Use ssl encryptation"));
++  printf ("    %s\n", _("Use ssl encryption"));
+   printf (" %s\n", "-C, --ca-cert=STRING");
+   printf ("    %s\n", _("Path to CA signing the cert"));
+   printf (" %s\n", "-a, --cert=STRING");
