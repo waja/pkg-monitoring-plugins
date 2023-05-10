@@ -12,6 +12,7 @@
 18_check_mysql_fix_typo
 19_check_nwstat_fix_typ
 20_chech_nt_fix_encoding
+21_check_pgsql_extra_output
 # feature patches
 30_check_radius_radcli_1.3.1_support
 31_checl_mailq_separate_submission_queue
