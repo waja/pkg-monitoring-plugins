@@ -11,6 +11,7 @@
 17_fix_exit_codes
 18_check_mysql_fix_typo
 19_check_nwstat_fix_typ
+20_chech_nt_fix_encoding
 # feature patches
 30_check_radius_radcli_1.3.1_support
 31_checl_mailq_separate_submission_queue
