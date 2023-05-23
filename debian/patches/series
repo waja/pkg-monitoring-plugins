@@ -10,7 +10,7 @@
 16_check_snmp_disable_multiplier_when_unused
 17_fix_exit_codes
 18_check_mysql_fix_typo
-19_check_nwstat_fix_typ
+19_check_nwstat_fix_typo
 20_chech_nt_fix_encoding
 21_check_pgsql_extra_output
 22_check_disk_avoid_mount
