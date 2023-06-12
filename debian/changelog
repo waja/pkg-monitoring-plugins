@@ -1,8 +1,26 @@
-monitoring-plugins (2.3.3-6) UNRELEASED; urgency=medium
+monitoring-plugins (2.3.3-6) unstable; urgency=medium
 
-  * 
+  * [e1f9786] Adding d/p/14_check_curl_fix_SSL_with_multiple_IPs from upstream
+  * [534d0c8] Adding d/p/30_check_radius_radcli_1.3.1_support from upstream
+  * [bd72df2] Adding d/p/31_checl_mailq_separate_submission_queue from upstream
+  * [567890c] Adding d/p/32_check_disk_add_ignore_missing from upstream
+    (Closes: #516097)
+  * [47b7589] Adding d/p/15_check_swap_remove_includes from upstream
+  * [6f89be8] Adding d/p/33_check_procs_exclude-process from upstream
+  * [983507a] Adding d/p/34_check_curl_fix_compare_warning from upstream
+  * [9225592] Adding d/p/17_fix_exit_codes from upstream
+  * [3a0d875] Adding d/p/18_check_mysql_fix_typo from upstream
+  * [17688c7] Adding d/p/19_check_nwstat_fix_typo from upstream
+  * [e0cfe77] Adding d/p/20_chech_nt_fix_encoding from upstream
+  * [3da2163] Adding d/p/21_check_pgsql_extra_output from upstream
+  * [7cbe4b6] Adding d/p/22_check_disk_avoid_mount from upstream
+  * [01be8ce] d/p/series: Fix typo
+  * [85d9e03] Adding d/p/23_check_mysql_fix_error_handling from upstream
+  * [555d643] CI: Disable BLHC job
+  * [85a271e] Adding d/p/24_check_disk_fix_SI_units from upstream
+  * [02c716f] d/p/31_check_mailq_separate_submission_queue: Fix filename
 
- -- Jan Wagner <waja@cyconet.org>  Thu, 30 Mar 2023 09:33:25 +0000
+ -- Jan Wagner <waja@cyconet.org>  Mon, 12 Jun 2023 21:46:29 +0200
 
 monitoring-plugins (2.3.3-5) unstable; urgency=medium
 
