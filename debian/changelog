@@ -1,3 +1,9 @@
+monitoring-plugins (2.3.3-7) UNRELEASED; urgency=medium
+
+  *
+
+ -- Jan Wagner <waja@cyconet.org>  Mon, 12 Jun 2023 21:55:02 +0200
+
 monitoring-plugins (2.3.3-6) unstable; urgency=medium
 
   * [e1f9786] Adding d/p/14_check_curl_fix_SSL_with_multiple_IPs from upstream
