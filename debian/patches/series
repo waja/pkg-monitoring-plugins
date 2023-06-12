@@ -15,6 +15,7 @@
 21_check_pgsql_extra_output
 22_check_disk_avoid_mount
 23_check_mysql_fix_error_handling
+24_check_disk_fix_SI_units
 # feature patches
 30_check_radius_radcli_1.3.1_support
 31_checl_mailq_separate_submission_queue
