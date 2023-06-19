@@ -22,3 +22,4 @@
 32_check_disk_add_ignore_missing
 33_check_procs_exclude-process
 34_check_curl_fix_compare_warning
+36_check_smtp_adding_proxy_header
