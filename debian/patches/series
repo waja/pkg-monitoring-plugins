@@ -23,3 +23,4 @@
 33_check_procs_exclude-process
 34_check_curl_fix_compare_warning
 36_check_smtp_adding_proxy_header
+37_check_smtp_Adding_SNI
