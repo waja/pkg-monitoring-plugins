@@ -1,3 +1,10 @@
+monitoring-plugins (2.3.3-5+deb12u1) bookworm; urgency=medium
+
+  * [85eed74] Adding d/p/22_check_disk_avoid_mount from upstream
+    (Closes: #1051768)
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 19 Sep 2023 07:54:14 +0200
+
 monitoring-plugins (2.3.3-5) unstable; urgency=medium
 
   * [6fb8e25] Adding d/p/14_check_curl_fix_SSL_with_multiple_IPs from upstream
