@@ -1,8 +1,17 @@
-monitoring-plugins (2.3.3-7) UNRELEASED; urgency=medium
+monitoring-plugins (2.3.4-1) UNRELEASED; urgency=medium
 
-  *
+  [ Jan Wagner ]
+  * [a20810f] Adding d/p/36_check_smtp_adding_proxy_header from upstream
+  * [0250eb9] Adding d/p/37_check_smtp_Adding_SNI from upstream
+  * [1381a20] Remove left over d/p/31_checl_mailq_separate_submission_queue
 
- -- Jan Wagner <waja@cyconet.org>  Mon, 12 Jun 2023 21:55:02 +0200
+  [ Bas Couwenberg ]
+  * [7c86d65] Explicitly enable test-build-twice job.
+
+  [ Jan Wagner ]
+  * [de72f6f] New upstream version 2.3.4
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 18 Oct 2023 07:37:07 +0000
 
 monitoring-plugins (2.3.3-6) unstable; urgency=medium
 
