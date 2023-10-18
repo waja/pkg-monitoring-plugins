@@ -1,4 +1,4 @@
-monitoring-plugins (2.3.4-1) UNRELEASED; urgency=medium
+monitoring-plugins (2.3.5-1) unstable; urgency=medium
 
   [ Jan Wagner ]
   * [a20810f] Adding d/p/36_check_smtp_adding_proxy_header from upstream
@@ -10,8 +10,10 @@ monitoring-plugins (2.3.4-1) UNRELEASED; urgency=medium
 
   [ Jan Wagner ]
   * [de72f6f] New upstream version 2.3.4
+  * [5956793] New upstream version 2.3.5
+  * [f07f4db] Drop patches integrated by upstream
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 18 Oct 2023 07:37:07 +0000
+ -- Jan Wagner <waja@cyconet.org>  Wed, 18 Oct 2023 12:04:05 +0200
 
 monitoring-plugins (2.3.3-6) unstable; urgency=medium
 
