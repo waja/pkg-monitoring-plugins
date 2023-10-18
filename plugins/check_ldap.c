@@ -97,9 +97,6 @@ main (int argc, char *argv[])
 	int tls;
 	int version=3;
 
-	/* for entry counting */
-
-	LDAPMessage *next_entry;
 	int status_entries = STATE_OK;
 	int num_entries = 0;
 
@@ -222,7 +219,7 @@ main (int argc, char *argv[])
 	/* reset the alarm handler */
 	alarm (0);
 
-	/* calcutate the elapsed time and compare to thresholds */
+	/* calculate the elapsed time and compare to thresholds */
 
 	microsec = deltime (tv);
 	elapsed_time = (double)microsec / 1.0e6;
