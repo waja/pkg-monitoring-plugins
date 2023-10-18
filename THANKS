@@ -2,19 +2,19 @@ This software is brought to you by the Monitoring Plugins Development Team. Howe
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-Thoralf Rickert-Wendt
-Matthias Hähnel
-Randy O'Meara
-dag rob?le
-Marc Sánchez
 Arkadiusz Miśkiewicz
-Aksel Sjögren
-fabiodds
+dag rob?le
+Matthias Döhler
+Marc Sánchez
+Wolfgang Karall-Ahlborn
+Thoralf Rickert-Wendt
 Diego Elio Pettenò
 Nicolai Søborg
 Elan Ruusamäe
-Matthias Döhler
-Wolfgang Karall-Ahlborn
+Matthias Hähnel
+fabiodds
+Aksel Sjögren
+Randy O'Meara
 Oskar Ahner
 Lance Albertson
 David Alden
@@ -89,9 +89,9 @@ Lee Clemens
 Ben Clewett
 Jean-Claude Computing
 Lionel Cons
+Ollie Cook
 Garry Cook
 Charlie Cook
-Ollie Cook
 Luca Corti
 Greg Cox
 Jason Crawford
@@ -130,13 +130,13 @@ Reuben Farrelly
 Mark Favas
 Duncan Ferguson
 Juan Carlos Fernandez
-Paulo Fessel
 Paulo Afonso Graner Fessel
+Paulo Fessel
 James Fidell
 Tobias Fiebig
 Roman Fiedler
-Bernhard Fischer
 Johan Fischer
+Bernhard Fischer
 Matthias Flacke
 Martin Foster
 Felix Frank
@@ -149,8 +149,8 @@ Tim Gates
 Sven Geggus
 Jonas Genannt
 Robby Giffin
-Florian Gleixner
 Flo Gleixner
+Florian Gleixner
 Evgeni Golov
 Joseph Gooch
 Aravind Gottipati
@@ -166,8 +166,8 @@ Sebastien Guay
 Linda Guo
 Jon Hallett
 Steve Hanselman
-Jacob Hansen
 Ask Bjoern Hansen
+Jacob Hansen
 Sebastian Harl
 Michael Haro
 Olli Hauer
@@ -247,8 +247,8 @@ Gerardo Malazdrewicz
 Ricardo Maraschini
 Michael Markstaller
 John Marquart
-Ernst-Dieter Martin
 Jason Martin
+Ernst-Dieter Martin
 Christopher Maser
 Mathieu Masseboeuf
 Alexander Matey
@@ -339,8 +339,8 @@ Sven Schaffranneck
 Christoph Schell
 Thomas Schimpke
 Benjamin Schmid
-Sebastian Schmidt
 Christian Schmidt
+Sebastian Schmidt
 Henning Schmiedehausen
 Christian Schneemann
 Cove Schneider
@@ -416,8 +416,8 @@ Shawn Wills
 Rob Windsor
 Mario Witte
 Alexander Wittig
-Brian De Wolf
 Tobias Wolf
+Brian De Wolf
 Eric Wunderlin
 Patric Wust
 Jamie Zawinski
