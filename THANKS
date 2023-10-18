@@ -2,22 +2,25 @@ This software is brought to you by the Monitoring Plugins Development Team. Howe
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-Elan Ruusamäe
-Randy O'Meara
-Wolfgang Karall-Ahlborn
-Nicolai Søborg
-dag rob?le
-Diego Elio Pettenò
+Thoralf Rickert-Wendt
 Matthias Hähnel
+Randy O'Meara
+dag rob?le
 Marc Sánchez
+Arkadiusz Miśkiewicz
 Aksel Sjögren
 fabiodds
+Diego Elio Pettenò
+Nicolai Søborg
+Elan Ruusamäe
+Matthias Döhler
+Wolfgang Karall-Ahlborn
 Oskar Ahner
 Lance Albertson
 David Alden
 Patrick Allen
-Rodger Allen
 Paul Allen
+Rodger Allen
 Felipe Gustavo de Almeida
 Michael Almond
 Michael Anthon
@@ -44,6 +47,7 @@ Hilko Bengen
 Jason Benguerel
 Allan Bennett
 Booker C. Bense
+Björn Berg
 Guy Van Den Bergh
 Andrew Berglund
 Jimmy Bergman
@@ -75,6 +79,7 @@ Jethro Carr
 Jim Carroll
 Ian Cass
 Arnold Cavazos
+Patrick Cervicek
 Alex Chaffee
 Yannick Charton
 Stephane Chazelas
@@ -125,13 +130,13 @@ Reuben Farrelly
 Mark Favas
 Duncan Ferguson
 Juan Carlos Fernandez
-Paulo Afonso Graner Fessel
 Paulo Fessel
+Paulo Afonso Graner Fessel
 James Fidell
 Tobias Fiebig
 Roman Fiedler
-Johan Fischer
 Bernhard Fischer
+Johan Fischer
 Matthias Flacke
 Martin Foster
 Felix Frank
@@ -161,12 +166,13 @@ Sebastien Guay
 Linda Guo
 Jon Hallett
 Steve Hanselman
-Ask Bjoern Hansen
 Jacob Hansen
+Ask Bjoern Hansen
 Sebastian Harl
 Michael Haro
 Olli Hauer
 Gunnar Hellekson
+Stuart Henderson
 Geert Hendrickx
 Sebastian Herbszt
 Johannes Herlitz
@@ -209,6 +215,7 @@ Frederic Krueger
 Claudio Kuenzler
 Marcel Kuiper
 Christian Kujau
+Thorsten Kukuk
 Alexander Kulak
 Bill Kunkel
 Thomas Kurschel
@@ -236,6 +243,7 @@ Jason Lunn
 Davide Madrisan
 Guenther Mair
 Pawel Malachowski
+Gerardo Malazdrewicz
 Ricardo Maraschini
 Michael Markstaller
 John Marquart
@@ -261,6 +269,7 @@ Jonathan Milby
 Russell Miller
 Eric J. Mislivec
 Janos Mohacsi
+John Morrissey
 Andreas Motl
 Tomas Mozes
 Gerd Mueller
@@ -297,6 +306,7 @@ Matt Pounsett
 Peter Pramberger
 Joe Presbrey
 Will Preston
+Platon Pronko
 Arnaud Quette
 Darian Rackham
 Peter Radcliffe
@@ -337,6 +347,8 @@ Cove Schneider
 Enrico Scholz
 Sebastian Schubert
 Christopher Schultz
+Kristian Schuster
+Franz Schwartau
 Russell Scibetti
 Noel Sebastien
 Andreas Seemueller
@@ -359,6 +371,7 @@ David Sullivan
 Kjell Sundtjonn
 Ziya Suzen
 Christian Tacke
+Stefan Taferner
 Danijel Tasov
 Michael Tiernan
 Ben Timby
@@ -369,6 +382,7 @@ Gabriele Tozzi
 Kyle Tucker
 Jerome Tytgat
 Daniel Uhlmann
+Patrick Uiterwijk
 Stéphane Urbanovski
 Matthias Urlichs
 Matteo HCE Valsasna
