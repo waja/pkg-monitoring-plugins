@@ -1,0 +1,22 @@
+From a6802bd5f50a5c12ed5bafa4fe9ee14fede7c1e1 Mon Sep 17 00:00:00 2001
+From: Thoralf Rickert-Wendt <30341294+trickert76@users.noreply.github.com>
+Date: Tue, 8 Aug 2023 10:22:53 +0200
+Subject: [PATCH] Fix issue #1872
+
+---
+ plugins/check_http.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/check_http.c b/plugins/check_http.c
+index 1288c415d..718c8ee71 100644
+--- a/plugins/check_http.c
++++ b/plugins/check_http.c
+@@ -1279,7 +1279,7 @@ check_http (void)
+ 
+   regmatch_t chre_pmatch[1]; // We actually do not care about this, since we only want to know IF it was found
+ 
+-  if (regexec(&chunked_header_regex, header, 1, chre_pmatch, 0) == 0) {
++  if (!no_body && regexec(&chunked_header_regex, header, 1, chre_pmatch, 0) == 0) {
+     if (verbose) {
+       printf("Found chunked content\n");
+     }
