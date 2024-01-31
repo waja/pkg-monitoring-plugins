@@ -1,3 +1,10 @@
+monitoring-plugins (2.3.3-5+deb12u2) bookworm; urgency=medium
+
+  * [c45bc15] Adding d/p/23_check_http_fix_unchunking_body from upstream
+    (Closes: #1061956)
+
+ -- Jan Wagner <waja@cyconet.org>  Wed, 31 Jan 2024 09:40:18 +0100
+
 monitoring-plugins (2.3.3-5+deb12u1) bookworm; urgency=medium
 
   * [85eed74] Adding d/p/22_check_disk_avoid_mount from upstream
