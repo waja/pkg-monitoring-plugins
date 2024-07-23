@@ -2,18 +2,18 @@ This software is brought to you by the Monitoring Plugins Development Team. Howe
 there have been many contributors to this project. Everyone below has helped in 
 raising bug reports, creating patches or contributing new plugins.
 
-Arkadiusz Miśkiewicz
+Matthias Hähnel
 dag rob?le
+Diego Elio Pettenò
+Elan Ruusamäe
+Thoralf Rickert-Wendt
+Aksel Sjögren
+fabiodds
+Nicolai Søborg
+Arkadiusz Miśkiewicz
+Wolfgang Karall-Ahlborn
 Matthias Döhler
 Marc Sánchez
-Wolfgang Karall-Ahlborn
-Thoralf Rickert-Wendt
-Diego Elio Pettenò
-Nicolai Søborg
-Elan Ruusamäe
-Matthias Hähnel
-fabiodds
-Aksel Sjögren
 Randy O'Meara
 Oskar Ahner
 Lance Albertson
@@ -25,8 +25,8 @@ Felipe Gustavo de Almeida
 Michael Almond
 Michael Anthon
 Bernd Apfel
-Bernd Arnold
 Paula Arnold
+Bernd Arnold
 Kondoros Attila
 Daniel Austin
 Karol Babioch
@@ -89,9 +89,9 @@ Lee Clemens
 Ben Clewett
 Jean-Claude Computing
 Lionel Cons
-Ollie Cook
-Garry Cook
 Charlie Cook
+Garry Cook
+Ollie Cook
 Luca Corti
 Greg Cox
 Jason Crawford
@@ -135,8 +135,8 @@ Paulo Fessel
 James Fidell
 Tobias Fiebig
 Roman Fiedler
-Johan Fischer
 Bernhard Fischer
+Johan Fischer
 Matthias Flacke
 Martin Foster
 Felix Frank
@@ -149,11 +149,12 @@ Tim Gates
 Sven Geggus
 Jonas Genannt
 Robby Giffin
-Flo Gleixner
 Florian Gleixner
+Flo Gleixner
 Evgeni Golov
 Joseph Gooch
 Aravind Gottipati
+Ralph Gottschalkson
 Kev Green
 Steve Greenland
 Roberto Greiner
@@ -166,10 +167,11 @@ Sebastien Guay
 Linda Guo
 Jon Hallett
 Steve Hanselman
-Ask Bjoern Hansen
 Jacob Hansen
+Ask Bjoern Hansen
 Sebastian Harl
 Michael Haro
+Sven Hartge
 Olli Hauer
 Gunnar Hellekson
 Stuart Henderson
@@ -204,6 +206,7 @@ Konstantin Khomoutov
 Serhan Kiymaz
 Alexander A. Klimov
 Denis Knauf
+Eric Knibbe
 Harald Koch
 Tilman Koschnick
 John Koyle
@@ -247,8 +250,8 @@ Gerardo Malazdrewicz
 Ricardo Maraschini
 Michael Markstaller
 John Marquart
-Jason Martin
 Ernst-Dieter Martin
+Jason Martin
 Christopher Maser
 Mathieu Masseboeuf
 Alexander Matey
@@ -293,6 +296,7 @@ Remi Paulmier
 Tom Payerle
 Nick Peelman
 Fabian Pehla
+Alvar Penning
 Chris Pepper
 Matt Perry
 Matthew Peters
@@ -318,6 +322,7 @@ Abid Rasheed
 Patrick Rauscher
 Jeremy Reed
 Spenser Reinhardt
+Eunice Remoquillo
 Marc Remy
 Alessandro Ren
 Joe Rhett
@@ -325,6 +330,7 @@ Cliff Rice
 Alain Richard
 Didi Rieder
 Steve Rigler
+Emmanuel Riviere
 Josip Rodin
 Kenny Root
 Wolfgang Rosenauer
@@ -335,12 +341,13 @@ Sascha Runschke
 Dietmar Ruzicka
 Ralph Rye
 Alen Salamun
+Louis Sautier
 Sven Schaffranneck
 Christoph Schell
 Thomas Schimpke
 Benjamin Schmid
-Christian Schmidt
 Sebastian Schmidt
+Christian Schmidt
 Henning Schmiedehausen
 Christian Schneemann
 Cove Schneider
@@ -416,8 +423,8 @@ Shawn Wills
 Rob Windsor
 Mario Witte
 Alexander Wittig
-Tobias Wolf
 Brian De Wolf
+Tobias Wolf
 Eric Wunderlin
 Patric Wust
 Jamie Zawinski

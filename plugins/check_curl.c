@@ -134,6 +134,7 @@ char regexp[MAX_RE_SIZE];
 int cflags = REG_NOSUB | REG_EXTENDED | REG_NEWLINE;
 int errcode;
 bool invert_regex = false;
+int state_regex = STATE_CRITICAL;
 
 char *server_address = NULL;
 char *host_name = NULL;
@@ -223,6 +224,7 @@ curlhelp_ssl_library ssl_library = CURLHELP_SSL_LIBRARY_UNKNOWN;
 int curl_http_version = CURL_HTTP_VERSION_NONE;
 bool automatic_decompression = false;
 char *cookie_jar_file = NULL;
+bool haproxy_protocol = false;
 
 bool process_arguments (int, char**);
 void handle_curl_option_return_code (CURLcode res, const char* option);
@@ -395,7 +397,7 @@ lookup_host (const char *host, char *buf, size_t buflen)
   char addrstr[100];
   size_t addrstr_len;
   int errcode;
-  void *ptr;
+  void *ptr = { 0 };
   size_t buflen_remaining = buflen - 1;
 
   memset (&hints, 0, sizeof (hints));
@@ -519,6 +521,11 @@ check_http (void)
   /* set timeouts */
   handle_curl_option_return_code (curl_easy_setopt (curl, CURLOPT_CONNECTTIMEOUT, socket_timeout), "CURLOPT_CONNECTTIMEOUT");
   handle_curl_option_return_code (curl_easy_setopt (curl, CURLOPT_TIMEOUT, socket_timeout), "CURLOPT_TIMEOUT");
+
+  /* enable haproxy protocol */
+  if (haproxy_protocol) {
+    handle_curl_option_return_code(curl_easy_setopt(curl, CURLOPT_HAPROXYPROTOCOL, 1L), "CURLOPT_HAPROXYPROTOCOL");
+  }
 
   // fill dns resolve cache to make curl connect to the given server_address instead of the host_name, only required for ssl, because we use the host_name later on to make SNI happy
   if(use_ssl && host_name != NULL) {
@@ -1127,7 +1134,7 @@ GOT_FIRST_CERT:
 				strcpy(msg, tmp);
 
 			}
-			result = STATE_CRITICAL;
+			result = state_regex;
 		} else {
 			regerror (errcode, &preg, errbuf, MAX_INPUT_BUFFER);
 
@@ -1186,16 +1193,16 @@ int
 uri_strcmp (const UriTextRangeA range, const char* s)
 {
   if (!range.first) return -1;
-  if (range.afterLast - range.first < strlen (s)) return -1;
-  return strncmp (s, range.first, min( range.afterLast - range.first, strlen (s)));
+  if ( (size_t)(range.afterLast - range.first) < strlen (s) ) return -1;
+  return strncmp (s, range.first, min( (size_t)(range.afterLast - range.first), strlen (s)));
 }
 
 char*
 uri_string (const UriTextRangeA range, char* buf, size_t buflen)
 {
   if (!range.first) return "(null)";
-  strncpy (buf, range.first, max (buflen-1, range.afterLast - range.first));
-  buf[max (buflen-1, range.afterLast - range.first)] = '\0';
+  strncpy (buf, range.first, max (buflen-1, (size_t)(range.afterLast - range.first)));
+  buf[max (buflen-1, (size_t)(range.afterLast - range.first))] = '\0';
   buf[range.afterLast - range.first] = '\0';
   return buf;
 }
@@ -1384,7 +1391,9 @@ process_arguments (int argc, char **argv)
     CA_CERT_OPTION,
     HTTP_VERSION_OPTION,
     AUTOMATIC_DECOMPRESSION,
-    COOKIE_JAR
+    COOKIE_JAR,
+    HAPROXY_PROTOCOL,
+    STATE_REGEX
   };
 
   int option = 0;
@@ -1423,6 +1432,7 @@ process_arguments (int argc, char **argv)
     {"content-type", required_argument, 0, 'T'},
     {"pagesize", required_argument, 0, 'm'},
     {"invert-regex", no_argument, NULL, INVERT_REGEX},
+    {"state-regex", required_argument, 0, STATE_REGEX},
     {"use-ipv4", no_argument, 0, '4'},
     {"use-ipv6", no_argument, 0, '6'},
     {"extended-perfdata", no_argument, 0, 'E'},
@@ -1431,6 +1441,7 @@ process_arguments (int argc, char **argv)
     {"http-version", required_argument, 0, HTTP_VERSION_OPTION},
     {"enable-automatic-decompression", no_argument, 0, AUTOMATIC_DECOMPRESSION},
     {"cookie-jar", required_argument, 0, COOKIE_JAR},
+    {"haproxy-protocol", no_argument, 0, HAPROXY_PROTOCOL},
     {0, 0, 0, 0}
   };
 
@@ -1757,6 +1768,13 @@ process_arguments (int argc, char **argv)
     case INVERT_REGEX:
       invert_regex = true;
       break;
+    case STATE_REGEX:
+      if (!strcmp (optarg, "critical"))
+        state_regex = STATE_CRITICAL;
+      else if (!strcmp (optarg, "warning"))
+        state_regex = STATE_WARNING;
+      else usage2 (_("Invalid state-regex option"), optarg);
+      break;
     case '4':
       address_family = AF_INET;
       break;
@@ -1840,6 +1858,9 @@ process_arguments (int argc, char **argv)
       break;
     case COOKIE_JAR:
       cookie_jar_file = optarg;
+      break;
+    case HAPROXY_PROTOCOL:
+      haproxy_protocol = true;
       break;
     case '?':
       /* print short usage statement if args not parsable */
@@ -2011,7 +2032,7 @@ print_help (void)
   printf (" %s\n", "-u, --url=PATH");
   printf ("    %s\n", _("URL to GET or POST (default: /)"));
   printf (" %s\n", "-P, --post=STRING");
-  printf ("    %s\n", _("URL encoded http POST data"));
+  printf ("    %s\n", _("URL decoded http POST data"));
   printf (" %s\n", "-j, --method=STRING  (for example: HEAD, OPTIONS, TRACE, PUT, DELETE, CONNECT)");
   printf ("    %s\n", _("Set HTTP method."));
   printf (" %s\n", "-N, --no-body");
@@ -2029,7 +2050,10 @@ print_help (void)
   printf (" %s\n", "-R, --eregi=STRING");
   printf ("    %s\n", _("Search page for case-insensitive regex STRING"));
   printf (" %s\n", "--invert-regex");
-  printf ("    %s\n", _("Return CRITICAL if found, OK if not\n"));
+  printf ("    %s\n", _("Return STATE if found, OK if not (STATE is CRITICAL, per default)"));
+  printf ("    %s\n", _("can be changed with --state--regex)"));
+  printf (" %s\n", "--regex-state=STATE");
+  printf ("    %s\n", _("Return STATE if regex is found, OK if not\n"));
   printf (" %s\n", "-a, --authorization=AUTH_PAIR");
   printf ("    %s\n", _("Username:password on sites with basic authentication"));
   printf (" %s\n", "-b, --proxy-authorization=AUTH_PAIR");
@@ -2060,6 +2084,8 @@ print_help (void)
   printf ("    %s\n", _("1.0 = HTTP/1.0, 1.1 = HTTP/1.1, 2.0 = HTTP/2 (HTTP/2 will fail without -S)"));
   printf (" %s\n", "--enable-automatic-decompression");
   printf ("    %s\n", _("Enable automatic decompression of body (CURLOPT_ACCEPT_ENCODING)."));
+  printf(" %s\n", "--haproxy-protocol");
+  printf("    %s\n", _("Send HAProxy proxy protocol v1 header (CURLOPT_HAPROXYPROTOCOL)."));
   printf (" %s\n", "---cookie-jar=FILE");
   printf ("    %s\n", _("Store cookies in the cookie jar and send them out when requested."));
   printf ("\n");
@@ -2144,7 +2170,7 @@ print_usage (void)
   printf ("       [-b proxy_auth] [-f <ok|warning|critical|follow|sticky|stickyport|curl>]\n");
   printf ("       [-e <expect>] [-d string] [-s string] [-l] [-r <regex> | -R <case-insensitive regex>]\n");
   printf ("       [-P string] [-m <min_pg_size>:<max_pg_size>] [-4|-6] [-N] [-M <age>]\n");
-  printf ("       [-A string] [-k string] [-S <version>] [--sni]\n");
+  printf ("       [-A string] [-k string] [-S <version>] [--sni] [--haproxy-protocol]\n");
   printf ("       [-T <content-type>] [-j method]\n");
   printf ("       [--http-version=<version>] [--enable-automatic-decompression]\n");
   printf ("       [--cookie-jar=<cookie jar file>\n");
@@ -2368,8 +2394,7 @@ remove_newlines (char *s)
 char *
 get_header_value (const struct phr_header* headers, const size_t nof_headers, const char* header)
 {
-  int i;
-  for( i = 0; i < nof_headers; i++ ) {
+  for(size_t i = 0; i < nof_headers; i++ ) {
     if(headers[i].name != NULL && strncasecmp( header, headers[i].name, max( headers[i].name_len, 4 ) ) == 0 ) {
       return strndup( headers[i].value, headers[i].value_len );
     }
@@ -2471,7 +2496,7 @@ check_document_dates (const curlhelp_write_curlbuf *header_buf, char (*msg)[DEFA
 int
 get_content_length (const curlhelp_write_curlbuf* header_buf, const curlhelp_write_curlbuf* body_buf)
 {
-  int content_length = 0;
+  size_t content_length = 0;
   struct phr_header headers[255];
   size_t nof_headers = 255;
   size_t msglen;
