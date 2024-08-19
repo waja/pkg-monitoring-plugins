@@ -3,4 +3,5 @@
 # commited upstream
 10_check_curl_fix_redirects
 11_check_curl_raise_ssl_issue
+12_check_curl_add_docu
 # feature patches
