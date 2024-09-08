@@ -4,4 +4,5 @@
 10_check_curl_fix_redirects
 11_check_curl_raise_ssl_issue
 12_check_curl_add_docu
+13_check_mysql_fix_variables
 # feature patches
