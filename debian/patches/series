@@ -5,4 +5,5 @@
 11_check_curl_raise_ssl_issue
 12_check_curl_add_docu
 13_check_mysql_fix_variables
+14_check_curl_remove_experimental_state
 # feature patches
