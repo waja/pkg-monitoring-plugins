@@ -7,4 +7,5 @@
 13_check_mysql_fix_variables
 14_check_curl_remove_experimental_state
 15_check_curl_fix_regex
+16_check_curl_openssl_error
 # feature patches
