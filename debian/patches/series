@@ -8,4 +8,5 @@
 14_check_curl_remove_experimental_state
 15_check_curl_fix_regex
 16_check_curl_openssl_error
+17_check_fping_dontfrag_random
 # feature patches
