@@ -1,0 +1,82 @@
+From 46efe803cf8e7b769ca112afc158b76510b01e46 Mon Sep 17 00:00:00 2001
+From: RincewindsHat <12514511+RincewindsHat@users.noreply.github.com>
+Date: Mon, 19 Aug 2024 15:23:41 +0200
+Subject: [PATCH 1/3] check_curl: Fix help for state regex option
+
+The help output of `check-curl` contained a typo,
+the real option is `state-regex` and not `regex-state` as
+the help suggests.
+Also added the two possible options to avoid confusion.
+---
+ plugins/check_curl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/check_curl.c b/plugins/check_curl.c
+index e9c15e648..bf46b2261 100644
+--- a/plugins/check_curl.c
++++ b/plugins/check_curl.c
+@@ -2061,8 +2061,8 @@ print_help (void)
+   printf (" %s\n", "--invert-regex");
+   printf ("    %s\n", _("Return STATE if found, OK if not (STATE is CRITICAL, per default)"));
+   printf ("    %s\n", _("can be changed with --state--regex)"));
+-  printf (" %s\n", "--regex-state=STATE");
+-  printf ("    %s\n", _("Return STATE if regex is found, OK if not\n"));
++  printf (" %s\n", "--state-regex=STATE");
++  printf ("    %s\n", _("Return STATE if regex is found, OK if not\nSTATE can be one of \"critical\",\"warning\""));
+   printf (" %s\n", "-a, --authorization=AUTH_PAIR");
+   printf ("    %s\n", _("Username:password on sites with basic authentication"));
+   printf (" %s\n", "-b, --proxy-authorization=AUTH_PAIR");
+
+From b6c72064a53da8b173b7406a0a535922dc0cc1b3 Mon Sep 17 00:00:00 2001
+From: RincewindsHat <12514511+RincewindsHat@users.noreply.github.com>
+Date: Mon, 19 Aug 2024 15:26:52 +0200
+Subject: [PATCH 2/3] check_curl: Parse state-regex option ignoring case
+
+Previously the --state-regex option accepted only "critical" and
+"warning" as values.
+This commit changes the strcmp there to strcasecmp to be more tolerant
+regarding the input.
+---
+ plugins/check_curl.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/check_curl.c b/plugins/check_curl.c
+index bf46b2261..38c971093 100644
+--- a/plugins/check_curl.c
++++ b/plugins/check_curl.c
+@@ -1775,9 +1775,9 @@ process_arguments (int argc, char **argv)
+       invert_regex = true;
+       break;
+     case STATE_REGEX:
+-      if (!strcmp (optarg, "critical"))
++      if (!strcasecmp (optarg, "critical"))
+         state_regex = STATE_CRITICAL;
+-      else if (!strcmp (optarg, "warning"))
++      else if (!strcasecmp (optarg, "warning"))
+         state_regex = STATE_WARNING;
+       else usage2 (_("Invalid state-regex option"), optarg);
+       break;
+
+From af097aa3642174a2111f0bbcbc8236fff0901e17 Mon Sep 17 00:00:00 2001
+From: RincewindsHat <12514511+RincewindsHat@users.noreply.github.com>
+Date: Mon, 19 Aug 2024 15:33:17 +0200
+Subject: [PATCH 3/3] check_curl: change help for --state-regex again to fix
+ formatting
+
+---
+ plugins/check_curl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/check_curl.c b/plugins/check_curl.c
+index 38c971093..214ba74f9 100644
+--- a/plugins/check_curl.c
++++ b/plugins/check_curl.c
+@@ -2062,7 +2062,7 @@ print_help (void)
+   printf ("    %s\n", _("Return STATE if found, OK if not (STATE is CRITICAL, per default)"));
+   printf ("    %s\n", _("can be changed with --state--regex)"));
+   printf (" %s\n", "--state-regex=STATE");
+-  printf ("    %s\n", _("Return STATE if regex is found, OK if not\nSTATE can be one of \"critical\",\"warning\""));
++  printf ("    %s\n", _("Return STATE if regex is found, OK if not. STATE can be one of \"critical\",\"warning\""));
+   printf (" %s\n", "-a, --authorization=AUTH_PAIR");
+   printf ("    %s\n", _("Username:password on sites with basic authentication"));
+   printf (" %s\n", "-b, --proxy-authorization=AUTH_PAIR");
