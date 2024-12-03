@@ -10,4 +10,5 @@
 16_check_curl_openssl_error
 17_check_fping_dontfrag_random
 18_check_curl_fix_TLS_notes
+19_check_curl_cookie_handling
 # feature patches
