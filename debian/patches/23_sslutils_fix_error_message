@@ -1,0 +1,23 @@
+From ef3045b97eea23a4dec3197277e5ff4e5afc5c71 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Andre=20Kl=C3=A4rner?= <kandre@ak-online.be>
+Date: Mon, 17 Mar 2025 16:13:46 +0100
+Subject: [PATCH] change error message for missing certificate
+
+The old error message is quite similar to the openssl `failed to retrieve issuer certificate` and can mislead users to troubleshooting certificate stores.
+
+The new message should be distinct enough to make it clear to users that this is not a problem raised by the underlying SSL implementation, but a problem inside monitoring-plugins.
+---
+ plugins/sslutils.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/plugins/sslutils.c
++++ b/plugins/sslutils.c
+@@ -208,7 +208,7 @@
+ 	time_t tm_t;
+ 
+ 	if (!certificate) {
+-		printf("%s\n",_("CRITICAL - Cannot retrieve server certificate."));
++		printf("%s\n",_("CRITICAL - No server certificate present to inspect."));
+ 		return STATE_CRITICAL;
+ 	}
+ 

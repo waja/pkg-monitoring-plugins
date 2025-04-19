@@ -14,4 +14,5 @@
 20_check_icmp_fix_rtmin
 21_check_http_state_regex
 22_check_by_ssh_missing_options
+23_sslutils_fix_error_message
 # feature patches
