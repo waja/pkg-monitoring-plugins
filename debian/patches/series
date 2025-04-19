@@ -12,4 +12,5 @@
 18_check_curl_fix_TLS_notes
 19_check_curl_cookie_handling
 20_check_icmp_fix_rtmin
+21_check_http_state_regex
 # feature patches

@@ -1,0 +1,22 @@
+From e445a386f8ad1166b05fcdfdb5b9cde4622a8632 Mon Sep 17 00:00:00 2001
+From: Andreas Baumann <mail@andreasbaumann.cc>
+Date: Fri, 27 Dec 2024 15:32:24 +0100
+Subject: [PATCH] check_http: fix documentation for --state-regex
+
+---
+ plugins/check_http.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/plugins/check_http.c b/plugins/check_http.c
+index 97c0e39ad..baff682a7 100644
+--- a/plugins/check_http.c
++++ b/plugins/check_http.c
+@@ -1805,7 +1805,7 @@ print_help (void)
+   printf (" %s\n", "--invert-regex");
+   printf ("    %s\n", _("Return STATE if found, OK if not (STATE is CRITICAL, per default)"));
+   printf ("    %s\n", _("can be changed with --state--regex)"));
+-  printf (" %s\n", "--regex-state=STATE");
++  printf (" %s\n", "--state-regex=STATE");
+   printf ("    %s\n", _("Return STATE if regex is found, OK if not\n"));
+ 
+   printf (" %s\n", "-a, --authorization=AUTH_PAIR");
