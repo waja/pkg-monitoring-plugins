@@ -11,4 +11,5 @@
 17_check_fping_dontfrag_random
 18_check_curl_fix_TLS_notes
 19_check_curl_cookie_handling
+20_check_icmp_fix_rtmin
 # feature patches

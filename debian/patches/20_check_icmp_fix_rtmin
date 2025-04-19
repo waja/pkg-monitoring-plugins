@@ -1,0 +1,29 @@
+From e5f35d40556468fcdebccae847cfc19380952ca0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?=
+ <12514511+RincewindsHat@users.noreply.github.com>
+Date: Wed, 27 Nov 2024 15:29:19 +0100
+Subject: [PATCH] check_icmp: set rtmin initially
+
+---
+ plugins-root/check_icmp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+--- a/plugins-root/check_icmp.c
++++ b/plugins-root/check_icmp.c
+@@ -64,6 +64,7 @@
+ #include <netinet/ip_icmp.h>
+ #include <netinet/icmp6.h>
+ #include <arpa/inet.h>
++#include <math.h>
+ 
+ 
+ /** sometimes undefined system macros (quite a few, actually) **/
+@@ -1051,7 +1052,7 @@
+ 		icmp_recv++;
+ 		if (tdiff > (unsigned int)host->rtmax)
+ 			host->rtmax = tdiff;
+-		if (tdiff < (unsigned int)host->rtmin)
++		if ((host->rtmin == INFINITY) || (tdiff < (unsigned int)host->rtmin))
+ 			host->rtmin = tdiff;
+ 
+ 		if(debug) {
