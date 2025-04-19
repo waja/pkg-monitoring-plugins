@@ -1,7 +1,7 @@
 monitoring-plugins (2.1.2-3) unstable; urgency=medium
 
   We switched again over to another radius library. This time radcli
-  to fix #822337. This makes it again necessary to migrate you radius
+  to fix #822337. This makes it again necessary to migrate your radius
   credentials from /etc/radiusclient/servers to /etc/radcli/servers
   in case you are using check_radius.
   Please install the new dependencies in this case if you don't install
