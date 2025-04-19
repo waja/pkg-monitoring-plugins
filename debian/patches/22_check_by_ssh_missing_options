@@ -1,0 +1,20 @@
+From 02adcbfa896eb726c59ca647eb4cf6909c690f37 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?=
+ <12514511+RincewindsHat@users.noreply.github.com>
+Date: Mon, 24 Feb 2025 20:32:19 +0100
+Subject: [PATCH] check_by_ssh: Remove warning/critical from help
+
+---
+ plugins/check_by_ssh.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+--- a/plugins/check_by_ssh.c
++++ b/plugins/check_by_ssh.c
+@@ -454,7 +454,6 @@
+   printf ("    %s\n", _("Tell ssh to use this configfile [optional]"));
+   printf (" %s\n","-q, --quiet");
+   printf ("    %s\n", _("Tell ssh to suppress warning and diagnostic messages [optional]"));
+-	printf (UT_WARN_CRIT);
+ 	printf (UT_CONN_TIMEOUT, DEFAULT_SOCKET_TIMEOUT);
+ 	printf (" %s\n","-U, --unknown-timeout");
+ 	printf ("    %s\n", _("Make connection problems return UNKNOWN instead of CRITICAL"));

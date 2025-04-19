@@ -13,4 +13,5 @@
 19_check_curl_cookie_handling
 20_check_icmp_fix_rtmin
 21_check_http_state_regex
+22_check_by_ssh_missing_options
 # feature patches
