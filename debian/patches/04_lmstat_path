@@ -1,0 +1,11 @@
+--- a/plugins-scripts/utils.pm.in
++++ b/plugins-scripts/utils.pm.in
+@@ -19,7 +19,7 @@
+ ## updated by autoconf
+ $PATH_TO_SUDO    = "@PATH_TO_SUDO@";
+ $PATH_TO_RPCINFO = "@PATH_TO_RPCINFO@" ;
+-$PATH_TO_LMSTAT  = "@PATH_TO_LMSTAT@" ;
++$PATH_TO_LMSTAT  = "/usr/local/bin/lmstat" ;
+ $PATH_TO_SMBCLIENT = "@PATH_TO_SMBCLIENT@" ;
+ $PATH_TO_MAILQ   = "@PATH_TO_MAILQ@";
+ $PATH_TO_QMAIL_QSTAT = "@PATH_TO_QMAIL_QSTAT@";
