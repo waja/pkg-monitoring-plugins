@@ -1,8 +1,40 @@
-monitoring-plugins (2.4.0-2) UNRELEASED; urgency=medium
+monitoring-plugins (2.4.0-2) unstable; urgency=medium
 
-  * 
+  [ Bas Couwenberg ]
+  * [2d414bd] Bump Standards-Version to 4.7.0, no changes.
 
- -- Jan Wagner <waja@cyconet.org>  Wed, 24 Jul 2024 23:24:10 +0200
+  [ Jan Wagner ]
+  * [672d37c] Adding d/p/10_check_curl_fix_redirects from upstream
+  * [15760ad] Adding d/p/11_check_curl_raise_ssl_issue from upstream
+  * [a6b1db0] Adding d/p/12_check_curl_add_docu from upstream
+  * [8b17915] Adding d/p/13_check_mysql_fix_variables from upstream
+  * [01e11f9] Adding d/p/14_check_curl_remove_experimental_state from upstream
+  * [1b018b3] Adding d/p/15_check_curl_fix_regex from upstream
+  * [9c49b6f] Adding d/p/16_check_curl_openssl_error from upstream
+  * [f3e1279] Adding d/p/17_check_fping_dontfrag_random from upstream
+
+  [ Bas Couwenberg ]
+  * [3c5882d] Add check_curl to monitoring-plugins-standard description.
+
+  [ Jan Wagner ]
+  * [043d328] Adding d/p/18_check_curl_fix_TLS_notes from upstream
+  * [bf60013] Adding d/p/19_check_curl_cookie_handling from upstream
+
+  [ Bas Couwenberg ]
+  * [9cb7fae] Bump Standards-Version to 4.7.2, no changes.
+  * [af69fcf] Fix old FSF address in copyright file.
+
+  [ Jan Wagner ]
+  * [38aec8e] Adding d/p/20_check_icmp_fix_rtmin from upstream
+  * [e817fec] Adding d/p/21_check_http_state_regex from upstream
+  * [45f91e2] Adding d/p/22_check_by_ssh_missing_options from upstream
+  * [b6a58eb] Adding d/p/23_sslutils_fix_error_message from upstream
+  * [3a5f250] debian/NEWS: Fix spelling error
+  * [55f87b7] Changing check_httpname to the intended check_http_hostname
+    definition (Closes: #1099028)
+  * [2f5d025] Adding d/p/04_lmstat_path (Closes: #1053687)
+
+ -- Jan Wagner <waja@cyconet.org>  Sun, 20 Apr 2025 21:09:27 +0200
 
 monitoring-plugins (2.4.0-1) unstable; urgency=medium
 
