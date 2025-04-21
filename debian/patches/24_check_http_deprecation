@@ -1,0 +1,30 @@
+From 14169fe5a11b94a9f9ab44336fdb5170ee98be66 Mon Sep 17 00:00:00 2001
+From: Jan Wagner <waja@cyconet.org>
+Date: Sat, 19 Apr 2025 14:37:46 +0200
+Subject: [PATCH] check_http: Adding deprecation text
+
+---
+ plugins/check_http.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/plugins/check_http.c b/plugins/check_http.c
+index baff682a7..8e0c15ec9 100644
+--- a/plugins/check_http.c
++++ b/plugins/check_http.c
+@@ -1724,6 +1724,16 @@ print_help (void)
+   printf ("%s\n", _("strings and regular expressions, check connection times, and report on"));
+   printf ("%s\n", _("certificate expiration times."));
+ 
++  printf ("\n");
++  printf ("%s\n", _("ATTENTION!"));
++  printf ("\n");
++  printf ("%s\n", _("THIS PLUGIN IS DEPRECATED. The functionality was reimplemented by the"));
++  printf ("%s\n", _("check_curl plugin, which can be used as a drop-in replacement. You should"));
++  printf ("%s\n", _("migrate your checks over to check_curl, because check_http is going to be"));
++  printf ("%s\n", _("removed sooner than later. Just replace check_http with check_curl in your"));
++  printf ("%s\n", _("check command definitions."));
++  printf ("%s\n", _("Report issues to: https://github.com/monitoring-plugins/monitoring-plugins/issues"));
++
+   printf ("\n\n");
+ 
+   print_usage ();
