@@ -1,8 +1,12 @@
-monitoring-plugins (2.4.0-3) UNRELEASED; urgency=medium
+monitoring-plugins (2.4.0-3~exp1) experimental; urgency=medium
 
-  * 
+  * [7e8c776] Adding d/p/24_check_http_deprecation from upstream
+  * [baad659] Add d/monitoring-plugins-basic.alternatives
+  * [6bb8580] Adjust debian/rules for check_http rename
+  * [ddaa81f] check_curl: move to monitoring-plugins-basic package
+  * [b724e41] d/NEWS: Add information about check_http deprecation
 
- -- Jan Wagner <waja@cyconet.org>  Sun, 20 Apr 2025 22:17:46 +0200
+ -- Jan Wagner <waja@cyconet.org>  Mon, 21 Apr 2025 16:29:02 +0200
 
 monitoring-plugins (2.4.0-2) unstable; urgency=medium
 
