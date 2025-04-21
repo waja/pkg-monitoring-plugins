@@ -156,6 +156,8 @@ install: build
 	for p in ${std_plugins}; do \
 		mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/$$p ${NP_STD_DIR}/${NP_LIBEXEC}; \
 	done
+	# rename check_http to check_http_deprecated for making use of update-alternatives
+	mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/check_http ${NP_BASIC_DIR}/${NP_LIBEXEC}/check_http.deprecated
 	# slit out common files
 	for p in ${common_files}; do \
 		mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/$$p ${NP_COMMON_DIR}/${NP_LIBEXEC}; \
