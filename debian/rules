@@ -213,6 +213,7 @@ binary-arch: build install
 	dh_link -a
 	dh_installexamples -a
 	dh_installman -a
+	dh_installalternatives -a
 	dh_strip -a
 	dh_compress -a
 	dh_fixperms -a -X utils.pm

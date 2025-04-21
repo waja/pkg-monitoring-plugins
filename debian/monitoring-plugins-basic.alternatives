@@ -1,0 +1,12 @@
+Name: check_http
+Link: /usr/lib/nagios/plugins/check_http
+Status: auto
+Best: /usr/lib/nagios/plugins/check_http.deprecated
+Value: /usr/lib/nagios/plugins/check_http.deprecated
+Alternative: /usr/lib/nagios/plugins/check_http.deprecated
+Priority: 50
+
+Name: check_http
+Link: /usr/lib/nagios/plugins/check_http
+Alternative: /usr/lib/nagios/plugins/check_curl
+Priority: -100
