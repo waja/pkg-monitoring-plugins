@@ -1,3 +1,15 @@
+monitoring-plugins (2.4.0-3) unstable; urgency=medium
+
+  The check_http plugin was deprecated. Please migrate the check command
+  definitions over to the drop-in replacement check_curl. It should be
+  sufficient to replace check_http with check_curl in your command definitions.
+  The check_curl plugin was moved to the monitoring-plugins-basic package for
+  a smoother migration path. For making things easy, update-alternatives can
+  be used to change the check_http alternative. This can be done with the
+  command: update-alternatives --config check_http
+
+ -- Jan Wagner <waja@cyconet.org>  Mon, 21 Apr 2025 11:00:59 +0200
+
 monitoring-plugins (2.1.2-3) unstable; urgency=medium
 
   We switched again over to another radius library. This time radcli
