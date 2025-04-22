@@ -1,3 +1,9 @@
+monitoring-plugins (2.4.0-4) UNRELEASED; urgency=medium
+
+  * 
+
+ -- Jan Wagner <waja@cyconet.org>  Tue, 22 Apr 2025 16:31:05 +0200
+
 monitoring-plugins (2.4.0-3) unstable; urgency=medium
 
   * Upload to unstable 
