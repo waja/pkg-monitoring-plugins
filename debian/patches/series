@@ -17,4 +17,5 @@
 22_check_by_ssh_missing_options
 23_sslutils_fix_error_message
 24_check_http_deprecation
+25_check_users_sd_get_uids
 # feature patches

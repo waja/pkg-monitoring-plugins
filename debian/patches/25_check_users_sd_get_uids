@@ -1,0 +1,28 @@
+From fb39f96ac6f72bb56d17f3e8694134dfea9186e9 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?=
+ <12514511+RincewindsHat@users.noreply.github.com>
+Date: Mon, 11 Aug 2025 21:49:20 +0200
+Subject: [PATCH] check_users: Use sd_get_uids instead of sd_get_session
+
+Previously check_users in combination with systemd used
+sd_get_sessions (3) to aquire the number of users, probably
+with the idea that every users opens a session.
+Turns out, that a user can have multiple sessions and we only really
+want to know how many users there are.
+
+This commit changes to sd_get_uids (3) to achieve that target.
+---
+ plugins/check_users.d/users.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/plugins/check_users.c
++++ b/plugins/check_users.c
+@@ -92,7 +92,7 @@
+ 
+ #ifdef HAVE_LIBSYSTEMD
+ 	if (sd_booted () > 0)
+-	        users = sd_get_sessions (NULL);
++		users = sd_get_uids(NULL);
+ 	else {
+ #endif
+ #if HAVE_WTSAPI32_H
