@@ -1,0 +1,188 @@
+From 4886fa3debf79aa2faac9d0180e8ddb4bb1d4aaa Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?=
+ <12514511+RincewindsHat@users.noreply.github.com>
+Date: Mon, 24 Feb 2025 19:52:08 +0100
+Subject: [PATCH 1/2] Add MySQL server version dectection and adaptive replica
+ query
+
+---
+
+Taken from https://github.com/monitoring-plugins/monitoring-plugins/compare/master...maintenance-2.4.0-check_mysql.patch
+
+---
+ plugins/check_mysql.c | 51 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 49 insertions(+), 2 deletions(-)
+
+diff --git a/plugins/check_mysql.c b/plugins/check_mysql.c
+index 6a7daf11a..1b7403f7b 100644
+--- a/plugins/check_mysql.c
++++ b/plugins/check_mysql.c
+@@ -211,8 +211,55 @@ main (int argc, char **argv)
+ 	}
+ 
+ 	if(check_slave) {
+-		/* check the slave status */
+-		if (mysql_query (&mysql, "show slave status") != 0) {
++		// Detect which version we are, on older version
++		// "show slave status" should work, on newer ones
++		// "show replica status"
++		// But first we have to find out whether this is
++		// MySQL or MariaDB since the version numbering scheme
++		// is different
++		bool use_deprecated_slave_status = false;
++		const char *server_version = mysql_get_server_info(&mysql);
++		unsigned long server_verion_int = mysql_get_server_version(&mysql);
++		unsigned long major_version = server_verion_int / 10000;
++		unsigned long minor_version = (server_verion_int % 10000) / 100;
++		unsigned long patch_version = (server_verion_int % 100);
++		if (verbose) {
++			printf("Found MariaDB: %s, main version: %lu, minor version: %lu, patch version: %lu\n", server_version, major_version,
++				   minor_version, patch_version);
++		}
++
++		if (strstr(server_version, "MariaDB") != NULL) {
++			// Looks like MariaDB, new commands should be available after 10.5.1
++			if (major_version < 10) {
++				use_deprecated_slave_status = true;
++			} else if (major_version == 10) {
++				if (minor_version < 5) {
++					use_deprecated_slave_status = true;
++				} else if (minor_version == 5 && patch_version < 1) {
++					use_deprecated_slave_status = true;
++				}
++			}
++		} else if (strstr(server_version, "MySQL") != NULL) {
++			// Looks like MySQL
++			if (major_version < 8) {
++				use_deprecated_slave_status = true;
++			} else if (major_version == 10 && minor_version < 4) {
++				use_deprecated_slave_status = true;
++			}
++		} else {
++			printf("Not a known sever implementation: %s\n", server_version);
++			exit(STATE_UNKNOWN);
++		}
++
++		char *replica_query = NULL;
++		if (use_deprecated_slave_status) {
++			replica_query = "show slave status";
++		} else {
++			replica_query = "show replica status";
++		}
++
++		/* check the replica status */
++		if (mysql_query(&mysql, replica_query) != 0) {
+ 			error = strdup(mysql_error(&mysql));
+ 			mysql_close (&mysql);
+ 			die (STATE_CRITICAL, _("slave query error: %s\n"), error);
+
+From 291a704bcf738f6ceb7a1f46c69b8332b33dbd70 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?=
+ <12514511+RincewindsHat@users.noreply.github.com>
+Date: Fri, 26 Sep 2025 08:57:19 +0200
+Subject: [PATCH 2/2] check_mysql: Assume MySQL server by default (in replica
+ check)
+
+In the Debian Bug tracker (and then Github) a person pointed out,
+that a MySQL server does not respond with a hint that is indeed the
+MySQL software, but only with the version string.
+Which makes sense if one assumes to be the only implementation.
+
+This commit changes the behaviour of the Replica check to assume
+that the counterpart is a MySQL server if there are not hints that
+it is a MariaDB server.
+---
+ plugins/check_mysql.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/plugins/check_mysql.c b/plugins/check_mysql.c
+index 1b7403f7b..951a96f93 100644
+--- a/plugins/check_mysql.c
++++ b/plugins/check_mysql.c
+@@ -239,16 +239,13 @@ main (int argc, char **argv)
+ 					use_deprecated_slave_status = true;
+ 				}
+ 			}
+-		} else if (strstr(server_version, "MySQL") != NULL) {
+-			// Looks like MySQL
++		} else {
++			// Looks like MySQL (or at least not like MariaDB)
+ 			if (major_version < 8) {
+ 				use_deprecated_slave_status = true;
+ 			} else if (major_version == 10 && minor_version < 4) {
+ 				use_deprecated_slave_status = true;
+ 			}
+-		} else {
+-			printf("Not a known sever implementation: %s\n", server_version);
+-			exit(STATE_UNKNOWN);
+ 		}
+ 
+ 		char *replica_query = NULL;
+From 392c945966d96d1dba9c68ac7a73450c2ad72d85 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Lorenz=20K=C3=A4stle?= <lorenz.kaestle@netways.de>
+Date: Tue, 30 Sep 2025 14:51:39 +0200
+Subject: [PATCH] More renaming due to MySQL name chances
+
+Due to MySQL changing several term in Version 8.0.22 the way to
+determine the status of replicas has changed.
+To adapt to these changes in a517dc614e44650a7e9204c4202feec7a40fd37f
+check_mysql was modified to adapt to different versions.
+Some parts were missed though which results in failures to detect
+the replica status properly.
+
+This parts should be contained in this commit.
+
+---
+
+Taken from https://patch-diff.githubusercontent.com/raw/monitoring-plugins/monitoring-plugins/pull/2163.patch
+
+---
+ plugins/check_mysql.c | 37 ++++++++++++++++++++++++++-----------
+ 1 file changed, 26 insertions(+), 11 deletions(-)
+
+--- a/plugins/check_mysql.c
++++ b/plugins/check_mysql.c
+@@ -300,17 +300,32 @@
+ 			num_fields = mysql_num_fields(res);
+ 			fields = mysql_fetch_fields(res);
+ 			for(i = 0; i < num_fields; i++) {
+-				if (strcmp(fields[i].name, "Slave_IO_Running") == 0) {
+-					slave_io_field = i;
+-					continue;
+-				}
+-				if (strcmp(fields[i].name, "Slave_SQL_Running") == 0) {
+-					slave_sql_field = i;
+-					continue;
+-				}
+-				if (strcmp(fields[i].name, "Seconds_Behind_Master") == 0) {
+-					seconds_behind_field = i;
+-					continue;
++				if (use_deprecated_slave_status) {
++					if (strcmp(fields[i].name, "Slave_IO_Running") == 0) {
++						slave_io_field = i;
++						continue;
++					}
++					if (strcmp(fields[i].name, "Slave_SQL_Running") == 0) {
++						slave_sql_field = i;
++						continue;
++					}
++					if (strcmp(fields[i].name, "Seconds_Behind_Master") == 0) {
++						seconds_behind_field = i;
++						continue;
++					}
++				} else {
++					if (strcmp(fields[i].name, "Replica_IO_Running") == 0) {
++						slave_io_field = i;
++						continue;
++					}
++					if (strcmp(fields[i].name, "Replica_SQL_Running") == 0) {
++						slave_sql_field = i;
++						continue;
++					}
++					if (strcmp(fields[i].name, "Seconds_Behind_Source") == 0) {
++						seconds_behind_field = i;
++						continue;
++					}
+ 				}
+ 			}
+ 

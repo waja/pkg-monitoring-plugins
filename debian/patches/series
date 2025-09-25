@@ -18,4 +18,5 @@
 23_sslutils_fix_error_message
 24_check_http_deprecation
 25_check_users_sd_get_uids
+26_check_mysql_replica
 # feature patches
