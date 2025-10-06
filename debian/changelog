@@ -1,8 +1,20 @@
-monitoring-plugins (2.4.0-4) UNRELEASED; urgency=medium
+monitoring-plugins (2.4.0-4) unstable; urgency=medium
 
-  * 
+  [ Jan Wagner ]
+  * [bee01b8] d/control: Remove Alexander Wirt from Uploaders
+  * [7236330] d/control: Adding libsystemd-dev and libsystemd0 as build-dep
+    (Closes: #1110265)
+  * [8cd52e3] Adding d/patches/25_check_users_sd_get_uids to fix user count
 
- -- Jan Wagner <waja@cyconet.org>  Tue, 22 Apr 2025 16:31:05 +0200
+  [ Bas Couwenberg ]
+  * [4770fe3] Update lintian overrides.
+  * [294841c] Drop Priority: optional, default since dpkg 1.22.13.
+  * [97009f5] Revert "Drop Priority: optional, default since dpkg 1.22.13."
+
+  [ Jan Wagner ]
+  * [3f438f9] Adding d/p/26_check_mysql_replica from upstream (Closes: #1116027)
+
+ -- Jan Wagner <waja@cyconet.org>  Mon, 06 Oct 2025 11:29:35 +0200
 
 monitoring-plugins (2.4.0-3) unstable; urgency=medium
 
