@@ -1,3 +1,14 @@
+monitoring-plugins (2.4.0-3+deb13u1) trixie; urgency=medium
+
+  * [3cb6abf] d/.gitlab-ci.yml: Change RELEASE to trixie
+  * [1b5ea7b] Adding d/patches/25_check_users_sd_get_uids to fix user count
+  * [b92ed85] Adding d/p/26_check_mysql_replica from upstream (Closes: #1116027)
+  * [4362a8d] d/control: Adding libsystemd-dev and libsystemd0 as build-dep
+    (Closes: #1110265)
+  * [22de282] d/control: Drop libsystemd0 from build-deps, pulled by libsystemd-dev
+
+ -- Jan Wagner <waja@cyconet.org>  Mon, 20 Oct 2025 06:00:52 +0000
+
 monitoring-plugins (2.4.0-3) unstable; urgency=medium
 
   * Upload to unstable 
