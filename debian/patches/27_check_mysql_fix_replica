@@ -1,0 +1,51 @@
+Backport of https://patch-diff.githubusercontent.com/raw/monitoring-plugins/monitoring-plugins/pull/2184.patch
+
+--- a/plugins/check_mysql.c
++++ b/plugins/check_mysql.c
+@@ -300,32 +300,20 @@
+ 			num_fields = mysql_num_fields(res);
+ 			fields = mysql_fetch_fields(res);
+ 			for(i = 0; i < num_fields; i++) {
+-				if (use_deprecated_slave_status) {
+-					if (strcmp(fields[i].name, "Slave_IO_Running") == 0) {
+-						slave_io_field = i;
+-						continue;
+-					}
+-					if (strcmp(fields[i].name, "Slave_SQL_Running") == 0) {
+-						slave_sql_field = i;
+-						continue;
+-					}
+-					if (strcmp(fields[i].name, "Seconds_Behind_Master") == 0) {
+-						seconds_behind_field = i;
+-						continue;
+-					}
+-				} else {
+-					if (strcmp(fields[i].name, "Replica_IO_Running") == 0) {
+-						slave_io_field = i;
+-						continue;
+-					}
+-					if (strcmp(fields[i].name, "Replica_SQL_Running") == 0) {
+-						slave_sql_field = i;
+-						continue;
+-					}
+-					if (strcmp(fields[i].name, "Seconds_Behind_Source") == 0) {
+-						seconds_behind_field = i;
+-						continue;
+-					}
++				if ((strcmp(fields[i].name, "Slave_IO_Running") == 0) ||
++				    (strcmp(fields[i].name, "Replica_IO_Running") == 0)) {
++					slave_io_field = i;
++					continue;
++				}
++				if ((strcmp(fields[i].name, "Slave_SQL_Running") == 0) ||
++				    (strcmp(fields[i].name, "Replica_SQL_Running") == 0)) {
++					slave_sql_field = i;
++					continue;
++				}
++				if ((strcmp(fields[i].name, "Seconds_Behind_Master") == 0) ||
++				    (strcmp(fields[i].name, "Seconds_Behind_Source") == 0)) {
++					seconds_behind_field = i;
++					continue;
+ 				}
+ 			}
+ 

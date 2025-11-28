@@ -20,3 +20,4 @@
 25_check_users_sd_get_uids
 26_check_mysql_replica
 # feature patches
+27_check_mysql_fix_replica
