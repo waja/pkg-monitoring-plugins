@@ -9,4 +9,4 @@ Priority: 50
 Name: check_http
 Link: /usr/lib/nagios/plugins/check_http
 Alternative: /usr/lib/nagios/plugins/check_curl
-Priority: -100
+Priority: 100
