@@ -3,6 +3,7 @@ monitoring-plugins (2.4.0-5) unstable; urgency=medium
   Priority of check_curl alternative for check_http is now higher
   then check_http.deprecated, which means calling check_http is now
   check_curl. You can change that by: update-alternatives --config check_http
+  Removed also deprecated check_ntp from package.
 
  -- Jan Wagner <waja@cyconet.org>  Thu, 2 Dec 2025 12:49:36 +0100
 

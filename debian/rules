@@ -158,6 +158,8 @@ install: build
 	done
 	# rename check_http to check_http_deprecated for making use of update-alternatives
 	mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/check_http ${NP_BASIC_DIR}/${NP_LIBEXEC}/check_http.deprecated
+	# remove deprecated check_ntp
+	rm ${NP_BASIC_DIR}/${NP_LIBEXEC}/check_ntp
 	# slit out common files
 	for p in ${common_files}; do \
 		mv ${NP_BASIC_DIR}/${NP_LIBEXEC}/$$p ${NP_COMMON_DIR}/${NP_LIBEXEC}; \
